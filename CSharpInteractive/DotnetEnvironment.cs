@@ -4,7 +4,6 @@ namespace CSharpInteractive;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using Microsoft.DotNet.PlatformAbstractions;
 
 internal class DotNetEnvironment : IDotNetEnvironment, ITraceSource
 {
@@ -27,7 +26,7 @@ internal class DotNetEnvironment : IDotNetEnvironment, ITraceSource
     {
         get
         {
-            var executable = _environment.OperatingSystemPlatform == Platform.Windows ? "dotnet.exe" : "dotnet";
+            var executable = _environment.OperatingSystemPlatform == OSPlatform.Windows ? "dotnet.exe" : "dotnet";
             try
             {
                 // ReSharper disable once InvertIf

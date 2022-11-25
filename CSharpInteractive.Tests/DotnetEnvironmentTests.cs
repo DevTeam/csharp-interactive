@@ -1,7 +1,7 @@
 namespace CSharpInteractive.Tests;
 
+using System.Runtime.InteropServices;
 using CSharpInteractive;
-using Microsoft.DotNet.PlatformAbstractions;
 
 public class DotNetEnvironmentTests
 {
@@ -21,15 +21,14 @@ public class DotNetEnvironmentTests
     }
 
     [Theory]
-    [InlineData(Platform.Windows, "dotnet.exe")]
-    [InlineData(Platform.Linux, "dotnet")]
-    [InlineData(Platform.FreeBSD, "dotnet")]
-    [InlineData(Platform.Darwin, "dotnet")]
-    [InlineData(Platform.Unknown, "dotnet")]
-    public void ShouldProvidePathFromModule(Platform platform, string dotnetExecutable)
+    [InlineData("Windows", "dotnet.exe")]
+    [InlineData("Linux", "dotnet")]
+    [InlineData("FreeBSD", "dotnet")]
+    [InlineData("Unknown", "dotnet")]
+    public void ShouldProvidePathFromModule(string platform, string dotnetExecutable)
     {
         // Given
-        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(platform);
+        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(OSPlatform.Create(platform));
         var modulePath = Path.Combine("Bin", dotnetExecutable);
 
         // When
@@ -40,15 +39,14 @@ public class DotNetEnvironmentTests
     }
 
     [Theory]
-    [InlineData(Platform.Windows, "dotnet.exe")]
-    [InlineData(Platform.Linux, "dotnet")]
-    [InlineData(Platform.FreeBSD, "dotnet")]
-    [InlineData(Platform.Darwin, "dotnet")]
-    [InlineData(Platform.Unknown, "dotnet")]
-    public void ShouldFindPath(Platform platform, string defaultPath)
+    [InlineData("Windows", "dotnet.exe")]
+    [InlineData("Linux", "dotnet")]
+    [InlineData("FreeBSD", "dotnet")]
+    [InlineData("Unknown", "dotnet")]
+    public void ShouldFindPath(string platform, string defaultPath)
     {
         // Given
-        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(platform);
+        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(OSPlatform.Create(platform));
         _fileExplorer.Setup(i => i.FindFiles(defaultPath, "DOTNET_ROOT", "DOTNET_HOME")).Returns(new[] {"Abc", "Xyz"});
 
         // When
@@ -59,15 +57,14 @@ public class DotNetEnvironmentTests
     }
 
     [Theory]
-    [InlineData(Platform.Windows, "dotnet.exe")]
-    [InlineData(Platform.Linux, "dotnet")]
-    [InlineData(Platform.FreeBSD, "dotnet")]
-    [InlineData(Platform.Darwin, "dotnet")]
-    [InlineData(Platform.Unknown, "dotnet")]
-    public void ShouldProvideDefaultPathWhenException(Platform platform, string defaultPath)
+    [InlineData("Windows", "dotnet.exe")]
+    [InlineData("Linux", "dotnet")]
+    [InlineData("FreeBSD", "dotnet")]
+    [InlineData("Unknown", "dotnet")]
+    public void ShouldProvideDefaultPathWhenException(string platform, string defaultPath)
     {
         // Given
-        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(platform);
+        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(OSPlatform.Create(platform));
         _fileExplorer.Setup(i => i.FindFiles(defaultPath, "DOTNET_ROOT", "DOTNET_HOME")).Throws<Exception>();
 
         // When

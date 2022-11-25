@@ -1,7 +1,7 @@
 namespace CSharpInteractive.Tests;
 
+using System.Runtime.InteropServices;
 using CSharpInteractive;
-using Microsoft.DotNet.PlatformAbstractions;
 
 public class DockerEnvironmentTests
 {
@@ -9,15 +9,14 @@ public class DockerEnvironmentTests
     private readonly Mock<IFileExplorer> _fileExplorer = new();
 
     [Theory]
-    [InlineData(Platform.Windows, "docker.exe")]
-    [InlineData(Platform.Linux, "docker")]
-    [InlineData(Platform.FreeBSD, "docker")]
-    [InlineData(Platform.Darwin, "docker")]
-    [InlineData(Platform.Unknown, "docker")]
-    public void ShouldFindPath(Platform platform, string defaultPath)
+    [InlineData("Windows", "docker.exe")]
+    [InlineData("Linux", "docker")]
+    [InlineData("FreeBSD", "docker")]
+    [InlineData("Unknown", "docker")]
+    public void ShouldFindPath(string platform, string defaultPath)
     {
         // Given
-        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(platform);
+        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(OSPlatform.Create(platform));
         _fileExplorer.Setup(i => i.FindFiles(defaultPath, "DOCKER_HOME")).Returns(new[] {"Abc", "Xyz"});
 
         // When
@@ -28,15 +27,14 @@ public class DockerEnvironmentTests
     }
 
     [Theory]
-    [InlineData(Platform.Windows, "docker.exe")]
-    [InlineData(Platform.Linux, "docker")]
-    [InlineData(Platform.FreeBSD, "docker")]
-    [InlineData(Platform.Darwin, "docker")]
-    [InlineData(Platform.Unknown, "docker")]
-    public void ShouldProvideDefaultPathWhenException(Platform platform, string defaultPath)
+    [InlineData("Windows", "docker.exe")]
+    [InlineData("Linux", "docker")]
+    [InlineData("FreeBSD", "docker")]
+    [InlineData("Unknown", "docker")]
+    public void ShouldProvideDefaultPathWhenException(string platform, string defaultPath)
     {
         // Given
-        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(platform);
+        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(OSPlatform.Create(platform));
         _fileExplorer.Setup(i => i.FindFiles(defaultPath, "DOCKER_HOME")).Throws<Exception>();
 
         // When

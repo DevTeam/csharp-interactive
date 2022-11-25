@@ -1,13 +1,13 @@
 // ReSharper disable UnusedMemberInSuper.Global
 namespace CSharpInteractive;
 
-using Microsoft.DotNet.PlatformAbstractions;
+using System.Runtime.InteropServices;
 
 internal interface IEnvironment
 {
-    Platform OperatingSystemPlatform { get; }
+    OSPlatform OperatingSystemPlatform { get; }
 
-    string ProcessArchitecture { get; }
+    Architecture ProcessArchitecture { get; }
 
     IEnumerable<string> GetCommandLineArgs();
 

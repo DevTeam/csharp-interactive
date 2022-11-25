@@ -3,7 +3,7 @@
 namespace CSharpInteractive;
 
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.DotNet.PlatformAbstractions;
+using System.Runtime.InteropServices;
 
 internal class DockerEnvironment : ITraceSource, IDockerEnvironment
 {
@@ -22,7 +22,7 @@ internal class DockerEnvironment : ITraceSource, IDockerEnvironment
     {
         get
         {
-            var executable = _environment.OperatingSystemPlatform == Platform.Windows ? "docker.exe" : "docker";
+            var executable = _environment.OperatingSystemPlatform == OSPlatform.Windows ? "docker.exe" : "docker";
             try
             {
                 return _fileExplorer.FindFiles(executable, "DOCKER_HOME").FirstOrDefault() ?? executable;

@@ -18,17 +18,18 @@
         <Title>C# {0} script library</Title>
         <PackageIcon>_common\icon.png</PackageIcon>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-        <Description>$(Company) $(Title) $(Version) $(TargetFramework)</Description>
+        <Description>$(Title) $(Version) $(TargetFramework)</Description>
         <PackageTags>C#;csharp;script;interactive</PackageTags>
         <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.2.0" />
-        <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="3.1.6" />
-        <PackageReference Include="NuGet.Build.Tasks" Version="6.2.1" />
-        <PackageReference Include="NuGet.Versioning" Version="6.2.1" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.4.0" />
+        <PackageReference Include="NuGet.Build.Tasks" Version="6.4.0" />
+        <PackageReference Include="NuGet.Versioning" Version="6.4.0" />
+        <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="all" />
         <PackageReference Include="Pure.DI" Version="1.1.62">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -1,8 +1,10 @@
 // ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable ConvertIfStatementToReturnStatement
+// ReSharper disable InconsistentNaming
 namespace CSharpInteractive;
 
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.DotNet.PlatformAbstractions;
+using System.Runtime.InteropServices;
 
 internal class Environment:
     IEnvironment,
@@ -10,46 +12,65 @@ internal class Environment:
     IScriptContext,
     IErrorContext
 {
+    private static readonly OSPlatform UnknownOSPlatform = OSPlatform.Create("Unknown");
     private readonly LinkedList<ICodeSource> _sources = new();
 
-    public Platform OperatingSystemPlatform => RuntimeEnvironment.OperatingSystemPlatform;
+    public OSPlatform OperatingSystemPlatform
+    {
+        get
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return OSPlatform.Windows;
+            }
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return OSPlatform.Linux;
+            }
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return OSPlatform.OSX;
+            }
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
+            {
+                return OSPlatform.FreeBSD;
+            }
 
-    public string ProcessArchitecture => RuntimeEnvironment.RuntimeArchitecture;
+            return UnknownOSPlatform;
+        }
+    }
+
+    public Architecture ProcessArchitecture => RuntimeInformation.ProcessArchitecture;
 
     public IEnumerable<string> GetCommandLineArgs() => System.Environment.GetCommandLineArgs();
 
     public string GetPath(SpecialFolder specialFolder)
     {
-        switch (OperatingSystemPlatform)
+        if (OperatingSystemPlatform == OSPlatform.Windows)
         {
-            case Platform.Windows:
-                return specialFolder switch
-                {
-                    SpecialFolder.Bin => GetBinDirectory(),
-                    SpecialFolder.Temp => Path.GetFullPath(System.Environment.GetEnvironmentVariable("TMP") ?? Path.GetTempPath()),
-                    SpecialFolder.ProgramFiles => System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles),
-                    SpecialFolder.Script => GetScriptDirectory(),
-                    SpecialFolder.Working => GetWorkingDirectory(),
-                    _ => throw new ArgumentOutOfRangeException(nameof(specialFolder), specialFolder, null)
-                };
-
-            case Platform.Unknown:
-            case Platform.Linux:
-            case Platform.Darwin:
-            case Platform.FreeBSD:
-                return specialFolder switch
-                {
-                    SpecialFolder.Bin => GetBinDirectory(),
-                    SpecialFolder.Temp => Path.GetFullPath(System.Environment.GetEnvironmentVariable("TMP") ?? Path.GetTempPath()),
-                    SpecialFolder.ProgramFiles => "usr/local/share",
-                    SpecialFolder.Script => GetScriptDirectory(),
-                    SpecialFolder.Working => GetWorkingDirectory(),
-                    _ => throw new ArgumentOutOfRangeException(nameof(specialFolder), specialFolder, null)
-                };
-
-            default:
-                throw new ArgumentOutOfRangeException(nameof(specialFolder));
+            return specialFolder switch
+            {
+                SpecialFolder.Bin => GetBinDirectory(),
+                SpecialFolder.Temp => Path.GetFullPath(System.Environment.GetEnvironmentVariable("TMP") ?? Path.GetTempPath()),
+                SpecialFolder.ProgramFiles => System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles),
+                SpecialFolder.Script => GetScriptDirectory(),
+                SpecialFolder.Working => GetWorkingDirectory(),
+                _ => throw new ArgumentOutOfRangeException(nameof(specialFolder), specialFolder, null)
+            };
         }
+        
+        return specialFolder switch
+        {
+            SpecialFolder.Bin => GetBinDirectory(),
+            SpecialFolder.Temp => Path.GetFullPath(System.Environment.GetEnvironmentVariable("TMP") ?? Path.GetTempPath()),
+            SpecialFolder.ProgramFiles => "usr/local/share",
+            SpecialFolder.Script => GetScriptDirectory(),
+            SpecialFolder.Working => GetWorkingDirectory(),
+            _ => throw new ArgumentOutOfRangeException(nameof(specialFolder), specialFolder, null)
+        };
     }
 
     public void Exit(int exitCode) => System.Environment.Exit(exitCode);
