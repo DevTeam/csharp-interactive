@@ -5,5 +5,6 @@ public enum CIType
 {
     Unknown,
     TeamCity,
-    GitLab
+    GitLab,
+    AzureDevOps
 }

@@ -40,6 +40,42 @@ public class CISettingsTests
         // Then
         actualIsUnderTeamCity.ShouldBe(expectedIsUnderTeamCity ? CIType.TeamCity: CIType.Unknown);
     }
+    
+    [Theory]
+    [InlineData("Abc", true)]
+    [InlineData("", false)]
+    [InlineData("   ", false)]
+    [InlineData(default, false)]
+    public void ShouldProvideIsGitLab(string? pipelineId, bool expectedIsUnderGitLab)
+    {
+        // Given
+        var settings = CreateInstance();
+        _hostEnvironment.Setup(i => i.GetEnvironmentVariable("CI_PIPELINE_ID")).Returns(pipelineId);
+
+        // When
+        var actualIsUnderGitLab = settings.CIType;
+
+        // Then
+        actualIsUnderGitLab.ShouldBe(expectedIsUnderGitLab ? CIType.GitLab: CIType.Unknown);
+    }
+    
+    [Theory]
+    [InlineData("Abc", true)]
+    [InlineData("", false)]
+    [InlineData("   ", false)]
+    [InlineData(default, false)]
+    public void ShouldProvideIsAzureDevOps(string? pipelineId, bool expectedIsUnderAzureDevOps)
+    {
+        // Given
+        var settings = CreateInstance();
+        _hostEnvironment.Setup(i => i.GetEnvironmentVariable("TF_BUILD")).Returns(pipelineId);
+
+        // When
+        var actualIsUnderAzureDevOps = settings.CIType;
+
+        // Then
+        actualIsUnderAzureDevOps.ShouldBe(expectedIsUnderAzureDevOps ? CIType.AzureDevOps: CIType.Unknown);
+    }
 
     [Theory]
     [InlineData("Abc", "Abc")]

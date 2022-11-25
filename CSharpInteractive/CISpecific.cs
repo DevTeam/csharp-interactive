@@ -25,6 +25,7 @@ internal class CISpecific<T> : ICISpecific<T>
     {
         CIType.TeamCity => _teamcityFactory(),
         CIType.GitLab => _ansiFactory(),
+        CIType.AzureDevOps => _ansiFactory(),
         _ => _defaultFactory()
     };
 }

@@ -11,12 +11,14 @@ internal class CISettings : ICISettings
     internal const string TeamCityFlowIdEnvironmentVariableName = "TEAMCITY_PROCESS_FLOW_ID";
     private const string TeamCityServiceMessagesPathEnvironmentVariableName = "TEAMCITY_SERVICE_MESSAGES_PATH";
     private const string GitLabPipelineIdVariableName = "CI_PIPELINE_ID";
+    private const string AzureDevOpsBuildVariableName = "TF_BUILD";
     private const string DefaultFlowId = "ROOT";
     private readonly IHostEnvironment _hostEnvironment;
     private readonly Lazy<bool> _isUnderTeamCity;
     private readonly Lazy<string> _flowId;
     private readonly Lazy<string> _serviceMessagesPath;
     private readonly Lazy<bool> _isUnderGitLab;
+    private readonly Lazy<bool> _isUnderAzureDevOps;
 
     public CISettings(
         IHostEnvironment hostEnvironment,
@@ -28,6 +30,7 @@ internal class CISettings : ICISettings
             || !string.IsNullOrWhiteSpace(_hostEnvironment.GetEnvironmentVariable(TeamCityVersionVariableName)));
         
         _isUnderGitLab = new Lazy<bool>(() => !string.IsNullOrWhiteSpace(_hostEnvironment.GetEnvironmentVariable(GitLabPipelineIdVariableName)));
+        _isUnderAzureDevOps = new Lazy<bool>(() => !string.IsNullOrWhiteSpace(_hostEnvironment.GetEnvironmentVariable(AzureDevOpsBuildVariableName)));
 
         _flowId = new Lazy<string>(() =>
         {
@@ -55,6 +58,11 @@ internal class CISettings : ICISettings
             if (_isUnderGitLab.Value)
             {
                 return CIType.GitLab;
+            }
+            
+            if (_isUnderAzureDevOps.Value)
+            {
+                return CIType.AzureDevOps;
             }
 
             return CIType.Unknown;
