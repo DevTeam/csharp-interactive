@@ -71,7 +71,7 @@ if (results.Any(i => i.ExitCode != 0))
 }
 
 var pack = new DotNetPack()
-    .WithShortName($"Packing MySampleLib")
+    .WithShortName("Packing MySampleLib")
     .WithWorkingDirectory("MySampleLib")
     .WithConfiguration(configuration)
     .WithOutput("bin")

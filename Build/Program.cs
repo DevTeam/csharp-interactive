@@ -4,10 +4,10 @@ using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 using NuGet.Versioning;
 
-const string solutionFile = "TeamCity.CSharpInteractive.sln";
-const string packageId = "TeamCity.CSharpInteractive";
-const string toolPackageId = "TeamCity.csi";
-const string templatesPackageId = "TeamCity.CSharpInteractive.Templates";
+const string solutionFile = "CSharpInteractive.sln";
+const string packageId = "CSharpInteractive";
+const string toolPackageId = "dotnet-csi";
+const string templatesPackageId = "CSharpInteractive.Templates";
 var frameworks = new[] {"net6.0", "net7.0"};
 
 var currentDir = Environment.CurrentDirectory;
@@ -21,8 +21,8 @@ var configuration = Property.Get("configuration", "Release");
 var apiKey = Property.Get("apiKey", "");
 var integrationTests = bool.Parse(Property.Get("integrationTests", Tools.UnderTeamCity.ToString()));
 var defaultVersion = NuGetVersion.Parse(Property.Get("version", "1.0.0-dev", Tools.UnderTeamCity));
-var outputDir = Path.Combine(currentDir, "TeamCity.CSharpInteractive", "bin", configuration);
-var templateOutputDir = Path.Combine(currentDir, "TeamCity.CSharpInteractive.Templates", "bin", configuration);
+var outputDir = Path.Combine(currentDir, "CSharpInteractive", "bin", configuration);
+var templateOutputDir = Path.Combine(currentDir, "CSharpInteractive.Templates", "bin", configuration);
 
 var dockerLinuxTests = false;
 new DockerCustom("info").WithShortName("Defining a docker container type")
@@ -52,21 +52,21 @@ var packages = new[]
 {
     new PackageInfo(
         packageId,
-        Path.Combine("TeamCity.CSharpInteractive", "TeamCity.CSharpInteractive.csproj"),
-        Path.Combine(outputDir, "TeamCity.CSharpInteractive", $"{packageId}.{packageVersion.ToString()}.nupkg"),
+        Path.Combine("CSharpInteractive", "CSharpInteractive.csproj"),
+        Path.Combine(outputDir, "CSharpInteractive", $"{packageId}.{packageVersion.ToString()}.nupkg"),
         packageVersion,
         true),
     
     new PackageInfo(
         toolPackageId,
-        Path.Combine("TeamCity.CSharpInteractive", "TeamCity.CSharpInteractive.Tool.csproj"),
-        Path.Combine(outputDir, "TeamCity.CSharpInteractive.Tool", $"{toolPackageId}.{packageVersion.ToString()}.nupkg"),
+        Path.Combine("CSharpInteractive", "CSharpInteractive.Tool.csproj"),
+        Path.Combine(outputDir, "CSharpInteractive.Tool", $"{toolPackageId}.{packageVersion.ToString()}.nupkg"),
         packageVersion,
         true),
     
     new PackageInfo(
         templatesPackageId,
-        Path.Combine("TeamCity.CSharpInteractive.Templates", "TeamCity.CSharpInteractive.Templates.csproj"),
+        Path.Combine("CSharpInteractive.Templates", "CSharpInteractive.Templates.csproj"),
         Path.Combine(templateOutputDir, $"{templatesPackageId}.{templatePackageVersion.ToString()}.nupkg"),
         templatePackageVersion,
         false)
@@ -131,7 +131,7 @@ Assertion.Succeed(
                 .AddArgs(cmd.Args)
                 .AddArgs(
                     $"--dcOutput={dotCoverSnapshot}",
-                    "--dcFilters=+:module=TeamCity.CSharpInteractive.HostApi;+:module=dotnet-csi",
+                    "--dcFilters=+:module=CSharpInteractive.HostApi;+:module=dotnet-csi",
                     "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"))
         .Build());
 
@@ -189,7 +189,7 @@ if (uninstallTool.Run(output => WriteLine(output.Line)) != 0)
     Warning($"{uninstallTool} failed.");
 }
 
-var installTool = new DotNetCustom("tool", "install", toolPackageId, "-g", "--version", packageVersion.ToString(), "--add-source", Path.Combine(outputDir, "TeamCity.CSharpInteractive.Tool"))
+var installTool = new DotNetCustom("tool", "install", toolPackageId, "-g", "--version", packageVersion.ToString(), "--add-source", Path.Combine(outputDir, "CSharpInteractive.Tool"))
     .WithShortName("Installing tool");
 
 if (installTool.Run(output => WriteLine(output.Line)) != 0)
@@ -221,7 +221,7 @@ foreach (var framework in frameworks)
     {
         var sampleProjectDir = Path.Combine("Samples", "DemoProject", "MySampleLib", "MySampleLib.Tests");
         Assertion.Succeed(new DotNetCustom("new", "build", $"--package-version={packageVersion}", "-T", framework, "--no-restore").WithWorkingDirectory(buildProjectDir).Run(), $"Creating a new {sampleProjectName}");
-        Assertion.Succeed(new DotNetBuild().WithProject(buildProjectDir).AddSources(Path.Combine(outputDir, "TeamCity.CSharpInteractive")).WithShortName($"Building the {sampleProjectName}").Build());
+        Assertion.Succeed(new DotNetBuild().WithProject(buildProjectDir).AddSources(Path.Combine(outputDir, "CSharpInteractive")).WithShortName($"Building the {sampleProjectName}").Build());
         Assertion.Succeed(new DotNetRun().WithProject(buildProjectDir).WithNoBuild(true).WithWorkingDirectory(sampleProjectDir).Run(), $"Running a build for the {sampleProjectName}");
         Assertion.Succeed(new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx")).WithWorkingDirectory(sampleProjectDir).Run(), $"Running a build as a C# script for the {sampleProjectName}");
     }
@@ -272,4 +272,4 @@ WriteLine($"Template version: {templatePackageVersion}", Color.Highlighted);
 WriteLine($"The coverage percentage: {coveragePercentage}", Color.Highlighted);
 return 0;
 
-record PackageInfo(string Id, string Project, string Package, NuGetVersion Version, bool Publish);
+internal record PackageInfo(string Id, string Project, string Package, NuGetVersion Version, bool Publish);

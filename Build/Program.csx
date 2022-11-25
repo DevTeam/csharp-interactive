@@ -1,4 +1,4 @@
-// https://github.com/JetBrains/teamcity-csharp-interactive
+// https://github.com/DevTeam/csharp-interactive
 
 // Changes a verbosity level (Quiet, Normal or Diagnostic)
 // #l Diagnostic

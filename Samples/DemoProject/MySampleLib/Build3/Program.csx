@@ -13,7 +13,7 @@
 // #load "MyClass.cs"
 
 // Please see the page below for more details.
-// https://github.com/JetBrains/teamcity-csharp-interactive
+// https://github.com/DevTeam/csharp-interactive
 
 #load "Tools.cs"
 #load "Settings.cs"

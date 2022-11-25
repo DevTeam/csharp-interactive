@@ -1,26 +1,18 @@
-## C# script tool for [<img src="https://cdn.worldvectorlogo.com/logos/teamcity.svg" height="20" align="center"/>](https://www.jetbrains.com/teamcity/)
+## C# script tool
 
-[<img src="http://jb.gg/badges/official.svg"/>](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub) [![NuGet TeamCity.csi](https://buildstats.info/nuget/TeamCity.csi?includePreReleases=true)](https://www.nuget.org/packages/TeamCity.csi) ![GitHub](https://img.shields.io/github/license/jetbrains/teamcity-csharp-interactive) [<img src="http://teamcity.jetbrains.com/app/rest/builds/buildType:(id:TeamCityPluginsByJetBrains_TeamCityCScript_BuildAndTestBuildType)/statusIcon.svg"/>](http://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_TeamCityCScript_BuildAndTestBuildType&guest=1)
+[![NuGet csi](https://buildstats.info/nuget/dotnet-csi?includePreReleases=true)](https://www.nuget.org/packages/dotnet-csi) ![GitHub](https://img.shields.io/github/license/devteam/csharp-interactive) [<img src="http://teamcity.jetbrains.com/app/rest/builds/buildType:(id:OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest)/statusIcon.svg"/>](http://teamcity.jetbrains.com/viewType.html?buildTypeId=OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest&guest=1)
 
-This is a repository of TeamCity.csi which is an interactive tool for running C# scripts. It can be used as
-a [TeamCity build runner](https://github.com/JetBrains/teamcity-dotnet-plugin#c-script-runner) or installed as a
-command-line tool on Windows, Linux, or macOS.
+This is a repository of dotnet-csi which is an interactive tool for running C# scripts. It can installed as a command-line tool on Windows, Linux, or macOS.
 
 ## Prerequisites
 
 The tool requires [.NET 6+ runtime](https://dotnet.microsoft.com/en-us/download).
 
-## Use Inside TeamCity
+## Usage
 
-Currently, the tool can be used as a TeamCity build runner provided in terms of TeamCity
-2021.2 [Early Access Program](https://www.jetbrains.com/teamcity/nextversion/). Read the runner's [documentation]() for
-more details.
+After installing tool you can use this tool to run C# scripts from the command line. dotnet-csi is available as a [NuGet package](https://www.nuget.org/packages/dotnet-csi/).
 
-## Use Outside TeamCity
-
-After installing tool you can use this tool independently of TeamCity, to run C# scripts from the command line. TeamCity.csi is available as a [NuGet package](https://www.nuget.org/packages/TeamCity.csi/).
-
-Before installing TeamCity.csi as a local tool dot not forget to create .NET local tool manifest file if it is not exist:
+Before installing dotnet-csi as a local tool dot not forget to create .NET local tool manifest file if it is not exist:
 
 ```Shell
 dotnet new tool-manifest
@@ -29,13 +21,13 @@ dotnet new tool-manifest
 Install the tool and add to the local tool manifest:
 
 ```Shell
-dotnet tool install TeamCity.csi
+dotnet tool install dotnet-csi
 ```
 
 Or install the tool for the current user:
 
 ```Shell
-dotnet tool install TeamCity.csi -g
+dotnet tool install dotnet-csi -g
 ```
 
 Launch the tool in the interactive mode:
@@ -82,10 +74,10 @@ Supported arguments:
 
 ## Debug scripts easy!
 
-Install the C# script template [TeamCity.CSharpInteractive.Templates](https://www.nuget.org/packages/TeamCity.CSharpInteractive.Templates)
+Install the C# script template [CSharpInteractive.Templates](https://www.nuget.org/packages/CSharpInteractive.Templates)
 
 ```shell
-dotnet new -i TeamCity.CSharpInteractive.Templates
+dotnet new -i CSharpInteractive.Templates
 ```
 
 Create a console project "Build" containing a script from the template *__build__*
@@ -108,8 +100,3 @@ dotnet run --project Build
 
 Open the *__./Build/Build.csproj__* in IDE and debug the script.
 
-## Report and Track Issues
-
-Please use our YouTrack
-to [report](https://youtrack.jetbrains.com/newIssue?project=TW&description=Expected%20behavior%20and%20actual%20behavior%3A%0A%0ASteps%20to%20reproduce%20the%20problem%3A%0A%0ASpecifications%20like%20the%20tool%20version%2C%20operating%20system%3A%0A%0AResult%20of%20'dotnet%20--info'%3A&c=Subsystem%20Agent%20-%20.NET&c=Assignee%20Nikolay.Pianikov&c=tag%20.NET%20Core&c=tag%20cs%20script%20step)
-related issues.

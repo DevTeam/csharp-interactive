@@ -10,8 +10,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\TeamCity.CSharpInteractive.HostApi\TeamCity.CSharpInteractive.HostApi.csproj" />
-        <ProjectReference Include="..\..\TeamCity.CSharpInteractive\TeamCity.CSharpInteractive.csproj" />
+        <ProjectReference Include="..\..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" />
+        <ProjectReference Include="..\..\CSharpInteractive\CSharpInteractive.csproj" />
         <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.28" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="build"/>
         <Using Include="System"/>
         <Using Include="System.Collections.Generic"/>

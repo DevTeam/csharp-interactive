@@ -3,6 +3,7 @@ using NuGet.Versioning;
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable CheckNamespace
 // ReSharper disable ConvertIfStatementToReturnStatement
+// ReSharper disable UnusedMember.Global
 
 static class Tools
 {
