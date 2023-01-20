@@ -1,17 +1,13 @@
 namespace CSharpInteractive.Tests;
 
+using System.Runtime.InteropServices;
 using CSharpInteractive;
 
 public class FileExplorerTests
 {
-    private readonly Mock<IHostEnvironment> _hostEnvironment;
-    private readonly Mock<IFileSystem> _fileSystem;
-
-    public FileExplorerTests()
-    {
-        _hostEnvironment = new Mock<IHostEnvironment>();
-        _fileSystem = new Mock<IFileSystem>();
-    }
+    private readonly Mock<IEnvironment> _environment = new();
+    private readonly Mock<IHostEnvironment> _hostEnvironment = new();
+    private readonly Mock<IFileSystem> _fileSystem = new();
 
     [Fact]
     public void ShouldFindFilesFromAdditionalPaths()
@@ -34,14 +30,16 @@ public class FileExplorerTests
         actual.ShouldBe(new[] {"C", "dd"});
     }
 
-    [Fact]
-    public void ShouldFindFiles()
+    [Theory]
+    [MemberData(nameof(Data))]
+    public void ShouldFindFiles(OSPlatform platform, char pathSeparator)
     {
         // Given
+        _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(platform);
         var explorer = CreateInstance();
         _hostEnvironment.Setup(i => i.GetEnvironmentVariable("Abc")).Returns(default(string));
         _hostEnvironment.Setup(i => i.GetEnvironmentVariable("DOTNET_HOME")).Returns("DotNet");
-        _hostEnvironment.Setup(i => i.GetEnvironmentVariable("PATH")).Returns("Bin1; bin2");
+        _hostEnvironment.Setup(i => i.GetEnvironmentVariable("PATH")).Returns($"Bin1{pathSeparator} bin2");
         _fileSystem.Setup(i => i.IsDirectoryExist("DotNet")).Returns(true);
         _fileSystem.Setup(i => i.IsDirectoryExist("Bin1")).Returns(false);
         _fileSystem.Setup(i => i.IsDirectoryExist("bin2")).Returns(true);
@@ -81,6 +79,16 @@ public class FileExplorerTests
         actual.ShouldBe(new[] {"C", "dd"});
     }
 
-    private FileExplorer CreateInstance() =>
-        new(_hostEnvironment.Object, _fileSystem.Object);
+    private FileExplorer CreateInstance() => new(
+        _environment.Object,
+        _hostEnvironment.Object,
+        _fileSystem.Object);
+
+    public static IEnumerable<object?[]> Data => new List<object?[]>
+    {
+        new object[] {OSPlatform.Windows, ';'},
+        new object[] {OSPlatform.Linux, ':'},
+        new object[] {OSPlatform.FreeBSD, ':'},
+        new object[] {OSPlatform.OSX, ':'}
+    };
 }

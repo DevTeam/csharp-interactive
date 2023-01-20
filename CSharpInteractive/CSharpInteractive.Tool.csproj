@@ -33,9 +33,9 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.4.0" />
         <PackageReference Include="NuGet.Build.Tasks" Version="6.4.0" />
-        <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all"/>
+        <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all" />
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="all" />
-        <PackageReference Include="Pure.DI" Version="1.1.62">
+        <PackageReference Include="Pure.DI" Version="1.1.63">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

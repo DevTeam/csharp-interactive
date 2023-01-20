@@ -23,7 +23,6 @@ using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
 using ILogger = NuGet.Common.ILogger;
 
-[ExcludeFromCodeCoverage]
 internal static partial class Composer
 {
     private static void Setup()
