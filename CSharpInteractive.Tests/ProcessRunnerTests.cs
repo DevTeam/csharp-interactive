@@ -3,13 +3,14 @@ namespace CSharpInteractive.Tests;
 using CSharpInteractive;
 using HostApi;
 
-public class ProcessRunnerTests
+public sealed class ProcessRunnerTests: IDisposable
 {
     private readonly Mock<IProcessManager> _processManager = new();
     private readonly Mock<IStartInfo> _startInfo = new();
     private readonly Mock<IProcessMonitor> _monitor = new();
     private readonly List<Output> _output = new();
     private readonly ProcessResult _processResult;
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
 
     public ProcessRunnerTests()
     {
@@ -37,7 +38,7 @@ public class ProcessRunnerTests
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
         _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Canceled, default, default));
     }
-
+    
     [Fact]
     public void ShouldRunWhenTimeoutIsSpecified()
     {
@@ -193,9 +194,35 @@ public class ProcessRunnerTests
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
         _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 2, default));
     }
+    
+    [Fact]
+    public async Task ShouldKillWhenCanceled()
+    {
+        // Given
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        Exception? exception;
+        _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
+        _processManager.SetupGet(i => i.ExitCode).Returns(2);
+        _processManager.SetupAdd(i => i.OnExit += It.IsAny<Action>()).Callback<Action>(i => i());
+        _processManager.SetupGet(i => i.Id).Returns(99);
+        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 2, default)).Returns(_processResult);
+        var cancellationTokenSource = new CancellationTokenSource();
+        var instance = CreateInstance();
+
+        // When
+        _processManager.Setup(i => i.WaitForExitAsync(cancellationTokenSource.Token)).Throws<OperationCanceledException>();
+        await Should.ThrowAsync<OperationCanceledException>(() => instance.RunAsync(processRun, cancellationTokenSource.Token));
+        
+        // Then
+        _processManager.Verify(i => i.Kill(), Times.Once);
+        _monitor.Verify(i => i.Started(_startInfo.Object, 99));
+        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Canceled, default, default));
+    }
 
     private void Handler(Output output) => _output.Add(output);
 
     private ProcessRunner CreateInstance() =>
         new(() => _processManager.Object);
+
+    public void Dispose() => _cancellationTokenSource.Dispose();
 }

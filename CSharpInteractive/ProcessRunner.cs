@@ -29,17 +29,24 @@ internal class ProcessRunner : IProcessRunner
 
     public async Task<ProcessResult> RunAsync(ProcessInfo processInfo, CancellationToken cancellationToken)
     {
-        var processManager =  _processManagerFactory();
+        var processManager = _processManagerFactory();
         var process = new Process(processInfo, processManager);
         if (!process.TryStart(out var processResult))
         {
             return processResult;
         }
-        
-        await processManager.WaitForExitAsync(cancellationToken);
-        var finished = !cancellationToken.IsCancellationRequested;
 
-        return process.Finish(finished);
+        try
+        {
+            await processManager.WaitForExitAsync(cancellationToken);
+            var finished = !cancellationToken.IsCancellationRequested;
+            return process.Finish(finished);
+        }
+        catch (OperationCanceledException)
+        {
+            process.Finish(false);
+            throw;
+        }
     }
 
     private class Process
