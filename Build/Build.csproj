@@ -4,6 +4,6 @@
 	<TargetFrameworks>$(Frameworks)</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="CSharpInteractive" Version="1.0.0" />
+        <PackageReference Include="CSharpInteractive" Version="1.0.2" />
     </ItemGroup>
 </Project>
