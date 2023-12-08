@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-	<TargetFrameworks>$(Frameworks)</TargetFrameworks>
+	    <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="CSharpInteractive" Version="1.0.2" />

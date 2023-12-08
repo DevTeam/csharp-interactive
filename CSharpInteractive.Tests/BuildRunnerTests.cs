@@ -96,7 +96,7 @@ public class BuildRunnerTests
         var token = cancellationTokenSource.Token;
         var buildService = CreateInstance();
         _processRunner.Setup(i => i.RunAsync(It.IsAny<ProcessInfo>(), token)).Returns(Task.FromResult(_processResult));
-        var handler = Mock.Of<Action<BuildMessage>?>();
+        var handler = Mock.Of<Action<BuildMessage>>();
 
         // When
         await buildService.RunAsync(_process.Object, handler, token);

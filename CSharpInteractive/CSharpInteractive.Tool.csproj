@@ -30,7 +30,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.4.0" />
         <PackageReference Include="NuGet.Build.Tasks" Version="6.4.0" />
         <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all" />
@@ -51,7 +50,19 @@
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
         </AssemblyAttribute>
-        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.28" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="build" />
+        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.30" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(TargetFramework)'=='net7.0'">
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -94,6 +105,18 @@
 
         <Content Include="$(PKGTeamCity_DotNet_Integration)\build\_common\vstest15\*.*" Visible="false">
             <PackagePath>tools\net7.0\any\vstest</PackagePath>
+            <Pack>true</Pack>
+            <Visible>false</Visible>
+        </Content>
+
+        <Content Include="$(PKGTeamCity_DotNet_Integration)\build\_common\msbuild15\*.*" Visible="false">
+            <PackagePath>tools\net8.0\any\msbuild</PackagePath>
+            <Pack>true</Pack>
+            <Visible>false</Visible>
+        </Content>
+
+        <Content Include="$(PKGTeamCity_DotNet_Integration)\build\_common\vstest15\*.*" Visible="false">
+            <PackagePath>tools\net8.0\any\vstest</PackagePath>
             <Pack>true</Pack>
             <Visible>false</Visible>
         </Content>

@@ -50,7 +50,7 @@ public class MessageIndicesReaderTests
         using var ms = new MemoryStream();
         Write(ms, 1UL);
         Write(ms, 123456789UL);
-        ms.Write(BitConverter.GetBytes((byte)12));
+        ms.Write(new byte[] { 12 });
         ms.Seek(0, SeekOrigin.Begin);
         _fileSystem.Setup(i => i.OpenReader("data")).Returns(new StreamReader(ms));
 

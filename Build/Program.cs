@@ -8,7 +8,7 @@ const string solutionFile = "CSharpInteractive.sln";
 const string packageId = "CSharpInteractive";
 const string toolPackageId = "dotnet-csi";
 const string templatesPackageId = "CSharpInteractive.Templates";
-var frameworks = new[] {"net6.0", "net7.0"};
+var frameworks = new[] {"net6.0", "net7.0", "net8.0"};
 
 var currentDir = Environment.CurrentDirectory;
 if (!File.Exists(solutionFile))

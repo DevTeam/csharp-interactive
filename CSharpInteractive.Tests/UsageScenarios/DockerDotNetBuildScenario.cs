@@ -14,7 +14,7 @@ public class DockerDotNetBuildScenario : BaseScenario
 {
     //[Fact(Skip = "Linux Docker only")]
     [SuppressMessage("Usage", "xUnit1004:Test methods should not be skipped")]
-    [Fact]
+    [Fact(Skip = "")]
     public void Run()
     {
         // $visible=true
