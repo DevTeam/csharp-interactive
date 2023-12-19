@@ -4,6 +4,7 @@ namespace CSharpInteractive;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using Pure.DI;
 
 internal class DotNetEnvironment : IDotNetEnvironment, ITraceSource
 {

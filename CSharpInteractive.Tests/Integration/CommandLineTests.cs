@@ -102,5 +102,5 @@ public class CommandLineTests
         stopwatch.ElapsedMilliseconds.ShouldBeGreaterThanOrEqualTo(100);
     }
 
-    private static T GetService<T>() => Composer.Resolve<T>();
+    private static T GetService<T>() => Composition.Shared.Resolve<T>();
 }

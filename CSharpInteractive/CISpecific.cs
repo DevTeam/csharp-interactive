@@ -2,6 +2,8 @@
 // ReSharper disable InconsistentNaming
 namespace CSharpInteractive;
 
+using Pure.DI;
+
 internal class CISpecific<T> : ICISpecific<T>
 {
     private readonly ICISettings _settings;

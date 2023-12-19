@@ -7,11 +7,11 @@ public class Program
     {
         try
         {
-            return Composer.ResolveProgram().Run();
+            return Composition.Shared.Program.Run();
         }
         finally
         {
-            Composer.FinalDispose();
+            Composition.Shared.Dispose();
         }
     }
 

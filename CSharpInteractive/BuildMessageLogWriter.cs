@@ -2,6 +2,7 @@
 namespace CSharpInteractive;
 
 using HostApi;
+using Pure.DI;
 
 internal class BuildMessageLogWriter : IBuildMessageLogWriter
 {

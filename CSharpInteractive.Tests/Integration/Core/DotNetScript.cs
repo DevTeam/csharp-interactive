@@ -13,21 +13,21 @@ internal static class DotNetScript
 
     public static CommandLine Create() =>
         new(
-            Composer.Resolve<IDotNetEnvironment>().Path,
+            Composition.Shared.Resolve<IDotNetEnvironment>().Path,
             Path.Combine(Path.GetDirectoryName(typeof(DotNetScript).Assembly.Location)!, "dotnet-csi.dll"));
 
     public static CommandLine Create(string scriptName, string? workingDirectory, IEnumerable<string> args, params string[] lines)
     {
         workingDirectory ??= GetWorkingDirectory();
         var scriptFile = Path.Combine(workingDirectory, scriptName);
-        TestComposer.ResolveIFileSystem().AppendAllLines(scriptFile, lines);
+        TestComposition.FileSystem.AppendAllLines(scriptFile, lines);
         return Create().AddArgs(args.ToArray()).AddArgs(scriptFile).WithWorkingDirectory(workingDirectory);
     }
 
     public static string GetWorkingDirectory()
     {
-        var uniqueNameGenerator = Composer.Resolve<IUniqueNameGenerator>();
-        var environment = Composer.Resolve<IEnvironment>();
+        var uniqueNameGenerator = Composition.Shared.Resolve<IUniqueNameGenerator>();
+        var environment = Composition.Shared.Resolve<IEnvironment>();
         var tempDirectory = environment.GetPath(SpecialFolder.Temp);
         return Path.Combine(tempDirectory, uniqueNameGenerator.Generate());
     }

@@ -32,19 +32,19 @@ public class BaseScenario : IHost, IDisposable
 
     public IProperties Props { get; } = new Properties();
 
-    public T GetService<T>() => Composer.Resolve<T>();
+    public T GetService<T>() => Composition.Shared.Resolve<T>();
 
-    public void WriteLine() => Composer.Resolve<IHost>().WriteLine();
+    public void WriteLine() => Composition.Shared.Resolve<IHost>().WriteLine();
 
-    public void WriteLine<T>(T line, Color color = Color.Default) => Composer.Resolve<IHost>().WriteLine(line, color);
+    public void WriteLine<T>(T line, Color color = Color.Default) => Composition.Shared.Resolve<IHost>().WriteLine(line, color);
 
-    public void Error(string? error, string? errorId = default) => Composer.Resolve<IHost>().Error(error, errorId);
+    public void Error(string? error, string? errorId = default) => Composition.Shared.Resolve<IHost>().Error(error, errorId);
 
-    public void Warning(string? warning) => Composer.Resolve<IHost>().Warning(warning);
+    public void Warning(string? warning) => Composition.Shared.Resolve<IHost>().Warning(warning);
 
-    public void Info(string? text) => Composer.Resolve<IHost>().Info(text);
+    public void Info(string? text) => Composition.Shared.Resolve<IHost>().Info(text);
 
-    public void Trace(string? trace, string? origin = default) => Composer.Resolve<IHost>().Trace(trace, origin);
+    public void Trace(string? trace, string? origin = default) => Composition.Shared.Resolve<IHost>().Trace(trace, origin);
 
     private class Properties : IProperties
     {

@@ -207,7 +207,7 @@ public class ScriptRunTests
     public void ShouldSupportLoad()
     {
         // Given
-        var fileSystem = TestComposer.Resolve<IFileSystem>();
+        var fileSystem = TestComposition.FileSystem;
         var refScriptFile = fileSystem.CreateTempFilePath();
         try
         {

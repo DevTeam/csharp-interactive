@@ -4,6 +4,7 @@ namespace CSharpInteractive;
 
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
+using Pure.DI;
 
 internal class ReliableBuildContext : IBuildContext
 {

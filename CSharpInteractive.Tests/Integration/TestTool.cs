@@ -23,7 +23,7 @@ internal static class TestTool
     public static IProcessResult Run(in CommandLine commandLine)
     {
         var events = new List<Output>();
-        var exitCode = Composer.ResolveICommandLineRunner().Run(commandLine, e => events.Add(e));
+        var exitCode = Composition.Shared.Resolve<ICommandLineRunner>().Run(commandLine, e => events.Add(e));
         return new ProcessResult(exitCode!.Value, events);
     }
 
@@ -65,7 +65,7 @@ internal static class TestTool
 
     private static IEnumerable<IServiceMessage> ParseMessagesInternal(this IEnumerable<string> lines)
     {
-        var parser = Composer.Resolve<IServiceMessageParser>();
+        var parser = Composition.Shared.Resolve<IServiceMessageParser>();
         foreach (var line in lines)
         {
             foreach (var message in parser.ParseServiceMessages(line))

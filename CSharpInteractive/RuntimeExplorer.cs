@@ -2,6 +2,7 @@
 namespace CSharpInteractive;
 
 using System.Diagnostics.CodeAnalysis;
+using Pure.DI;
 
 internal class RuntimeExplorer : IRuntimeExplorer
 {

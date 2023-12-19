@@ -19,7 +19,7 @@ public static class Host
 public static class Components
 #endif
 {
-    private static readonly ScriptHostComponents HostComponents = Composer.ResolveScriptHostComponents();
+    private static readonly ScriptHostComponents HostComponents = Composition.Shared.ScriptHostComponents;
     private static readonly IHost CurHost = HostComponents.Host;
 
 #if APPLICATION
@@ -44,7 +44,7 @@ public static class Components
         try
         {
             FinishToken.Dispose();
-            Composer.FinalDispose();
+            Composition.Shared.Dispose();
         }
         catch (Exception ex)
         {

@@ -5,7 +5,6 @@ namespace CSharpInteractive;
 
 using System.Buffers;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.Versioning;
 using HostApi;
@@ -21,29 +20,46 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
+using Pure.DI;
+using Pure.DI.MS;
 using ILogger = NuGet.Common.ILogger;
 
-internal static partial class Composer
+internal partial class Composition: ServiceProviderFactory<Composition>
 {
-    private static void Setup()
+    public static readonly Composition Shared = new();
+    
+    private void Setup()
     {
-        DI.Setup()
-            .Default(Lifetime.Singleton)
+        DI.Setup(nameof(Composition))
+            .DependsOn(Base)
+            .DefaultLifetime(Lifetime.Singleton)
 #if TOOL
-            .Bind<Program>().To<Program>()
+            .Bind<Program>().To<Program>().Root<Program>("Program")
             .Bind<RunningMode>().To(_ => RunningMode.Tool)
 #endif
 #if APPLICATION
             .Bind<RunningMode>().To(_ => RunningMode.Application)
 #endif
-            .Bind<Assembly>().To(_ => typeof(Composer).Assembly)
+            .Bind<Assembly>().To(_ => typeof(Composition).Assembly)
             .Bind<LanguageVersion>().To(_ => new CSharpParseOptions().LanguageVersion)
             .Bind<string>("RuntimePath").To(_ => Path.GetDirectoryName(typeof(object).Assembly.Location) ?? string.Empty)
-            .Bind<string>("TargetFrameworkMoniker").To(ctx => ctx.Resolve<Assembly?>()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName ?? string.Empty)
+            .Bind<string>("TargetFrameworkMoniker").To(ctx =>
+            {
+                ctx.Inject<Assembly>(out var assembly);
+                return assembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName ?? string.Empty;
+            })
             .Bind<Process>().To(_ => Process.GetCurrentProcess())
-            .Bind<string>("ModuleFile").To(ctx => ctx.Resolve<Process>().MainModule?.FileName ?? string.Empty)
+            .Bind<string>("ModuleFile").To(ctx =>
+            {
+                ctx.Inject<Process>(out var process);
+                return process.MainModule?.FileName ?? string.Empty;
+            })
             .Bind<CancellationTokenSource>().To(_ => new CancellationTokenSource())
-            .Bind<CancellationToken>().As(Lifetime.Transient).To(ctx => ctx.Resolve<CancellationTokenSource>().Token)
+            .Bind<CancellationToken>().As(Lifetime.Transient).To(ctx =>
+            {
+                ctx.Inject<CancellationTokenSource>(out var cancellationTokenSource);
+                return cancellationTokenSource.Token;
+            })
             .Bind<IActive>(typeof(ExitManager)).To<ExitManager>()
             .Bind<IHostEnvironment>().To<HostEnvironment>()
             .Bind<IColorTheme>().To<ColorTheme>()
@@ -53,16 +69,28 @@ internal static partial class Composer
             .Bind<IStdOut>().Bind<IStdErr>().Tags("TeamCity").To<TeamCityInOut>()
             .Bind<IStdOut>().Bind<IStdErr>().Tags("Ansi").To<AnsiInOut>()
             .Bind<IConsole>().To<Console>()
-            .Bind<IStdOut>().To(ctx => ctx.Resolve<ICISpecific<IStdOut>>().Instance)
-            .Bind<IStdErr>().To(ctx => ctx.Resolve<ICISpecific<IStdErr>>().Instance)
+            .Bind<IStdOut>().To(ctx =>
+            {
+                ctx.Inject<ICISpecific<IStdOut>>(out var stdOut);
+                return stdOut.Instance;
+            })
+            .Bind<IStdErr>().To(ctx =>
+            {
+                ctx.Inject<ICISpecific<IStdErr>>(out var stdErr);
+                return stdErr.Instance;
+            })
             .Bind<ILog<TT>>("Default", "Ansi").To<Log<TT>>()
             .Bind<ILog<TT>>("TeamCity").To<TeamCityLog<TT>>()
-            .Bind<ILog<TT>>().To(ctx => ctx.Resolve<ICISpecific<ILog<TT>>>().Instance)
+            .Bind<ILog<TT>>().To(ctx =>
+            {
+                ctx.Inject<ICISpecific<ILog<TT>>>(out var log);
+                return log.Instance;
+            })
             .Bind<IFileSystem>().To<FileSystem>()
-            .Bind<IEnvironment>().Bind<IScriptContext>().Bind<IErrorContext>().Bind<ITraceSource>(typeof(Environment)).To<Environment>()
+            .Bind<IEnvironment>().Bind<IScriptContext>().Bind<IErrorContext>().Bind<ITraceSource>(typeof(Environment)).To<Environment>().Root<IEnvironment>()
             .Bind<ICISettings>().To<CISettings>()
             .Bind<IExitTracker>().To<ExitTracker>()
-            .Bind<IDotNetEnvironment>().Bind<ITraceSource>(typeof(DotNetEnvironment)).To<DotNetEnvironment>()
+            .Bind<IDotNetEnvironment>().Bind<ITraceSource>(typeof(DotNetEnvironment)).To<DotNetEnvironment>().Root<IDotNetEnvironment>()
             .Bind<IDockerEnvironment>().Bind<ITraceSource>(typeof(DockerEnvironment)).To<DockerEnvironment>()
             .Bind<INuGetEnvironment>().Bind<ITraceSource>(typeof(NuGetEnvironment)).To<NuGetEnvironment>()
             .Bind<ISettings>().Bind<ISettingSetter<VerbosityLevel>>().Bind<Settings>().To<Settings>()
@@ -73,19 +101,32 @@ internal static partial class Composer
             .Bind<ICodeSource>().To<ConsoleSource>()
             .Bind<Func<string, ICodeSource>>(typeof(LoadFileCodeSource)).To(ctx => new Func<string, ICodeSource>(name =>
             {
-                var source = ctx.Resolve<LoadFileCodeSource>();
-                source.Name = name;
-                return source;
+                ctx.Inject<LoadFileCodeSource>(out var loadFileCodeSource);
+                loadFileCodeSource.Name = name;
+                return loadFileCodeSource;
             }))
             .Bind<Func<string, ICodeSource>>(typeof(LineCodeSource)).To(ctx => new Func<string, ICodeSource>(line =>
             {
-                var source = ctx.Resolve<LineCodeSource>();
-                source.Line = line;
-                return source;
+                ctx.Inject<LineCodeSource>(out var lineCodeSource);
+                lineCodeSource.Line = line;
+                return lineCodeSource;
             }))
             .Bind<IScriptRunner>().Tags(InteractionMode.Interactive).To<InteractiveRunner>()
             .Bind<IScriptRunner>().Tags(InteractionMode.NonInteractive).To<ScriptRunner>()
-            .Bind<IScriptRunner>().As(Lifetime.Transient).To(ctx => ctx.Resolve<ISettings>().InteractionMode == InteractionMode.Interactive ? ctx.Resolve<IScriptRunner>(InteractionMode.Interactive) : ctx.Resolve<IScriptRunner>(InteractionMode.NonInteractive))
+            .Bind<IScriptRunner>().As(Lifetime.Transient).To(ctx =>
+            {
+                ctx.Inject<ISettings>(out var settings);
+                if (settings.InteractionMode == InteractionMode.Interactive)
+                {
+                    ctx.Inject<IScriptRunner>(InteractionMode.Interactive, out var scriptRunner);
+                    return scriptRunner;
+                }
+                else
+                {
+                    ctx.Inject<IScriptRunner>(InteractionMode.NonInteractive, out var scriptRunner);
+                    return scriptRunner;
+                }
+            })
             .Bind<ICommandSource>().To<CommandSource>()
             .Bind<IStringService>().To<StringService>()
             .Bind<IStatistics>().To<Statistics>()
@@ -96,7 +137,7 @@ internal static partial class Composer
             .Bind<IBuildEngine>().To<BuildEngine>()
             .Bind<INuGetRestoreService>().Bind<ISettingSetter<NuGetRestoreSetting>>().To<NuGetRestoreService>()
             .Bind<ILogger>().To<NuGetLogger>()
-            .Bind<IUniqueNameGenerator>().To<UniqueNameGenerator>()
+            .Bind<IUniqueNameGenerator>().To<UniqueNameGenerator>().Root<IUniqueNameGenerator>()
             .Bind<INuGetAssetsReader>().To<NuGetAssetsReader>()
             .Bind<ICleaner>().To<Cleaner>()
             .Bind<ICommandsRunner>().To<CommandsRunner>()
@@ -106,7 +147,7 @@ internal static partial class Composer
             .Bind<ITargetFrameworkMonikerParser>().To<TargetFrameworkMonikerParser>()
             .Bind<IEnvironmentVariables>().Bind<ITraceSource>(typeof(EnvironmentVariables)).To<EnvironmentVariables>()
             .Bind<IActive>(typeof(Debugger)).To<Debugger>()
-            .Bind<IDockerSettings>().To<DockerSettings>()
+            .Bind<IDockerSettings>().To<DockerSettings>().Root<IDockerSettings>()
             .Bind<IBuildContext>("base").As(Lifetime.Transient).To<BuildContext>()
             .Bind<IBuildContext>().As(Lifetime.Transient).To<ReliableBuildContext>()
             .Bind<ITextToColorStrings>().To<TextToColorStrings>()
@@ -116,27 +157,25 @@ internal static partial class Composer
             .Bind<MemoryPool<TT>>().To(_ => MemoryPool<TT>.Shared)
             .Bind<IMessageIndicesReader>().To<MessageIndicesReader>()
             .Bind<IMessagesReader>().To<MessagesReader>()
-            .Bind<IPathResolverContext>().Bind<IVirtualContext>().To<PathResolverContext>()
+            .Bind<IPathResolverContext>().Bind<IVirtualContext>().To<PathResolverContext>().Root<IPathResolverContext>().Root<IVirtualContext>()
             .Bind<IEncoding>().To<Utf8Encoding>()
             .Bind<IProcessMonitor>().As(Lifetime.Transient).To<ProcessMonitor>()
             .Bind<IBuildOutputProcessor>().To<BuildOutputProcessor>()
             .Bind<IBuildMessagesProcessor>("default").To<DefaultBuildMessagesProcessor>()
-            .Bind<IBuildMessagesProcessor>("custom").To<CustomMessagesProcessor>()
-            .Root<ScriptHostComponents>()
+            .Bind<IBuildMessagesProcessor>("custom").To<CustomMessagesProcessor>().Root<ScriptHostComponents>("ScriptHostComponents")
             .Bind<IPresenter<Summary>>().To<SummaryPresenter>()
             .Bind<IExitCodeParser>().To<ExitCodeParser>()
             .Bind<IProcessRunner>("base").To<ProcessRunner>()
             .Bind<IProcessRunner>().To<ProcessInFlowRunner>()
-            .Bind<IDotNetSettings>().Bind<ITeamCityContext>().To<TeamCityContext>()
+            .Bind<IDotNetSettings>().Bind<ITeamCityContext>().To<TeamCityContext>().Root<IDotNetSettings>()
             .Bind<IProcessResultHandler>().To<ProcessResultHandler>()
             .Bind<IRuntimeExplorer>().To<RuntimeExplorer>()
             .Bind<INuGetReferenceResolver>().To<NuGetReferenceResolver>()
             .Bind<SourceReferenceResolver>().As(Lifetime.Transient).To<SourceResolver>()
             .Bind<MetadataReferenceResolver>().As(Lifetime.Transient).To<MetadataResolver>()
             .Bind<IScriptContentReplacer>().To<ScriptContentReplacer>()
-            .Bind<ITextReplacer>().To<TextReplacer>();
+            .Bind<ITextReplacer>().To<TextReplacer>()
 
-        DI.Setup()
             // Script options factory
             .Bind<ISettingGetter<LanguageVersion>>().Bind<ISettingSetter<LanguageVersion>>().To(_ => new Setting<LanguageVersion>(LanguageVersion.Default))
             .Bind<ISettingGetter<OptimizationLevel>>().Bind<ISettingSetter<OptimizationLevel>>().To(_ => new Setting<OptimizationLevel>(OptimizationLevel.Release))
@@ -183,12 +222,21 @@ internal static partial class Composer
             .Bind<IProperties>("TeamCity").To<TeamCityProperties>()
 
             // Public
-            .Bind<IHost>().To<HostService>()
-            .Bind<IProperties>().To(ctx => ctx.Resolve<ICISpecific<IProperties>>().Instance)
-            .Bind<INuGet>().To<NuGetService>()
-            .Bind<ICommandLineRunner>().To<CommandLineRunner>()
-            .Bind<IBuildRunner>().To<BuildRunner>()
-            .Bind<IServiceCollection>().To<HostServiceCollection>()
+            .Bind<IHost>().To<HostService>().Root<IHost>()
+            .Bind<IServiceCollection>().To(_ => CreateServiceCollection(this)).Root<IServiceCollection>()
+            .Bind<IServiceProvider>().To(ctx =>
+            {
+                ctx.Inject<IServiceCollection>(out var serviceCollection);
+                return CreateServiceProvider(serviceCollection);
+            }).Root<IServiceProvider>()
+            .Bind<IProperties>().To(ctx =>
+            {
+                ctx.Inject<ICISpecific<IProperties>>(out var properties);
+                return properties.Instance;
+            })
+            .Bind<INuGet>().To<NuGetService>().Root<INuGet>()
+            .Bind<ICommandLineRunner>().To<CommandLineRunner>().Root<ICommandLineRunner>()
+            .Bind<IBuildRunner>().To<BuildRunner>().Root<IBuildRunner>()
 
             // TeamCity Service messages
             .Bind<ITeamCityServiceMessages>().To<TeamCityServiceMessages>()
@@ -197,8 +245,16 @@ internal static partial class Composer
             .Bind<DateTime>().As(Lifetime.Transient).To(_ => DateTime.Now)
             .Bind<IServiceMessageUpdater>().To<TimestampUpdater>()
             .Bind<ITeamCityWriter>().To(
-                ctx => ctx.Resolve<ITeamCityServiceMessages>().CreateWriter(
-                    str => ctx.Resolve<IConsole>().WriteToOut((default, str + "\n"))))
-            .Bind<IServiceMessageParser>().To<ServiceMessageParser>();
+                ctx =>
+                {
+                    ctx.Inject<ITeamCityServiceMessages>(out var teamCityServiceMessages);
+                    return teamCityServiceMessages.CreateWriter(
+                        str =>
+                        {
+                            ctx.Inject<IConsole>(out var console);
+                            console.WriteToOut((default, str + "\n"));
+                        });
+                }).Root<ITeamCityWriter>()
+            .Bind<IServiceMessageParser>().To<ServiceMessageParser>().Root<IServiceMessageParser>();
     }
 }

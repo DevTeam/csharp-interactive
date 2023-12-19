@@ -62,5 +62,5 @@ internal class HostService : IHost
         }
     }
 
-    public T GetService<T>() => Composer.Resolve<T>();
+    public T GetService<T>() => Composition.Shared.Resolve<T>();
 }

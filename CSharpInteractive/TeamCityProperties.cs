@@ -5,6 +5,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
+using Pure.DI;
 
 internal class TeamCityProperties : IProperties
 {

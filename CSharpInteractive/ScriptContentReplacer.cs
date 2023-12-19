@@ -3,6 +3,7 @@ namespace CSharpInteractive;
 
 using System.Diagnostics.CodeAnalysis;
 using NuGet.Packaging;
+using Pure.DI;
 
 internal class ScriptContentReplacer : IScriptContentReplacer
 {
