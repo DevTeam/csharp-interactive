@@ -9,8 +9,8 @@
         <Authors>NikolayP</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/DevTeam/csharp-interactive</PackageProjectUrl>
-        <Company>NikolayP</Company>
-        <Copyright>$(Company) 2022</Copyright>
+        <Company>Nikolay Pianikov</Company>
+        <Copyright>Copyright (C) $([System.DateTime]::Now.Year) $(Company)</Copyright>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/DevTeam/csharp-interactive</RepositoryUrl>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>

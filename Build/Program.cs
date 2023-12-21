@@ -103,6 +103,13 @@ Assertion.Succeed(
         .Build());
 
 Assertion.Succeed(
+    new DotNetRestore()
+        .WithProject(solutionFile)
+        .WithDisableParallel(true)
+        .WithProps(buildProps)
+        .Build());
+
+Assertion.Succeed(
     new DotNetBuild()
         .WithProject(solutionFile)
         .WithConfiguration(configuration)

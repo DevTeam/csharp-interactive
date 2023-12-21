@@ -174,8 +174,10 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             .Bind<SourceReferenceResolver>().As(Lifetime.Transient).To<SourceResolver>()
             .Bind<MetadataReferenceResolver>().As(Lifetime.Transient).To<MetadataResolver>()
             .Bind<IScriptContentReplacer>().To<ScriptContentReplacer>()
-            .Bind<ITextReplacer>().To<TextReplacer>()
+            .Bind<ITextReplacer>().To<TextReplacer>();
 
+        DI.Setup(nameof(Composition))
+            .DefaultLifetime(Lifetime.Singleton)
             // Script options factory
             .Bind<ISettingGetter<LanguageVersion>>().Bind<ISettingSetter<LanguageVersion>>().To(_ => new Setting<LanguageVersion>(LanguageVersion.Default))
             .Bind<ISettingGetter<OptimizationLevel>>().Bind<ISettingSetter<OptimizationLevel>>().To(_ => new Setting<OptimizationLevel>(OptimizationLevel.Release))

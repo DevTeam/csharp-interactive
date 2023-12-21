@@ -1,15 +1,13 @@
 <!--suppress MsbuildTargetFrameworkTagInspection -->
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework />
+        <TargetFramework/>
         <TargetFrameworks>$(Frameworks)</TargetFrameworks>
         <IsPackable>true</IsPackable>
         <DefineConstants>$(DefineConstants);APPLICATION</DefineConstants>
         <ProjectOutputPath>$(configuration)/$(MSBuildThisFileName)</ProjectOutputPath>
         <OutputPath>bin/$(ProjectOutputPath)</OutputPath>
         <IntermediateOutputPath>obj/$(ProjectOutputPath)/</IntermediateOutputPath>
-        <PureDINamespace>CSharpInteractive</PureDINamespace>
-        <CompilerGeneratedFilesOutputPath>$(CompilerGeneratedFilesOutputPath)/$(MSBuildThisFileName)</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -40,12 +38,8 @@
         </PackageReference>
         <PackageReference Include="TeamCity.ServiceMessages" Version="3.0.13" />
         <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" PrivateAssets="all" GeneratePathProperty="true" IncludeAssets="All" />
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>CSharpInteractive.Tests</_Parameter1>
-        </AssemblyAttribute>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
-        </AssemblyAttribute>
+        <InternalsVisibleTo Include="CSharpInteractive.Tests" />
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
         <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.30" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
     </ItemGroup>
 
@@ -67,12 +61,14 @@
 
     <Target Name="GetDependencyTargetPaths">
         <ItemGroup>
-            <MSBuildLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\msbuild15\*.*" />
-            <VSTestLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\vstest15\*.*" />
+            <MSBuildLoggerFiles Include="$(MSBuildProjectDirectory)\bin\msbuild\*.*" />
+            <VSTestLoggerFiles Include="$(MSBuildProjectDirectory)\bin\vstest\*.*" />
         </ItemGroup>
 
         <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(OutDir)\msbuild" />
         <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(OutDir)\vstest" />
+        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(MSBuildProjectDirectory)\bin\msbuild" />
+        <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(MSBuildProjectDirectory)\bin\vstest" />
     </Target>
 
     <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
@@ -85,15 +81,16 @@
         <Content Include="$(MSBuildProjectDirectory)\..\icon.png">
             <PackagePath>_common</PackagePath>
             <Pack>true</Pack>
+            <Visible>false</Visible>
         </Content>
 
-        <None Include="$(PKGTeamCity_DotNet_Integration)\build\_common\msbuild15\*.*">
+        <None Include="$(MSBuildProjectDirectory)\bin\msbuild\*.*">
             <PackagePath>build\any\msbuild</PackagePath>
             <Pack>true</Pack>
             <Visible>false</Visible>
         </None>
 
-        <None Include="$(PKGTeamCity_DotNet_Integration)\build\_common\vstest15\*.*">
+        <None Include="$(MSBuildProjectDirectory)\bin\vstest\*.*">
             <PackagePath>build\any\vstest</PackagePath>
             <Pack>true</Pack>
             <Visible>false</Visible>
