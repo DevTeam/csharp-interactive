@@ -27,7 +27,7 @@
         <PackageReference Include="NuGet.Versioning" Version="6.4.0" />
         <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all" />
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="all" />
-        <PackageReference Include="Pure.DI" Version="2.0.29">
+        <PackageReference Include="Pure.DI" Version="2.0.31">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -38,9 +38,9 @@
         </PackageReference>
         <PackageReference Include="TeamCity.ServiceMessages" Version="3.0.13" />
         <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" PrivateAssets="all" GeneratePathProperty="true" IncludeAssets="All" />
+        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.31" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
         <InternalsVisibleTo Include="CSharpInteractive.Tests" />
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
-        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.30" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">

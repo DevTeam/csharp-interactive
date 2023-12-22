@@ -115,5 +115,5 @@ internal class NuGetAssetsReader : INuGetAssetsReader
         }
     }
 
-    private readonly record struct LibraryKey(string Name, NuGetVersion Version);
+    private readonly record struct LibraryKey(string? Name, NuGetVersion? Version);
 }

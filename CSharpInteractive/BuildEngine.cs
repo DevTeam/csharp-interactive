@@ -12,30 +12,51 @@ internal class BuildEngine : IBuildEngine
 
     public BuildEngine(ILog<BuildEngine> log) => _log = log;
 
-    public void LogErrorEvent(BuildErrorEventArgs e) => _log.Error(new ErrorId(e.Code), new[] {new Text(e.Message)});
-
-    public void LogWarningEvent(BuildWarningEventArgs e) => _log.Warning(new[] {new Text(e.Message)});
-
-    public void LogMessageEvent(BuildMessageEventArgs e)
+    public void LogErrorEvent(BuildErrorEventArgs e)
     {
-        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-        switch (e.Importance)
+        if (e.Message is { } message)
         {
-            case MessageImportance.High:
-                _log.Info(new[] {new Text(e.Message)});
-                break;
-
-            case MessageImportance.Normal:
-                _log.Info(new[] {new Text(e.Message)});
-                break;
-
-            default:
-                _log.Trace(() => new[] {new Text(e.Message)}, "MSBuild");
-                break;
+            _log.Error(new ErrorId(e.Code), [new Text(message)]);
         }
     }
 
-    public void LogCustomEvent(CustomBuildEventArgs e) => _log.Trace(() => new[] {new Text(e.Message)}, "MSBuild");
+    public void LogWarningEvent(BuildWarningEventArgs e)
+    {
+        if (e.Message is { } message)
+        {
+            _log.Warning([new Text(message)]);
+        }
+    }
+
+    public void LogMessageEvent(BuildMessageEventArgs e)
+    {
+        if (e.Message is { } message)
+        {
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+            switch (e.Importance)
+            {
+                case MessageImportance.High:
+                    _log.Info([new Text(message)]);
+                    break;
+
+                case MessageImportance.Normal:
+                    _log.Info([new Text(message)]);
+                    break;
+
+                default:
+                    _log.Trace(() => [new Text(message)], "MSBuild");
+                    break;
+            }
+        }
+    }
+
+    public void LogCustomEvent(CustomBuildEventArgs e)
+    {
+        if (e.Message is { } message)
+        {
+            _log.Trace(() => [new Text(message)], "MSBuild");
+        }
+    }
 
     public bool BuildProjectFile(string projectFileName, string[] targetNames, IDictionary globalProperties, IDictionary targetOutputs) =>
         true;
