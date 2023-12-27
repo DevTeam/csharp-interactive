@@ -3,10 +3,12 @@
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 namespace CSharpInteractive.Tests.UsageScenarios;
 
+using System.Diagnostics.CodeAnalysis;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "true")]
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class DotNetRunScenario : BaseScenario
 {
     [Fact]

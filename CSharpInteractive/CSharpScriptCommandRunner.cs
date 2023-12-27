@@ -2,21 +2,18 @@
 // ReSharper disable InvertIf
 namespace CSharpInteractive;
 
-internal class CSharpScriptCommandRunner : ICommandRunner
+internal class CSharpScriptCommandRunner(ICSharpScriptRunner scriptRunner) : ICommandRunner
 {
-    private readonly ICSharpScriptRunner _scriptRunner;
-
-    public CSharpScriptCommandRunner(ICSharpScriptRunner scriptRunner) => _scriptRunner = scriptRunner;
 
     public CommandResult TryRun(ICommand command)
     {
         switch (command)
         {
             case ScriptCommand scriptCommand:
-                return _scriptRunner.Run(command, scriptCommand.Script);
+                return scriptRunner.Run(command, scriptCommand.Script);
 
             case ResetCommand:
-                _scriptRunner.Reset();
+                scriptRunner.Reset();
                 return new CommandResult(command, true);
 
             default:

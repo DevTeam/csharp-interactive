@@ -4,29 +4,21 @@ namespace CSharpInteractive;
 using System.Diagnostics;
 using HostApi;
 
-internal class StartInfoFactory : IStartInfoFactory
+internal class StartInfoFactory(
+    ILog<StartInfoFactory> log,
+    IEnvironment environment) : IStartInfoFactory
 {
-    private readonly ILog<StartInfoFactory> _log;
-    private readonly IEnvironment _environment;
-
-    public StartInfoFactory(
-        ILog<StartInfoFactory> log,
-        IEnvironment environment)
-    {
-        _log = log;
-        _environment = environment;
-    }
 
     public ProcessStartInfo Create(IStartInfo info)
     {
         var workingDirectory = info.WorkingDirectory;
         var directory = workingDirectory;
         var description = info.GetDescription();
-        _log.Trace(() => new[] {new Text($"Working directory: \"{directory}\".")}, description);
+        log.Trace(() => [new Text($"Working directory: \"{directory}\".")], description);
         if (string.IsNullOrWhiteSpace(workingDirectory))
         {
-            workingDirectory = _environment.GetPath(SpecialFolder.Working);
-            _log.Trace(() => new[] {new Text($"The working directory has been replaced with the directory \"{workingDirectory}\".")}, description);
+            workingDirectory = environment.GetPath(SpecialFolder.Working);
+            log.Trace(() => [new Text($"The working directory has been replaced with the directory \"{workingDirectory}\".")], description);
         }
 
         var startInfo = new ProcessStartInfo
@@ -39,18 +31,18 @@ internal class StartInfoFactory : IStartInfoFactory
             RedirectStandardError = true
         };
 
-        _log.Trace(() => new[] {new Text($"File name: \"{startInfo.FileName}\".")}, description);
+        log.Trace(() => [new Text($"File name: \"{startInfo.FileName}\".")], description);
 
         foreach (var arg in info.Args)
         {
             startInfo.ArgumentList.Add(arg);
-            _log.Trace(() => new[] {new Text($"Add the argument \"{arg}\".")}, description);
+            log.Trace(() => [new Text($"Add the argument \"{arg}\".")], description);
         }
 
         foreach (var (name, value) in info.Vars)
         {
             startInfo.Environment[name] = value;
-            _log.Trace(() => new[] {new Text($"Add the environment variable {name}={value}.")}, description);
+            log.Trace(() => [new Text($"Add the environment variable {name}={value}.")], description);
         }
 
         return startInfo;

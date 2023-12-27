@@ -1,7 +1,9 @@
 namespace CSharpInteractive.Tests;
 
+using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class SettingsTests
 {
     private readonly Mock<IEnvironment> _environment = new();
@@ -34,9 +36,9 @@ public class SettingsTests
         settings.VerbosityLevel.ShouldBe(VerbosityLevel.Normal);
         settings.InteractionMode.ShouldBe(InteractionMode.NonInteractive);
         settings.ShowVersionAndExit.ShouldBeTrue();
-        settings.CodeSources.ToArray().ShouldBe(new[] {codeSource});
-        settings.NuGetSources.ToArray().ShouldBe(new[] {"Src1", "Src2"});
-        settings.ScriptArguments.ToArray().ShouldBe(new[] {"Arg1", "Arg2"});
+        settings.CodeSources.ToArray().ShouldBe([codeSource]);
+        settings.NuGetSources.ToArray().ShouldBe(["Src1", "Src2"]);
+        settings.ScriptArguments.ToArray().ShouldBe(["Arg1", "Arg2"]);
     }
 
     [Fact]
@@ -64,8 +66,8 @@ public class SettingsTests
         settings.InteractionMode.ShouldBe(InteractionMode.NonInteractive);
         settings.ShowVersionAndExit.ShouldBeTrue();
         settings.CodeSources.ShouldBeEmpty();
-        settings.NuGetSources.ToArray().ShouldBe(new[] {"Src1", "Src2"});
-        settings.ScriptArguments.ToArray().ShouldBe(new[] {"Arg1", "Arg2"});
+        settings.NuGetSources.ToArray().ShouldBe(["Src1", "Src2"]);
+        settings.ScriptArguments.ToArray().ShouldBe(["Arg1", "Arg2"]);
     }
 
     [Fact]
@@ -80,7 +82,7 @@ public class SettingsTests
         // Then
         settings.VerbosityLevel.ShouldBe(VerbosityLevel.Quiet);
         settings.InteractionMode.ShouldBe(InteractionMode.Interactive);
-        settings.CodeSources.ToArray().ShouldBe(new[] {_consoleCodeSource});
+        settings.CodeSources.ToArray().ShouldBe([_consoleCodeSource]);
     }
 
     private Settings CreateInstance(RunningMode runningMode) =>

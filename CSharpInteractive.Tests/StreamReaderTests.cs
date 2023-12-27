@@ -9,7 +9,7 @@ public class StreamReaderTests
     public void ShouldRead()
     {
         // Given
-        var stream = new MemoryStream(new byte[] {1, 2, 3});
+        var stream = new MemoryStream([1, 2, 3]);
         var instance = CreateInstance(stream);
         var pool = MemoryPool<byte>.Shared;
         using var owner = pool.Rent(2);
@@ -27,7 +27,7 @@ public class StreamReaderTests
     public void ShouldReadAndChangePosition()
     {
         // Given
-        var stream = new MemoryStream(new byte[] {1, 2, 3});
+        var stream = new MemoryStream([1, 2, 3]);
         var instance = CreateInstance(stream);
         var pool = MemoryPool<byte>.Shared;
         using var owner = pool.Rent(2);
@@ -45,7 +45,7 @@ public class StreamReaderTests
     public void ShouldReadToTheEnd()
     {
         // Given
-        var stream = new MemoryStream(new byte[] {1, 2, 3});
+        var stream = new MemoryStream([1, 2, 3]);
         var instance = CreateInstance(stream);
         var pool = MemoryPool<byte>.Shared;
         using var owner = pool.Rent(4);
@@ -64,7 +64,7 @@ public class StreamReaderTests
     public void ShouldReadWithOffset()
     {
         // Given
-        var stream = new MemoryStream(new byte[] {1, 2, 3});
+        var stream = new MemoryStream([1, 2, 3]);
         var instance = CreateInstance(stream);
         var pool = MemoryPool<byte>.Shared;
         using var owner = pool.Rent(2);
@@ -82,7 +82,7 @@ public class StreamReaderTests
     public void ShouldReadWithOffsetToTheEnd()
     {
         // Given
-        var stream = new MemoryStream(new byte[] {1, 2, 3});
+        var stream = new MemoryStream([1, 2, 3]);
         var instance = CreateInstance(stream);
         var pool = MemoryPool<byte>.Shared;
         using var owner = pool.Rent(3);
@@ -100,7 +100,7 @@ public class StreamReaderTests
     public void ShouldReadWithOffsetToChangeIt()
     {
         // Given
-        var stream = new MemoryStream(new byte[] {1, 2, 3});
+        var stream = new MemoryStream([1, 2, 3]);
         var instance = CreateInstance(stream);
         var pool = MemoryPool<byte>.Shared;
         using var owner = pool.Rent(2);

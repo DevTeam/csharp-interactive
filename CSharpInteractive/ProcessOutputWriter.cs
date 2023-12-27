@@ -3,21 +3,18 @@ namespace CSharpInteractive;
 
 using HostApi;
 
-internal class ProcessOutputWriter : IProcessOutputWriter
+internal class ProcessOutputWriter(IConsole console) : IProcessOutputWriter
 {
-    private readonly IConsole _console;
-
-    public ProcessOutputWriter(IConsole console) => _console = console;
 
     public void Write(in Output output)
     {
         if (output.IsError)
         {
-            _console.WriteToErr(output.Line, System.Environment.NewLine);
+            console.WriteToErr(output.Line, System.Environment.NewLine);
         }
         else
         {
-            _console.WriteToOut((default, output.Line), (default, System.Environment.NewLine));
+            console.WriteToOut((default, output.Line), (default, System.Environment.NewLine));
         }
     }
 }

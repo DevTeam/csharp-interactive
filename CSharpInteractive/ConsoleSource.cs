@@ -5,11 +5,8 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class ConsoleSource : ICodeSource, IEnumerator<string?>
+internal class ConsoleSource(CancellationToken cancellationToken) : ICodeSource, IEnumerator<string?>
 {
-    private readonly CancellationToken _cancellationToken;
-
-    public ConsoleSource(CancellationToken cancellationToken) => _cancellationToken = cancellationToken;
 
     public string Name => "Console";
 
@@ -27,7 +24,7 @@ internal class ConsoleSource : ICodeSource, IEnumerator<string?>
     {
         if (Current == default)
         {
-            Task.Run(() => { Current = System.Console.In.ReadLine() ?? string.Empty; }, _cancellationToken).Wait(_cancellationToken);
+            Task.Run(() => { Current = System.Console.In.ReadLine() ?? string.Empty; }, cancellationToken).Wait(cancellationToken);
         }
         else
         {

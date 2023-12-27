@@ -81,7 +81,7 @@ public partial record MSBuild(
     public IStartInfo GetStartInfo(IHost host) =>
         host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
-            .WithArgs(ExecutablePath == string.Empty ? new[] {"msbuild"} : Array.Empty<string>())
+            .WithArgs(ExecutablePath == string.Empty ? ["msbuild"] : Array.Empty<string>())
             .AddArgs(new[] {Project}.Where(i => !string.IsNullOrWhiteSpace(i)).ToArray())
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())

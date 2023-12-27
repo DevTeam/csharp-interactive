@@ -4,14 +4,15 @@ namespace CSharpInteractive;
 using System.Collections.Immutable;
 using Pure.DI;
 
-internal class Settings : ISettings, ISettingSetter<VerbosityLevel>
+internal class Settings(
+    RunningMode runningMode,
+    IEnvironment environment,
+    ICommandLineParser commandLineParser,
+    ICodeSource consoleCodeSource,
+    [Tag(typeof(LoadFileCodeSource))] Func<string, ICodeSource> fileCodeSourceFactory)
+    : ISettings, ISettingSetter<VerbosityLevel>
 {
     private readonly object _lockObject = new();
-    private readonly RunningMode _runningMode;
-    private readonly IEnvironment _environment;
-    private readonly ICommandLineParser _commandLineParser;
-    private readonly ICodeSource _consoleCodeSource;
-    private readonly Func<string, ICodeSource> _fileCodeSourceFactory;
     private bool _isLoaded;
     private VerbosityLevel _verbosityLevel = VerbosityLevel.Normal;
     private InteractionMode _interactionMode = InteractionMode.Interactive;
@@ -21,20 +22,6 @@ internal class Settings : ISettings, ISettingSetter<VerbosityLevel>
     private IReadOnlyList<string> _scriptArguments = ImmutableArray<string>.Empty;
     private IReadOnlyDictionary<string, string> _scriptProperties = new Dictionary<string, string>();
     private IEnumerable<string> _nuGetSources = Enumerable.Empty<string>();
-
-    public Settings(
-        RunningMode runningMode,
-        IEnvironment environment,
-        ICommandLineParser commandLineParser,
-        ICodeSource consoleCodeSource,
-        [Tag(typeof(LoadFileCodeSource))] Func<string, ICodeSource> fileCodeSourceFactory)
-    {
-        _runningMode = runningMode;
-        _environment = environment;
-        _commandLineParser = commandLineParser;
-        _consoleCodeSource = consoleCodeSource;
-        _fileCodeSourceFactory = fileCodeSourceFactory;
-    }
 
     public VerbosityLevel VerbosityLevel
     {
@@ -118,15 +105,15 @@ internal class Settings : ISettings, ISettingSetter<VerbosityLevel>
             }
 
             _isLoaded = true;
-            var defaultArgType = _runningMode switch
+            var defaultArgType = runningMode switch
             {
                 RunningMode.Tool => CommandLineArgumentType.ScriptFile,
                 RunningMode.Application => CommandLineArgumentType.ScriptArgument,
                 _ => CommandLineArgumentType.ScriptFile
             };
 
-            var args = _commandLineParser.Parse(
-                    _environment.GetCommandLineArgs().Skip(1),
+            var args = commandLineParser.Parse(
+                    environment.GetCommandLineArgs().Skip(1),
                     defaultArgType)
                 .ToImmutableArray();
 
@@ -138,7 +125,7 @@ internal class Settings : ISettings, ISettingSetter<VerbosityLevel>
             }
 
             _nuGetSources = args.Where(i => i.ArgumentType == CommandLineArgumentType.NuGetSource).Select(i => i.Value);
-            if (_runningMode == RunningMode.Application
+            if (runningMode == RunningMode.Application
                 || args.Any(i => i.ArgumentType == CommandLineArgumentType.ScriptFile)
                 || args.Any(i => i.ArgumentType == CommandLineArgumentType.Help))
             {
@@ -147,13 +134,13 @@ internal class Settings : ISettings, ISettingSetter<VerbosityLevel>
                 _showHelpAndExit = args.Any(i => i.ArgumentType == CommandLineArgumentType.Help);
                 _showVersionAndExit = args.Any(i => i.ArgumentType == CommandLineArgumentType.Version);
                 _scriptArguments = args.Where(i => i.ArgumentType == CommandLineArgumentType.ScriptArgument).Select(i => i.Value).ToImmutableArray();
-                _codeSources = args.Where(i => i.ArgumentType == CommandLineArgumentType.ScriptFile).Select(i => _fileCodeSourceFactory(i.Value));
+                _codeSources = args.Where(i => i.ArgumentType == CommandLineArgumentType.ScriptFile).Select(i => fileCodeSourceFactory(i.Value));
             }
             else
             {
                 _interactionMode = InteractionMode.Interactive;
                 _verbosityLevel = VerbosityLevel.Quiet;
-                _codeSources = new[] {_consoleCodeSource};
+                _codeSources = new[] {consoleCodeSource};
             }
         }
     }

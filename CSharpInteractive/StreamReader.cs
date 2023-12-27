@@ -1,17 +1,14 @@
 namespace CSharpInteractive;
 
-internal class StreamReader : IStreamReader
+internal class StreamReader(Stream stream) : IStreamReader
 {
     private readonly object _lockObject = new();
-    private readonly Stream _stream;
-
-    public StreamReader(Stream stream) => _stream = stream;
 
     public int Read(Memory<byte> buffer)
     {
         lock (_lockObject)
         {
-            return _stream.Read(buffer.Span);
+            return stream.Read(buffer.Span);
         }
     }
 
@@ -19,8 +16,8 @@ internal class StreamReader : IStreamReader
     {
         lock (_lockObject)
         {
-            _stream.Seek(offset, SeekOrigin.Begin);
-            return _stream.Read(buffer.Span);
+            stream.Seek(offset, SeekOrigin.Begin);
+            return stream.Read(buffer.Span);
         }
     }
 
@@ -28,7 +25,7 @@ internal class StreamReader : IStreamReader
     {
         lock (_lockObject)
         {
-            _stream.Dispose();
+            stream.Dispose();
         }
 
         GC.SuppressFinalize(this);

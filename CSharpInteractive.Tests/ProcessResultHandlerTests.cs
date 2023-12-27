@@ -8,7 +8,7 @@ public class ProcessResultHandlerTests
     private readonly Mock<ILog<ProcessResultHandler>> _log = new();
     private readonly Mock<IStartInfo> _startInfo = new();
     private readonly Mock<IExitTracker> _exitTracker = new();
-    private readonly Text[] _description = {new("Abc")};
+    private readonly Text[] _description = [new Text("Abc")];
     private readonly Action<object> _handler = Mock.Of<Action<object>>();
     
     [Theory]

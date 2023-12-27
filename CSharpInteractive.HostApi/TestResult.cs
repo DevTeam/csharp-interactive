@@ -61,39 +61,36 @@ public readonly record struct TestResult(
         return sb.ToString();
     }
 
-    private class TestResultDebugView
+    private class TestResultDebugView(TestResult testResult)
     {
-        private readonly TestResult _testResult;
 
-        public TestResultDebugView(TestResult testResult) => _testResult = testResult;
-
-        public TestState State => _testResult.State;
+        public TestState State => testResult.State;
         
-        public string Name => _testResult.Name;
+        public string Name => testResult.Name;
 
-        public string SuiteName => _testResult.SuiteName;
+        public string SuiteName => testResult.SuiteName;
 
-        public string FullyQualifiedName => _testResult.FullyQualifiedName;
+        public string FullyQualifiedName => testResult.FullyQualifiedName;
 
-        public string DisplayName => _testResult.DisplayName;
+        public string DisplayName => testResult.DisplayName;
 
-        public string Message => _testResult.Message;
+        public string Message => testResult.Message;
 
-        public string Details => _testResult.Details;
+        public string Details => testResult.Details;
 
-        public TimeSpan Duration => _testResult.Duration;
+        public TimeSpan Duration => testResult.Duration;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
-        public IReadOnlyList<Output> Output => _testResult.Output;
+        public IReadOnlyList<Output> Output => testResult.Output;
         
-        public string Source => _testResult.Source;
+        public string Source => testResult.Source;
         
-        public string CodeFilePath => _testResult.CodeFilePath;
+        public string CodeFilePath => testResult.CodeFilePath;
         
-        public Guid Id => _testResult.Id;
+        public Guid Id => testResult.Id;
         
-        public Uri? ExecutorUri => _testResult.ExecutorUri;
+        public Uri? ExecutorUri => testResult.ExecutorUri;
         
-        public int? LineNumber => _testResult.LineNumber;
+        public int? LineNumber => testResult.LineNumber;
     }
 }

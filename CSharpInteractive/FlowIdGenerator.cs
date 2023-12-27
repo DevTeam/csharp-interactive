@@ -3,14 +3,11 @@ namespace CSharpInteractive;
 
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
-internal class FlowIdGenerator : IFlowIdGenerator, IFlowContext
+internal class FlowIdGenerator(ICISettings ciSettings) : IFlowIdGenerator, IFlowContext
 {
     private readonly object _lockObject = new();
-    private string _nextFlowId;
+    private string _nextFlowId = ciSettings.FlowId;
     [ThreadStatic] private static string? _currentFlowId;
-
-    public FlowIdGenerator(ICISettings ciSettings) =>
-        _nextFlowId = ciSettings.FlowId;
 
     public string CurrentFlowId
     {

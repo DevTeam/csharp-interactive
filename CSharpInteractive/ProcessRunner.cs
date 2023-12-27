@@ -6,16 +6,12 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using HostApi;
 
-internal class ProcessRunner : IProcessRunner
+internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IProcessRunner
 {
-    private readonly Func<IProcessManager> _processManagerFactory;
-
-    public ProcessRunner(Func<IProcessManager> processManagerFactory) =>
-        _processManagerFactory = processManagerFactory;
 
     public ProcessResult Run(ProcessInfo processInfo, TimeSpan timeout)
     {
-        var processManager = _processManagerFactory();
+        var processManager = processManagerFactory();
         var process = new Process(processInfo, processManager);
         if (!process.TryStart(out var processResult))
         {
@@ -29,7 +25,7 @@ internal class ProcessRunner : IProcessRunner
 
     public async Task<ProcessResult> RunAsync(ProcessInfo processInfo, CancellationToken cancellationToken)
     {
-        var processManager = _processManagerFactory();
+        var processManager = processManagerFactory();
         var process = new Process(processInfo, processManager);
         if (!process.TryStart(out var processResult))
         {
@@ -49,20 +45,14 @@ internal class ProcessRunner : IProcessRunner
         }
     }
 
-    private class Process
+    private class Process(ProcessInfo processInfo, IProcessManager processManager)
     {
-        public Process(ProcessInfo processInfo, IProcessManager processManager)
-        {
-            ProcessInfo = processInfo;
-            ProcessManager = processManager;
-            Stopwatch = new Stopwatch();
-        }
-        
-        private IProcessManager ProcessManager { get; }
-        
-        private ProcessInfo ProcessInfo { get; }
-        
-        private Stopwatch Stopwatch { get; }
+
+        private IProcessManager ProcessManager { get; } = processManager;
+
+        private ProcessInfo ProcessInfo { get; } = processInfo;
+
+        private Stopwatch Stopwatch { get; } = new();
 
         private IStartInfo StartInfo => ProcessInfo.StartInfo;
 

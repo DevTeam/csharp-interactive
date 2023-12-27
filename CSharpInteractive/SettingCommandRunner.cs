@@ -1,19 +1,11 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive;
 
-internal class SettingCommandRunner<TOption> : ICommandRunner
+internal class SettingCommandRunner<TOption>(
+    ILog<SettingCommandRunner<TOption>> log,
+    ISettingSetter<TOption> settingSetter) : ICommandRunner
     where TOption: struct, Enum
 {
-    private readonly ILog<SettingCommandRunner<TOption>> _log;
-    private readonly ISettingSetter<TOption> _settingSetter;
-
-    public SettingCommandRunner(
-        ILog<SettingCommandRunner<TOption>> log,
-        ISettingSetter<TOption> settingSetter)
-    {
-        _log = log;
-        _settingSetter = settingSetter;
-    }
 
     public CommandResult TryRun(ICommand command)
     {
@@ -22,8 +14,8 @@ internal class SettingCommandRunner<TOption> : ICommandRunner
             return new CommandResult(command, default);
         }
 
-        var previousValue = _settingSetter.SetSetting(settingCommand.Value);
-        _log.Trace(() => { return new[] {new Text($"Change the {typeof(TOption).Name} from {previousValue} to {settingCommand.Value}.")}; });
+        var previousValue = settingSetter.SetSetting(settingCommand.Value);
+        log.Trace(() => [new Text($"Change the {typeof(TOption).Name} from {previousValue} to {settingCommand.Value}.")]);
 
         return new CommandResult(command, true);
     }

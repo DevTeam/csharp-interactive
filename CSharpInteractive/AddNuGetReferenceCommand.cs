@@ -4,16 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 using NuGet.Versioning;
 
 [ExcludeFromCodeCoverage]
-internal class AddNuGetReferenceCommand : ICommand
+internal class AddNuGetReferenceCommand(string packageId, VersionRange? versionRange) : ICommand
 {
-    public readonly string PackageId;
-    public readonly VersionRange? VersionRange;
-
-    public AddNuGetReferenceCommand(string packageId, VersionRange? versionRange)
-    {
-        PackageId = packageId;
-        VersionRange = versionRange;
-    }
+    public readonly string PackageId = packageId;
+    public readonly VersionRange? VersionRange = versionRange;
 
     public string Name => $"Package {PackageId} {VersionRange?.ToString() ?? "latest"}";
 

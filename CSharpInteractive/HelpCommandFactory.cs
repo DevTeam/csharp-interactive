@@ -3,12 +3,9 @@ namespace CSharpInteractive;
 
 using System.Text.RegularExpressions;
 
-internal class HelpCommandFactory : ICommandFactory<string>
+internal class HelpCommandFactory(ILog<HelpCommandFactory> log) : ICommandFactory<string>
 {
     private static readonly Regex Regex = new(@"^#help\s*$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
-    private readonly ILog<HelpCommandFactory> _log;
-
-    public HelpCommandFactory(ILog<HelpCommandFactory> log) => _log = log;
 
     public int Order => 0;
 
@@ -19,7 +16,7 @@ internal class HelpCommandFactory : ICommandFactory<string>
             yield break;
         }
 
-        _log.Trace(() => new[] {new Text("REPL help")});
+        log.Trace(() => [new Text("REPL help")]);
         yield return HelpCommand.Shared;
     }
 }

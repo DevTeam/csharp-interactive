@@ -141,7 +141,7 @@ public class HostServiceTests
     }
 
     private static bool CheckTrace(IReadOnlyList<Text> text) =>
-        text.Count == 1 && text[0].Value == "Trace" && text[0].Color == Color.Default;
+        text is [{Value: "Trace", Color: Color.Default}];
 
     private HostService CreateInstance() =>
         new(_log.Object, _settings.Object, _stdOut.Object, _properties.Object);

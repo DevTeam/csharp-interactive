@@ -12,7 +12,7 @@ public class ScriptRunTeamCityScriptRunTests
         // Given
 
         // When
-        var result = TestTool.RunUnderTeamCity(@"Console.WriteLine(""Hello"");");
+        var result = TestTool.RunUnderTeamCity("""Console.WriteLine("Hello");""");
 
         // Then
         result.ExitCode.ShouldBe(0);
@@ -28,7 +28,7 @@ public class ScriptRunTeamCityScriptRunTests
         // Given
 
         // When
-        var result = TestTool.RunUnderTeamCity(@"WriteLine(99);");
+        var result = TestTool.RunUnderTeamCity("WriteLine(99);");
 
         // Then
         result.ExitCode.ShouldBe(0);
@@ -44,7 +44,7 @@ public class ScriptRunTeamCityScriptRunTests
         // Given
 
         // When
-        var result = TestTool.RunUnderTeamCity(@"Error(""My error"", ""errId"");");
+        var result = TestTool.RunUnderTeamCity("""Error("My error", "errId");""");
 
         // Then
         result.ExitCode.ShouldBe(1);
@@ -59,7 +59,7 @@ public class ScriptRunTeamCityScriptRunTests
         // Given
 
         // When
-        var result = TestTool.RunUnderTeamCity(@"Warning(""My warning"");");
+        var result = TestTool.RunUnderTeamCity("""Warning("My warning");""");
 
         // Then
         result.ExitCode.ShouldBe(0);
@@ -74,7 +74,7 @@ public class ScriptRunTeamCityScriptRunTests
         // Given
 
         // When
-        var result = TestTool.RunUnderTeamCity(@"Info(""My info"");");
+        var result = TestTool.RunUnderTeamCity("""Info("My info");""");
 
         // Then
         result.ExitCode.ShouldBe(0);
@@ -105,7 +105,7 @@ public class ScriptRunTeamCityScriptRunTests
         // Given
 
         // When
-        var result = TestTool.RunUnderTeamCity(@"throw new Exception(""Test"");");
+        var result = TestTool.RunUnderTeamCity("""throw new Exception("Test");""");
 
         // Then
         result.ExitCode.ShouldBe(1);
@@ -120,7 +120,7 @@ public class ScriptRunTeamCityScriptRunTests
         // Given
 
         // When
-        var result = TestTool.RunUnderTeamCity(@"var i=10");
+        var result = TestTool.RunUnderTeamCity("var i=10");
 
         // Then
         result.ExitCode.ShouldBe(1);

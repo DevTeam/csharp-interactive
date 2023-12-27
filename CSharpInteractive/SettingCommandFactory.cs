@@ -36,7 +36,7 @@ internal class SettingCommandFactory<TOption> : ICommandFactory<string>
         var rawParam = loadMatch.Groups[1].Value;
         if (Enum.TryParse<TOption>(_stringService.TrimAndUnquote(rawParam), true, out var verbosityLevel))
         {
-            _log.Trace(() => new[] {new Text($"REPL {_setting.Key}({_setting.Description}) {rawParam} -> {verbosityLevel}")});
+            _log.Trace(() => [new Text($"REPL {_setting.Key}({_setting.Description}) {rawParam} -> {verbosityLevel}")]);
             yield return new SettingCommand<TOption>(verbosityLevel);
         }
         else

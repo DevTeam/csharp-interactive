@@ -1,8 +1,10 @@
 namespace CSharpInteractive.Tests;
 
+using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 using NuGet.Versioning;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class ScriptContentReplacerTests
 {
     private readonly Mock<INuGetReferenceResolver> _nuGetReferenceResolver = new();
@@ -52,7 +54,7 @@ public class ScriptContentReplacerTests
         var replacedScript = replacer.Replace(new[] {"code1", "ref", "cmd", "ref", "code2", "cmd"}).ToArray();
 
         // Then
-        replacedScript.ShouldBe(new []{"code1", $"#load \"{scriptFile}\"", "code2"});
+        replacedScript.ShouldBe(["code1", $"#load \"{scriptFile}\"", "code2"]);
         _fileSystem.Verify(i => i.WriteAllLines(scriptFile, It.Is<IEnumerable<string>>(lines => lines.SequenceEqual(new []{"#r \"Abc1.dll\"", "#r \"Abc2Runtime.dll\""}))));
         _commandsRunner.Verify(i => i.Run(It.Is<IEnumerable<ICommand>>(commands => commands.SequenceEqual(new []{HelpCommand.Shared, HelpCommand.Shared, HelpCommand.Shared, HelpCommand.Shared}))));
     }

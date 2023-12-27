@@ -47,13 +47,10 @@ public class SourceResolverTests
     private TestSourceResolver CreateInstance() =>
         new(_environment.Object, _scriptContentReplacer.Object, _textReplacer.Object, _openReadStream);
     
-    private class TestSourceResolver: SourceResolver
+    private class TestSourceResolver(IEnvironment environment, IScriptContentReplacer scriptContentReplacer, ITextReplacer textReplacer, Stream openReadStream)
+        : SourceResolver(environment, scriptContentReplacer, textReplacer)
     {
-        private readonly Stream _openReadStream;
-        public TestSourceResolver(IEnvironment environment, IScriptContentReplacer scriptContentReplacer, ITextReplacer textReplacer, Stream openReadStream)
-            : base(environment, scriptContentReplacer, textReplacer) =>
-            _openReadStream = openReadStream;
 
-        protected override Stream OpenReadInternal(string resolvedPath) => _openReadStream;
+        protected override Stream OpenReadInternal(string resolvedPath) => openReadStream;
     }
 }

@@ -3,20 +3,12 @@ namespace CSharpInteractive;
 
 using System.Text.RegularExpressions;
 
-internal class CommandLineParser : ICommandLineParser
+internal class CommandLineParser(
+    IFileSystem fileSystem,
+    IMSBuildArgumentsTool msBuildArgumentsTool) : ICommandLineParser
 {
-    private static readonly Regex PropertyRegex = new(@"^(--property|-p|/property|/p):(.+)$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
-    private static readonly char[] PropertiesSeparators = {';', ','};
-    private readonly IFileSystem _fileSystem;
-    private readonly IMSBuildArgumentsTool _msBuildArgumentsTool;
-
-    public CommandLineParser(
-        IFileSystem fileSystem,
-        IMSBuildArgumentsTool msBuildArgumentsTool)
-    {
-        _fileSystem = fileSystem;
-        _msBuildArgumentsTool = msBuildArgumentsTool;
-    }
+    private static readonly Regex PropertyRegex = new("^(--property|-p|/property|/p):(.+)$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
+    private static readonly char[] PropertiesSeparators = [';', ','];
 
     public IEnumerable<CommandLineArgument> Parse(IEnumerable<string> arguments, CommandLineArgumentType defaultArgType)
     {
@@ -34,7 +26,7 @@ internal class CommandLineParser : ICommandLineParser
                     continue;
                 }
 
-                var argument = _msBuildArgumentsTool.Unescape(enumerator.Current);
+                var argument = msBuildArgumentsTool.Unescape(enumerator.Current);
                 if (argumentType != null)
                 {
                     // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
@@ -68,7 +60,7 @@ internal class CommandLineParser : ICommandLineParser
                 {
                     if (argument.StartsWith('@') && !argument.StartsWith("@@"))
                     {
-                        enumerators.Insert(0, _fileSystem.ReadAllLines(argument[1..]).GetEnumerator());
+                        enumerators.Insert(0, fileSystem.ReadAllLines(argument[1..]).GetEnumerator());
                         continue;
                     }
 

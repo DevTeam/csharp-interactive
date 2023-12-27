@@ -5,13 +5,10 @@ using HostApi;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 [ExcludeFromCodeCoverage]
-internal class Console : IConsole
+internal class Console(IColorTheme colorTheme) : IConsole
 {
     private readonly object _lockObject = new();
-    private readonly ConsoleColor _errorColor;
-
-    public Console(IColorTheme colorTheme) =>
-        _errorColor = colorTheme.GetConsoleColor(Color.Error);
+    private readonly ConsoleColor _errorColor = colorTheme.GetConsoleColor(Color.Error);
 
     public void WriteToOut(params (ConsoleColor? color, string output)[] text)
     {

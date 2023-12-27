@@ -5,36 +5,17 @@ using System.Diagnostics.CodeAnalysis;
 using NuGet.Packaging;
 using Pure.DI;
 
-internal class ScriptContentReplacer : IScriptContentReplacer
+internal class ScriptContentReplacer(
+    INuGetReferenceResolver nuGetReferenceResolver,
+    ICommandFactory<ICodeSource> commandFactory,
+    IRuntimeExplorer runtimeExplorer,
+    ICommandsRunner commandsRunner,
+    IFileSystem fileSystem,
+    IUniqueNameGenerator uniqueNameGenerator,
+    IEnvironment environment,
+    [Tag(typeof(LineCodeSource))] Func<string, ICodeSource> codeSourceFactory)
+    : IScriptContentReplacer
 {
-    private readonly INuGetReferenceResolver _nuGetReferenceResolver;
-    private readonly ICommandFactory<ICodeSource> _commandFactory;
-    private readonly IRuntimeExplorer _runtimeExplorer;
-    private readonly ICommandsRunner _commandsRunner;
-    private readonly IFileSystem _fileSystem;
-    private readonly IUniqueNameGenerator _uniqueNameGenerator;
-    private readonly IEnvironment _environment;
-    private readonly Func<string, ICodeSource> _codeSourceFactory;
-
-    public ScriptContentReplacer(
-        INuGetReferenceResolver nuGetReferenceResolver,
-        ICommandFactory<ICodeSource> commandFactory,
-        IRuntimeExplorer runtimeExplorer,
-        ICommandsRunner commandsRunner,
-        IFileSystem fileSystem,
-        IUniqueNameGenerator uniqueNameGenerator,
-        IEnvironment environment,
-        [Tag(typeof(LineCodeSource))] Func<string, ICodeSource> codeSourceFactory)
-    {
-        _nuGetReferenceResolver = nuGetReferenceResolver;
-        _commandFactory = commandFactory;
-        _runtimeExplorer = runtimeExplorer;
-        _commandsRunner = commandsRunner;
-        _fileSystem = fileSystem;
-        _uniqueNameGenerator = uniqueNameGenerator;
-        _environment = environment;
-        _codeSourceFactory = codeSourceFactory;
-    }
 
     [SuppressMessage("Performance", "CA1806:Do not ignore method results")]
     public IEnumerable<string> Replace(IEnumerable<string> lines)
@@ -49,7 +30,7 @@ internal class ScriptContentReplacer : IScriptContentReplacer
             }
 
             var assemblies = new HashSet<string>();
-            var commands = _commandFactory.Create(_codeSourceFactory(line)).ToArray();
+            var commands = commandFactory.Create(codeSourceFactory(line)).ToArray();
             var repl = false;
             foreach (var command in commands)
             {
@@ -57,12 +38,12 @@ internal class ScriptContentReplacer : IScriptContentReplacer
                 {
                     case AddNuGetReferenceCommand referenceCommand:
                         repl = true;
-                        if (_nuGetReferenceResolver.TryResolveAssemblies(referenceCommand.PackageId, referenceCommand.VersionRange, out var resolvedAssemblies))
+                        if (nuGetReferenceResolver.TryResolveAssemblies(referenceCommand.PackageId, referenceCommand.VersionRange, out var resolvedAssemblies))
                         {
                             foreach (var assembly in resolvedAssemblies.Where(i => !allAssemblies.Contains(i.FilePath)))
                             {
                                 // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-                                if (_runtimeExplorer.TryFindRuntimeAssembly(assembly.FilePath, out var runtimeAssemblyPath))
+                                if (runtimeExplorer.TryFindRuntimeAssembly(assembly.FilePath, out var runtimeAssemblyPath))
                                 {
                                     assemblies.Add(runtimeAssemblyPath);
                                 }
@@ -96,14 +77,14 @@ internal class ScriptContentReplacer : IScriptContentReplacer
             else
             {
                 allAssemblies.AddRange(newAssemblies);
-                var scriptFile = Path.Combine(_environment.GetPath(SpecialFolder.Temp), _uniqueNameGenerator.Generate());
-                _fileSystem.WriteAllLines(scriptFile, newAssemblies.Select(i => $"#r \"{i}\""));
+                var scriptFile = Path.Combine(environment.GetPath(SpecialFolder.Temp), uniqueNameGenerator.Generate());
+                fileSystem.WriteAllLines(scriptFile, newAssemblies.Select(i => $"#r \"{i}\""));
                 yield return $"#load \"{scriptFile}\"";
             }
         }
 
         // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-        _commandsRunner.Run(commandsToRun).ToArray();
+        commandsRunner.Run(commandsToRun).ToArray();
     }
 
 }

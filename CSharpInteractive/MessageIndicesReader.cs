@@ -3,26 +3,16 @@ namespace CSharpInteractive;
 
 using System.Buffers;
 
-internal class MessageIndicesReader : IMessageIndicesReader
+internal class MessageIndicesReader(
+    ILog<MessageIndicesReader> log,
+    MemoryPool<byte> memoryPool,
+    IFileSystem fileSystem) : IMessageIndicesReader
 {
-    private readonly ILog<MessageIndicesReader> _log;
-    private readonly MemoryPool<byte> _memoryPool;
-    private readonly IFileSystem _fileSystem;
-
-    public MessageIndicesReader(
-        ILog<MessageIndicesReader> log,
-        MemoryPool<byte> memoryPool,
-        IFileSystem fileSystem)
-    {
-        _log = log;
-        _memoryPool = memoryPool;
-        _fileSystem = fileSystem;
-    }
 
     public IEnumerable<ulong> Read(string indicesFile)
     {
-        using var reader = _fileSystem.OpenReader(indicesFile);
-        using var bufferOwner = _memoryPool.Rent(sizeof(ulong));
+        using var reader = fileSystem.OpenReader(indicesFile);
+        using var bufferOwner = memoryPool.Rent(sizeof(ulong));
         var buffer = bufferOwner.Memory[..sizeof(ulong)];
         int size;
         var prevIndex = 0UL;
@@ -33,7 +23,7 @@ internal class MessageIndicesReader : IMessageIndicesReader
             var index = BitConverter.ToUInt64(buffer.Span);
             if (index <= prevIndex)
             {
-                _log.Warning($"Corrupted file \"{indicesFile}\", invalid index {index} at offset {number * sizeof(ulong)}.");
+                log.Warning($"Corrupted file \"{indicesFile}\", invalid index {index} at offset {number * sizeof(ulong)}.");
                 break;
             }
 
@@ -44,7 +34,7 @@ internal class MessageIndicesReader : IMessageIndicesReader
 
         if (size != 0)
         {
-            _log.Warning($"Corrupted file \"{indicesFile}\", invalid size.");
+            log.Warning($"Corrupted file \"{indicesFile}\", invalid size.");
         }
     }
 }

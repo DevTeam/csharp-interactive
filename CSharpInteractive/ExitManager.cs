@@ -4,22 +4,15 @@ namespace CSharpInteractive;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class ExitManager : IActive
+internal class ExitManager(
+    ISettings settings,
+    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    CancellationTokenSource cancellationTokenSource) : IActive
 {
-    private readonly ISettings _settings;
-    private readonly CancellationTokenSource _cancellationTokenSource;
-
-    public ExitManager(
-        ISettings settings,
-        CancellationTokenSource cancellationTokenSource)
-    {
-        _settings = settings;
-        _cancellationTokenSource = cancellationTokenSource;
-    }
 
     public IDisposable Activate()
     {
-        if (_settings.InteractionMode != InteractionMode.Interactive)
+        if (settings.InteractionMode != InteractionMode.Interactive)
         {
             return Disposable.Empty;
         }
@@ -39,7 +32,7 @@ internal class ExitManager : IActive
 
     private void ConsoleOnCancelKeyPress(object? sender, ConsoleCancelEventArgs e)
     {
-        _cancellationTokenSource.Dispose();
+        cancellationTokenSource.Dispose();
         System.Environment.Exit(0);
     }
 }

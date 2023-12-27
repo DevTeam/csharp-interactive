@@ -7,35 +7,23 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
 [ExcludeFromCodeCoverage]
-internal class CSharpScriptRunner : ICSharpScriptRunner
+internal class CSharpScriptRunner(
+    ILog<CSharpScriptRunner> log,
+    IPresenter<ScriptState<object>> scriptStatePresenter,
+    IPresenter<CompilationDiagnostics> diagnosticsPresenter,
+    // ReSharper disable once ParameterTypeCanBeEnumerable.Local
+    IReadOnlyCollection<IScriptOptionsFactory> scriptOptionsFactories,
+    IExitCodeParser exitCodeParser)
+    : ICSharpScriptRunner
 {
-    private readonly ILog<CSharpScriptRunner> _log;
-    private readonly IPresenter<ScriptState<object>> _scriptStatePresenter;
-    private readonly IPresenter<CompilationDiagnostics> _diagnosticsPresenter;
-    private readonly IReadOnlyCollection<IScriptOptionsFactory> _scriptOptionsFactories;
-    private readonly IExitCodeParser _exitCodeParser;
     private ScriptState<object>? _scriptState;
-
-    public CSharpScriptRunner(
-        ILog<CSharpScriptRunner> log,
-        IPresenter<ScriptState<object>> scriptStatePresenter,
-        IPresenter<CompilationDiagnostics> diagnosticsPresenter,
-        IReadOnlyCollection<IScriptOptionsFactory> scriptOptionsFactories,
-        IExitCodeParser exitCodeParser)
-    {
-        _log = log;
-        _scriptStatePresenter = scriptStatePresenter;
-        _diagnosticsPresenter = diagnosticsPresenter;
-        _scriptOptionsFactories = scriptOptionsFactories;
-        _exitCodeParser = exitCodeParser;
-    }
 
     public CommandResult Run(ICommand sourceCommand, string script)
     {
         var success = true;
         try
         {
-            var options = _scriptOptionsFactories.Aggregate(ScriptOptions.Default, (current, scriptOptionsFactory) => scriptOptionsFactory.Create(current));
+            var options = scriptOptionsFactories.Aggregate(ScriptOptions.Default, (current, scriptOptionsFactory) => scriptOptionsFactory.Create(current));
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -47,39 +35,39 @@ internal class CSharpScriptRunner : ICSharpScriptRunner
                     exception =>
                     {
                         success = false;
-                        _log.Trace(() => new[] {new Text($"Exception: {exception}.")});
-                        _log.Error(ErrorId.Exception, new[] {new Text(exception.ToString())});
+                        log.Trace(() => [new Text($"Exception: {exception}.")]);
+                        log.Error(ErrorId.Exception, [new Text(exception.ToString())]);
                         return true;
                     })
                 .Result;
 
             stopwatch.Stop();
-            _log.Trace(() => new[] {new Text($"Time Elapsed {stopwatch.Elapsed:g}")});
-            _diagnosticsPresenter.Show(new CompilationDiagnostics(sourceCommand, _scriptState.Script.GetCompilation().GetDiagnostics().ToList().AsReadOnly()));
+            log.Trace(() => [new Text($"Time Elapsed {stopwatch.Elapsed:g}")]);
+            diagnosticsPresenter.Show(new CompilationDiagnostics(sourceCommand, _scriptState.Script.GetCompilation().GetDiagnostics().ToList().AsReadOnly()));
             if (_scriptState.ReturnValue != default)
             {
-                if (success && _exitCodeParser.TryParse(_scriptState.ReturnValue, out var exitCode))
+                if (success && exitCodeParser.TryParse(_scriptState.ReturnValue, out var exitCode))
                 {
                     return new CommandResult(sourceCommand, success, exitCode);
                 }
 
-                _log.Trace(() => new[] {new Text("The return value is \""), new Text(_scriptState.ReturnValue.ToString() ?? "empty"), new Text("\".")});
+                log.Trace(() => [new Text("The return value is \""), new Text(_scriptState.ReturnValue.ToString() ?? "empty"), new Text("\".")]);
             }
             else
             {
-                _log.Trace(() => new[] {new Text("The return value is \"null\".")});
+                log.Trace(() => [new Text("The return value is \"null\".")]);
             }
         }
         catch (CompilationErrorException e)
         {
-            _diagnosticsPresenter.Show(new CompilationDiagnostics(sourceCommand, e.Diagnostics.ToList().AsReadOnly()));
+            diagnosticsPresenter.Show(new CompilationDiagnostics(sourceCommand, e.Diagnostics.ToList().AsReadOnly()));
             success = false;
         }
         finally
         {
             if (_scriptState != null)
             {
-                _scriptStatePresenter.Show(_scriptState);
+                scriptStatePresenter.Show(_scriptState);
             }
         }
 
@@ -88,7 +76,7 @@ internal class CSharpScriptRunner : ICSharpScriptRunner
 
     public void Reset()
     {
-        _log.Trace(() => new[] {new Text("Reset state.")});
+        log.Trace(() => [new Text("Reset state.")]);
         _scriptState = default;
     }
 }

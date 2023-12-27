@@ -4,27 +4,20 @@ namespace CSharpInteractive;
 using System.Diagnostics.CodeAnalysis;
 using Pure.DI;
 
-internal class RuntimeExplorer : IRuntimeExplorer
+internal class RuntimeExplorer(
+    [Tag("RuntimePath")] string runtimePath,
+    IFileSystem fileSystem) : IRuntimeExplorer
 {
-    private readonly string _runtimePath;
-    private readonly IFileSystem _fileSystem;
-    public RuntimeExplorer(
-        [Tag("RuntimePath")] string runtimePath,
-        IFileSystem fileSystem)
-    {
-        _runtimePath = runtimePath;
-        _fileSystem = fileSystem;
-    }
 
     public bool TryFindRuntimeAssembly(string assemblyPath, [MaybeNullWhen(false)] out string runtimeAssemblyPath)
     {
-        if (string.IsNullOrWhiteSpace(_runtimePath))
+        if (string.IsNullOrWhiteSpace(runtimePath))
         {
             runtimeAssemblyPath = default;
             return false;
         }
 
-        runtimeAssemblyPath = _fileSystem.EnumerateFileSystemEntries(_runtimePath, Path.GetFileName(assemblyPath), SearchOption.TopDirectoryOnly).FirstOrDefault();
+        runtimeAssemblyPath = fileSystem.EnumerateFileSystemEntries(runtimePath, Path.GetFileName(assemblyPath), SearchOption.TopDirectoryOnly).FirstOrDefault();
         return runtimeAssemblyPath != default;
     }
 }

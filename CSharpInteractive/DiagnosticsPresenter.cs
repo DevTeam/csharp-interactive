@@ -6,22 +6,14 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class DiagnosticsPresenter : IPresenter<CompilationDiagnostics>
+internal class DiagnosticsPresenter(ILog<DiagnosticsPresenter> log, IErrorContext errorContext) : IPresenter<CompilationDiagnostics>
 {
-    private readonly ILog<DiagnosticsPresenter> _log;
-    private readonly IErrorContext _errorContext;
-
-    public DiagnosticsPresenter(ILog<DiagnosticsPresenter> log, IErrorContext errorContext)
-    {
-        _log = log;
-        _errorContext = errorContext;
-    }
 
     public void Show(CompilationDiagnostics data)
     {
         var (sourceCommand, readOnlyCollection) = data;
         var prefix = Text.Empty;
-        if(_errorContext.TryGetSourceName(out var name))
+        if(errorContext.TryGetSourceName(out var name))
         {
             prefix = new Text(name + " ");
         }
@@ -31,20 +23,20 @@ internal class DiagnosticsPresenter : IPresenter<CompilationDiagnostics>
             switch (diagnostic.Severity)
             {
                 case DiagnosticSeverity.Hidden:
-                    _log.Trace(() => new[] {prefix, new Text(diagnostic.ToString())});
+                    log.Trace(() => [prefix, new Text(diagnostic.ToString())]);
                     break;
 
                 case DiagnosticSeverity.Info:
-                    _log.Info(prefix, new Text(diagnostic.ToString()));
+                    log.Info(prefix, new Text(diagnostic.ToString()));
                     break;
 
                 case DiagnosticSeverity.Warning:
-                    _log.Warning(prefix, new Text(diagnostic.ToString()));
+                    log.Warning(prefix, new Text(diagnostic.ToString()));
                     break;
 
                 case DiagnosticSeverity.Error:
                     var errorId = $"{GetProperty(diagnostic.Id, string.Empty)},{diagnostic.Location.SourceSpan.Start},{diagnostic.Location.SourceSpan.Length}{GetProperty(GetFileName(sourceCommand.Name))}";
-                    _log.Error(new ErrorId(errorId), prefix, new Text(diagnostic.ToString()));
+                    log.Error(new ErrorId(errorId), prefix, new Text(diagnostic.ToString()));
                     break;
             }
         }

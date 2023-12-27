@@ -136,25 +136,17 @@ public partial record DockerRun(
     
     public override string ToString() => !string.IsNullOrWhiteSpace(ShortName) ? ShortName : $"{CommandLine} in the docker container {Image}";
     
-    private class PathResolver : IPathResolver
+    private class PathResolver(string platform, IDictionary<string, string> directoryMap) : IPathResolver
     {
-        private readonly string _platform;
-        private readonly IDictionary<string, string> _directoryMap;
-
-        public PathResolver(string platform, IDictionary<string, string> directoryMap)
-        {
-            _platform = platform;
-            _directoryMap = directoryMap;
-        }
 
         public string Resolve(IHost host, string path, IPathResolver nextResolver)
         {
             path = Path.GetFullPath(path);
-            if (!_directoryMap.TryGetValue(path, out var toPath))
+            if (!directoryMap.TryGetValue(path, out var toPath))
             {
-                var rootDirectory = _platform.Contains("windows", StringComparison.OrdinalIgnoreCase) ? "c:" : string.Empty;
+                var rootDirectory = platform.Contains("windows", StringComparison.OrdinalIgnoreCase) ? "c:" : string.Empty;
                 toPath = $"{rootDirectory}/.{Guid.NewGuid().ToString()[..8]}";
-                _directoryMap.Add(path, toPath);
+                directoryMap.Add(path, toPath);
             }
 
             return toPath;

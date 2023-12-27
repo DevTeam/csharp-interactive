@@ -9,57 +9,36 @@ namespace CSharpInteractive;
 using HostApi;
 using Pure.DI;
 
-internal class BuildRunner : IBuildRunner
+internal class BuildRunner(
+    IProcessRunner processRunner,
+    IHost host,
+    ITeamCityContext teamCityContext,
+    Func<IBuildContext> buildContextFactory,
+    IBuildOutputProcessor buildOutputProcessor,
+    Func<IProcessMonitor> monitorFactory,
+    [Tag("default")] IBuildMessagesProcessor defaultBuildMessagesProcessor,
+    [Tag("custom")] IBuildMessagesProcessor customBuildMessagesProcessor,
+    IProcessResultHandler processResultHandler)
+    : IBuildRunner
 {
-    private readonly IProcessRunner _processRunner;
-    private readonly IHost _host;
-    private readonly ITeamCityContext _teamCityContext;
-    private readonly Func<IBuildContext> _buildContextFactory;
-    private readonly IBuildOutputProcessor _buildOutputProcessor;
-    private readonly Func<IProcessMonitor> _monitorFactory;
-    private readonly IBuildMessagesProcessor _defaultBuildMessagesProcessor;
-    private readonly IBuildMessagesProcessor _customBuildMessagesProcessor;
-    private readonly IProcessResultHandler _processResultHandler;
-
-    public BuildRunner(
-        IProcessRunner processRunner,
-        IHost host,
-        ITeamCityContext teamCityContext,
-        Func<IBuildContext> buildContextFactory,
-        IBuildOutputProcessor buildOutputProcessor,
-        Func<IProcessMonitor> monitorFactory,
-        [Tag("default")] IBuildMessagesProcessor defaultBuildMessagesProcessor,
-        [Tag("custom")] IBuildMessagesProcessor customBuildMessagesProcessor,
-        IProcessResultHandler processResultHandler)
-    {
-        _processRunner = processRunner;
-        _host = host;
-        _teamCityContext = teamCityContext;
-        _buildContextFactory = buildContextFactory;
-        _buildOutputProcessor = buildOutputProcessor;
-        _monitorFactory = monitorFactory;
-        _defaultBuildMessagesProcessor = defaultBuildMessagesProcessor;
-        _customBuildMessagesProcessor = customBuildMessagesProcessor;
-        _processResultHandler = processResultHandler;
-    }
 
     public IBuildResult Run(ICommandLine commandLine, Action<BuildMessage>? handler = default, TimeSpan timeout = default)
     {
-        var buildContext = _buildContextFactory();
+        var buildContext = buildContextFactory();
         var startInfo = CreateStartInfo(commandLine);
-        var processInfo = new ProcessInfo(startInfo, _monitorFactory(), output => Handle(handler, output, buildContext));
-        var result = _processRunner.Run(processInfo, timeout);
-        _processResultHandler.Handle(result, handler);
+        var processInfo = new ProcessInfo(startInfo, monitorFactory(), output => Handle(handler, output, buildContext));
+        var result = processRunner.Run(processInfo, timeout);
+        processResultHandler.Handle(result, handler);
         return buildContext.Create(startInfo, result.ExitCode);
     }
 
     public async Task<IBuildResult> RunAsync(ICommandLine commandLine, Action<BuildMessage>? handler = default, CancellationToken cancellationToken = default)
     {
-        var buildContext = _buildContextFactory();
+        var buildContext = buildContextFactory();
         var startInfo = CreateStartInfo(commandLine);
-        var processInfo = new ProcessInfo(startInfo, _monitorFactory(), output => Handle(handler, output, buildContext));
-        var result = await _processRunner.RunAsync(processInfo, cancellationToken);
-        _processResultHandler.Handle(result, handler);
+        var processInfo = new ProcessInfo(startInfo, monitorFactory(), output => Handle(handler, output, buildContext));
+        var result = await processRunner.RunAsync(processInfo, cancellationToken);
+        processResultHandler.Handle(result, handler);
         return buildContext.Create(startInfo, result.ExitCode);
     }
 
@@ -67,25 +46,25 @@ internal class BuildRunner : IBuildRunner
     {
         try
         {
-            _teamCityContext.TeamCityIntegration = true;
-            return commandLine.GetStartInfo(_host);
+            teamCityContext.TeamCityIntegration = true;
+            return commandLine.GetStartInfo(host);
         }
         finally
         {
-            _teamCityContext.TeamCityIntegration = false;
+            teamCityContext.TeamCityIntegration = false;
         }
     }
 
     private void Handle(Action<BuildMessage>? handler, in Output output, IBuildContext buildContext)
     {
-        var messages = _buildOutputProcessor.Convert(output, buildContext);
+        var messages = buildOutputProcessor.Convert(output, buildContext);
         if (handler != default)
         {
-            _customBuildMessagesProcessor.ProcessMessages(output, messages, handler);
+            customBuildMessagesProcessor.ProcessMessages(output, messages, handler);
         }
         else
         {
-            _defaultBuildMessagesProcessor.ProcessMessages(output, messages, EmptyHandler);
+            defaultBuildMessagesProcessor.ProcessMessages(output, messages, EmptyHandler);
         }
     }
 

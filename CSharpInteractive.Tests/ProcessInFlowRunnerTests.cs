@@ -14,7 +14,7 @@ public class ProcessInFlowRunnerTests
     private readonly Mock<IFlowContext> _flowContext = new();
     private readonly Mock<IProcessMonitor> _monitor = new();
     private readonly ProcessResult _processResult;
-    private static readonly (string name, string value)[] InitialVars = {("Var1", "Val 1")};
+    private static readonly (string name, string value)[] InitialVars = [("Var1", "Val 1")];
     private static readonly (string name, string value)[] ModifiedVars = new (string name, string value)[] {(CISettings.TeamCityFlowIdEnvironmentVariableName, "FlowId123")}.Concat(InitialVars).ToArray();
 
     public ProcessInFlowRunnerTests()

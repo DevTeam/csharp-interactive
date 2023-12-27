@@ -1,7 +1,9 @@
 namespace CSharpInteractive.Tests;
 
+using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class CommandLineParserTests
 {
     private readonly Mock<IFileSystem> _fileSystem = new();

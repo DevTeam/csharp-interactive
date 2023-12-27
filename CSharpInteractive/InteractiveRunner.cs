@@ -2,27 +2,17 @@
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 namespace CSharpInteractive;
 
-internal class InteractiveRunner : IScriptRunner
+internal class InteractiveRunner(
+    ICommandSource commandSource,
+    ICommandsRunner commandsRunner,
+    IStdOut stdOut) : IScriptRunner
 {
-    private readonly ICommandSource _commandSource;
-    private readonly ICommandsRunner _commandsRunner;
-    private readonly IStdOut _stdOut;
-
-    public InteractiveRunner(
-        ICommandSource commandSource,
-        ICommandsRunner commandsRunner,
-        IStdOut stdOut)
-    {
-        _commandSource = commandSource;
-        _commandsRunner = commandsRunner;
-        _stdOut = stdOut;
-    }
 
     public int Run()
     {
         ShowCursor(true);
         // ReSharper disable once UseDeconstruction
-        foreach (var result in _commandsRunner.Run(_commandSource.GetCommands()))
+        foreach (var result in commandsRunner.Run(commandSource.GetCommands()))
         {
             var exitCode = result.ExitCode;
             if (exitCode.HasValue)
@@ -40,5 +30,5 @@ internal class InteractiveRunner : IScriptRunner
     }
 
     private void ShowCursor(bool completed) =>
-        _stdOut.Write(new Text(completed ? "> " : ". "));
+        stdOut.Write(new Text(completed ? "> " : ". "));
 }

@@ -64,5 +64,5 @@ public class CommandsRunnerTests
     };
 
     private CommandsRunner CreateInstance() =>
-        new(new[] {_commandRunner1.Object, _commandRunner2.Object}, _statistics.Object);
+        new([_commandRunner1.Object, _commandRunner2.Object], _statistics.Object);
 }

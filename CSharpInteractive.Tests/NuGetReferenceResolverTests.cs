@@ -13,8 +13,8 @@ public class NuGetReferenceResolverTests
     private readonly Mock<ICleaner> _cleaner;
     private readonly AddNuGetReferenceCommand _command;
     private readonly Mock<IDisposable> _trackToken;
-    private static readonly string[] Sources = {"src"};
-    private static readonly string[] FallbackFolders = {"fallback"};
+    private static readonly string[] Sources = ["src"];
+    private static readonly string[] FallbackFolders = ["fallback"];
     private const string PackagesPath = "packages";
     private readonly ReferencingAssembly _referencingAssembly1 = new("Abc1", "Abc1.dll");
     private readonly ReferencingAssembly _referencingAssembly2 = new("Abc2", "Abc2.dll");

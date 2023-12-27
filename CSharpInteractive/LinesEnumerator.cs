@@ -2,16 +2,9 @@ namespace CSharpInteractive;
 
 using System.Collections;
 
-internal class LinesEnumerator : IEnumerator<string>
+internal class LinesEnumerator(IEnumerable<string> enumerable, Action onDispose) : IEnumerator<string>
 {
-    private readonly IEnumerator<string> _baseEnumerator;
-    private readonly Action _onDispose;
-
-    public LinesEnumerator(IEnumerable<string> enumerable, Action onDispose)
-    {
-        _baseEnumerator = enumerable.GetEnumerator();
-        _onDispose = onDispose;
-    }
+    private readonly IEnumerator<string> _baseEnumerator = enumerable.GetEnumerator();
 
     public bool MoveNext() => _baseEnumerator.MoveNext();
 
@@ -29,7 +22,7 @@ internal class LinesEnumerator : IEnumerator<string>
         }
         finally
         {
-            _onDispose();
+            onDispose();
         }
     }
 }

@@ -5,31 +5,20 @@ namespace CSharpInteractive;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class ExitTracker : IExitTracker
+internal class ExitTracker(
+    ISettings settings,
+    IEnvironment environment,
+    IPresenter<Summary> summaryPresenter,
+    CancellationTokenSource cancellationTokenSource)
+    : IExitTracker
 {
-    private readonly ISettings _settings;
-    private readonly IEnvironment _environment;
-    private readonly IPresenter<Summary> _summaryPresenter;
-    private readonly CancellationTokenSource _cancellationTokenSource;
     private volatile bool _isTerminating;
-
-    public ExitTracker(
-        ISettings settings,
-        IEnvironment environment,
-        IPresenter<Summary> summaryPresenter,
-        CancellationTokenSource cancellationTokenSource)
-    {
-        _settings = settings;
-        _environment = environment;
-        _summaryPresenter = summaryPresenter;
-        _cancellationTokenSource = cancellationTokenSource;
-    }
 
     public bool IsTerminating => _isTerminating;
 
     public IDisposable Track()
     {
-        switch (_settings.InteractionMode)
+        switch (settings.InteractionMode)
         {
             case InteractionMode.Interactive:
                 System.Console.CancelKeyPress += ConsoleOnCancelKeyPress;
@@ -47,15 +36,15 @@ internal class ExitTracker : IExitTracker
 
         try
         {
-            _cancellationTokenSource.Cancel();
+            cancellationTokenSource.Cancel();
         }
         catch
         {
             // ignored
         }
         
-        _summaryPresenter.Show(Summary.Empty);
+        summaryPresenter.Show(Summary.Empty);
     }
 
-    private void ConsoleOnCancelKeyPress(object? sender, ConsoleCancelEventArgs e) => _environment.Exit(0);
+    private void ConsoleOnCancelKeyPress(object? sender, ConsoleCancelEventArgs e) => environment.Exit(0);
 }

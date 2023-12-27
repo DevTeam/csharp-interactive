@@ -5,11 +5,8 @@ namespace CSharpInteractive;
 using System.Text;
 using HostApi;
 
-internal class TeamCityLineFormatter : ITeamCityLineFormatter
+internal class TeamCityLineFormatter(IColorTheme colorTheme) : ITeamCityLineFormatter
 {
-    private readonly IColorTheme _colorTheme;
-
-    public TeamCityLineFormatter(IColorTheme colorTheme) => _colorTheme = colorTheme;
 
     // ReSharper disable once MemberCanBePrivate.Global
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
@@ -23,7 +20,7 @@ internal class TeamCityLineFormatter : ITeamCityLineFormatter
         {
             if (color != lastColor && !string.IsNullOrWhiteSpace(value))
             {
-                sb.Append($"{EscapeSymbol}[{_colorTheme.GetAnsiColor(color)}m");
+                sb.Append($"{EscapeSymbol}[{colorTheme.GetAnsiColor(color)}m");
                 lastColor = color;
             }
 

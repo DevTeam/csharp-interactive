@@ -18,7 +18,7 @@ internal readonly record struct Text(string Value, Color Color)
         : this(value, Color.Default)
     { }
 
-    public static implicit operator Text[](Text text) => new[] {text};
+    public static implicit operator Text[](Text text) => [text];
 
     public override string ToString()
     {

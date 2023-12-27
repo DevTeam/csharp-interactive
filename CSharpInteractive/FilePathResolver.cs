@@ -1,21 +1,11 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive;
 
-internal class FilePathResolver : IFilePathResolver
+internal class FilePathResolver(
+    ILog<FilePathResolver> log,
+    IEnvironment environment,
+    IFileSystem fileSystem) : IFilePathResolver
 {
-    private readonly ILog<FilePathResolver> _log;
-    private readonly IEnvironment _environment;
-    private readonly IFileSystem _fileSystem;
-
-    public FilePathResolver(
-        ILog<FilePathResolver> log,
-        IEnvironment environment,
-        IFileSystem fileSystem)
-    {
-        _log = log;
-        _environment = environment;
-        _fileSystem = fileSystem;
-    }
 
     public bool TryResolve(string? fileOrDirectoryPath, out string fullScriptPath)
     {
@@ -23,7 +13,7 @@ internal class FilePathResolver : IFilePathResolver
         fullScriptPath = string.Empty;
         if (!string.IsNullOrWhiteSpace(fileOrDirectoryPath))
         {
-            if (_fileSystem.IsPathRooted(fileOrDirectoryPath))
+            if (fileSystem.IsPathRooted(fileOrDirectoryPath))
             {
                 state = TryResolveFullPath(fileOrDirectoryPath, fileOrDirectoryPath, out fullScriptPath);
                 if (state == State.NotFound)
@@ -47,7 +37,7 @@ internal class FilePathResolver : IFilePathResolver
 
         if (state is State.NotFound)
         {
-            _log.Error(ErrorId.CannotFind, $"Cannot find \"{fileOrDirectoryPath}\".");
+            log.Error(ErrorId.CannotFind, $"Cannot find \"{fileOrDirectoryPath}\".");
         }
         
         return state == State.Found;
@@ -56,29 +46,29 @@ internal class FilePathResolver : IFilePathResolver
     private State TryResolveFullPath(string basePath, string fullPath, out string fullScriptPath)
     {
         fullScriptPath = string.Empty;
-        var isFileExist = _fileSystem.IsFileExist(fullPath);
-        _log.Trace(() => new[] {new Text($"Try to find file \"{fullPath}\" in \"{basePath}\": {isFileExist}.")});
+        var isFileExist = fileSystem.IsFileExist(fullPath);
+        log.Trace(() => [new Text($"Try to find file \"{fullPath}\" in \"{basePath}\": {isFileExist}.")]);
         if (isFileExist)
         {
             fullScriptPath = fullPath;
             return State.Found;
         }
                 
-        var isDirectoryExist = _fileSystem.IsDirectoryExist(fullPath);
-        _log.Trace(() => new[] {new Text($"Try to find directory \"{fullPath}\" in \"{basePath}\": {isDirectoryExist}.")});
+        var isDirectoryExist = fileSystem.IsDirectoryExist(fullPath);
+        log.Trace(() => [new Text($"Try to find directory \"{fullPath}\" in \"{basePath}\": {isDirectoryExist}.")]);
         if (!isDirectoryExist)
         {
             return State.NotFound;
         }
 
-        var scripts = _fileSystem.EnumerateFileSystemEntries(fullPath, "*.csx", SearchOption.TopDirectoryOnly).ToList();
+        var scripts = fileSystem.EnumerateFileSystemEntries(fullPath, "*.csx", SearchOption.TopDirectoryOnly).ToList();
         switch (scripts.Count)
         {
             case 1:
                 fullScriptPath = scripts[0];
                 return State.Found;
             case > 1:
-                _log.Error(ErrorId.CannotFind, new Text($"Specify which script file to use because the folder \"{fullPath}\" contains more than one script file."));
+                log.Error(ErrorId.CannotFind, new Text($"Specify which script file to use because the folder \"{fullPath}\" contains more than one script file."));
                 return State.Error;
             default:
                 return State.Unknown;
@@ -95,7 +85,7 @@ internal class FilePathResolver : IFilePathResolver
 
     private IEnumerable<string> GetPaths()
     {
-        yield return _environment.GetPath(SpecialFolder.Script);
-        yield return _environment.GetPath(SpecialFolder.Working);
+        yield return environment.GetPath(SpecialFolder.Script);
+        yield return environment.GetPath(SpecialFolder.Working);
     }
 }

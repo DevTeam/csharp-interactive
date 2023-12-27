@@ -1,40 +1,31 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable HeapView.PossibleBoxingAllocation
 namespace CSharpInteractive;
 
 using HostApi;
 
-internal class HostService : IHost
+internal class HostService(
+    ILog<HostService> log,
+    ISettings settings,
+    IStdOut stdOut,
+    IProperties properties)
+    : IHost
 {
-    private readonly ILog<HostService> _log;
-    private readonly ISettings _settings;
-    private readonly IStdOut _stdOut;
 
-    public HostService(
-        ILog<HostService> log,
-        ISettings settings,
-        IStdOut stdOut,
-        IProperties properties)
-    {
-        _log = log;
-        _settings = settings;
-        _stdOut = stdOut;
-        Props = properties;
-    }
+    public IReadOnlyList<string> Args => settings.ScriptArguments;
 
-    public IReadOnlyList<string> Args => _settings.ScriptArguments;
+    public IProperties Props { get; } = properties;
 
-    public IProperties Props { get; }
+    public void WriteLine() => stdOut.WriteLine();
 
-    public void WriteLine() => _stdOut.WriteLine();
-
-    public void WriteLine<T>(T line, Color color = Color.Default) => _stdOut.WriteLine(new Text(line?.ToString() ?? string.Empty, color));
+    public void WriteLine<T>(T line, Color color = Color.Default) => stdOut.WriteLine(new Text(line?.ToString() ?? string.Empty, color));
 
     public void Error(string? error, string? errorId = default)
     {
         if (error != default)
         {
-            _log.Error(new ErrorId(errorId ?? "Unknown"), error);
+            log.Error(new ErrorId(errorId ?? "Unknown"), error);
         }
     }
 
@@ -42,7 +33,7 @@ internal class HostService : IHost
     {
         if (warning != default)
         {
-            _log.Warning(warning);
+            log.Warning(warning);
         }
     }
 
@@ -50,7 +41,7 @@ internal class HostService : IHost
     {
         if (text != default)
         {
-            _log.Info(text);
+            log.Info(text);
         }
     }
 
@@ -58,7 +49,7 @@ internal class HostService : IHost
     {
         if (trace != default)
         {
-            _log.Trace(() => new[] {new Text(trace)}, origin ?? string.Empty);
+            log.Trace(() => [new Text(trace)], origin ?? string.Empty);
         }
     }
 

@@ -22,24 +22,17 @@ internal static class Disposable
     public static IDisposable Create(IEnumerable<IDisposable> disposables) =>
         new CompositeDisposable(disposables);
 
-    private sealed class DisposableAction : IDisposable
+    private sealed class DisposableAction(Action action, object? key = null) : IDisposable
     {
-        private readonly Action _action;
-        private readonly object? _key;
+        private readonly object? _key = key ?? action;
         private int _counter;
-
-        public DisposableAction(Action action, object? key = null)
-        {
-            _action = action;
-            _key = key ?? action;
-        }
 
         public void Dispose()
         {
             if (Interlocked.Increment(ref _counter) != 1) return;
             try
             {
-                _action();
+                action();
             }
             catch
             { }
@@ -56,18 +49,14 @@ internal static class Disposable
             _key != null ? _key.GetHashCode() : 0;
     }
 
-    private sealed class CompositeDisposable : IDisposable
+    private sealed class CompositeDisposable(IEnumerable<IDisposable> disposables) : IDisposable
     {
-        private readonly IEnumerable<IDisposable> _disposables;
         private int _counter;
-
-        public CompositeDisposable(IEnumerable<IDisposable> disposables)
-            => _disposables = disposables;
 
         public void Dispose()
         {
             if (Interlocked.Increment(ref _counter) != 1) return;
-            foreach (var disposable in _disposables)
+            foreach (var disposable in disposables)
             {
                 try
                 {

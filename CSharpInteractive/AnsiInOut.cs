@@ -5,13 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 using HostApi;
 
 [ExcludeFromCodeCoverage]
-internal class AnsiInOut : IStdOut, IStdErr
+internal class AnsiInOut(IColorTheme colorTheme) : IStdOut, IStdErr
 {
     private const char EscapeSymbol = '\x001B';
     private readonly object _lockObject = new();
-    private readonly IColorTheme _colorTheme;
-
-    public AnsiInOut(IColorTheme colorTheme) => _colorTheme = colorTheme;
 
     public void Write(params Text[] text) => 
         Write(System.Console.Out, text, Color.Default);
@@ -39,6 +36,6 @@ internal class AnsiInOut : IStdOut, IStdErr
         writer.Write(
             color == Color.Default
                 ? text.Value
-                : $"{EscapeSymbol}[{_colorTheme.GetAnsiColor(color)}m{text.Value}{EscapeSymbol}[{_colorTheme.GetAnsiColor(Color.Default)}m");
+                : $"{EscapeSymbol}[{colorTheme.GetAnsiColor(color)}m{text.Value}{EscapeSymbol}[{colorTheme.GetAnsiColor(Color.Default)}m");
     }
 }

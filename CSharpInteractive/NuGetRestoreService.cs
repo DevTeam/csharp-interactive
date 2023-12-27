@@ -56,7 +56,7 @@ internal class NuGetRestoreService : INuGetRestoreService, ISettingSetter<NuGetR
             _ => "PackageReference"
         };
 
-        _log.Trace(() => new[] {new Text($"Restore nuget package {settings.PackageId} {settings.VersionRange} to \"{outputPath}\" and \"{settings.PackagesPath}\".")});
+        _log.Trace(() => [new Text($"Restore nuget package {settings.PackageId} {settings.VersionRange} to \"{outputPath}\" and \"{settings.PackagesPath}\".")]);
         var restoreGraphItems = new[]
         {
             CreateTaskItem("RestoreSpec"),

@@ -23,7 +23,7 @@ public class MessageIndicesReaderTests
         var expectedIndices = reader.Read("data").ToArray();
 
         // Then
-        expectedIndices.ShouldBe(new[] {1UL, 123456789UL});
+        expectedIndices.ShouldBe([1UL, 123456789UL]);
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class MessageIndicesReaderTests
 
         // Then
         _log.Verify(i => i.Warning(It.Is<Text[]>(warning => warning.Single().Value.Contains("invalid size"))));
-        expectedIndices.ShouldBe(new[] {1UL, 123456789UL});
+        expectedIndices.ShouldBe([1UL, 123456789UL]);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class MessageIndicesReaderTests
 
         // Then
         _log.Verify(i => i.Warning(It.Is<Text[]>(warning => warning.Single().Value.Contains("invalid index"))));
-        expectedIndices.ShouldBe(new[] {123UL});
+        expectedIndices.ShouldBe([123UL]);
     }
 
     private static void Write(Stream stream, ulong index)

@@ -4,27 +4,19 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class Debugger : IActive
+internal class Debugger(
+    ILog<Debugger> log,
+    IEnvironmentVariables environmentVariables) : IActive
 {
-    private readonly ILog<Debugger> _log;
-    private readonly IEnvironmentVariables _environmentVariables;
-
-    public Debugger(
-        ILog<Debugger> log,
-        IEnvironmentVariables environmentVariables)
-    {
-        _log = log;
-        _environmentVariables = environmentVariables;
-    }
 
     public IDisposable Activate()
     {
-        if (_environmentVariables.GetEnvironmentVariable("DEBUG_CSI") == null)
+        if (environmentVariables.GetEnvironmentVariable("DEBUG_CSI") == null)
         {
             return Disposable.Empty;
         }
 
-        _log.Warning($"\nWaiting for debugger in process [{System.Environment.ProcessId}] \"{Process.GetCurrentProcess().ProcessName}\".");
+        log.Warning($"\nWaiting for debugger in process [{System.Environment.ProcessId}] \"{Process.GetCurrentProcess().ProcessName}\".");
         while (!System.Diagnostics.Debugger.IsAttached)
         {
             Thread.Sleep(100);

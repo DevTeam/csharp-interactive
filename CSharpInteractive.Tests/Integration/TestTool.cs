@@ -9,16 +9,16 @@ using JetBrains.TeamCity.ServiceMessages.Read;
 internal static class TestTool
 {
     public static readonly (string, string)[] DefaultVars =
-    {
+    [
         ("TEAMCITY_VERSION", string.Empty),
         ("TEAMCITY_PROJECT_NAME", string.Empty)
-    };
+    ];
 
     private static readonly (string, string)[] TeamCityVars =
-    {
+    [
         ("TEAMCITY_VERSION", "2021.2"),
         ("TEAMCITY_PROJECT_NAME", "Test")
-    };
+    ];
 
     public static IProcessResult Run(in CommandLine commandLine)
     {

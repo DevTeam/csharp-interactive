@@ -6,7 +6,7 @@ using NuGet.Versioning;
 public class AddNuGetReferenceCommandFactoryTests
 {
     private readonly Mock<ILog<AddNuGetReferenceCommandFactory>> _log;
-    private readonly List<Text> _errors = new();
+    private readonly List<Text> _errors = [];
 
     public AddNuGetReferenceCommandFactoryTests()
     {
@@ -38,7 +38,7 @@ public class AddNuGetReferenceCommandFactoryTests
 
         // Then
         actualCommands.ShouldBe(expectedCommands);
-        _errors.Any().ShouldBe(hasErrors);
+        (_errors.Count != 0).ShouldBe(hasErrors);
     }
 
     public static IEnumerable<object?[]> Data => new List<object?[]>

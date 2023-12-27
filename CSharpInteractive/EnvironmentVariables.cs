@@ -5,16 +5,13 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class EnvironmentVariables : IEnvironmentVariables, ITraceSource
+internal class EnvironmentVariables(ILog<EnvironmentVariables> log) : IEnvironmentVariables, ITraceSource
 {
-    private readonly ILog<EnvironmentVariables> _log;
-
-    public EnvironmentVariables(ILog<EnvironmentVariables> log) => _log = log;
 
     public string? GetEnvironmentVariable(string variable)
     {
         var value = System.Environment.GetEnvironmentVariable(variable);
-        _log.Trace(() => new[] {new Text($"Get environment variable {variable} = \"{value}\".")});
+        log.Trace(() => [new Text($"Get environment variable {variable} = \"{value}\".")]);
         return value;
     }
 

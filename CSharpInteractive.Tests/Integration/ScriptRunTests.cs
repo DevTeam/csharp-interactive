@@ -2,11 +2,13 @@
 // ReSharper disable RedundantUsingDirective
 namespace CSharpInteractive.Tests.Integration;
 
+using System.Diagnostics.CodeAnalysis;
 using Core;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "true")]
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class ScriptRunTests
 {
     private const int InitialLinesCount = 3;
@@ -31,7 +33,7 @@ public class ScriptRunTests
         // Given
 
         // When
-        var result = TestTool.Run(@"Console.WriteLine(""Hello"");");
+        var result = TestTool.Run("""Console.WriteLine("Hello");""");
 
         // Then
         result.ExitCode.ShouldBe(0, result.ToString());
@@ -41,7 +43,9 @@ public class ScriptRunTests
     }
 
     [Theory]
-    [InlineData(@"""Hello""", "Hello")]
+    [InlineData("""
+                "Hello"
+                """, "Hello")]
     [InlineData("99", "99")]
     [InlineData("true", "True")]
     public void ShouldSupportWriteLine(string writeLineArg, string expectedOutput)
@@ -49,7 +53,7 @@ public class ScriptRunTests
         // Given
 
         // When
-        var result = TestTool.Run(@$"WriteLine({writeLineArg});");
+        var result = TestTool.Run($"WriteLine({writeLineArg});");
 
         // Then
         result.ExitCode.ShouldBe(0, result.ToString());
@@ -83,7 +87,7 @@ public class ScriptRunTests
             Array.Empty<string>(),
             new[] {"Abc", "Xyz"},
             TestTool.DefaultVars,
-            @"WriteLine($""Args: {Args.Count}, {Args[0]}, {Args[1]}"");"
+            """WriteLine($"Args: {Args.Count}, {Args[0]}, {Args[1]}");"""
         );
 
         // Then
@@ -110,7 +114,7 @@ public class ScriptRunTests
             },
             Array.Empty<string>(),
             new[] {("TEAMCITY_VERSION", teamcityVersionEnvVar)},
-            @"WriteLine(Props[""Val1""] + Props[""val2""] + Props[""val3""] + Props[""4""] + Props.Count);"
+            """WriteLine(Props["Val1"] + Props["val2"] + Props["val3"] + Props["4"] + Props.Count);"""
         );
 
         // Then
@@ -129,7 +133,7 @@ public class ScriptRunTests
             Array.Empty<string>(),
             Array.Empty<string>(),
             new[] {("TEAMCITY_VERSION", "2021")},
-            @"Props[""Val1""]=""Xyz"";"
+            """Props["Val1"]="Xyz";"""
         );
 
         // Then
@@ -144,7 +148,7 @@ public class ScriptRunTests
         // Given
 
         // When
-        var result = TestTool.Run(@"Error(""My error"");");
+        var result = TestTool.Run("""Error("My error");""");
 
         // Then
         result.ExitCode.ShouldBe(1, result.ToString());
@@ -157,7 +161,7 @@ public class ScriptRunTests
         // Given
 
         // When
-        var result = TestTool.Run(@"Warning(""My warning"");");
+        var result = TestTool.Run("""Warning("My warning");""");
 
         // Then
         result.ExitCode.ShouldBe(0, result.ToString());
@@ -172,7 +176,7 @@ public class ScriptRunTests
         // Given
 
         // When
-        var result = TestTool.Run(@"Info(""My info"");");
+        var result = TestTool.Run("""Info("My info");""");
 
         // Then
         result.ExitCode.ShouldBe(0, result.ToString());
@@ -192,7 +196,9 @@ public class ScriptRunTests
 
         // When
         var result = TestTool.Run(
-            @$"#r ""{package}""",
+            $"""
+             #r "{package}"
+             """,
             "using IoC;",
             "WriteLine(Container.Create());");
 
@@ -211,10 +217,12 @@ public class ScriptRunTests
         var refScriptFile = fileSystem.CreateTempFilePath();
         try
         {
-            fileSystem.AppendAllLines(refScriptFile, new[] {@"Console.WriteLine(""Hello"");"});
+            fileSystem.AppendAllLines(refScriptFile, new[] {"""Console.WriteLine("Hello");"""});
 
             // When
-            var result = TestTool.Run(@$"#load ""{refScriptFile}""");
+            var result = TestTool.Run($"""
+                                       #load "{refScriptFile}"
+                                       """);
 
             // Then
             result.ExitCode.ShouldBe(0, result.ToString());
@@ -305,7 +313,7 @@ public class ScriptRunTests
         // Given
 
         // When
-        var result = TestTool.Run(@"throw new Exception(""Test"");");
+        var result = TestTool.Run("""throw new Exception("Test");""");
 
         // Then
         result.ExitCode.ShouldBe(1, result.ToString());
@@ -325,7 +333,9 @@ public class ScriptRunTests
             new[] {"-s", Path.Combine(Directory.GetCurrentDirectory(), "Integration", "Resources")},
             Array.Empty<string>(),
             new[] {("TEAMCITY_VERSION", teamcityVersionEnvVar)},
-            @"#r ""nuget: csinetstandard11, 1.0.0""",
+            """
+            #r "nuget: csinetstandard11, 1.0.0"
+            """,
             "using System.Collections.Generic;",
             "using System.Linq;",
             "var list = new List<int>{1, 2};",
@@ -352,7 +362,7 @@ public class ScriptRunTests
             "  {",
             "    void LocalFun()",
             "    {",
-            @"      Info(""Abc"");",
+            """      Info("Abc");""",
             "    }",
             "    LocalFun();",
             "  }",
@@ -425,7 +435,7 @@ public class ScriptRunTests
         // Given
 
         // When
-        var result = TestTool.Run(@"Abc.Abc();");
+        var result = TestTool.Run("Abc.Abc();");
 
         // Then
         result.ExitCode.ShouldBe(1, result.ToString());

@@ -22,7 +22,7 @@ public class TeamCityInOutTests
         var output = (IStdErr)CreateInstance();
 
         // When
-        output.WriteLine(new[] {new Text("err")});
+        output.WriteLine([new Text("err")]);
 
         // Then
         _teamCityWriter.Verify(i => i.WriteError("F_err", null));
@@ -35,7 +35,7 @@ public class TeamCityInOutTests
         var output = (IStdOut)CreateInstance();
 
         // When
-        output.WriteLine(new[] {new Text("message")});
+        output.WriteLine([new Text("message")]);
 
         // Then
         _teamCityWriter.Verify(i => i.WriteMessage("F_message"));

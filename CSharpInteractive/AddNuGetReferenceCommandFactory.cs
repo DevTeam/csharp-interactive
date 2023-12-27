@@ -4,13 +4,9 @@ namespace CSharpInteractive;
 using System.Text.RegularExpressions;
 using NuGet.Versioning;
 
-internal class AddNuGetReferenceCommandFactory : ICommandFactory<string>
+internal class AddNuGetReferenceCommandFactory(ILog<AddNuGetReferenceCommandFactory> log) : ICommandFactory<string>
 {
-    private static readonly Regex NuGetReferenceRegex = new(@"^\s*#r\s+""nuget:\s*([^,\s]+?)(,(.+?)|\s*)""\s*$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
-    private readonly ILog<AddNuGetReferenceCommandFactory> _log;
-
-    public AddNuGetReferenceCommandFactory(ILog<AddNuGetReferenceCommandFactory> log) =>
-        _log = log;
+    private static readonly Regex NuGetReferenceRegex = new("""^\s*#r\s+"nuget:\s*([^,\s]+?)(,(.+?)|\s*)"\s*$""", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
     public int Order => 0;
 
@@ -34,12 +30,12 @@ internal class AddNuGetReferenceCommandFactory : ICommandFactory<string>
             }
             else
             {
-                _log.Error(ErrorId.CannotParsePackageVersion, $"Cannot parse the package version range \"{versionRangeStr}\".");
+                log.Error(ErrorId.CannotParsePackageVersion, $"Cannot parse the package version range \"{versionRangeStr}\".");
                 yield break;
             }
         }
 
-        _log.Trace(() => new[] {new Text($"REPL #r \"nuget:{packageIdStr}, {versionRange}\"")}, string.Empty);
+        log.Trace(() => [new Text($"REPL #r \"nuget:{packageIdStr}, {versionRange}\"")], string.Empty);
         yield return new AddNuGetReferenceCommand(packageIdStr, versionRange);
     }
 }

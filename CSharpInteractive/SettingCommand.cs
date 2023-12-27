@@ -3,12 +3,10 @@ namespace CSharpInteractive;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class SettingCommand<TOption> : ICommand
+internal class SettingCommand<TOption>(TOption value) : ICommand
     where TOption: struct, Enum
 {
-    public readonly TOption Value;
-
-    public SettingCommand(TOption value) => Value = value;
+    public readonly TOption Value = value;
 
     public string Name => $"Set verbosity level to {Value}";
 

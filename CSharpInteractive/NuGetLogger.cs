@@ -6,25 +6,22 @@ using System.Diagnostics.CodeAnalysis;
 using NuGet.Common;
 
 [ExcludeFromCodeCoverage]
-internal class NuGetLogger : ILogger
+internal class NuGetLogger(ILog<NuGetLogger> log) : ILogger
 {
-    private readonly ILog<NuGetLogger> _log;
 
-    public NuGetLogger(ILog<NuGetLogger> log) => _log = log;
+    public void LogDebug(string data) => log.Trace(() => [new Text(data)], "NuGet");
 
-    public void LogDebug(string data) => _log.Trace(() => new[] {new Text(data)}, "NuGet");
+    public void LogVerbose(string data) => log.Trace(() => [new Text(data)], "NuGet");
 
-    public void LogVerbose(string data) => _log.Trace(() => new[] {new Text(data)}, "NuGet");
+    public void LogInformation(string data) => log.Info(data);
 
-    public void LogInformation(string data) => _log.Info(data);
+    public void LogMinimal(string data) => log.Info([new Text(data)]);
 
-    public void LogMinimal(string data) => _log.Info(new[] {new Text(data)});
+    public void LogWarning(string data) => log.Warning(data);
 
-    public void LogWarning(string data) => _log.Warning(data);
+    public void LogError(string data) => log.Error(ErrorId.NuGet, data);
 
-    public void LogError(string data) => _log.Error(ErrorId.NuGet, data);
-
-    public void LogInformationSummary(string data) => _log.Trace(() => new[] {new Text(data)}, "NuGet");
+    public void LogInformationSummary(string data) => log.Trace(() => [new Text(data)], "NuGet");
 
     public void Log(LogLevel level, string data)
     {

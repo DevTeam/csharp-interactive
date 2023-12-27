@@ -3,13 +3,12 @@ namespace CSharpInteractive;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class CodeCommand : ICommand
+internal class CodeCommand(bool isInternal = false) : ICommand
 {
-    public CodeCommand(bool isInternal = false) => Internal = isInternal;
 
     public string Name => "Code";
 
-    public bool Internal { get; }
+    public bool Internal { get; } = isInternal;
 
     public override string ToString() => Name;
 

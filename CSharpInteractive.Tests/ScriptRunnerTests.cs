@@ -3,6 +3,7 @@ namespace CSharpInteractive.Tests;
 using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class ScriptRunnerTests
 {
     private readonly Mock<ICommandSource> _commandSource;

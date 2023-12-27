@@ -4,21 +4,13 @@ namespace CSharpInteractive;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class NuGetEnvironment : INuGetEnvironment, ITraceSource
+internal class NuGetEnvironment(
+    IEnvironment environment,
+    ISettings settings) : INuGetEnvironment, ITraceSource
 {
-    private readonly IEnvironment _environment;
-    private readonly ISettings _settings;
-
-    public NuGetEnvironment(
-        IEnvironment environment,
-        ISettings settings)
-    {
-        _environment = environment;
-        _settings = settings;
-    }
 
     public IEnumerable<string> Sources => 
-        _settings.NuGetSources
+        settings.NuGetSources
             .Concat(NuGet.Configuration.SettingsUtility.GetEnabledSources(GetNuGetSettings()).Select(i => i.Source))
             .Distinct();
 
@@ -42,5 +34,5 @@ internal class NuGetEnvironment : INuGetEnvironment, ITraceSource
     }
 
     private NuGet.Configuration.ISettings GetNuGetSettings() =>
-        NuGet.Configuration.Settings.LoadDefaultSettings(_environment.GetPath(SpecialFolder.Script));
+        NuGet.Configuration.Settings.LoadDefaultSettings(environment.GetPath(SpecialFolder.Script));
 }

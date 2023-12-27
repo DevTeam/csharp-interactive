@@ -3,12 +3,9 @@ namespace CSharpInteractive;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
 
-internal class MetadataResolverOptionsFactory: IScriptOptionsFactory
+internal class MetadataResolverOptionsFactory(Func<MetadataReferenceResolver> metadataResolverFactory) : IScriptOptionsFactory
 {
-    private readonly Func<MetadataReferenceResolver> _metadataResolverFactory;
-
-    public MetadataResolverOptionsFactory(Func<MetadataReferenceResolver> metadataResolverFactory) => _metadataResolverFactory = metadataResolverFactory;
 
     public ScriptOptions Create(ScriptOptions baseOptions) =>
-        baseOptions.WithMetadataResolver(_metadataResolverFactory());
+        baseOptions.WithMetadataResolver(metadataResolverFactory());
 }

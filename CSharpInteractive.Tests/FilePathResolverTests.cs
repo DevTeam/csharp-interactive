@@ -7,7 +7,7 @@ public class FilePathResolverTests
     private readonly Mock<ILog<FilePathResolver>> _log;
     private readonly Mock<IEnvironment> _environment;
     private readonly Mock<IFileSystem> _fileSystem;
-    private readonly List<Text> _errors = new();
+    private readonly List<Text> _errors = [];
 
     public FilePathResolverTests()
     {
@@ -45,7 +45,7 @@ public class FilePathResolverTests
         // Then
         actualResult.ShouldBe(expectedPath != string.Empty);
         actualPath.ShouldBe(expectedPath.Replace('/', Path.DirectorySeparatorChar));
-        _errors.Any().ShouldBe(hasErrors);
+        (_errors.Count != 0).ShouldBe(hasErrors);
     }
     
     [Fact]
@@ -70,7 +70,7 @@ public class FilePathResolverTests
         // Then
         actualResult.ShouldBeTrue();
         actualPath.ShouldBe("sc/Existing/MyScript.csx".Replace('/', Path.DirectorySeparatorChar));
-        _errors.Any().ShouldBeFalse();
+        (_errors.Count != 0).ShouldBeFalse();
     }
     
     [Fact]
@@ -93,7 +93,7 @@ public class FilePathResolverTests
         // Then
         actualResult.ShouldBeTrue();
         actualPath.ShouldBe("Existing/MyScript.csx".Replace('/', Path.DirectorySeparatorChar));
-        _errors.Any().ShouldBeFalse();
+        (_errors.Count != 0).ShouldBeFalse();
     }
     
     [Fact]
@@ -118,7 +118,7 @@ public class FilePathResolverTests
 
         // Then
         actualResult.ShouldBeFalse();
-        _errors.Any().ShouldBeTrue();
+        (_errors.Count != 0).ShouldBeTrue();
     }
     
     [Fact]
@@ -139,7 +139,7 @@ public class FilePathResolverTests
 
         // Then
         actualResult.ShouldBeFalse();
-        _errors.Any().ShouldBeTrue();
+        (_errors.Count != 0).ShouldBeTrue();
     }
 
     private FilePathResolver CreateInstance() =>

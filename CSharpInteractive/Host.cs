@@ -63,7 +63,7 @@ public static class Components
     {
         try
         {
-            HostComponents.Log.Error(ErrorId.Exception, new[] {new Text(e.ExceptionObject.ToString() ?? "Unhandled exception.")});
+            HostComponents.Log.Error(ErrorId.Exception, [new Text(e.ExceptionObject.ToString() ?? "Unhandled exception.")]);
             Finish();
             System.Environment.Exit(1);
         }
@@ -91,6 +91,7 @@ public static class Components
     public static void Trace(string? trace, string? origin = default) => CurHost.Trace(trace, origin);
 
     [Pure]
+    // ReSharper disable once UnusedMethodReturnValue.Global
     public static T GetService<T>() => CurHost.GetService<T>();
     
     public static int? Run(this ICommandLine commandLine, Action<Output>? handler = default, TimeSpan timeout = default) => 

@@ -12,7 +12,7 @@ internal class AssembliesScriptOptionsProvider : IScriptOptionsFactory, IActive
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     [SuppressMessage("ReSharper", "BuiltInTypeReferenceStyle")]
     internal static readonly (string ns, Type? type)[] Refs =
-    {
+    [
         ("System", typeof(String)),
         ("System.Collections.Generic", typeof(List<string>)),
         ("System.IO", typeof(Path)),
@@ -22,7 +22,7 @@ internal class AssembliesScriptOptionsProvider : IScriptOptionsFactory, IActive
         ("System.Threading.Tasks", typeof(Task)),
         ("", typeof(IServiceCollection)),
         ("", typeof(ServiceCollectionContainerBuilderExtensions))
-    };
+    ];
 
     private readonly ILog<AssembliesScriptOptionsProvider> _log;
     private readonly IAssembliesProvider _assembliesProvider;
@@ -53,7 +53,7 @@ internal class AssembliesScriptOptionsProvider : IScriptOptionsFactory, IActive
 
     private IEnumerable<Assembly> GetAssemblies()
     {
-        _log.Trace(() => new[] {new Text("Loading assemblies.")});
+        _log.Trace(() => [new Text("Loading assemblies.")]);
         var assemblies = _assembliesProvider
             .GetAssemblies(Refs.Where(i => i.type != default).Select(i => i.type!))
             .Where(_ => !_cancellationToken.IsCancellationRequested)

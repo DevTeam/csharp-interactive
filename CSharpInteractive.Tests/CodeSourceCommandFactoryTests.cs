@@ -1,8 +1,10 @@
 namespace CSharpInteractive.Tests;
 
+using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 using Environment = System.Environment;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class CodeSourceCommandFactoryTests
 {
     private const string SourceName = "Abc";
@@ -40,6 +42,7 @@ public class CodeSourceCommandFactoryTests
     {
         // Given
         _codeSource.SetupGet(i => i.Name).Returns(SourceName);
+        // ReSharper disable once NotDisposedResourceIsReturned
         _codeSource.Setup(i => i.GetEnumerator()).Returns(lines.GetEnumerator());
         var factory = CreateInstance();
 

@@ -4,30 +4,19 @@ namespace CSharpInteractive;
 
 using Pure.DI;
 
-internal class CISpecific<T> : ICISpecific<T>
+internal class CISpecific<T>(
+    ICISettings settings,
+    [Tag("Default")] Func<T> defaultFactory,
+    [Tag("TeamCity")] Func<T> teamcityFactory,
+    [Tag("Ansi")] Func<T> ansiFactory)
+    : ICISpecific<T>
 {
-    private readonly ICISettings _settings;
-    private readonly Func<T> _defaultFactory;
-    private readonly Func<T> _teamcityFactory;
-    private readonly Func<T> _ansiFactory;
 
-    public CISpecific(
-        ICISettings settings,
-        [Tag("Default")] Func<T> defaultFactory,
-        [Tag("TeamCity")] Func<T> teamcityFactory,
-        [Tag("Ansi")] Func<T> ansiFactory)
+    public T Instance => settings.CIType switch
     {
-        _settings = settings;
-        _defaultFactory = defaultFactory;
-        _teamcityFactory = teamcityFactory;
-        _ansiFactory = ansiFactory;
-    }
-
-    public T Instance => _settings.CIType switch
-    {
-        CIType.TeamCity => _teamcityFactory(),
-        CIType.GitLab => _ansiFactory(),
-        CIType.AzureDevOps => _ansiFactory(),
-        _ => _defaultFactory()
+        CIType.TeamCity => teamcityFactory(),
+        CIType.GitLab => ansiFactory(),
+        CIType.AzureDevOps => ansiFactory(),
+        _ => defaultFactory()
     };
 }

@@ -18,7 +18,7 @@ public class ScriptCommandParserTests
         var commands = parser.Create(new ScriptCommand("origin", "code")).ToArray();
 
         // Then
-        commands.ShouldBe(new[] {(ICommand)new CodeCommand()});
+        commands.ShouldBe([new CodeCommand()]);
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class ScriptCommandParserTests
         var commands = parser.Create(new ScriptCommand("origin", "code")).ToArray();
 
         // Then
-        commands.ShouldBe(new ICommand[] {new ScriptCommand("origin", "code" + Environment.NewLine)});
+        commands.ShouldBe([new ScriptCommand("origin", "code" + Environment.NewLine)]);
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class ScriptCommandParserTests
         var commands2 = parser.Create(new ScriptCommand("origin", "code2")).ToArray();
 
         // Then
-        commands.ShouldBe(new ICommand[] {new ScriptCommand("origin", "code1" + Environment.NewLine + "code2" + Environment.NewLine)});
-        commands2.ShouldBe(new ICommand[] {new ScriptCommand("origin", "code2" + Environment.NewLine)});
+        commands.ShouldBe([new ScriptCommand("origin", "code1" + Environment.NewLine + "code2" + Environment.NewLine)]);
+        commands2.ShouldBe([new ScriptCommand("origin", "code2" + Environment.NewLine)]);
     }
 }

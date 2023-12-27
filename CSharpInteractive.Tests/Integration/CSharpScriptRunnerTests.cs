@@ -13,8 +13,8 @@ public class CSharpScriptRunnerTests
     private readonly Mock<IPresenter<ScriptState<object>>> _scriptStatePresenter;
     private readonly Mock<IPresenter<CompilationDiagnostics>> _diagnosticsPresenter;
     private readonly Mock<IExitCodeParser> _exitCodeParser;
-    private readonly List<Text> _errors = new();
-    private readonly List<Diagnostic> _diagnostics = new();
+    private readonly List<Text> _errors = [];
+    private readonly List<Diagnostic> _diagnostics = [];
 
     public CSharpScriptRunnerTests()
     {

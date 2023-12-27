@@ -3,22 +3,14 @@ namespace CSharpInteractive;
 
 using HostApi;
 
-internal class ProcessResultHandler : IProcessResultHandler
+internal class ProcessResultHandler(
+    ILog<ProcessResultHandler> log,
+    IExitTracker exitTracker) : IProcessResultHandler
 {
-    private readonly ILog<ProcessResultHandler> _log;
-    private readonly IExitTracker _exitTracker;
-
-    public ProcessResultHandler(
-        ILog<ProcessResultHandler> log,
-        IExitTracker exitTracker)
-    {
-        _log = log;
-        _exitTracker = exitTracker;
-    }
 
     public void Handle<T>(ProcessResult result, Action<T>? handler)
     {
-        if (_exitTracker.IsTerminating)
+        if (exitTracker.IsTerminating)
         {
             return;
         }
@@ -34,22 +26,22 @@ internal class ProcessResultHandler : IProcessResultHandler
             switch (result.State)
             {
                 case ProcessState.Failed:
-                    _log.Error(ErrorId.Process, description.WithDefaultColor(Color.Default));
+                    log.Error(ErrorId.Process, description.WithDefaultColor(Color.Default));
                     break;
 
                 case ProcessState.Canceled:
-                    _log.Warning(description.WithDefaultColor(Color.Default));
+                    log.Warning(description.WithDefaultColor(Color.Default));
                     break;
 
                 case ProcessState.Finished:
                 default:
-                    _log.Info(description);
+                    log.Info(description);
                     break;
             }
         }
         else
         {
-            _log.Info(description);
+            log.Info(description);
         }
     }
 }

@@ -5,14 +5,8 @@ using CSharpInteractive;
 
 public class CISettingsTests
 {
-    private readonly Mock<IHostEnvironment> _hostEnvironment;
-    private readonly Mock<IEnvironment> _environment;
-
-    public CISettingsTests()
-    {
-        _hostEnvironment = new Mock<IHostEnvironment>();
-        _environment = new Mock<IEnvironment>();
-    }
+    private readonly Mock<IHostEnvironment> _hostEnvironment = new();
+    private readonly Mock<IEnvironment> _environment = new();
 
     [Theory]
     [InlineData("Abc", "1", true)]

@@ -1,8 +1,10 @@
 namespace CSharpInteractive.Tests;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using CSharpInteractive;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class FileExplorerTests
 {
     private readonly Mock<IEnvironment> _environment = new();
@@ -27,7 +29,7 @@ public class FileExplorerTests
         var actual = explorer.FindFiles("*", "Abc", "DOTNET_HOME").ToArray();
 
         // Then
-        actual.ShouldBe(new[] {"C", "dd"});
+        actual.ShouldBe(["C", "dd"]);
     }
 
     [Theory]
@@ -55,7 +57,7 @@ public class FileExplorerTests
         var actual = explorer.FindFiles("*", "Abc", "DOTNET_HOME").ToArray();
 
         // Then
-        actual.ShouldBe(new[] {"C", "dd", "zz"});
+        actual.ShouldBe(["C", "dd", "zz"]);
     }
 
     [Fact]
@@ -76,7 +78,7 @@ public class FileExplorerTests
         var actual = explorer.FindFiles("*", "Abc", "DOTNET_HOME").ToArray();
 
         // Then
-        actual.ShouldBe(new[] {"C", "dd"});
+        actual.ShouldBe(["C", "dd"]);
     }
 
     private FileExplorer CreateInstance() => new(

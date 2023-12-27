@@ -30,7 +30,7 @@ static class Version
 
     private static string GetNextRelease(SemanticVersion curVersion, string release)
     {
-        if (!curVersion.Release.ToLowerInvariant().StartsWith(release.ToLowerInvariant()))
+        if (!curVersion.Release.StartsWith(release, StringComparison.InvariantCultureIgnoreCase))
         {
             return release;
         }

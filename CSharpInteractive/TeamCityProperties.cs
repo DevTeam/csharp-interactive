@@ -7,34 +7,27 @@ using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 using Pure.DI;
 
-internal class TeamCityProperties : IProperties
+internal class TeamCityProperties(
+    [Tag("Default")] IProperties properties,
+    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    ITeamCityWriter teamCityWriter) : IProperties
 {
-    private readonly IProperties _props;
-    private readonly ITeamCityWriter _teamCityWriter;
 
-    public TeamCityProperties(
-        [Tag("Default")] IProperties properties,
-        ITeamCityWriter teamCityWriter)
-    {
-        _props = properties;
-        _teamCityWriter = teamCityWriter;
-    }
-
-    public int Count => _props.Count;
+    public int Count => properties.Count;
 
     public string this[string key]
     {
-        get => _props[key];
+        get => properties[key];
         set
         {
-            _props[key] = value;
-            _teamCityWriter.WriteBuildParameter($"system.{key}", value);
+            properties[key] = value;
+            teamCityWriter.WriteBuildParameter($"system.{key}", value);
         }
     }
 
-    public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => _props.GetEnumerator();
+    public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => properties.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_props).GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)properties).GetEnumerator();
 
-    public bool TryGetValue(string key, [MaybeNullWhen(false)] out string value) => _props.TryGetValue(key, out value);
+    public bool TryGetValue(string key, [MaybeNullWhen(false)] out string value) => properties.TryGetValue(key, out value);
 }

@@ -7,16 +7,13 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
 
-internal class MetadataResolver: MetadataReferenceResolver
+internal class MetadataResolver(IEnvironment environment) : MetadataReferenceResolver
 {
     private static readonly ImmutableArray<PortableExecutableReference> NuGetReferences =
         ImmutableArray<PortableExecutableReference>.Empty
             .Add(MetadataReference.CreateFromFile(typeof(MetadataResolver).Assembly.Location));
 
-    private readonly Lazy<ScriptMetadataResolver> _baseResolver;
-
-    public MetadataResolver(IEnvironment environment) =>
-        _baseResolver = new Lazy<ScriptMetadataResolver>(() => CreateResolver(environment));
+    private readonly Lazy<ScriptMetadataResolver> _baseResolver = new(() => CreateResolver(environment));
 
     public override bool ResolveMissingAssemblies => _baseResolver.Value.ResolveMissingAssemblies;
 

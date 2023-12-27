@@ -8,7 +8,7 @@ public class TeamCityLogTests
     private readonly Mock<ISettings> _settings;
     private readonly Mock<ITeamCityLineFormatter> _lineFormatter;
     private readonly Mock<ITeamCityWriter> _teamCityWriter;
-    private readonly Text[] _text = {new("line1"), new("line2")};
+    private readonly Text[] _text = [new Text("line1"), new Text("line2")];
     private readonly Mock<IStatistics> _statistics;
 
     public TeamCityLogTests()

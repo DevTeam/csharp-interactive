@@ -6,38 +6,29 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Pure.DI;
 
-internal class DotNetEnvironment : IDotNetEnvironment, ITraceSource
+internal class DotNetEnvironment(
+    [Tag("TargetFrameworkMoniker")] string targetFrameworkMoniker,
+    [Tag("ModuleFile")] string moduleFile,
+    IEnvironment environment,
+    IFileExplorer fileExplorer)
+    : IDotNetEnvironment, ITraceSource
 {
-    private readonly string _moduleFile;
-    private readonly IEnvironment _environment;
-    private readonly IFileExplorer _fileExplorer;
-    public DotNetEnvironment(
-        [Tag("TargetFrameworkMoniker")] string targetFrameworkMoniker,
-        [Tag("ModuleFile")] string moduleFile,
-        IEnvironment environment,
-        IFileExplorer fileExplorer)
-    {
-        _moduleFile = moduleFile;
-        _environment = environment;
-        _fileExplorer = fileExplorer;
-        TargetFrameworkMoniker = targetFrameworkMoniker;
-    }
 
     public string Path
     {
         get
         {
-            var executable = _environment.OperatingSystemPlatform == OSPlatform.Windows ? "dotnet.exe" : "dotnet";
+            var executable = environment.OperatingSystemPlatform == OSPlatform.Windows ? "dotnet.exe" : "dotnet";
             try
             {
                 // ReSharper disable once InvertIf
-                if (System.IO.Path.GetFileName(_moduleFile).Equals(executable, StringComparison.InvariantCultureIgnoreCase))
+                if (System.IO.Path.GetFileName(moduleFile).Equals(executable, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    System.Console.WriteLine($"From module {_moduleFile}");
-                    return _moduleFile;
+                    System.Console.WriteLine($"From module {moduleFile}");
+                    return moduleFile;
                 }
 
-                return _fileExplorer.FindFiles(executable, "DOTNET_ROOT", "DOTNET_HOME").FirstOrDefault() ?? executable;
+                return fileExplorer.FindFiles(executable, "DOTNET_ROOT", "DOTNET_HOME").FirstOrDefault() ?? executable;
             }
             catch
             {
@@ -48,7 +39,7 @@ internal class DotNetEnvironment : IDotNetEnvironment, ITraceSource
         }
     }
 
-    public string TargetFrameworkMoniker { get; }
+    public string TargetFrameworkMoniker { get; } = targetFrameworkMoniker;
 
     [ExcludeFromCodeCoverage]
     public IEnumerable<Text> Trace

@@ -1,13 +1,15 @@
 namespace CSharpInteractive.Tests;
 
+using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class InteractiveRunnerTests
 {
     private readonly Mock<ICommandSource> _commandSource;
     private readonly Mock<ICommandsRunner> _commandsRunner;
     private readonly Mock<IStdOut> _stdOut;
-    private readonly List<string> _out = new();
+    private readonly List<string> _out = [];
     private readonly IEnumerable<ICommand> _commands;
 
     public InteractiveRunnerTests()

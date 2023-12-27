@@ -1,11 +1,13 @@
 namespace CSharpInteractive.Tests;
 
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 using JetBrains.TeamCity.ServiceMessages;
 using JetBrains.TeamCity.ServiceMessages.Read;
 using JetBrains.TeamCity.ServiceMessages.Write;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class MessagesReaderTests
 {
     private readonly Mock<ILog<MessagesReader>> _log = new();
@@ -51,7 +53,7 @@ public class MessagesReaderTests
         var actualMessages = reader.Read("data", "data.msg").ToArray();
 
         // Then
-        actualMessages.ShouldBe(new IServiceMessage[] {msg11, msg12, msg2});
+        actualMessages.ShouldBe([msg11, msg12, msg2]);
     }
 
     [Fact]
@@ -111,7 +113,7 @@ public class MessagesReaderTests
         var actualMessages = reader.Read("data", "data.msg").ToArray();
 
         // Then
-        actualMessages.ShouldBe(new IServiceMessage[] {msg2});
+        actualMessages.ShouldBe([msg2]);
     }
 
     [Fact]
@@ -149,7 +151,7 @@ public class MessagesReaderTests
 
         // Then
         _log.Verify(i => i.Warning(It.Is<Text[]>(warning => warning.Single().Value.Contains("invalid size"))));
-        actualMessages.ShouldBe(new IServiceMessage[] {msg11, msg12});
+        actualMessages.ShouldBe([msg11, msg12]);
     }
 
     [Fact]
@@ -180,7 +182,7 @@ public class MessagesReaderTests
 
         // Then
         _log.Verify(i => i.Warning(It.Is<Text[]>(warning => warning.Single().Value.Contains("invalid index"))));
-        actualMessages.ShouldBe(new IServiceMessage[] {msg11, msg12});
+        actualMessages.ShouldBe([msg11, msg12]);
     }
 
     private MessagesReader CreateInstance() =>

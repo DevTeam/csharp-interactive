@@ -1,11 +1,8 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive;
 
-internal class HelpCommandRunner : ICommandRunner
+internal class HelpCommandRunner(IInfo info) : ICommandRunner
 {
-    private readonly IInfo _info;
-
-    public HelpCommandRunner(IInfo info) => _info = info;
 
     public CommandResult TryRun(ICommand command)
     {
@@ -14,7 +11,7 @@ internal class HelpCommandRunner : ICommandRunner
             return new CommandResult(command, default);
         }
 
-        _info.ShowReplHelp();
+        info.ShowReplHelp();
         return new CommandResult(command, true);
     }
 }

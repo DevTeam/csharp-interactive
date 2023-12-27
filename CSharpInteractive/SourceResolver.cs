@@ -6,21 +6,12 @@ namespace CSharpInteractive;
 
 using Microsoft.CodeAnalysis;
 
-internal class SourceResolver: SourceReferenceResolver
+internal class SourceResolver(
+    IEnvironment environment,
+    IScriptContentReplacer scriptContentReplacer,
+    ITextReplacer textReplacer) : SourceReferenceResolver
 {
-    private readonly IScriptContentReplacer _scriptContentReplacer;
-    private readonly ITextReplacer _textReplacer;
-    private readonly Lazy<SourceFileResolver> _baseResolver;
-
-    public SourceResolver(
-        IEnvironment environment,
-        IScriptContentReplacer scriptContentReplacer,
-        ITextReplacer textReplacer)
-    {
-        _scriptContentReplacer = scriptContentReplacer;
-        _textReplacer = textReplacer;
-        _baseResolver = new Lazy<SourceFileResolver>(() => CreateResolver(environment));
-    }
+    private readonly Lazy<SourceFileResolver> _baseResolver = new(() => CreateResolver(environment));
 
     public override bool Equals(object? other) => _baseResolver.Equals(other);
 
@@ -33,7 +24,7 @@ internal class SourceResolver: SourceReferenceResolver
         _baseResolver.Value.ResolveReference(path, baseFilePath);
 
     public override Stream OpenRead(string resolvedPath) =>
-        _textReplacer.Replace(OpenReadInternal(resolvedPath), _scriptContentReplacer.Replace);
+        textReplacer.Replace(OpenReadInternal(resolvedPath), scriptContentReplacer.Replace);
 
     protected virtual Stream OpenReadInternal(string resolvedPath) => _baseResolver.Value.OpenRead(resolvedPath);
 

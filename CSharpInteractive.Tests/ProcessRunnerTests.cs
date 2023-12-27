@@ -8,13 +8,13 @@ public sealed class ProcessRunnerTests: IDisposable
     private readonly Mock<IProcessManager> _processManager = new();
     private readonly Mock<IStartInfo> _startInfo = new();
     private readonly Mock<IProcessMonitor> _monitor = new();
-    private readonly List<Output> _output = new();
+    private readonly List<Output> _output = [];
     private readonly ProcessResult _processResult;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
     public ProcessRunnerTests()
     {
-        _processResult = new ProcessResult(_startInfo.Object, ProcessState.Finished, 12, new []{new Text("Abc")});
+        _processResult = new ProcessResult(_startInfo.Object, ProcessState.Finished, 12, [new Text("Abc")]);
     }
 
     [Fact]

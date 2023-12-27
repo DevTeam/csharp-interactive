@@ -5,18 +5,11 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using HostApi;
 
-internal class Properties : IProperties
+internal class Properties(
+    ILog<Properties> log,
+    ISettings settings) : IProperties
 {
-    private readonly ILog<Properties> _log;
-    private readonly Dictionary<string, string> _props;
-
-    public Properties(
-        ILog<Properties> log,
-        ISettings settings)
-    {
-        _log = log;
-        _props = new Dictionary<string, string>(FilterPairs(settings.ScriptProperties));
-    }
+    private readonly Dictionary<string, string> _props = new(FilterPairs(settings.ScriptProperties));
 
     public int Count
     {
@@ -36,14 +29,14 @@ internal class Properties : IProperties
         {
             lock (_props)
             {
-                _log.Trace(() => new[] {new Text($"Props[\"{key}\"]=\"{value}\"")});
+                log.Trace(() => [new Text($"Props[\"{key}\"]=\"{value}\"")]);
                 if (!string.IsNullOrEmpty(value))
                 {
                     _props[key] = value;
                 }
                 else
                 {
-                    _log.Trace(() => new[] {new Text($"Props.Remove(\"{key}\")")});
+                    log.Trace(() => [new Text($"Props.Remove(\"{key}\")")]);
                     _props.Remove(key);
                 }
             }
@@ -69,7 +62,7 @@ internal class Properties : IProperties
         {
             _props.TryGetValue(key, out var curValue);
             value = curValue ?? string.Empty;
-            _log.Trace(() => new[] {new Text($"Props[\"{key}\"] returns \"{curValue ?? "empty"}\"")});
+            log.Trace(() => [new Text($"Props[\"{key}\"] returns \"{curValue ?? "empty"}\"")]);
             return !string.IsNullOrEmpty(value);
         }
     }

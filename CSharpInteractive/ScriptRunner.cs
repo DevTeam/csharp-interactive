@@ -2,27 +2,14 @@
 // ReSharper disable InvertIf
 namespace CSharpInteractive;
 
-internal class ScriptRunner : IScriptRunner
+internal class ScriptRunner(
+    ILog<ScriptRunner> log,
+    ICommandSource commandSource,
+    ICommandsRunner commandsRunner,
+    IStatistics statistics,
+    IPresenter<Summary> summaryPresenter)
+    : IScriptRunner
 {
-    private readonly ILog<ScriptRunner> _log;
-    private readonly ICommandSource _commandSource;
-    private readonly ICommandsRunner _commandsRunner;
-    private readonly IStatistics _statistics;
-    private readonly IPresenter<Summary> _summaryPresenter;
-
-    public ScriptRunner(
-        ILog<ScriptRunner> log,
-        ICommandSource commandSource,
-        ICommandsRunner commandsRunner,
-        IStatistics statistics,
-        IPresenter<Summary> summaryPresenter)
-    {
-        _log = log;
-        _commandSource = commandSource;
-        _commandsRunner = commandsRunner;
-        _statistics = statistics;
-        _summaryPresenter = summaryPresenter;
-    }
 
     public int Run()
     {
@@ -30,7 +17,7 @@ internal class ScriptRunner : IScriptRunner
         try
         {
             int? exitCode = default;
-            foreach (var (command, success, currentExitCode) in _commandsRunner.Run(GetCommands()))
+            foreach (var (command, success, currentExitCode) in commandsRunner.Run(GetCommands()))
             {
                 if (success.HasValue)
                 {
@@ -42,26 +29,26 @@ internal class ScriptRunner : IScriptRunner
                 }
                 else
                 {
-                    _log.Error(ErrorId.NotSupported, $"{command} is not supported.");
+                    log.Error(ErrorId.NotSupported, $"{command} is not supported.");
                 }
 
                 exitCode = currentExitCode;
             }
 
-            var actualExitCode = exitCode ?? (summary.Success == false || _statistics.Errors.Count > 0 ? 1 : 0);
-            _log.Trace(() => new []{new Text($"Exit code: {actualExitCode}.")});
+            var actualExitCode = exitCode ?? (summary.Success == false || statistics.Errors.Count > 0 ? 1 : 0);
+            log.Trace(() => [new Text($"Exit code: {actualExitCode}.")]);
             return actualExitCode;
         }
         finally
         {
-            _summaryPresenter.Show(summary);
+            summaryPresenter.Show(summary);
         }
     }
 
     private IEnumerable<ICommand> GetCommands()
     {
         CodeCommand? codeCommand = null;
-        foreach (var command in _commandSource.GetCommands())
+        foreach (var command in commandSource.GetCommands())
         {
             codeCommand = command as CodeCommand;
             if (codeCommand == null)
@@ -72,7 +59,7 @@ internal class ScriptRunner : IScriptRunner
 
         if (codeCommand != null)
         {
-            _log.Error(ErrorId.UncompletedScript, "Script is uncompleted.");
+            log.Error(ErrorId.UncompletedScript, "Script is uncompleted.");
         }
     }
 }

@@ -6,14 +6,8 @@ using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
 public class TeamCityPropertiesTests
 {
-    private readonly Mock<IProperties> _properties;
-    private readonly Mock<ITeamCityWriter> _teamCityWriter;
-
-    public TeamCityPropertiesTests()
-    {
-        _properties = new Mock<IProperties>();
-        _teamCityWriter = new Mock<ITeamCityWriter>();
-    }
+    private readonly Mock<IProperties> _properties = new();
+    private readonly Mock<ITeamCityWriter> _teamCityWriter = new();
 
     [Fact]
     public void ShouldSetProperty()

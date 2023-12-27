@@ -68,15 +68,10 @@ public class MetadataResolverTests
     private TestMetadataResolver CreateInstance(params PortableExecutableReference[] references) =>
         new(_environment.Object, references.ToImmutableArray());
     
-    private class TestMetadataResolver: MetadataResolver
+    private class TestMetadataResolver(IEnvironment environment, ImmutableArray<PortableExecutableReference> references) : MetadataResolver(environment)
     {
-        private readonly ImmutableArray<PortableExecutableReference> _references;
-
-        public TestMetadataResolver(IEnvironment environment, ImmutableArray<PortableExecutableReference> references)
-            : base(environment) =>
-            _references = references;
 
         protected override ImmutableArray<PortableExecutableReference> ShouldResolveReferenceInternal(string reference, string? baseFilePath, MetadataReferenceProperties properties) => 
-            _references;
+            references;
     }
 }

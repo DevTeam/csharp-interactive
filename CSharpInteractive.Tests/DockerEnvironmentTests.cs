@@ -1,8 +1,10 @@
 namespace CSharpInteractive.Tests;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using CSharpInteractive;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class DockerEnvironmentTests
 {
     private readonly Mock<IEnvironment> _environment = new();

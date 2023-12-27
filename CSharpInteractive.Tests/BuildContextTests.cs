@@ -76,8 +76,8 @@ public class BuildContextTests
         var output = new Output(_startInfo.Object, false, string.Empty, 11);
 
         // When
-        result.ProcessMessage(output, testStdout).ToArray().ShouldBe(new[] {new BuildMessage(BuildMessageState.StdOut).WithText("Some output")});
-        result.ProcessMessage(output, testStderr).ToArray().ShouldBe(new[] {new BuildMessage(BuildMessageState.StdError).WithText("Some error")});
+        result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdOut).WithText("Some output")]);
+        result.ProcessMessage(output, testStderr).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdError).WithText("Some error")]);
         result.ProcessMessage(output, testFinished).ShouldBeEmpty();
         var buildResult = result.Create(_startInfo.Object, 33);
 
@@ -127,7 +127,7 @@ public class BuildContextTests
         var output = new Output(_startInfo.Object, false, string.Empty, 11);
 
         // When
-        result.ProcessMessage(output, testStdout).ToArray().ShouldBe(new[] {new BuildMessage(BuildMessageState.StdOut).WithText("Some output")});
+        result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdOut).WithText("Some output")]);
         result.ProcessMessage(output, testFailed).ShouldBeEmpty();
         var buildResult = result.Create(_startInfo.Object, 33);
 
@@ -170,7 +170,7 @@ public class BuildContextTests
         var output = new Output(_startInfo.Object, false, string.Empty, 11);
 
         // When
-        result.ProcessMessage(output, testStdout).ToArray().ShouldBe(new[] {new BuildMessage(BuildMessageState.StdOut).WithText("Some output")});
+        result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdOut).WithText("Some output")]);
         result.ProcessMessage(output, testIgnored).ShouldBeEmpty();
         var buildResult = result.Create(_startInfo.Object, 33);
 

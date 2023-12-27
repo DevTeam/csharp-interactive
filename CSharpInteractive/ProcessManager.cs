@@ -95,9 +95,9 @@ internal class ProcessManager : IProcessManager
     {
         try
         {
-            _log.Trace(() => new[] {new Text($"{_description} is terminating.")}, _description);
+            _log.Trace(() => [new Text($"{_description} is terminating.")], _description);
             _process.Kill();
-            _log.Trace(() => new[] {new Text($"{_description} was terminated.")}, _description);
+            _log.Trace(() => [new Text($"{_description} was terminated.")], _description);
             if (_exitTracker.IsTerminating)
             {
                 _log.Warning($"{_description} was forcibly stopped. Try to wait for completion or cancel this process on one's own to avoid this warning.");
@@ -134,7 +134,7 @@ internal class ProcessManager : IProcessManager
         var output = new Output(_startInfo!, isError, line, Id);
         if (handler != default)
         {
-            _log.Trace(() => new[] {isError ? StdErrPrefix : StdOutPrefix, new Text(line)}, _description);
+            _log.Trace(() => [isError ? StdErrPrefix : StdOutPrefix, new Text(line)], _description);
             handler(output);
         }
         else
@@ -161,7 +161,7 @@ internal class ProcessManager : IProcessManager
         }
         catch (Exception exception)
         {
-            _log.Trace(() => new[] {new Text($"Exception during disposing: {exception}.")});
+            _log.Trace(() => [new Text($"Exception during disposing: {exception}.")]);
         }
     }
 }

@@ -15,7 +15,7 @@ public class LineCodeSourceTests
 
         // Then
         source.Name.ShouldBe("Abc");
-        source.ToArray().ShouldBe(new []{"Abc"});
+        source.ToArray().ShouldBe(["Abc"]);
     }
 
     private static LineCodeSource CreateInstance() =>

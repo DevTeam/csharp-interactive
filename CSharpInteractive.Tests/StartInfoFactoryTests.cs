@@ -5,12 +5,7 @@ using HostApi;
 
 public class StartInfoFactoryTests
 {
-    private readonly Mock<IEnvironment> _environment;
-
-    public StartInfoFactoryTests()
-    {
-        _environment = new Mock<IEnvironment>();
-    }
+    private readonly Mock<IEnvironment> _environment = new();
 
     [Fact]
     public void ShouldCreateStartInfo()

@@ -4,42 +4,29 @@ namespace CSharpInteractive;
 using HostApi;
 using NuGet.Versioning;
 
-internal class NuGetReferenceResolver : INuGetReferenceResolver
+internal class NuGetReferenceResolver(
+    ILog<NuGetReferenceResolver> log,
+    INuGetEnvironment nugetEnvironment,
+    INuGetRestoreService nugetRestoreService,
+    INuGetAssetsReader nugetAssetsReader,
+    ICleaner cleaner)
+    : INuGetReferenceResolver
 {
-    private readonly ILog<NuGetReferenceResolver> _log;
-    private readonly INuGetEnvironment _nugetEnvironment;
-    private readonly INuGetRestoreService _nugetRestoreService;
-    private readonly INuGetAssetsReader _nugetAssetsReader;
-    private readonly ICleaner _cleaner;
-
-    public NuGetReferenceResolver(
-        ILog<NuGetReferenceResolver> log,
-        INuGetEnvironment nugetEnvironment,
-        INuGetRestoreService nugetRestoreService,
-        INuGetAssetsReader nugetAssetsReader,
-        ICleaner cleaner)
-    {
-        _log = log;
-        _nugetEnvironment = nugetEnvironment;
-        _nugetRestoreService = nugetRestoreService;
-        _nugetAssetsReader = nugetAssetsReader;
-        _cleaner = cleaner;
-    }
 
     public bool TryResolveAssemblies(string packageId, VersionRange? versionRange, out IReadOnlyCollection<ReferencingAssembly> assemblies)
     {
         var result = new List<ReferencingAssembly>();
         assemblies = result;
         var packageName = $"{packageId} {versionRange}".Trim();
-        _log.Info(new[] {new Text($"Restoring package {packageName}.", Color.Highlighted)});
-        var restoreResult = _nugetRestoreService.TryRestore(
+        log.Info([new Text($"Restoring package {packageName}.", Color.Highlighted)]);
+        var restoreResult = nugetRestoreService.TryRestore(
             new NuGetRestoreSettings(
                 packageId,
-                _nugetEnvironment.Sources,
-                _nugetEnvironment.FallbackFolders,
+                nugetEnvironment.Sources,
+                nugetEnvironment.FallbackFolders,
                 versionRange,
                 default,
-                _nugetEnvironment.PackagesPath
+                nugetEnvironment.PackagesPath
             ),
             out var projectAssetsJson);
 
@@ -52,15 +39,15 @@ internal class NuGetReferenceResolver : INuGetReferenceResolver
         var outputPathToken = Disposable.Empty;
         if (!string.IsNullOrWhiteSpace(output))
         {
-            outputPathToken = _cleaner.Track(output);
+            outputPathToken = cleaner.Track(output);
         }
 
         using (outputPathToken)
         {
-            _log.Trace(() => new Text("Assemblies referenced:"));
-            foreach (var assembly in _nugetAssetsReader.ReadReferencingAssemblies(projectAssetsJson))
+            log.Trace(() => new Text("Assemblies referenced:"));
+            foreach (var assembly in nugetAssetsReader.ReadReferencingAssemblies(projectAssetsJson))
             {
-                _log.Trace(() => new []{ Text.Tab, new Text(assembly.Name) });
+                log.Trace(() => [Text.Tab, new Text(assembly.Name)]);
                 result.Add(assembly);
             }
         }

@@ -6,35 +6,24 @@ using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 using Pure.DI;
 
-internal class ProcessInFlowRunner : IProcessRunner
+internal class ProcessInFlowRunner(
+    [Tag("base")] IProcessRunner baseProcessRunner,
+    ICISettings ciSettings,
+    ITeamCityWriter teamCityWriter,
+    IFlowContext flowContext)
+    : IProcessRunner
 {
-    private readonly IProcessRunner _baseProcessRunner;
-    private readonly ICISettings _ciSettings;
-    private readonly ITeamCityWriter _teamCityWriter;
-    private readonly IFlowContext _flowContext;
-
-    public ProcessInFlowRunner(
-        [Tag("base")] IProcessRunner baseProcessRunner,
-        ICISettings ciSettings,
-        ITeamCityWriter teamCityWriter,
-        IFlowContext flowContext)
-    {
-        _baseProcessRunner = baseProcessRunner;
-        _ciSettings = ciSettings;
-        _teamCityWriter = teamCityWriter;
-        _flowContext = flowContext;
-    }
 
     public ProcessResult Run(ProcessInfo processInfo, TimeSpan timeout)
     {
         using var flow = CreateFlow();
-        return _baseProcessRunner.Run(processInfo.WithStartInfo(WrapInFlow(processInfo.StartInfo)), timeout);
+        return baseProcessRunner.Run(processInfo.WithStartInfo(WrapInFlow(processInfo.StartInfo)), timeout);
     }
 
     public Task<ProcessResult> RunAsync(ProcessInfo processInfo, CancellationToken cancellationToken)
     {
         var flow = CreateFlow();
-        return _baseProcessRunner.RunAsync(processInfo.WithStartInfo(WrapInFlow(processInfo.StartInfo)), cancellationToken)
+        return baseProcessRunner.RunAsync(processInfo.WithStartInfo(WrapInFlow(processInfo.StartInfo)), cancellationToken)
             .ContinueWith(
                 task =>
                 {
@@ -44,37 +33,29 @@ internal class ProcessInFlowRunner : IProcessRunner
     }
 
     private IStartInfo WrapInFlow(IStartInfo startInfo) =>
-        _ciSettings.CIType == CIType.TeamCity
-            ? new StartInfoInFlow(startInfo, _flowContext.CurrentFlowId)
+        ciSettings.CIType == CIType.TeamCity
+            ? new StartInfoInFlow(startInfo, flowContext.CurrentFlowId)
             : startInfo;
 
     private IDisposable CreateFlow() =>
-        _ciSettings.CIType == CIType.TeamCity ? _teamCityWriter.OpenFlow() : Disposable.Empty;
+        ciSettings.CIType == CIType.TeamCity ? teamCityWriter.OpenFlow() : Disposable.Empty;
 
     [DebuggerTypeProxy(typeof(CommandLine.CommandLineDebugView))]
-    private class StartInfoInFlow : IStartInfo
+    private class StartInfoInFlow(IStartInfo baseStartIfo, string flowId) : IStartInfo
     {
-        private readonly IStartInfo _baseStartIfo;
-        private readonly string _flowId;
 
-        public StartInfoInFlow(IStartInfo baseStartIfo, string flowId)
-        {
-            _baseStartIfo = baseStartIfo;
-            _flowId = flowId;
-        }
+        public string ShortName => baseStartIfo.ShortName;
 
-        public string ShortName => _baseStartIfo.ShortName;
+        public string ExecutablePath => baseStartIfo.ExecutablePath;
 
-        public string ExecutablePath => _baseStartIfo.ExecutablePath;
+        public string WorkingDirectory => baseStartIfo.WorkingDirectory;
 
-        public string WorkingDirectory => _baseStartIfo.WorkingDirectory;
-
-        public IEnumerable<string> Args => _baseStartIfo.Args;
+        public IEnumerable<string> Args => baseStartIfo.Args;
 
         public IEnumerable<(string name, string value)> Vars =>
-            new[] {(FlowIdEnvironmentVariableName: CISettings.TeamCityFlowIdEnvironmentVariableName, _flowId)}
-                .Concat(_baseStartIfo.Vars);
+            new[] {(FlowIdEnvironmentVariableName: CISettings.TeamCityFlowIdEnvironmentVariableName, _flowId: flowId)}
+                .Concat(baseStartIfo.Vars);
 
-        public override string? ToString() => _baseStartIfo.ToString();
+        public override string? ToString() => baseStartIfo.ToString();
     }
 }

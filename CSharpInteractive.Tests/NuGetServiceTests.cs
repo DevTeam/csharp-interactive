@@ -73,7 +73,7 @@ public class NuGetServiceTests
                 .WithPackagesPath(expectedNuGtePackagesDir),
             out projectAssetsJson));
 
-        packages.ShouldBe(new[] {NuGetPackage1, NuGetPackage2});
+        packages.ShouldBe([NuGetPackage1, NuGetPackage2]);
         _trackToken.Verify(i => i.Dispose());
     }
 

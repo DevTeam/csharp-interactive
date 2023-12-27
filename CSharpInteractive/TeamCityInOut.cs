@@ -3,22 +3,15 @@ namespace CSharpInteractive;
 
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
-internal class TeamCityInOut : IStdOut, IStdErr
+internal class TeamCityInOut(
+    ITeamCityLineFormatter lineFormatter,
+    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    ITeamCityWriter teamCityWriter) : IStdOut, IStdErr
 {
-    private readonly ITeamCityLineFormatter _lineFormatter;
-    private readonly ITeamCityWriter _teamCityWriter;
 
-    public TeamCityInOut(
-        ITeamCityLineFormatter lineFormatter,
-        ITeamCityWriter teamCityWriter)
-    {
-        _lineFormatter = lineFormatter;
-        _teamCityWriter = teamCityWriter;
-    }
+    public void Write(params Text[] text) => teamCityWriter.WriteMessage(lineFormatter.Format(text));
 
-    public void Write(params Text[] text) => _teamCityWriter.WriteMessage(_lineFormatter.Format(text));
+    void IStdOut.WriteLine(params Text[] line) => teamCityWriter.WriteMessage(lineFormatter.Format(line));
 
-    void IStdOut.WriteLine(params Text[] line) => _teamCityWriter.WriteMessage(_lineFormatter.Format(line));
-
-    void IStdErr.WriteLine(params Text[] errorLine) => _teamCityWriter.WriteError(_lineFormatter.Format(errorLine));
+    void IStdErr.WriteLine(params Text[] errorLine) => teamCityWriter.WriteError(lineFormatter.Format(errorLine));
 }

@@ -1,8 +1,10 @@
 namespace CSharpInteractive.Tests;
 
+using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 using HostApi;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class SummaryPresenterTests
 {
     private readonly Mock<ILog<SummaryPresenter>> _log = new();

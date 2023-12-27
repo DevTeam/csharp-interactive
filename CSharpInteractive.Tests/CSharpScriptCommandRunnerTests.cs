@@ -4,12 +4,7 @@ using CSharpInteractive;
 
 public class CSharpScriptCommandRunnerTests
 {
-    private readonly Mock<ICSharpScriptRunner> _csharpScriptRunner;
-
-    public CSharpScriptCommandRunnerTests()
-    {
-        _csharpScriptRunner = new Mock<ICSharpScriptRunner>();
-    }
+    private readonly Mock<ICSharpScriptRunner> _csharpScriptRunner = new();
 
     [Theory]
     [InlineData(true)]

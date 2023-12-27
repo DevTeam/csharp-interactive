@@ -101,25 +101,21 @@ internal class BuildResult : IBuildResult
             passedTests);
     }
 
-    private class BuildResultDebugView
+    private class BuildResultDebugView(IBuildResult buildResult)
     {
-        private readonly BuildResult _buildResult;
-
-        public BuildResultDebugView(BuildResult buildResult) => _buildResult = buildResult;
-
-        public BuildStatistics Summary => _buildResult.Summary;
+        public BuildStatistics Summary => buildResult.Summary;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
-        public IReadOnlyList<BuildMessage> Errors => _buildResult.Errors;
+        public IReadOnlyList<BuildMessage> Errors => buildResult.Errors;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
-        public IReadOnlyList<BuildMessage> Warnings => _buildResult.Warnings;
+        public IReadOnlyList<BuildMessage> Warnings => buildResult.Warnings;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
-        public IReadOnlyList<TestResult> Tests => _buildResult.Tests;
+        public IReadOnlyList<TestResult> Tests => buildResult.Tests;
 
-        public IStartInfo StartInfo => _buildResult.StartInfo;
+        public IStartInfo StartInfo => buildResult.StartInfo;
 
-        public int? ExitCode => _buildResult.ExitCode;
+        public int? ExitCode => buildResult.ExitCode;
     }
 }

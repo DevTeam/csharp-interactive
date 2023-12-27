@@ -4,16 +4,9 @@ using CSharpInteractive;
 
 public class LoadFileCodeSourceTests
 {
-    private readonly Mock<IFilePathResolver> _filePathResolver;
-    private readonly Mock<IScriptContext> _workingDirectoryContext;
-    private readonly Mock<IDisposable> _workingDirectoryToken;
-
-    public LoadFileCodeSourceTests()
-    {
-        _filePathResolver = new Mock<IFilePathResolver>();
-        _workingDirectoryToken = new Mock<IDisposable>();
-        _workingDirectoryContext = new Mock<IScriptContext>();
-    }
+    private readonly Mock<IFilePathResolver> _filePathResolver = new();
+    private readonly Mock<IScriptContext> _workingDirectoryContext = new();
+    private readonly Mock<IDisposable> _workingDirectoryToken = new();
 
     [Fact]
     public void ShouldProvideLoadCommand()
@@ -28,7 +21,7 @@ public class LoadFileCodeSourceTests
         var expectedResult = source.ToArray();
 
         // Then
-        expectedResult.ShouldBe(new[] {"#load \"wd\\zx\\Abc\""});
+        expectedResult.ShouldBe(["#load \"wd\\zx\\Abc\""]);
         _workingDirectoryContext.Verify(i => i.CreateScope(source));
         _workingDirectoryToken.Verify(i => i.Dispose());
     }

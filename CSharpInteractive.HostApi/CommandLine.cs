@@ -61,22 +61,19 @@ public partial record CommandLine(
 
     private static string Escape(string text) => !text.TrimStart().StartsWith("\"") && text.Contains(' ') ? $"\"{text}\"" : text;
 
-    internal class CommandLineDebugView
+    internal class CommandLineDebugView(IStartInfo startInfo)
     {
-        private readonly IStartInfo _startInfo;
 
-        public CommandLineDebugView(IStartInfo startInfo) => _startInfo = startInfo;
+        public string ShortName => startInfo.ShortName;
 
-        public string ShortName => _startInfo.ShortName;
+        public string ExecutablePath => startInfo.ExecutablePath;
 
-        public string ExecutablePath => _startInfo.ExecutablePath;
-
-        public string WorkingDirectory => _startInfo.WorkingDirectory;
+        public string WorkingDirectory => startInfo.WorkingDirectory;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
-        public IEnumerable<string> Args => _startInfo.Args;
+        public IEnumerable<string> Args => startInfo.Args;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
-        public IEnumerable<(string name, string value)> Vars => _startInfo.Vars;
+        public IEnumerable<(string name, string value)> Vars => startInfo.Vars;
     }
 }

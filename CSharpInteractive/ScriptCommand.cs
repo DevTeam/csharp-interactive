@@ -3,20 +3,13 @@ namespace CSharpInteractive;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class ScriptCommand : ICommand
+internal class ScriptCommand(string originName, string script, bool isInternal = false) : ICommand
 {
-    public readonly string Script;
+    public readonly string Script = script;
 
-    public ScriptCommand(string originName, string script, bool isInternal = false)
-    {
-        Name = originName;
-        Script = script;
-        Internal = isInternal;
-    }
+    public string Name { get; } = originName;
 
-    public string Name { get; }
-
-    public bool Internal { get; }
+    public bool Internal { get; } = isInternal;
 
     public override bool Equals(object? obj)
     {

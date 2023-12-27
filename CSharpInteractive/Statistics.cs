@@ -8,8 +8,8 @@ using System.Diagnostics;
 internal class Statistics : IStatistics
 {
     private readonly Stopwatch _stopwatch = new();
-    private readonly List<string> _errors = new();
-    private readonly List<string> _warnings = new();
+    private readonly List<string> _errors = [];
+    private readonly List<string> _warnings = [];
 
     public IReadOnlyCollection<string> Errors
     {

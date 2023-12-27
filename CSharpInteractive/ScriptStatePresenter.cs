@@ -7,24 +7,16 @@ using HostApi;
 using Microsoft.CodeAnalysis.Scripting;
 
 [ExcludeFromCodeCoverage]
-internal class ScriptStatePresenter : IPresenter<ScriptState<object>>
+internal class ScriptStatePresenter(ILog<ScriptStatePresenter> log, IProperties properties) : IPresenter<ScriptState<object>>
 {
     private const string Tab = " ";
     private static readonly IEnumerable<Text> EmptyLine = new[] {Text.NewLine};
-    private readonly ILog<ScriptStatePresenter> _log;
-    private readonly IProperties _properties;
-
-    public ScriptStatePresenter(ILog<ScriptStatePresenter> log, IProperties properties)
-    {
-        _log = log;
-        _properties = properties;
-    }
 
     public void Show(ScriptState<object> data)
     {
         if (data.Variables.Any())
         {
-            _log.Trace(() =>
+            log.Trace(() =>
             {
                 var vars = GetTrace(
                     "Variables",
@@ -37,7 +29,7 @@ internal class ScriptStatePresenter : IPresenter<ScriptState<object>>
 
                 var props = GetTrace(
                     "Properties",
-                    _properties.Select(i => $"{Tab}Props[\"{i.Key}\"] = \"{i.Value}\""));
+                    properties.Select(i => $"{Tab}Props[\"{i.Key}\"] = \"{i.Value}\""));
 
                 return EmptyLine
                     .Concat(vars)
@@ -47,7 +39,7 @@ internal class ScriptStatePresenter : IPresenter<ScriptState<object>>
         }
         else
         {
-            _log.Trace(() => new[] {new Text("No variables defined.")});
+            log.Trace(() => [new Text("No variables defined.")]);
         }
     }
 

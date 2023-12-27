@@ -31,14 +31,13 @@ public class BuildOutputProcessorTests
 
         // Then
         messages.ShouldBe(
-            new[]
-            {
-                new(BuildMessageState.ServiceMessage, msg1.Object),
+        [
+            new BuildMessage(BuildMessageState.ServiceMessage, msg1.Object),
                 buildMsg1,
                 buildMsg2,
-                new(BuildMessageState.ServiceMessage, msg2.Object),
+                new BuildMessage(BuildMessageState.ServiceMessage, msg2.Object),
                 buildMsg3
-            });
+        ]);
     }
 
     [Theory]
@@ -58,7 +57,7 @@ public class BuildOutputProcessorTests
         var messages = processor.Convert(output, _buildResult.Object).ToArray();
 
         // Then
-        messages.ShouldBe(new[] {buildMsg});
+        messages.ShouldBe([buildMsg]);
     }
 
     private BuildOutputProcessor CreateInstance() =>

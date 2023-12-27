@@ -3,16 +3,10 @@ namespace CSharpInteractive;
 using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
-internal class ReferencingAssembly
+internal class ReferencingAssembly(string name, string filePath)
 {
-    public readonly string Name;
-    public readonly string FilePath;
-
-    public ReferencingAssembly(string name, string filePath)
-    {
-        Name = name;
-        FilePath = filePath;
-    }
+    public readonly string Name = name;
+    public readonly string FilePath = filePath;
 
     public override string ToString() => FilePath;
 }

@@ -33,7 +33,7 @@ public class StatisticsTests
         statistics.RegisterError("error2");
 
         // Then
-        statistics.Errors.ToArray().ShouldBe(new[] {"error1", "error2"});
+        statistics.Errors.ToArray().ShouldBe(["error1", "error2"]);
     }
 
     [Fact]
@@ -49,6 +49,6 @@ public class StatisticsTests
         statistics.RegisterWarning("warning2");
 
         // Then
-        statistics.Warnings.ToArray().ShouldBe(new[] {"warning1", "warning2"});
+        statistics.Warnings.ToArray().ShouldBe(["warning1", "warning2"]);
     }
 }

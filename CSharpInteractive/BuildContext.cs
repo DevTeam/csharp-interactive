@@ -8,10 +8,10 @@ using JetBrains.TeamCity.ServiceMessages;
 
 internal class BuildContext : IBuildContext
 {
-    private readonly List<BuildMessage> _errors = new();
-    private readonly List<BuildMessage> _warnings = new();
-    private readonly List<TestResult> _tests = new();
-    private readonly HashSet<TestKey> _testKeys = new();
+    private readonly List<BuildMessage> _errors = [];
+    private readonly List<BuildMessage> _warnings = [];
+    private readonly List<TestResult> _tests = [];
+    private readonly HashSet<TestKey> _testKeys = [];
     private readonly Dictionary<TestKey, TestContext> _currentTests = new();
 
     [SuppressMessage("ReSharper", "StringLiteralTypo")]
@@ -256,7 +256,7 @@ internal class BuildContext : IBuildContext
 
     private class TestContext
     {
-        public readonly List<Output> Output = new();
+        public readonly List<Output> Output = [];
 
         public void AddStdOut(IStartInfo info, int processId, string? text)
         {

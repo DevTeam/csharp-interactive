@@ -6,17 +6,14 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Build.Framework;
 
 [ExcludeFromCodeCoverage]
-internal class BuildEngine : IBuildEngine
+internal class BuildEngine(ILog<BuildEngine> log) : IBuildEngine
 {
-    private readonly ILog<BuildEngine> _log;
-
-    public BuildEngine(ILog<BuildEngine> log) => _log = log;
 
     public void LogErrorEvent(BuildErrorEventArgs e)
     {
         if (e.Message is { } message)
         {
-            _log.Error(new ErrorId(e.Code), [new Text(message)]);
+            log.Error(new ErrorId(e.Code), [new Text(message)]);
         }
     }
 
@@ -24,29 +21,31 @@ internal class BuildEngine : IBuildEngine
     {
         if (e.Message is { } message)
         {
-            _log.Warning([new Text(message)]);
+            log.Warning([new Text(message)]);
         }
     }
 
     public void LogMessageEvent(BuildMessageEventArgs e)
     {
-        if (e.Message is { } message)
+        if (e.Message is not { } message)
         {
-            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            switch (e.Importance)
-            {
-                case MessageImportance.High:
-                    _log.Info([new Text(message)]);
-                    break;
+            return;
+        }
+        
+        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+        switch (e.Importance)
+        {
+            case MessageImportance.High:
+                log.Info([new Text(message)]);
+                break;
 
-                case MessageImportance.Normal:
-                    _log.Info([new Text(message)]);
-                    break;
+            case MessageImportance.Normal:
+                log.Info([new Text(message)]);
+                break;
 
-                default:
-                    _log.Trace(() => [new Text(message)], "MSBuild");
-                    break;
-            }
+            default:
+                log.Trace(() => [new Text(message)], "MSBuild");
+                break;
         }
     }
 
@@ -54,7 +53,7 @@ internal class BuildEngine : IBuildEngine
     {
         if (e.Message is { } message)
         {
-            _log.Trace(() => [new Text(message)], "MSBuild");
+            log.Trace(() => [new Text(message)], "MSBuild");
         }
     }
 

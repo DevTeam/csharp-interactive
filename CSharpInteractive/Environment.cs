@@ -13,7 +13,7 @@ internal class Environment:
     IErrorContext
 {
     private static readonly OSPlatform UnknownOSPlatform = OSPlatform.Create("Unknown");
-    private readonly LinkedList<ICodeSource> _sources = new();
+    private readonly LinkedList<ICodeSource> _sources = [];
 
     public OSPlatform OperatingSystemPlatform
     {

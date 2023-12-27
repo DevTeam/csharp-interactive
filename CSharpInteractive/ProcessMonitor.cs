@@ -3,19 +3,11 @@ namespace CSharpInteractive;
 
 using HostApi;
 
-internal class ProcessMonitor : IProcessMonitor
+internal class ProcessMonitor(
+    ILog<ProcessMonitor> log,
+    IEnvironment environment) : IProcessMonitor
 {
-    private readonly ILog<ProcessMonitor> _log;
-    private readonly IEnvironment _environment;
     private int? _processId;
-
-    public ProcessMonitor(
-        ILog<ProcessMonitor> log,
-        IEnvironment environment)
-    {
-        _log = log;
-        _environment = environment;
-    }
 
     public void Started(IStartInfo startInfo, int processId)
     {
@@ -32,17 +24,17 @@ internal class ProcessMonitor : IProcessMonitor
             executable.Add(new Text(arg.EscapeArg()));
         }
 
-        _log.Info(executable.ToArray());
+        log.Info(executable.ToArray());
 
         var workingDirectory = startInfo.WorkingDirectory;
         if (string.IsNullOrWhiteSpace(workingDirectory))
         {
-            workingDirectory = _environment.GetPath(SpecialFolder.Working);
+            workingDirectory = environment.GetPath(SpecialFolder.Working);
         }
 
         if (!string.IsNullOrWhiteSpace(workingDirectory))
         {
-            _log.Info(new Text("in directory: "), new Text(workingDirectory.EscapeArg()));
+            log.Info(new Text("in directory: "), new Text(workingDirectory.EscapeArg()));
         }
     }
 

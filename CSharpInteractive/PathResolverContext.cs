@@ -4,13 +4,10 @@ namespace CSharpInteractive;
 using HostApi;
 using HostApi.Cmd;
 
-internal class PathResolverContext : IPathResolverContext, IVirtualContext
+internal class PathResolverContext(IHost host) : IPathResolverContext, IVirtualContext
 {
-    private readonly IHost _host;
     private IPathResolver _currentResolver = EmptyResolver.Shared;
     private IPathResolver _prevResolver = EmptyResolver.Shared;
-
-    public PathResolverContext(IHost host) => _host = host;
 
     public bool IsActive => _currentResolver != EmptyResolver.Shared;
 
@@ -26,7 +23,7 @@ internal class PathResolverContext : IPathResolverContext, IVirtualContext
         });
     }
 
-    public string Resolve(string path) => _currentResolver.Resolve(_host, path, _prevResolver);
+    public string Resolve(string path) => _currentResolver.Resolve(host, path, _prevResolver);
 
     private class EmptyResolver : IPathResolver
     {

@@ -14,7 +14,6 @@ public class AddNuGetReferenceCommandRunnerTests
 
     public AddNuGetReferenceCommandRunnerTests()
     {
-        _referenceRegistry = new Mock<IReferenceRegistry>();
         var referencingAssembly1Description = _referencingAssembly1.Name;
         _referenceRegistry.Setup(i => i.TryRegisterAssembly(_referencingAssembly1.FilePath, out referencingAssembly1Description)).Returns(true);
 

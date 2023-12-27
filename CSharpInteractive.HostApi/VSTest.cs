@@ -103,7 +103,7 @@ public partial record VSTest(
         }
 
         var runSettings = RunSettings.Select(i => $"{i.name}={i.value}").ToArray();
-        if (runSettings.Any())
+        if (runSettings.Length != 0)
         {
             cmd = cmd.AddArgs("--").AddArgs(runSettings);
         }

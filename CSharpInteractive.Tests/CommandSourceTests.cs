@@ -24,6 +24,6 @@ public class CommandSourceTests
         var actualCommands = source.GetCommands().ToArray();
 
         // Then
-        actualCommands.ShouldBe(new[] {HelpCommand.Shared, ResetCommand.Shared});
+        actualCommands.ShouldBe([HelpCommand.Shared, ResetCommand.Shared]);
     }
 }

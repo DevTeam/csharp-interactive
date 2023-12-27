@@ -1,7 +1,9 @@
 namespace CSharpInteractive.Tests;
 
+using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class ProgramTests
 {
     private readonly Mock<ILog<Program>> _log;
