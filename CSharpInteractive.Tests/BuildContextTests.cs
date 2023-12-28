@@ -121,6 +121,7 @@ public class BuildContextTests
             {"message", "Some message"},
             {"details", "Error details"},
             {"displayName", "Test1"},
+            {"resultDisplayName", "Test1 Abc"},
             {"fullyQualifiedName", "Full Test1"}
         };
 
@@ -136,6 +137,7 @@ public class BuildContextTests
         var test = buildResult.Tests[0];
         test.SuiteName.ShouldBe("Assembly1");
         test.DisplayName.ShouldBe("Test1");
+        test.ResultDisplayName.ShouldBe("Test1 Abc");
         test.FullyQualifiedName.ShouldBe("Full Test1");
         test.Duration.ShouldBe(TimeSpan.Zero);
         test.State.ShouldBe(TestState.Failed);

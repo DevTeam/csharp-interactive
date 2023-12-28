@@ -16,6 +16,7 @@ public readonly record struct TestResult(
     string SuiteName,
     string FullyQualifiedName,
     string DisplayName,
+    string ResultDisplayName,
     string Message,
     string Details,
     TimeSpan Duration,
@@ -30,6 +31,7 @@ public readonly record struct TestResult(
         : this(
             state,
             name,
+            string.Empty,
             string.Empty,
             string.Empty,
             string.Empty,

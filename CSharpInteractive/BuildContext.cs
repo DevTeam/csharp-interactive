@@ -111,6 +111,7 @@ internal class BuildContext : IBuildContext
     {
         var testSource = message.GetValue("testSource") ?? string.Empty;
         var displayName = message.GetValue("displayName") ?? string.Empty; 
+        var resultDisplayName = message.GetValue("resultDisplayName") ?? string.Empty;
         var codeFilePath = message.GetValue("codeFilePath") ?? string.Empty;
         var fullyQualifiedName = message.GetValue("fullyQualifiedName") ?? string.Empty;
         var (flowId, suiteName, testName) = key;
@@ -119,6 +120,7 @@ internal class BuildContext : IBuildContext
                 .WithFlowId(flowId)
                 .WithSource(testSource)
                 .WithDisplayName(displayName)
+                .WithResultDisplayName(resultDisplayName)
                 .WithCodeFilePath(codeFilePath)
                 .WithFullyQualifiedName(fullyQualifiedName);
         
