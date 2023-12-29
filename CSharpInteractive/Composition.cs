@@ -65,9 +65,9 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             .Bind<IColorTheme>().To<ColorTheme>()
             .Bind<ITeamCityLineFormatter>().To<TeamCityLineFormatter>()
             .Bind<ICISpecific<TT>>().To<CISpecific<TT>>()
-            .Bind<IStdOut>().Bind<IStdErr>().Tags("Default").To<ConsoleInOut>()
-            .Bind<IStdOut>().Bind<IStdErr>().Tags("TeamCity").To<TeamCityInOut>()
-            .Bind<IStdOut>().Bind<IStdErr>().Tags("Ansi").To<AnsiInOut>()
+            .Bind<IStdOut, IStdErr>("Default").To<ConsoleInOut>()
+            .Bind<IStdOut, IStdErr>("TeamCity").To<TeamCityInOut>()
+            .Bind<IStdOut, IStdErr>("Ansi").To<AnsiInOut>()
             .Bind<IConsole>().To<Console>()
             .Bind<IStdOut>().To(ctx =>
             {
@@ -87,14 +87,14 @@ internal partial class Composition: ServiceProviderFactory<Composition>
                 return log.Instance;
             })
             .Bind<IFileSystem>().To<FileSystem>()
-            .Bind<IEnvironment>().Bind<IScriptContext>().Bind<IErrorContext>().Bind<ITraceSource>(typeof(Environment)).To<Environment>().Root<IEnvironment>()
+            .Bind<IEnvironment, IScriptContext, IErrorContext>().Bind<ITraceSource>(typeof(Environment)).To<Environment>().Root<IEnvironment>()
             .Bind<ICISettings>().To<CISettings>()
             .Bind<IExitTracker>().To<ExitTracker>()
             .Bind<IDotNetEnvironment>().Bind<ITraceSource>(typeof(DotNetEnvironment)).To<DotNetEnvironment>().Root<IDotNetEnvironment>()
             .Bind<IDockerEnvironment>().Bind<ITraceSource>(typeof(DockerEnvironment)).To<DockerEnvironment>()
             .Bind<INuGetEnvironment>().Bind<ITraceSource>(typeof(NuGetEnvironment)).To<NuGetEnvironment>()
-            .Bind<ISettings>().Bind<ISettingSetter<VerbosityLevel>>().Bind<Settings>().To<Settings>()
-            .Bind<ISettingDescription>().Tags(typeof(VerbosityLevel)).To<VerbosityLevelSettingDescription>()
+            .Bind<ISettings, ISettingSetter<VerbosityLevel>, Settings>().To<Settings>()
+            .Bind<ISettingDescription>(typeof(VerbosityLevel)).To<VerbosityLevelSettingDescription>()
             .Bind<IMSBuildArgumentsTool>().To<MSBuildArgumentsTool>()
             .Bind<ICommandLineParser>().To<CommandLineParser>()
             .Bind<IInfo>().To<Info>()
@@ -111,8 +111,8 @@ internal partial class Composition: ServiceProviderFactory<Composition>
                 lineCodeSource.Line = line;
                 return lineCodeSource;
             }))
-            .Bind<IScriptRunner>().Tags(InteractionMode.Interactive).To<InteractiveRunner>()
-            .Bind<IScriptRunner>().Tags(InteractionMode.NonInteractive).To<ScriptRunner>()
+            .Bind<IScriptRunner>(InteractionMode.Interactive).To<InteractiveRunner>()
+            .Bind<IScriptRunner>(InteractionMode.NonInteractive).To<ScriptRunner>()
             .Bind<IScriptRunner>().As(Lifetime.Transient).To(ctx =>
             {
                 ctx.Inject<ISettings>(out var settings);
@@ -135,7 +135,7 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             .Bind<IPresenter<CompilationDiagnostics>>().To<DiagnosticsPresenter>()
             .Bind<IPresenter<ScriptState<object>>>().To<ScriptStatePresenter>()
             .Bind<IBuildEngine>().To<BuildEngine>()
-            .Bind<INuGetRestoreService>().Bind<ISettingSetter<NuGetRestoreSetting>>().To<NuGetRestoreService>()
+            .Bind<INuGetRestoreService, ISettingSetter<NuGetRestoreSetting>>().To<NuGetRestoreService>()
             .Bind<ILogger>().To<NuGetLogger>()
             .Bind<IUniqueNameGenerator>().To<UniqueNameGenerator>().Root<IUniqueNameGenerator>()
             .Bind<INuGetAssetsReader>().To<NuGetAssetsReader>()
@@ -157,7 +157,7 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             .Bind<MemoryPool<TT>>().To(_ => MemoryPool<TT>.Shared)
             .Bind<IMessageIndicesReader>().To<MessageIndicesReader>()
             .Bind<IMessagesReader>().To<MessagesReader>()
-            .Bind<IPathResolverContext>().Bind<IVirtualContext>().To<PathResolverContext>().Root<IPathResolverContext>().Root<IVirtualContext>()
+            .Bind<IPathResolverContext, IVirtualContext>().To<PathResolverContext>().Root<IPathResolverContext>().Root<IVirtualContext>()
             .Bind<IEncoding>().To<Utf8Encoding>()
             .Bind<IProcessMonitor>().As(Lifetime.Transient).To<ProcessMonitor>()
             .Bind<IBuildOutputProcessor>().To<BuildOutputProcessor>()
@@ -167,7 +167,7 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             .Bind<IExitCodeParser>().To<ExitCodeParser>()
             .Bind<IProcessRunner>("base").To<ProcessRunner>()
             .Bind<IProcessRunner>().To<ProcessInFlowRunner>()
-            .Bind<IDotNetSettings>().Bind<ITeamCityContext>().To<TeamCityContext>().Root<IDotNetSettings>()
+            .Bind<IDotNetSettings, ITeamCityContext>().To<TeamCityContext>().Root<IDotNetSettings>()
             .Bind<IProcessResultHandler>().To<ProcessResultHandler>()
             .Bind<IRuntimeExplorer>().To<RuntimeExplorer>()
             .Bind<INuGetReferenceResolver>().To<NuGetReferenceResolver>()
@@ -179,13 +179,13 @@ internal partial class Composition: ServiceProviderFactory<Composition>
         DI.Setup(nameof(Composition))
             .DefaultLifetime(Lifetime.Singleton)
             // Script options factory
-            .Bind<ISettingGetter<LanguageVersion>>().Bind<ISettingSetter<LanguageVersion>>().To(_ => new Setting<LanguageVersion>(LanguageVersion.Default))
-            .Bind<ISettingGetter<OptimizationLevel>>().Bind<ISettingSetter<OptimizationLevel>>().To(_ => new Setting<OptimizationLevel>(OptimizationLevel.Release))
-            .Bind<ISettingGetter<WarningLevel>>().Bind<ISettingSetter<WarningLevel>>().To(_ => new Setting<WarningLevel>((WarningLevel)ScriptOptions.Default.WarningLevel))
-            .Bind<ISettingGetter<CheckOverflow>>().Bind<ISettingSetter<CheckOverflow>>().To(_ => new Setting<CheckOverflow>(ScriptOptions.Default.CheckOverflow ? CheckOverflow.On : CheckOverflow.Off))
-            .Bind<ISettingGetter<AllowUnsafe>>().Bind<ISettingSetter<AllowUnsafe>>().To(_ => new Setting<AllowUnsafe>(ScriptOptions.Default.AllowUnsafe ? AllowUnsafe.On : AllowUnsafe.Off))
+            .Bind<ISettingGetter<LanguageVersion>, ISettingSetter<LanguageVersion>>().To(_ => new Setting<LanguageVersion>(LanguageVersion.Default))
+            .Bind<ISettingGetter<OptimizationLevel>, ISettingSetter<OptimizationLevel>>().To(_ => new Setting<OptimizationLevel>(OptimizationLevel.Release))
+            .Bind<ISettingGetter<WarningLevel>, ISettingSetter<WarningLevel>>().To(_ => new Setting<WarningLevel>((WarningLevel)ScriptOptions.Default.WarningLevel))
+            .Bind<ISettingGetter<CheckOverflow>, ISettingSetter<CheckOverflow>>().To(_ => new Setting<CheckOverflow>(ScriptOptions.Default.CheckOverflow ? CheckOverflow.On : CheckOverflow.Off))
+            .Bind<ISettingGetter<AllowUnsafe>, ISettingSetter<AllowUnsafe>>().To(_ => new Setting<AllowUnsafe>(ScriptOptions.Default.AllowUnsafe ? AllowUnsafe.On : AllowUnsafe.Off))
             .Bind<IAssembliesProvider>().To<AssembliesProvider>()
-            .Bind<IScriptOptionsFactory>().Bind<IActive>().Tags(typeof(AssembliesScriptOptionsProvider)).To<AssembliesScriptOptionsProvider>()
+            .Bind<IScriptOptionsFactory, IActive>(typeof(AssembliesScriptOptionsProvider)).To<AssembliesScriptOptionsProvider>()
             .Bind<IScriptOptionsFactory>(typeof(ConfigurableScriptOptionsFactory)).To<ConfigurableScriptOptionsFactory>()
             .Bind<IScriptOptionsFactory>(typeof(ReferencesScriptOptionsFactory)).Bind<IReferenceRegistry>().To<ReferencesScriptOptionsFactory>()
             .Bind<IScriptOptionsFactory>(typeof(SourceFileScriptOptionsFactory)).To<SourceFileScriptOptionsFactory>()
@@ -243,7 +243,7 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             // TeamCity Service messages
             .Bind<ITeamCityServiceMessages>().To<TeamCityServiceMessages>()
             .Bind<IServiceMessageFormatter>().To<ServiceMessageFormatter>()
-            .Bind<IFlowIdGenerator>().Bind<IFlowContext>().To<FlowIdGenerator>()
+            .Bind<IFlowIdGenerator, IFlowContext>().To<FlowIdGenerator>()
             .Bind<DateTime>().As(Lifetime.Transient).To(_ => DateTime.Now)
             .Bind<IServiceMessageUpdater>().To<TimestampUpdater>()
             .Bind<ITeamCityWriter>().To(

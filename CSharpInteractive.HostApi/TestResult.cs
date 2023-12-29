@@ -76,6 +76,8 @@ public readonly record struct TestResult(
 
         public string DisplayName => testResult.DisplayName;
 
+        public string ResultDisplayName => testResult.ResultDisplayName;
+
         public string Message => testResult.Message;
 
         public string Details => testResult.Details;
