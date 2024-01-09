@@ -109,12 +109,19 @@ Assertion.Succeed(
         .WithProps(buildProps)
         .Build());
 
-Assertion.Succeed(
-    new DotNetBuild()
-        .WithProject(solutionFile)
-        .WithConfiguration(configuration)
-        .WithProps(buildProps)
-        .Build());
+var buildCommand = new DotNetBuild()
+    .WithProject(solutionFile)
+    .WithConfiguration(configuration)
+    .WithProps(buildProps);
+
+var attempt = 3;
+IBuildResult? buildResult = default;
+while (buildResult?.ExitCode != 0 && attempt-- > 0)
+{
+    buildResult = buildCommand.Build(_ => {});
+}
+
+Assertion.Succeed(buildResult!);
 
 var reportDir = Path.Combine(currentDir, ".reports");
 if (Directory.Exists(reportDir))
