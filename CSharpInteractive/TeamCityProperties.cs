@@ -12,7 +12,6 @@ internal class TeamCityProperties(
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     ITeamCityWriter teamCityWriter) : IProperties
 {
-
     public int Count => properties.Count;
 
     public string this[string key]
@@ -29,5 +28,5 @@ internal class TeamCityProperties(
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)properties).GetEnumerator();
 
-    public bool TryGetValue(string key, [MaybeNullWhen(false)] out string value) => properties.TryGetValue(key, out value);
+    public bool TryGetValue(string key, out string value) => properties.TryGetValue(key, out value);
 }

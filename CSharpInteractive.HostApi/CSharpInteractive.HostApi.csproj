@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <IsPackable>false</IsPackable>
-        <TargetFrameworks>$(Frameworks)</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>HostApi</RootNamespace>
         <ImmutypeAPI>True</ImmutypeAPI>
     </PropertyGroup>
@@ -13,7 +13,6 @@
         </PackageReference>
         <PackageReference Include="NuGet.Versioning" Version="6.4.0" />
         <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1" />
-        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
         <InternalsVisibleTo Include="dotnet-csi" />
         <InternalsVisibleTo Include="CSharpInteractive" />

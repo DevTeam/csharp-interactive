@@ -144,8 +144,8 @@ public partial record DockerRun(
             path = Path.GetFullPath(path);
             if (!directoryMap.TryGetValue(path, out var toPath))
             {
-                var rootDirectory = platform.Contains("windows", StringComparison.OrdinalIgnoreCase) ? "c:" : string.Empty;
-                toPath = $"{rootDirectory}/.{Guid.NewGuid().ToString()[..8]}";
+                var rootDirectory = platform.ToLower().Contains("windows") ? "c:" : string.Empty;
+                toPath = $"{rootDirectory}/.{Guid.NewGuid().ToString().Substring(0, 8)}";
                 directoryMap.Add(path, toPath);
             }
 

@@ -10,5 +10,5 @@ public interface IProperties : IEnumerable<KeyValuePair<string, string>>
 
     string this[string key] { get; set; }
 
-    bool TryGetValue(string key, [MaybeNullWhen(false)] out string value);
+    bool TryGetValue(string key, out string value);
 }

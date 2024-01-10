@@ -117,5 +117,5 @@ public partial record MSBuild(
     public override string ToString() => (ExecutablePath == string.Empty ? "dotnet msbuild" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Project);
 
     private static string JoinWithSemicolons(IEnumerable<string> arg) => 
-        string.Join(';', arg.Where(i => !string.IsNullOrWhiteSpace(i)).Select(i => i.Trim()));
+        string.Join(";", arg.Where(i => !string.IsNullOrWhiteSpace(i)).Select(i => i.Trim()));
 }

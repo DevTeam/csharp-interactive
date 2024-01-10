@@ -3,7 +3,6 @@
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
 namespace HostApi;
 
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text;
 using Immutype;
@@ -29,7 +28,7 @@ public partial record CommandLine(
     private readonly string _shortName = ShortName;
 
     public CommandLine(string executablePath, params string[] args)
-        : this(executablePath, string.Empty, args, ImmutableArray<(string name, string value)>.Empty)
+        : this(executablePath, string.Empty, args, Array.Empty<(string name, string value)>())
     { }
 
     internal CommandLine(IStartInfo startInfo)

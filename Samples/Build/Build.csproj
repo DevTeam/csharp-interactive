@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>net6.0</TargetFrameworks>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
@@ -12,7 +12,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" />
         <ProjectReference Include="..\..\CSharpInteractive\CSharpInteractive.csproj" />
-        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.28" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="build"/>
+        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.0-cs" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="build"/>
         <Using Include="System"/>
         <Using Include="System.Collections.Generic"/>
         <Using Include="System.IO"/>
