@@ -2,13 +2,11 @@
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
 internal class DiagnosticsPresenter(ILog<DiagnosticsPresenter> log, IErrorContext errorContext) : IPresenter<CompilationDiagnostics>
 {
-
     public void Show(CompilationDiagnostics data)
     {
         var (sourceCommand, readOnlyCollection) = data;

@@ -1,14 +1,12 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using Pure.DI;
 
 internal class RuntimeExplorer(
     [Tag("RuntimePath")] string runtimePath,
     IFileSystem fileSystem) : IRuntimeExplorer
 {
-
     public bool TryFindRuntimeAssembly(string assemblyPath, [MaybeNullWhen(false)] out string runtimeAssemblyPath)
     {
         if (string.IsNullOrWhiteSpace(runtimePath))

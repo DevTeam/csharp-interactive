@@ -2,8 +2,6 @@
 // ReSharper disable UnusedMethodReturnValue.Global
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
-
 [ExcludeFromCodeCoverage]
 internal static class LogExtensions
 {

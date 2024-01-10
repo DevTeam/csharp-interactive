@@ -1,6 +1,7 @@
 <!--suppress MsbuildTargetFrameworkTagInspection -->
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
         <IsPackable>false</IsPackable>
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>HostApi</RootNamespace>

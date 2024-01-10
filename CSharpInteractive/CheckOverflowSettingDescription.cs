@@ -1,8 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
-
 [ExcludeFromCodeCoverage]
 internal class CheckOverflowSettingDescription : ISettingDescription
 {

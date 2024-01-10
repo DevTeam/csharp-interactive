@@ -3,7 +3,6 @@
 // ReSharper disable InconsistentNaming
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 internal class Environment:

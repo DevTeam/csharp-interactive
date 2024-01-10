@@ -3,12 +3,10 @@
 namespace CSharpInteractive;
 
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using HostApi;
 
 internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IProcessRunner
 {
-
     public ProcessResult Run(ProcessInfo processInfo, TimeSpan timeout)
     {
         var processManager = processManagerFactory();

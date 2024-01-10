@@ -3,7 +3,6 @@
 // ReSharper disable NotAccessedPositionalProperty.Global
 namespace HostApi;
 
-using Immutype;
 using NuGet.Versioning;
 
 [Target]

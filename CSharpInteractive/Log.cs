@@ -1,7 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using HostApi;
 
 [ExcludeFromCodeCoverage]
@@ -15,7 +14,7 @@ internal class Log<T>(
 
     public void Error(ErrorId id, params Text[] error)
     {
-        if (!error.Any())
+        if (error.Length == 0)
         {
             return;
         }
@@ -26,7 +25,7 @@ internal class Log<T>(
 
     public void Warning(params Text[] warning)
     {
-        if (!warning.Any())
+        if (warning.Length == 0)
         {
             return;
         }

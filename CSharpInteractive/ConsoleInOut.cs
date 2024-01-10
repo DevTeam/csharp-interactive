@@ -1,7 +1,5 @@
 ﻿namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
-
 // ReSharper disable once ClassNeverInstantiated.Global
 [ExcludeFromCodeCoverage]
 internal class ConsoleInOut(

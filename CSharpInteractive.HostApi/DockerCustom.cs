@@ -4,7 +4,6 @@
 namespace HostApi;
 
 using Docker;
-using Immutype;
 
 /// <summary>
 /// The docker custom command is used to execute any docker commands with any arguments.

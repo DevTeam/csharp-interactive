@@ -14,7 +14,6 @@ internal class MessagesReader(
     IServiceMessageParser serviceMessageParser)
     : IMessagesReader
 {
-
     public IEnumerable<IServiceMessage> Read(string indicesFile, string messagesFile)
     {
         using var reader = fileSystem.OpenReader(messagesFile);

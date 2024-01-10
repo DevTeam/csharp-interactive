@@ -2,13 +2,11 @@
 namespace CSharpInteractive;
 
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Build.Framework;
 
 [ExcludeFromCodeCoverage]
 internal class BuildEngine(ILog<BuildEngine> log) : IBuildEngine
 {
-
     public void LogErrorEvent(BuildErrorEventArgs e)
     {
         if (e.Message is { } message)

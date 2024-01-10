@@ -1,7 +1,6 @@
 namespace CSharpInteractive;
 
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]

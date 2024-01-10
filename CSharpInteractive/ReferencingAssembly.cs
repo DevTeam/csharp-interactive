@@ -1,7 +1,5 @@
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
-
 [ExcludeFromCodeCoverage]
 internal class ReferencingAssembly(string name, string filePath)
 {

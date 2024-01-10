@@ -8,7 +8,6 @@ internal class MessageIndicesReader(
     MemoryPool<byte> memoryPool,
     IFileSystem fileSystem) : IMessageIndicesReader
 {
-
     public IEnumerable<ulong> Read(string indicesFile)
     {
         using var reader = fileSystem.OpenReader(indicesFile);

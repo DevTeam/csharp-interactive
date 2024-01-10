@@ -1,7 +1,6 @@
 namespace CSharpInteractive;
 
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
 internal class Debugger(

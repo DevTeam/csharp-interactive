@@ -1,8 +1,8 @@
 namespace HostApi;
 
 using System.Text;
-using Immutype;
 
+[ExcludeFromCodeCoverage]
 [Target]
 public record BuildStatistics(
     int Errors = default,

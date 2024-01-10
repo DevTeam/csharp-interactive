@@ -20,6 +20,7 @@ public partial record CommandLine: ICommandLine
     public static CommandLine operator -(CommandLine command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetBuild: ICommandLine
 {
     public static DotNetBuild operator +(DotNetBuild command, string arg) => command.AddArgs(arg);
@@ -39,6 +40,7 @@ public partial record DotNetBuild: ICommandLine
     public static DotNetBuild operator -(DotNetBuild command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetBuildServerShutdown: ICommandLine
 {
     public static DotNetBuildServerShutdown operator +(DotNetBuildServerShutdown command, string arg) => command.AddArgs(arg);
@@ -58,6 +60,7 @@ public partial record DotNetBuildServerShutdown: ICommandLine
     public static DotNetBuildServerShutdown operator -(DotNetBuildServerShutdown command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetClean: ICommandLine
 {
     public static DotNetClean operator +(DotNetClean command, string arg) => command.AddArgs(arg);
@@ -77,6 +80,7 @@ public partial record DotNetClean: ICommandLine
     public static DotNetClean operator -(DotNetClean command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetCustom: ICommandLine
 {
     public static DotNetCustom operator +(DotNetCustom command, string arg) => command.AddArgs(arg);
@@ -96,6 +100,7 @@ public partial record DotNetCustom: ICommandLine
     public static DotNetCustom operator -(DotNetCustom command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetNew: ICommandLine
 {
     public static DotNetNew operator +(DotNetNew command, string arg) => command.AddArgs(arg);
@@ -115,6 +120,7 @@ public partial record DotNetNew: ICommandLine
     public static DotNetNew operator -(DotNetNew command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetNuGetPush: ICommandLine
 {
     public static DotNetNuGetPush operator +(DotNetNuGetPush command, string arg) => command.AddArgs(arg);
@@ -134,6 +140,7 @@ public partial record DotNetNuGetPush: ICommandLine
     public static DotNetNuGetPush operator -(DotNetNuGetPush command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetPack: ICommandLine
 {
     public static DotNetPack operator +(DotNetPack command, string arg) => command.AddArgs(arg);
@@ -153,6 +160,7 @@ public partial record DotNetPack: ICommandLine
     public static DotNetPack operator -(DotNetPack command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetPublish: ICommandLine
 {
     public static DotNetPublish operator +(DotNetPublish command, string arg) => command.AddArgs(arg);
@@ -172,6 +180,7 @@ public partial record DotNetPublish: ICommandLine
     public static DotNetPublish operator -(DotNetPublish command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetRestore: ICommandLine
 {
     public static DotNetRestore operator +(DotNetRestore command, string arg) => command.AddArgs(arg);
@@ -191,6 +200,7 @@ public partial record DotNetRestore: ICommandLine
     public static DotNetRestore operator -(DotNetRestore command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetRun: ICommandLine
 {
     public static DotNetRun operator +(DotNetRun command, string arg) => command.AddArgs(arg);
@@ -210,6 +220,7 @@ public partial record DotNetRun: ICommandLine
     public static DotNetRun operator -(DotNetRun command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetTest: ICommandLine
 {
     public static DotNetTest operator +(DotNetTest command, string arg) => command.AddArgs(arg);
@@ -229,6 +240,7 @@ public partial record DotNetTest: ICommandLine
     public static DotNetTest operator -(DotNetTest command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DotNetToolRestore: ICommandLine
 {
     public static DotNetToolRestore operator +(DotNetToolRestore command, string arg) => command.AddArgs(arg);
@@ -248,6 +260,7 @@ public partial record DotNetToolRestore: ICommandLine
     public static DotNetToolRestore operator -(DotNetToolRestore command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record MSBuild: ICommandLine
 {
     public static MSBuild operator +(MSBuild command, string arg) => command.AddArgs(arg);
@@ -267,6 +280,7 @@ public partial record MSBuild: ICommandLine
     public static MSBuild operator -(MSBuild command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record VSTest: ICommandLine
 {
     public static VSTest operator +(VSTest command, string arg) => command.AddArgs(arg);
@@ -286,6 +300,7 @@ public partial record VSTest: ICommandLine
     public static VSTest operator -(VSTest command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DockerCustom: ICommandLine
 {
     public static DockerCustom operator +(DockerCustom command, string arg) => command.AddArgs(arg);
@@ -305,6 +320,7 @@ public partial record DockerCustom: ICommandLine
     public static DockerCustom operator -(DockerCustom command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
+[ExcludeFromCodeCoverage]
 public partial record DockerRun: ICommandLine
 {
     public static DockerRun operator +(DockerRun command, string arg) => command.AddArgs(arg);

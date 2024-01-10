@@ -3,7 +3,6 @@
 // ReSharper disable NotAccessedPositionalProperty.Local
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using HostApi;
 using NuGet.Common;
 using NuGet.ProjectModel;
@@ -17,7 +16,6 @@ internal class NuGetAssetsReader(
     IFileSystem fileSystem)
     : INuGetAssetsReader
 {
-
     public IEnumerable<NuGetPackage> ReadPackages(string packagesPath, string projectAssetsJson)
     {
         var lockFile = LockFileUtilities.GetLockFile(projectAssetsJson, logger);

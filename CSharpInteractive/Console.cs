@@ -1,6 +1,5 @@
 ﻿namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using HostApi;
 
 // ReSharper disable once ClassNeverInstantiated.Global

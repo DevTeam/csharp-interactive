@@ -2,7 +2,6 @@
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using NuGet.Common;
 
 [ExcludeFromCodeCoverage]

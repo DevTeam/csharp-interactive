@@ -2,7 +2,7 @@
 namespace CSharpInteractive;
 
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.ObjectModel;
 using HostApi;
 
 internal class Properties(
@@ -45,7 +45,7 @@ internal class Properties(
 
     public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
     {
-        IReadOnlyList<KeyValuePair<string, string>> props;
+        ReadOnlyCollection<KeyValuePair<string, string>> props;
         lock (_props)
         {
             props = FilterPairs(_props).ToList().AsReadOnly();

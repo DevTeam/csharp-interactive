@@ -1,5 +1,6 @@
 namespace HostApi;
 
+[ExcludeFromCodeCoverage]
 public static class CommandLineTools
 {
     public static CommandLine AsCommandLine(this string executable, params string[] args) => new(executable, args);

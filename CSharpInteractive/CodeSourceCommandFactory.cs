@@ -43,14 +43,14 @@ internal class CodeSourceCommandFactory : ICommandFactory<ICodeSource>
             {
                 var trimmedLine = line.Trim();
                 _log.Trace(() => [new Text($"Line: \"{trimmedLine}\".")]);
-                if (trimmedLine.StartsWith("#"))
+                if (trimmedLine.StartsWith('#'))
                 {
                     var hasReplCommand = false;
                     foreach (var replCommandFactory in _replCommandFactories)
                     {
                         var commands = replCommandFactory.Create(trimmedLine).ToArray();
                         _log.Trace(() => [new Text($"REPL commands count: {commands.Length}.")]);
-                        if (!commands.Any())
+                        if (commands.Length == 0)
                         {
                             continue;
                         }

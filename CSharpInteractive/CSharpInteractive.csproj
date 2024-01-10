@@ -4,6 +4,7 @@
         <TargetFramework/>
         <TargetFrameworks>$(Frameworks)</TargetFrameworks>
         <IsPackable>true</IsPackable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <DefineConstants>$(DefineConstants);APPLICATION</DefineConstants>
         <ProjectOutputPath>$(configuration)/$(MSBuildThisFileName)</ProjectOutputPath>
         <OutputPath>bin/$(ProjectOutputPath)</OutputPath>

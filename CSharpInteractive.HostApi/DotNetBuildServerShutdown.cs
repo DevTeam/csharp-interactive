@@ -5,7 +5,6 @@
 namespace HostApi;
 
 using DotNet;
-using Immutype;
 
 /// <summary>
 /// The dotnet build server command is used to shut down build servers that are started from dotnet. 

@@ -5,7 +5,6 @@ using HostApi;
 
 internal class ProcessOutputWriter(IConsole console) : IProcessOutputWriter
 {
-
     public void Write(in Output output)
     {
         if (output.IsError)

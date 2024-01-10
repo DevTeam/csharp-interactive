@@ -5,7 +5,6 @@
 namespace HostApi;
 
 using DotNet;
-using Immutype;
 
 [Target]
 public partial record MSBuild(

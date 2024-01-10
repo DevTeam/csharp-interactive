@@ -2,7 +2,6 @@
 // ReSharper disable UnusedMember.Global
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 internal class DockerEnvironment(

@@ -7,7 +7,6 @@ internal class ProcessResultHandler(
     ILog<ProcessResultHandler> log,
     IExitTracker exitTracker) : IProcessResultHandler
 {
-
     public void Handle<T>(ProcessResult result, Action<T>? handler)
     {
         if (exitTracker.IsTerminating)

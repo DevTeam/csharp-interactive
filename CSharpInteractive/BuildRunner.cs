@@ -21,7 +21,6 @@ internal class BuildRunner(
     IProcessResultHandler processResultHandler)
     : IBuildRunner
 {
-
     public IBuildResult Run(ICommandLine commandLine, Action<BuildMessage>? handler = default, TimeSpan timeout = default)
     {
         var buildContext = buildContextFactory();

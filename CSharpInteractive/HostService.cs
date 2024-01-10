@@ -12,7 +12,6 @@ internal class HostService(
     IProperties properties)
     : IHost
 {
-
     public IReadOnlyList<string> Args => settings.ScriptArguments;
 
     public IProperties Props { get; } = properties;

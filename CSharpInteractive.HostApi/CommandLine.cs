@@ -5,11 +5,11 @@ namespace HostApi;
 
 using System.Diagnostics;
 using System.Text;
-using Immutype;
 
 /// <summary>
 /// Runs an arbitrary executable with arguments and environment variables from the working directory.
 /// </summary>
+[ExcludeFromCodeCoverage]
 [Target]
 [DebuggerTypeProxy(typeof(CommandLineDebugView))]
 public partial record CommandLine(

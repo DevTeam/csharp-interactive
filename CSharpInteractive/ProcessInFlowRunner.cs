@@ -13,7 +13,6 @@ internal class ProcessInFlowRunner(
     IFlowContext flowContext)
     : IProcessRunner
 {
-
     public ProcessResult Run(ProcessInfo processInfo, TimeSpan timeout)
     {
         using var flow = CreateFlow();

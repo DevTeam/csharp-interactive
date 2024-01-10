@@ -2,8 +2,6 @@
 // ReSharper disable InconsistentNaming
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
-
 internal class CISettings : ICISettings
 {
     private const string TeamCityVersionVariableName = "TEAMCITY_VERSION";

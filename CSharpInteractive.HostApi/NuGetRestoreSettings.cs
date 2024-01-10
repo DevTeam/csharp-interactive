@@ -1,6 +1,5 @@
 namespace HostApi;
 
-using Immutype;
 using NuGet.Versioning;
 
 [Target]

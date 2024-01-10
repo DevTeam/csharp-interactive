@@ -3,7 +3,6 @@
 namespace HostApi;
 
 using DotNet;
-using Immutype;
 
 /// <summary>
 /// The dotnet restore command uses NuGet to restore dependencies as well as project-specific tools that are specified in the project file. In most cases, you don't need to explicitly use the dotnet restore command.

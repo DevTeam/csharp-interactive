@@ -9,11 +9,10 @@ internal class SummaryPresenter(
     IStatistics statistics,
     IPresenter<IStatistics> statisticsPresenter) : IPresenter<Summary>
 {
-
     public void Show(Summary summary)
     {
         statisticsPresenter.Show(statistics);
-        var state = summary.Success == false || statistics.Errors.Any()
+        var state = summary.Success == false || statistics.Errors.Count != 0
             ? new Text("Running FAILED.", Color.Error)
             : new Text("Running succeeded.", Color.Success);
         log.Info(state);

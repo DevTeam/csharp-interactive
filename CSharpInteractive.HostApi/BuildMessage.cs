@@ -2,9 +2,9 @@
 // ReSharper disable NotAccessedPositionalProperty.Global
 namespace HostApi;
 
-using Immutype;
 using JetBrains.TeamCity.ServiceMessages;
 
+[ExcludeFromCodeCoverage]
 [Target]
 public readonly record struct BuildMessage(
     BuildMessageState State,

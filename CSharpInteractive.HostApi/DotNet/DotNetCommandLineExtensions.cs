@@ -7,6 +7,7 @@ namespace HostApi.DotNet;
 
 using Cmd;
 
+[ExcludeFromCodeCoverage]
 internal static class DotNetCommandLineExtensions
 {
     internal static CommandLine CreateCommandLine(this IHost host, string executablePath) => new(host.GetExecutablePath(executablePath));

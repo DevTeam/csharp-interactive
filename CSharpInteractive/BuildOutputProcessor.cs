@@ -6,7 +6,6 @@ using JetBrains.TeamCity.ServiceMessages.Read;
 
 internal class BuildOutputProcessor(IServiceMessageParser serviceMessageParser) : IBuildOutputProcessor
 {
-
     public IEnumerable<BuildMessage> Convert(in Output output, IBuildContext context)
     {
         var messages = new List<BuildMessage>();
@@ -16,7 +15,7 @@ internal class BuildOutputProcessor(IServiceMessageParser serviceMessageParser) 
             messages.AddRange(context.ProcessMessage(output, message));
         }
 
-        if (!messages.Any()) messages.AddRange(context.ProcessOutput(output));
+        if (messages.Count == 0) messages.AddRange(context.ProcessOutput(output));
 
         return messages;
     }

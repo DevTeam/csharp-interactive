@@ -3,7 +3,6 @@ namespace CSharpInteractive;
 
 internal class Cleaner(ILog<Cleaner> log, IFileSystem fileSystem) : ICleaner
 {
-
     public IDisposable Track(string path)
     {
         log.Trace(() => [new Text($"Start tracking \"{path}\".")]);

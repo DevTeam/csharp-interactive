@@ -7,7 +7,6 @@ internal class CommandsRunner(
     IReadOnlyCollection<ICommandRunner> commandRunners,
     IStatistics statistics) : ICommandsRunner
 {
-
     public IEnumerable<CommandResult> Run(IEnumerable<ICommand> commands)
     {
         using (statistics.Start())

@@ -1,7 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using NuGet.Packaging;
 using Pure.DI;
 
@@ -16,7 +15,6 @@ internal class ScriptContentReplacer(
     [Tag(typeof(LineCodeSource))] Func<string, ICodeSource> codeSourceFactory)
     : IScriptContentReplacer
 {
-
     [SuppressMessage("Performance", "CA1806:Do not ignore method results")]
     public IEnumerable<string> Replace(IEnumerable<string> lines)
     {
@@ -67,7 +65,7 @@ internal class ScriptContentReplacer(
             }
 
             var newAssemblies = assemblies.Except(allAssemblies).ToArray();
-            if (!newAssemblies.Any())
+            if (newAssemblies.Length == 0)
             {
                 if (!repl)
                 {

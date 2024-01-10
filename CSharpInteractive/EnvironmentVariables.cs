@@ -2,7 +2,6 @@
 namespace CSharpInteractive;
 
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
 internal class EnvironmentVariables(ILog<EnvironmentVariables> log) : IEnvironmentVariables, ITraceSource

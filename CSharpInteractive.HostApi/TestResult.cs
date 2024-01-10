@@ -5,7 +5,6 @@ namespace HostApi;
 
 using System.Diagnostics;
 using System.Text;
-using Immutype;
 
 [Target]
 [DebuggerTypeProxy(typeof(TestResultDebugView))]

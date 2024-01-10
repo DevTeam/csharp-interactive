@@ -1,7 +1,5 @@
 namespace HostApi;
 
-using Immutype;
-
 [Target]
 public readonly record struct Output(IStartInfo StartInfo, bool IsError, string Line, int ProcessId)
 {

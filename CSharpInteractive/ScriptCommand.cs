@@ -1,7 +1,5 @@
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
-
 [ExcludeFromCodeCoverage]
 internal class ScriptCommand(string originName, string script, bool isInternal = false) : ICommand
 {

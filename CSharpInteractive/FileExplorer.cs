@@ -8,7 +8,6 @@ internal class FileExplorer(
     IHostEnvironment hostEnvironment,
     IFileSystem fileSystem) : IFileExplorer
 {
-
     private char PathSeparator => environment.OperatingSystemPlatform == OSPlatform.Windows ? ';' : ':';
 
     public IEnumerable<string> FindFiles(string searchPattern, params string[] additionalVariables)

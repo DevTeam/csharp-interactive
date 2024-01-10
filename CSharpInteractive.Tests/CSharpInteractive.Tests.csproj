@@ -2,6 +2,7 @@
     <PropertyGroup>
         <IsPackable>false</IsPackable>
         <TargetFrameworks>$(Frameworks)</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
         <DefineConstants>$(DefineConstants);PUREDI_API_SUPPRESSION</DefineConstants>
     </PropertyGroup>
 

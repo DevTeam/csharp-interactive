@@ -4,6 +4,7 @@
 // ReSharper disable MemberCanBePrivate.Global
 namespace HostApi.Docker;
 
+[ExcludeFromCodeCoverage]
 internal static class DockerCommandLineExtensions
 {
     public static CommandLine AddBooleanArgs(this CommandLine cmd, params (string name, bool? value)[] args) =>

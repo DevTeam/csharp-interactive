@@ -9,7 +9,6 @@ internal class BuildMessageLogWriter(
     [Tag("Default")] IStdOut stdOut,
     [Tag("Default")] IStdErr stdErr) : IBuildMessageLogWriter
 {
-
     public void Write(BuildMessage message)
     {
         // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault

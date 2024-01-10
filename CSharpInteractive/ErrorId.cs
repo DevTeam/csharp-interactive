@@ -1,7 +1,5 @@
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
-
 [ExcludeFromCodeCoverage]
 internal readonly record struct ErrorId(string Id)
 {

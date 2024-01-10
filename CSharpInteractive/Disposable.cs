@@ -4,8 +4,6 @@
 // ReSharper disable EmptyGeneralCatchClause
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
-
 [ExcludeFromCodeCoverage]
 internal static class Disposable
 {

@@ -13,7 +13,6 @@ internal class NuGetService(
     ICleaner cleaner)
     : INuGet
 {
-
     public IEnumerable<NuGetPackage> Restore(NuGetRestoreSettings settings)
     {
         var packagesPath = settings.PackagesPath;

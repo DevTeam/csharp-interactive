@@ -10,7 +10,6 @@ internal class CommandLineRunner(
     IProcessResultHandler processResultHandler)
     : ICommandLineRunner
 {
-
     public int? Run(ICommandLine commandLine, Action<Output>? handler = default, TimeSpan timeout = default)
     {
         var result = processRunner.Run(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), handler), timeout);

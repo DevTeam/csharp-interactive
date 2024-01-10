@@ -8,7 +8,6 @@ internal class DefaultBuildMessagesProcessor(
     IProcessOutputWriter processOutputWriter,
     IBuildMessageLogWriter buildMessageLogWriter) : IBuildMessagesProcessor
 {
-
     public void ProcessMessages(in Output output, IEnumerable<BuildMessage> messages, Action<BuildMessage> nextHandler)
     {
         var curMessages = messages.ToArray();

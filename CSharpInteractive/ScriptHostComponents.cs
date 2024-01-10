@@ -1,7 +1,6 @@
 // ReSharper disable NotAccessedPositionalProperty.Global
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using HostApi;
 
 [ExcludeFromCodeCoverage]

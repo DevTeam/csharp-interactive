@@ -1,6 +1,5 @@
 ﻿namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using HostApi;
 

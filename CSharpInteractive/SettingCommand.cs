@@ -1,7 +1,5 @@
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
-
 [ExcludeFromCodeCoverage]
 internal class SettingCommand<TOption>(TOption value) : ICommand
     where TOption: struct, Enum

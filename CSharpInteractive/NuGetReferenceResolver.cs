@@ -12,7 +12,6 @@ internal class NuGetReferenceResolver(
     ICleaner cleaner)
     : INuGetReferenceResolver
 {
-
     public bool TryResolveAssemblies(string packageId, VersionRange? versionRange, out IReadOnlyCollection<ReferencingAssembly> assemblies)
     {
         var result = new List<ReferencingAssembly>();

@@ -4,7 +4,6 @@
 namespace HostApi;
 
 using DotNet;
-using Immutype;
 
 /// <summary>
 /// The 'dotnet new' command creates a .NET project based on a template. 

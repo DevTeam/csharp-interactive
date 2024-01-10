@@ -1,7 +1,6 @@
 // ReSharper disable MemberCanBePrivate.Global
 namespace CSharpInteractive;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
 using Microsoft.CodeAnalysis.Scripting;
@@ -51,7 +50,7 @@ internal class AssembliesScriptOptionsProvider : IScriptOptionsFactory, IActive
         return Disposable.Empty;
     }
 
-    private IEnumerable<Assembly> GetAssemblies()
+    private HashSet<Assembly> GetAssemblies()
     {
         _log.Trace(() => [new Text("Loading assemblies.")]);
         var assemblies = _assembliesProvider
