@@ -1,14 +1,13 @@
 <!--suppress MsbuildTargetFrameworkTagInspection -->
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework/>
-        <TargetFrameworks>$(Frameworks)</TargetFrameworks>
+        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <IsPackable>true</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DefineConstants>$(DefineConstants);APPLICATION</DefineConstants>
         <ProjectOutputPath>$(configuration)/$(MSBuildThisFileName)</ProjectOutputPath>
         <OutputPath>bin/$(ProjectOutputPath)</OutputPath>
-        <IntermediateOutputPath>obj/$(ProjectOutputPath)/</IntermediateOutputPath>
+        <IntermediateOutputPath>obj/$(MSBuildThisFileName)/</IntermediateOutputPath>
     </PropertyGroup>
 
     <PropertyGroup>

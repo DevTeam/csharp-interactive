@@ -1,10 +1,9 @@
 <!--suppress MsbuildTargetFrameworkTagInspection -->
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <OutputType>Exe</OutputType>
         <UseAppHost>false</UseAppHost>
-        <TargetFramework/>
-        <TargetFrameworks>$(Frameworks)</TargetFrameworks>
         <AssemblyName>dotnet-csi</AssemblyName>
         <IsPackable>true</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -12,7 +11,7 @@
         <DefineConstants>$(DefineConstants);TOOL</DefineConstants>
         <ProjectOutputPath>$(configuration)/$(MSBuildThisFileName)</ProjectOutputPath>
         <OutputPath>bin/$(ProjectOutputPath)</OutputPath>
-        <IntermediateOutputPath>obj/$(ProjectOutputPath)/</IntermediateOutputPath>
+        <IntermediateOutputPath>obj/$(MSBuildThisFileName)/</IntermediateOutputPath>
     </PropertyGroup>
     
     <PropertyGroup>

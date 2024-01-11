@@ -102,23 +102,16 @@ Assertion.Succeed(
         .WithConfiguration(configuration)
         .Build());
 
-Assertion.Succeed(
-    new DotNetRestore()
-        .WithProject(solutionFile)
-        .WithDisableParallel(true)
-        .WithProps(buildProps)
-        .Build());
-
 var buildCommand = new DotNetBuild()
     .WithProject(solutionFile)
     .WithConfiguration(configuration)
     .WithProps(buildProps);
 
-var attempt = 3;
+var attempt = 5;
 IBuildResult? buildResult = default;
 while (buildResult?.ExitCode != 0 && attempt-- > 0)
 {
-    buildResult = buildCommand.Build(_ => {});
+    buildResult = buildCommand.Build(_ => { });
 }
 
 Assertion.Succeed(buildResult!);
@@ -129,6 +122,8 @@ if (Directory.Exists(reportDir))
     Directory.Delete(reportDir, true);
 }
 
+var teamCityWriter = GetService<ITeamCityWriter>();
+
 var test = 
     new DotNetTest()
         .WithProject(solutionFile)
@@ -137,48 +132,56 @@ var test =
         .WithProps(buildProps)
         .WithFilter("Integration!=true&Docker!=true");
 
-var dotCoverSnapshot = Path.Combine(reportDir, "dotCover.dcvr");
-Assertion.Succeed(
-    test
-        .Customize(cmd => 
-            cmd.WithArgs("dotcover")
-                .AddArgs(cmd.Args)
-                .AddArgs(
-                    $"--dcOutput={dotCoverSnapshot}",
-                    "--dcFilters=+:module=CSharpInteractive.HostApi;+:module=dotnet-csi",
-                    "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"))
-        .Build());
-
-var dotCoverReportDir = Path.Combine(reportDir, "html");
-var dotCoverReportHtml = Path.Combine(dotCoverReportDir, "index.html");
-var dotCoverReportXml = Path.Combine(reportDir, "dotCover.xml");
-Assertion.Succeed(new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportHtml};{dotCoverReportXml}", "--reportType=HTML,TeamCityXml").Run(), "Generating the code coverage reports");
-var dotCoverReportDoc = new XmlDocument();
-dotCoverReportDoc.Load(dotCoverReportXml);
-var coveragePercentageValue = dotCoverReportDoc.SelectNodes("Root")?.Item(0)?.Attributes?["CoveragePercent"]?.Value;
-if (int.TryParse(coveragePercentageValue, out var coveragePercentage))
+var coveragePercentage = 0;
+var skipTests = bool.Parse(Property.Get("skipTests", "false"));
+if (skipTests)
 {
-    switch (coveragePercentage)
-    {
-        case < 80:
-            Error($"The coverage percentage {coveragePercentage} is too low. See {dotCoverReportHtml} for details.");
-            Assertion.Exit();
-            break;
-
-        case < 85:
-            Warning($"The coverage percentage {coveragePercentage} is too low. See {dotCoverReportHtml} for details.");
-            break;
-    }
+    Warning("The test was skipped.");
 }
 else
 {
-    Warning("Coverage percentage was not found.");
-}
+    var dotCoverSnapshot = Path.Combine(reportDir, "dotCover.dcvr");
+    Assertion.Succeed(
+        test
+            .Customize(cmd =>
+                cmd.WithArgs("dotcover")
+                    .AddArgs(cmd.Args)
+                    .AddArgs(
+                        $"--dcOutput={dotCoverSnapshot}",
+                        "--dcFilters=+:module=CSharpInteractive.HostApi;+:module=dotnet-csi",
+                        "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"))
+            .Build());
 
-var dotCoverReportZip = Path.Combine(reportDir, "dotCover.zip");
-ZipFile.CreateFromDirectory(dotCoverReportDir, dotCoverReportZip);
-var teamCityWriter = GetService<ITeamCityWriter>();
-teamCityWriter.PublishArtifact($"{dotCoverReportZip} => .");
+    var dotCoverReportDir = Path.Combine(reportDir, "html");
+    var dotCoverReportHtml = Path.Combine(dotCoverReportDir, "index.html");
+    var dotCoverReportXml = Path.Combine(reportDir, "dotCover.xml");
+    Assertion.Succeed(new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportHtml};{dotCoverReportXml}", "--reportType=HTML,TeamCityXml").Run(), "Generating the code coverage reports");
+    var dotCoverReportDoc = new XmlDocument();
+    dotCoverReportDoc.Load(dotCoverReportXml);
+    var coveragePercentageValue = dotCoverReportDoc.SelectNodes("Root")?.Item(0)?.Attributes?["CoveragePercent"]?.Value;
+    if (int.TryParse(coveragePercentageValue, out coveragePercentage))
+    {
+        switch (coveragePercentage)
+        {
+            case < 80:
+                Error($"The coverage percentage {coveragePercentage} is too low. See {dotCoverReportHtml} for details.");
+                Assertion.Exit();
+                break;
+
+            case < 85:
+                Warning($"The coverage percentage {coveragePercentage} is too low. See {dotCoverReportHtml} for details.");
+                break;
+        }
+    }
+    else
+    {
+        Warning("Coverage percentage was not found.");
+    }
+
+    var dotCoverReportZip = Path.Combine(reportDir, "dotCover.zip");
+    ZipFile.CreateFromDirectory(dotCoverReportDir, dotCoverReportZip);
+    teamCityWriter.PublishArtifact($"{dotCoverReportZip} => .");
+}
 
 foreach (var package in packages)
 {
@@ -283,7 +286,11 @@ WriteLine("To create a build project from the template:", Color.Highlighted);
 WriteLine($"    dotnet new build --package-version={packageVersion}", Color.Highlighted);
 WriteLine($"Tool and package version: {packageVersion}", Color.Highlighted);
 WriteLine($"Template version: {templatePackageVersion}", Color.Highlighted);
-WriteLine($"The coverage percentage: {coveragePercentage}", Color.Highlighted);
+if (skipTests)
+{
+    WriteLine($"The coverage percentage: {coveragePercentage}", Color.Highlighted);
+}
+
 return 0;
 
 internal record PackageInfo(string Id, string Project, string Package, NuGetVersion Version, bool Publish);

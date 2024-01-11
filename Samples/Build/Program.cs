@@ -48,7 +48,7 @@ if (msbuild.Build().ExitCode != 0)
 }
 
 var vstest = new VSTest()
-    .WithTestFileNames(Path.Combine("MySampleLib.Tests", "bin", configuration, "net6.0", "MySampleLib.Tests.dll"));
+    .WithTestFileNames(Path.Combine("MySampleLib.Tests", "bin", configuration, "net8.0", "MySampleLib.Tests.dll"));
 
 var test = new DotNetTest()
     .WithNoBuild(true)
