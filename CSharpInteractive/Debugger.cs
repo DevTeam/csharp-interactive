@@ -7,7 +7,6 @@ internal class Debugger(
     ILog<Debugger> log,
     IEnvironmentVariables environmentVariables) : IActive
 {
-
     public IDisposable Activate()
     {
         if (environmentVariables.GetEnvironmentVariable("DEBUG_CSI") == null)

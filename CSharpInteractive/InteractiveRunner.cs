@@ -7,7 +7,6 @@ internal class InteractiveRunner(
     ICommandsRunner commandsRunner,
     IStdOut stdOut) : IScriptRunner
 {
-
     public int Run()
     {
         ShowCursor(true);

@@ -6,7 +6,6 @@ using System.Collections;
 [ExcludeFromCodeCoverage]
 internal class ConsoleSource(CancellationToken cancellationToken) : ICodeSource, IEnumerator<string?>
 {
-
     public string Name => "Console";
 
     public bool Internal => false;

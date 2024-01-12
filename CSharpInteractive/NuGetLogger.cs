@@ -7,7 +7,6 @@ using NuGet.Common;
 [ExcludeFromCodeCoverage]
 internal class NuGetLogger(ILog<NuGetLogger> log) : ILogger
 {
-
     public void LogDebug(string data) => log.Trace(() => [new Text(data)], "NuGet");
 
     public void LogVerbose(string data) => log.Trace(() => [new Text(data)], "NuGet");

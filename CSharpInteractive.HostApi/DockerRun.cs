@@ -68,7 +68,12 @@ public partial record DockerRun(
     // A file with environment variables inside the container
     string EnvFile = "",
     // Specifies a short name for this operation.
-    string ShortName = "")
+    string ShortName = "",
+    // Keep STDIN open even if not attached
+    bool Interactive = false,
+    // Allocate a pseudo-TTY
+    bool Tty = false
+    )
 {
     public DockerRun(string image = "") : this(new CommandLine(string.Empty), image)
     { }
@@ -99,7 +104,8 @@ public partial record DockerRun(
             .WithWorkingDirectory(WorkingDirectory)
             .WithArgs("run")
             .AddBooleanArgs(
-                ("-it", Name == string.Empty),
+                ("--interactive", Interactive),
+                ("--tty", Tty),
                 ("--privileged", Privileged),
                 ("--read-only", ReadOnly),
                 ("--rm", AutoRemove))
@@ -124,7 +130,7 @@ public partial record DockerRun(
 
         var additionalVolums = directoryMap.Select(i => (i.Key, i.Value));
         return cmd
-            .AddValues("-v", ":", additionalVolums.ToArray())
+            .AddValues("-v", ":", additionalVolums.Select(i => (pathResolver.ToAbsolutPath(i.Key), i.Value)).ToArray())
             .AddValues("-v", ":", Volumes.ToArray())
             .AddArgs(Options.ToArray())
             .AddArgs(Image)
@@ -137,18 +143,40 @@ public partial record DockerRun(
     
     private class PathResolver(string platform, IDictionary<string, string> directoryMap) : IPathResolver
     {
-
         public string Resolve(IHost host, string path, IPathResolver nextResolver)
         {
             path = Path.GetFullPath(path);
             if (!directoryMap.TryGetValue(path, out var toPath))
             {
-                var rootDirectory = platform.ToLower().Contains("windows") ? "c:" : string.Empty;
+                var isWindows = IsWindows();
+                var rootDirectory = isWindows ? "c:" : string.Empty;
                 toPath = $"{rootDirectory}/.{Guid.NewGuid().ToString().Substring(0, 8)}";
                 directoryMap.Add(path, toPath);
             }
 
             return toPath;
         }
+        
+        public string ToAbsolutPath(string path)
+        {
+            if (IsWindows())
+            {
+                return path;
+            }
+            
+            path = path.Replace(":", string.Empty).Replace('\\', '/');
+            if (path.Length > 0 && path[0] != '/')
+            {
+                path = "/" + path;
+            }
+
+            return path;
+        }
+        
+        private bool IsWindows()
+        {
+            return platform.ToLower().Contains("windows");
+        }
+
     }
 }

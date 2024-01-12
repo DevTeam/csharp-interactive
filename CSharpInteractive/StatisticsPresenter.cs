@@ -6,7 +6,6 @@ using HostApi;
 [ExcludeFromCodeCoverage]
 internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<IStatistics>
 {
-
     public void Show(IStatistics statistics)
     {
         foreach (var error in statistics.Errors)

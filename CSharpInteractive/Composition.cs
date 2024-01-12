@@ -32,6 +32,32 @@ internal partial class Composition: ServiceProviderFactory<Composition>
     {
         DI.Setup(nameof(Composition))
             .DependsOn(Base)
+            .Hint(Hint.OnCannotResolve, "Off")
+            
+            // Provides collection of service descriptors
+            .Root<IServiceCollection>()
+            // Defines a mechanism for retrieving a service object
+            .Root<IServiceProvider>()
+            .Root<IEnvironment>()
+            .Root<IDotNetEnvironment>()
+            .Root<IDockerSettings>()
+            .Root<IDotNetSettings>()
+            // Command line context to register paths resolver
+            .Root<IPathResolverContext>()
+            // Command line context to resolver a path
+            .Root<IVirtualContext>()
+            // This root contains all dependencies for the application host
+            .Root<ScriptHostComponents>("ScriptHostComponents")
+            // Host API
+            .Root<IHost>()
+            // Public nuget service
+            .Root<INuGet>()
+            // Command line runner
+            .Root<ICommandLineRunner>()
+            // Build runner
+            .Root<IBuildRunner>()
+            .Root<IServiceMessageParser>()
+            
             .DefaultLifetime(Lifetime.Singleton)
 #if TOOL
             .Bind<Program>().To<Program>().Root<Program>("Program")
@@ -87,10 +113,10 @@ internal partial class Composition: ServiceProviderFactory<Composition>
                 return log.Instance;
             })
             .Bind<IFileSystem>().To<FileSystem>()
-            .Bind<IEnvironment, IScriptContext, IErrorContext>().Bind<ITraceSource>(typeof(Environment)).To<Environment>().Root<IEnvironment>()
+            .Bind<IEnvironment, IScriptContext, IErrorContext>().Bind<ITraceSource>(typeof(Environment)).To<Environment>()
             .Bind<ICISettings>().To<CISettings>()
             .Bind<IExitTracker>().To<ExitTracker>()
-            .Bind<IDotNetEnvironment>().Bind<ITraceSource>(typeof(DotNetEnvironment)).To<DotNetEnvironment>().Root<IDotNetEnvironment>()
+            .Bind<IDotNetEnvironment>().Bind<ITraceSource>(typeof(DotNetEnvironment)).To<DotNetEnvironment>()
             .Bind<IDockerEnvironment>().Bind<ITraceSource>(typeof(DockerEnvironment)).To<DockerEnvironment>()
             .Bind<INuGetEnvironment>().Bind<ITraceSource>(typeof(NuGetEnvironment)).To<NuGetEnvironment>()
             .Bind<ISettings, ISettingSetter<VerbosityLevel>, Settings>().To<Settings>()
@@ -137,7 +163,7 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             .Bind<IBuildEngine>().To<BuildEngine>()
             .Bind<INuGetRestoreService, ISettingSetter<NuGetRestoreSetting>>().To<NuGetRestoreService>()
             .Bind<ILogger>().To<NuGetLogger>()
-            .Bind<IUniqueNameGenerator>().To<UniqueNameGenerator>().Root<IUniqueNameGenerator>()
+            .Bind<IUniqueNameGenerator>().To<UniqueNameGenerator>()
             .Bind<INuGetAssetsReader>().To<NuGetAssetsReader>()
             .Bind<ICleaner>().To<Cleaner>()
             .Bind<ICommandsRunner>().To<CommandsRunner>()
@@ -147,7 +173,7 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             .Bind<ITargetFrameworkMonikerParser>().To<TargetFrameworkMonikerParser>()
             .Bind<IEnvironmentVariables>().Bind<ITraceSource>(typeof(EnvironmentVariables)).To<EnvironmentVariables>()
             .Bind<IActive>(typeof(Debugger)).To<Debugger>()
-            .Bind<IDockerSettings>().To<DockerSettings>().Root<IDockerSettings>()
+            .Bind<IDockerSettings>().To<DockerSettings>()
             .Bind<IBuildContext>("base").As(Lifetime.Transient).To<BuildContext>()
             .Bind<IBuildContext>().As(Lifetime.Transient).To<ReliableBuildContext>()
             .Bind<ITextToColorStrings>().To<TextToColorStrings>()
@@ -157,17 +183,17 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             .Bind<MemoryPool<TT>>().To(_ => MemoryPool<TT>.Shared)
             .Bind<IMessageIndicesReader>().To<MessageIndicesReader>()
             .Bind<IMessagesReader>().To<MessagesReader>()
-            .Bind<IPathResolverContext, IVirtualContext>().To<PathResolverContext>().Root<IPathResolverContext>().Root<IVirtualContext>()
+            .Bind<IPathResolverContext, IVirtualContext>().To<PathResolverContext>()
             .Bind<IEncoding>().To<Utf8Encoding>()
             .Bind<IProcessMonitor>().As(Lifetime.Transient).To<ProcessMonitor>()
             .Bind<IBuildOutputProcessor>().To<BuildOutputProcessor>()
             .Bind<IBuildMessagesProcessor>("default").To<DefaultBuildMessagesProcessor>()
-            .Bind<IBuildMessagesProcessor>("custom").To<CustomMessagesProcessor>().Root<ScriptHostComponents>("ScriptHostComponents")
+            .Bind<IBuildMessagesProcessor>("custom").To<CustomMessagesProcessor>()
             .Bind<IPresenter<Summary>>().To<SummaryPresenter>()
             .Bind<IExitCodeParser>().To<ExitCodeParser>()
             .Bind<IProcessRunner>("base").To<ProcessRunner>()
             .Bind<IProcessRunner>().To<ProcessInFlowRunner>()
-            .Bind<IDotNetSettings, ITeamCityContext>().To<TeamCityContext>().Root<IDotNetSettings>()
+            .Bind<IDotNetSettings, ITeamCityContext>().To<TeamCityContext>()
             .Bind<IProcessResultHandler>().To<ProcessResultHandler>()
             .Bind<IRuntimeExplorer>().To<RuntimeExplorer>()
             .Bind<INuGetReferenceResolver>().To<NuGetReferenceResolver>()
@@ -224,21 +250,21 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             .Bind<IProperties>("TeamCity").To<TeamCityProperties>()
 
             // Public
-            .Bind<IHost>().To<HostService>().Root<IHost>()
-            .Bind<IServiceCollection>().To(_ => CreateServiceCollection(this)).Root<IServiceCollection>()
+            .Bind<IHost>().To<HostService>()
+            .Bind<IServiceCollection>().To(_ => CreateServiceCollection(this))
             .Bind<IServiceProvider>().To(ctx =>
             {
                 ctx.Inject<IServiceCollection>(out var serviceCollection);
                 return CreateServiceProvider(serviceCollection);
-            }).Root<IServiceProvider>()
+            })
             .Bind<IProperties>().To(ctx =>
             {
                 ctx.Inject<ICISpecific<IProperties>>(out var properties);
                 return properties.Instance;
             })
-            .Bind<INuGet>().To<NuGetService>().Root<INuGet>()
-            .Bind<ICommandLineRunner>().To<CommandLineRunner>().Root<ICommandLineRunner>()
-            .Bind<IBuildRunner>().To<BuildRunner>().Root<IBuildRunner>()
+            .Bind<INuGet>().To<NuGetService>()
+            .Bind<ICommandLineRunner>().To<CommandLineRunner>()
+            .Bind<IBuildRunner>().To<BuildRunner>()
 
             // TeamCity Service messages
             .Bind<ITeamCityServiceMessages>().To<TeamCityServiceMessages>()
@@ -257,6 +283,6 @@ internal partial class Composition: ServiceProviderFactory<Composition>
                             console.WriteToOut((default, str + "\n"));
                         });
                 }).Root<ITeamCityWriter>()
-            .Bind<IServiceMessageParser>().To<ServiceMessageParser>().Root<IServiceMessageParser>();
+            .Bind<IServiceMessageParser>().To<ServiceMessageParser>();
     }
 }

@@ -3,7 +3,6 @@ namespace CSharpInteractive;
 
 internal class TracePresenter(ILog<TracePresenter> log) : IPresenter<IEnumerable<ITraceSource>>
 {
-
     public void Show(IEnumerable<ITraceSource> data) =>
         log.Trace(() => new[] {Text.NewLine}.Concat(
             from source in data

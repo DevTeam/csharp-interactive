@@ -26,7 +26,7 @@ internal static class DotNetScript
 
     public static string GetWorkingDirectory()
     {
-        var uniqueNameGenerator = Composition.Shared.Resolve<IUniqueNameGenerator>();
+        var uniqueNameGenerator = new UniqueNameGenerator();
         var environment = Composition.Shared.Resolve<IEnvironment>();
         var tempDirectory = environment.GetPath(SpecialFolder.Temp);
         return Path.Combine(tempDirectory, uniqueNameGenerator.Generate());

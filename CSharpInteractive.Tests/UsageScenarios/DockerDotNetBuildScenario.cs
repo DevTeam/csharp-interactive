@@ -1,6 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
+// ReSharper disable SeparateLocalFunctionsWithJumpStatement
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
@@ -28,10 +29,12 @@ public class DockerDotNetBuildScenario : BaseScenario
         // Creates a base docker command line
         var dockerRun = new DockerRun()
             .WithAutoRemove(true)
+            .WithInteractive(true)
+            .WithTty(true)
             .WithImage("mcr.microsoft.com/dotnet/sdk")
             .WithPlatform("linux")
             .WithContainerWorkingDirectory("/MyProjects")
-            .AddVolumes((Environment.CurrentDirectory, "/MyProjects"));
+            .AddVolumes((ToAbsoluteLinuxPath(Environment.CurrentDirectory), "/MyProjects"));
 
         // Creates a new library project in a docker container
         var exitCode = dockerRun
@@ -48,6 +51,9 @@ public class DockerDotNetBuildScenario : BaseScenario
         // The "result" variable provides details about a build
         result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
         result.ExitCode.ShouldBe(0);
+
+        string ToAbsoluteLinuxPath(string path) => 
+            "/" + path.Replace(":", "").Replace('\\', '/');
         // }
     }
 }

@@ -6,7 +6,6 @@ using System.Collections;
 [ExcludeFromCodeCoverage]
 internal class EnvironmentVariables(ILog<EnvironmentVariables> log) : IEnvironmentVariables, ITraceSource
 {
-
     public string? GetEnvironmentVariable(string variable)
     {
         var value = System.Environment.GetEnvironmentVariable(variable);
