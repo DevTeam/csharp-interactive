@@ -15,14 +15,12 @@ using JetBrains.TeamCity.ServiceMessages.Read;
 using JetBrains.TeamCity.ServiceMessages.Write;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 using JetBrains.TeamCity.ServiceMessages.Write.Special.Impl.Updater;
-using Microsoft.Build.Framework;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
 using Pure.DI;
 using Pure.DI.MS;
-using ILogger = NuGet.Common.ILogger;
 
 internal partial class Composition: ServiceProviderFactory<Composition>
 {
@@ -56,90 +54,94 @@ internal partial class Composition: ServiceProviderFactory<Composition>
             .Root<ICommandLineRunner>()
             // Build runner
             .Root<IBuildRunner>()
+            // TeamCity parser
             .Root<IServiceMessageParser>()
+            // TeamCity writer
+            .Root<ITeamCityWriter>()
             
             .DefaultLifetime(Lifetime.Singleton)
 #if TOOL
-            .Bind<Program>().To<Program>().Root<Program>("Program")
-            .Bind<RunningMode>().To(_ => RunningMode.Tool)
+            .Root<Program>("Program")
+            .Bind().To(_ => RunningMode.Tool)
 #endif
 #if APPLICATION
-            .Bind<RunningMode>().To(_ => RunningMode.Application)
+            .Bind().To(_ => RunningMode.Application)
 #endif
-            .Bind<Assembly>().To(_ => typeof(Composition).Assembly)
-            .Bind<LanguageVersion>().To(_ => new CSharpParseOptions().LanguageVersion)
-            .Bind<string>("RuntimePath").To(_ => Path.GetDirectoryName(typeof(object).Assembly.Location) ?? string.Empty)
-            .Bind<string>("TargetFrameworkMoniker").To(ctx =>
+            .Bind().To(_ => typeof(Composition).Assembly)
+            .Bind().To(_ => new CSharpParseOptions().LanguageVersion)
+            .Bind("RuntimePath").To(_ => Path.GetDirectoryName(typeof(object).Assembly.Location) ?? string.Empty)
+            .Bind("TargetFrameworkMoniker").To(ctx =>
             {
                 ctx.Inject<Assembly>(out var assembly);
                 return assembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName ?? string.Empty;
             })
-            .Bind<Process>().To(_ => Process.GetCurrentProcess())
-            .Bind<string>("ModuleFile").To(ctx =>
+            .Bind().To(_ => Process.GetCurrentProcess())
+            .Bind("ModuleFile").To(ctx =>
             {
                 ctx.Inject<Process>(out var process);
                 return process.MainModule?.FileName ?? string.Empty;
             })
-            .Bind<CancellationTokenSource>().To(_ => new CancellationTokenSource())
-            .Bind<CancellationToken>().As(Lifetime.Transient).To(ctx =>
+            .Bind().To(_ => new CancellationTokenSource())
+            .Bind().As(Lifetime.Transient).To(ctx =>
             {
                 ctx.Inject<CancellationTokenSource>(out var cancellationTokenSource);
                 return cancellationTokenSource.Token;
             })
-            .Bind<IActive>(typeof(ExitManager)).To<ExitManager>()
-            .Bind<IHostEnvironment>().To<HostEnvironment>()
-            .Bind<IColorTheme>().To<ColorTheme>()
-            .Bind<ITeamCityLineFormatter>().To<TeamCityLineFormatter>()
-            .Bind<ICISpecific<TT>>().To<CISpecific<TT>>()
-            .Bind<IStdOut, IStdErr>("Default").To<ConsoleInOut>()
-            .Bind<IStdOut, IStdErr>("TeamCity").To<TeamCityInOut>()
-            .Bind<IStdOut, IStdErr>("Ansi").To<AnsiInOut>()
-            .Bind<IConsole>().To<Console>()
-            .Bind<IStdOut>().To(ctx =>
+            .Bind(Tag.Type).To<ExitManager>()
+            .Bind().To<HostEnvironment>()
+            .Bind().To<ColorTheme>()
+            .Bind().To<TeamCityLineFormatter>()
+            .Bind().To<CISpecific<TT>>()
+            .Bind("Default").To<ConsoleInOut>()
+            .Bind("TeamCity").To<TeamCityInOut>()
+            .Bind("Ansi").To<AnsiInOut>()
+            .Bind().To<Console>()
+            .Bind().To(ctx =>
             {
                 ctx.Inject<ICISpecific<IStdOut>>(out var stdOut);
                 return stdOut.Instance;
             })
-            .Bind<IStdErr>().To(ctx =>
+            .Bind().To(ctx =>
             {
                 ctx.Inject<ICISpecific<IStdErr>>(out var stdErr);
                 return stdErr.Instance;
             })
-            .Bind<ILog<TT>>("Default", "Ansi").To<Log<TT>>()
-            .Bind<ILog<TT>>("TeamCity").To<TeamCityLog<TT>>()
-            .Bind<ILog<TT>>().To(ctx =>
+            .Bind("Default", "Ansi").To<Log<TT>>()
+            .Bind("TeamCity").To<TeamCityLog<TT>>()
+            .Bind().To(ctx =>
             {
                 ctx.Inject<ICISpecific<ILog<TT>>>(out var log);
                 return log.Instance;
             })
-            .Bind<IFileSystem>().To<FileSystem>()
-            .Bind<IEnvironment, IScriptContext, IErrorContext>().Bind<ITraceSource>(typeof(Environment)).To<Environment>()
-            .Bind<ICISettings>().To<CISettings>()
-            .Bind<IExitTracker>().To<ExitTracker>()
-            .Bind<IDotNetEnvironment>().Bind<ITraceSource>(typeof(DotNetEnvironment)).To<DotNetEnvironment>()
-            .Bind<IDockerEnvironment>().Bind<ITraceSource>(typeof(DockerEnvironment)).To<DockerEnvironment>()
-            .Bind<INuGetEnvironment>().Bind<ITraceSource>(typeof(NuGetEnvironment)).To<NuGetEnvironment>()
-            .Bind<ISettings, ISettingSetter<VerbosityLevel>, Settings>().To<Settings>()
-            .Bind<ISettingDescription>(typeof(VerbosityLevel)).To<VerbosityLevelSettingDescription>()
-            .Bind<IMSBuildArgumentsTool>().To<MSBuildArgumentsTool>()
-            .Bind<ICommandLineParser>().To<CommandLineParser>()
-            .Bind<IInfo>().To<Info>()
-            .Bind<ICodeSource>().To<ConsoleSource>()
-            .Bind<Func<string, ICodeSource>>(typeof(LoadFileCodeSource)).To(ctx => new Func<string, ICodeSource>(name =>
+            .Bind().To<FileSystem>()
+            .Bind().To<CISettings>()
+            .Bind().To<ExitTracker>()
+            .Bind<IEnvironment, IScriptContext, IErrorContext>().Bind<ITraceSource>(Tag.Type).To<Environment>()
+            .Bind<IDotNetEnvironment>().Bind<ITraceSource>(Tag.Type).To<DotNetEnvironment>()
+            .Bind<IDockerEnvironment>().Bind<ITraceSource>(Tag.Type).To<DockerEnvironment>()
+            .Bind<INuGetEnvironment>().Bind<ITraceSource>(Tag.Type).To<NuGetEnvironment>()
+            .Bind<IEnvironmentVariables>().Bind<ITraceSource>(Tag.Type).To<EnvironmentVariables>()
+            .Bind().To<Settings>()
+            .Bind(typeof(VerbosityLevel)).To<VerbosityLevelSettingDescription>()
+            .Bind().To<MSBuildArgumentsTool>()
+            .Bind().To<CommandLineParser>()
+            .Bind().To<Info>()
+            .Bind().To<ConsoleSource>()
+            .Bind(typeof(LoadFileCodeSource)).To(ctx => new Func<string, ICodeSource>(name =>
             {
                 ctx.Inject<LoadFileCodeSource>(out var loadFileCodeSource);
                 loadFileCodeSource.Name = name;
                 return loadFileCodeSource;
             }))
-            .Bind<Func<string, ICodeSource>>(typeof(LineCodeSource)).To(ctx => new Func<string, ICodeSource>(line =>
+            .Bind(typeof(LineCodeSource)).To(ctx => new Func<string, ICodeSource>(line =>
             {
                 ctx.Inject<LineCodeSource>(out var lineCodeSource);
                 lineCodeSource.Line = line;
                 return lineCodeSource;
             }))
-            .Bind<IScriptRunner>(InteractionMode.Interactive).To<InteractiveRunner>()
-            .Bind<IScriptRunner>(InteractionMode.NonInteractive).To<ScriptRunner>()
-            .Bind<IScriptRunner>().As(Lifetime.Transient).To(ctx =>
+            .Bind(InteractionMode.Interactive).To<InteractiveRunner>()
+            .Bind(InteractionMode.NonInteractive).To<ScriptRunner>()
+            .Bind().As(Lifetime.Transient).To(ctx =>
             {
                 ctx.Inject<ISettings>(out var settings);
                 if (settings.InteractionMode == InteractionMode.Interactive)
@@ -153,126 +155,125 @@ internal partial class Composition: ServiceProviderFactory<Composition>
                     return scriptRunner;
                 }
             })
-            .Bind<ICommandSource>().To<CommandSource>()
-            .Bind<IStringService>().To<StringService>()
-            .Bind<IStatistics>().To<Statistics>()
-            .Bind<IPresenter<IEnumerable<ITraceSource>>>().To<TracePresenter>()
-            .Bind<IPresenter<IStatistics>>().To<StatisticsPresenter>()
-            .Bind<IPresenter<CompilationDiagnostics>>().To<DiagnosticsPresenter>()
-            .Bind<IPresenter<ScriptState<object>>>().To<ScriptStatePresenter>()
-            .Bind<IBuildEngine>().To<BuildEngine>()
-            .Bind<INuGetRestoreService, ISettingSetter<NuGetRestoreSetting>>().To<NuGetRestoreService>()
-            .Bind<ILogger>().To<NuGetLogger>()
-            .Bind<IUniqueNameGenerator>().To<UniqueNameGenerator>()
-            .Bind<INuGetAssetsReader>().To<NuGetAssetsReader>()
-            .Bind<ICleaner>().To<Cleaner>()
-            .Bind<ICommandsRunner>().To<CommandsRunner>()
-            .Bind<ICommandFactory<ICodeSource>>().To<CodeSourceCommandFactory>()
-            .Bind<ICommandFactory<ScriptCommand>>().As(Lifetime.Transient).To<ScriptCommandFactory>()
-            .Bind<ICSharpScriptRunner>().To<CSharpScriptRunner>()
-            .Bind<ITargetFrameworkMonikerParser>().To<TargetFrameworkMonikerParser>()
-            .Bind<IEnvironmentVariables>().Bind<ITraceSource>(typeof(EnvironmentVariables)).To<EnvironmentVariables>()
-            .Bind<IActive>(typeof(Debugger)).To<Debugger>()
-            .Bind<IDockerSettings>().To<DockerSettings>()
-            .Bind<IBuildContext>("base").As(Lifetime.Transient).To<BuildContext>()
-            .Bind<IBuildContext>().As(Lifetime.Transient).To<ReliableBuildContext>()
-            .Bind<ITextToColorStrings>().To<TextToColorStrings>()
-            .Bind<IFileExplorer>().To<FileExplorer>()
-            .Bind<IProcessOutputWriter>().To<ProcessOutputWriter>()
-            .Bind<IBuildMessageLogWriter>().To<BuildMessageLogWriter>()
-            .Bind<MemoryPool<TT>>().To(_ => MemoryPool<TT>.Shared)
-            .Bind<IMessageIndicesReader>().To<MessageIndicesReader>()
-            .Bind<IMessagesReader>().To<MessagesReader>()
-            .Bind<IPathResolverContext, IVirtualContext>().To<PathResolverContext>()
-            .Bind<IEncoding>().To<Utf8Encoding>()
-            .Bind<IProcessMonitor>().As(Lifetime.Transient).To<ProcessMonitor>()
-            .Bind<IBuildOutputProcessor>().To<BuildOutputProcessor>()
-            .Bind<IBuildMessagesProcessor>("default").To<DefaultBuildMessagesProcessor>()
-            .Bind<IBuildMessagesProcessor>("custom").To<CustomMessagesProcessor>()
-            .Bind<IPresenter<Summary>>().To<SummaryPresenter>()
-            .Bind<IExitCodeParser>().To<ExitCodeParser>()
-            .Bind<IProcessRunner>("base").To<ProcessRunner>()
-            .Bind<IProcessRunner>().To<ProcessInFlowRunner>()
-            .Bind<IDotNetSettings, ITeamCityContext>().To<TeamCityContext>()
-            .Bind<IProcessResultHandler>().To<ProcessResultHandler>()
-            .Bind<IRuntimeExplorer>().To<RuntimeExplorer>()
-            .Bind<INuGetReferenceResolver>().To<NuGetReferenceResolver>()
-            .Bind<SourceReferenceResolver>().As(Lifetime.Transient).To<SourceResolver>()
-            .Bind<MetadataReferenceResolver>().As(Lifetime.Transient).To<MetadataResolver>()
-            .Bind<IScriptContentReplacer>().To<ScriptContentReplacer>()
-            .Bind<ITextReplacer>().To<TextReplacer>();
+            .Bind().To<CommandSource>()
+            .Bind().To<StringService>()
+            .Bind().To<Statistics>()
+            .Bind().To<TracePresenter>()
+            .Bind().To<StatisticsPresenter>()
+            .Bind().To<DiagnosticsPresenter>()
+            .Bind().To<ScriptStatePresenter>()
+            .Bind().To<BuildEngine>()
+            .Bind().To<NuGetRestoreService>()
+            .Bind().To<NuGetLogger>()
+            .Bind().To<UniqueNameGenerator>()
+            .Bind().To<NuGetAssetsReader>()
+            .Bind().To<Cleaner>()
+            .Bind().To<CommandsRunner>()
+            .Bind().To<CodeSourceCommandFactory>()
+            .Bind().As(Lifetime.Transient).To<ScriptCommandFactory>()
+            .Bind().To<CSharpScriptRunner>()
+            .Bind().To<TargetFrameworkMonikerParser>()
+            .Bind(Tag.Type).To<Debugger>()
+            .Bind().To<DockerSettings>()
+            .Bind("base").As(Lifetime.Transient).To<BuildContext>()
+            .Bind().As(Lifetime.Transient).To<ReliableBuildContext>()
+            .Bind().To<TextToColorStrings>()
+            .Bind().To<FileExplorer>()
+            .Bind().To<ProcessOutputWriter>()
+            .Bind().To<BuildMessageLogWriter>()
+            .Bind().To(_ => MemoryPool<TT>.Shared)
+            .Bind().To<MessageIndicesReader>()
+            .Bind().To<MessagesReader>()
+            .Bind().To<PathResolverContext>()
+            .Bind().To<Utf8Encoding>()
+            .Bind().As(Lifetime.Transient).To<ProcessMonitor>()
+            .Bind().To<BuildOutputProcessor>()
+            .Bind("default").To<DefaultBuildMessagesProcessor>()
+            .Bind("custom").To<CustomMessagesProcessor>()
+            .Bind().To<SummaryPresenter>()
+            .Bind().To<ExitCodeParser>()
+            .Bind("base").To<ProcessRunner>()
+            .Bind().To<ProcessInFlowRunner>()
+            .Bind().To<TeamCityContext>()
+            .Bind().To<ProcessResultHandler>()
+            .Bind().To<RuntimeExplorer>()
+            .Bind().To<NuGetReferenceResolver>()
+            .Bind().As(Lifetime.Transient).To<SourceResolver>()
+            .Bind().As(Lifetime.Transient).To<MetadataResolver>()
+            .Bind().To<ScriptContentReplacer>()
+            .Bind().To<TextReplacer>();
 
         DI.Setup(nameof(Composition))
             .DefaultLifetime(Lifetime.Singleton)
             // Script options factory
-            .Bind<ISettingGetter<LanguageVersion>, ISettingSetter<LanguageVersion>>().To(_ => new Setting<LanguageVersion>(LanguageVersion.Default))
-            .Bind<ISettingGetter<OptimizationLevel>, ISettingSetter<OptimizationLevel>>().To(_ => new Setting<OptimizationLevel>(OptimizationLevel.Release))
-            .Bind<ISettingGetter<WarningLevel>, ISettingSetter<WarningLevel>>().To(_ => new Setting<WarningLevel>((WarningLevel)ScriptOptions.Default.WarningLevel))
-            .Bind<ISettingGetter<CheckOverflow>, ISettingSetter<CheckOverflow>>().To(_ => new Setting<CheckOverflow>(ScriptOptions.Default.CheckOverflow ? CheckOverflow.On : CheckOverflow.Off))
-            .Bind<ISettingGetter<AllowUnsafe>, ISettingSetter<AllowUnsafe>>().To(_ => new Setting<AllowUnsafe>(ScriptOptions.Default.AllowUnsafe ? AllowUnsafe.On : AllowUnsafe.Off))
-            .Bind<IAssembliesProvider>().To<AssembliesProvider>()
-            .Bind<IScriptOptionsFactory, IActive>(typeof(AssembliesScriptOptionsProvider)).To<AssembliesScriptOptionsProvider>()
-            .Bind<IScriptOptionsFactory>(typeof(ConfigurableScriptOptionsFactory)).To<ConfigurableScriptOptionsFactory>()
-            .Bind<IScriptOptionsFactory>(typeof(ReferencesScriptOptionsFactory)).Bind<IReferenceRegistry>().To<ReferencesScriptOptionsFactory>()
-            .Bind<IScriptOptionsFactory>(typeof(SourceFileScriptOptionsFactory)).To<SourceFileScriptOptionsFactory>()
-            .Bind<IScriptOptionsFactory>(typeof(MetadataResolverOptionsFactory)).To<MetadataResolverOptionsFactory>()
-            .Bind<IScriptOptionsFactory>(typeof(ImportsOptionsFactory)).To<ImportsOptionsFactory>()
-            .Bind<ICommandFactory<string>>("REPL Set a C# language version parser").To<SettingCommandFactory<LanguageVersion>>()
-            .Bind<ICommandRunner>("REPL Set a C# language version").To<SettingCommandRunner<LanguageVersion>>()
-            .Bind<ISettingDescription>(typeof(LanguageVersion)).To<LanguageVersionSettingDescription>()
-            .Bind<ICommandFactory<string>>("REPL Set an optimization level parser").To<SettingCommandFactory<OptimizationLevel>>()
-            .Bind<ICommandRunner>("REPL Set an optimization level").To<SettingCommandRunner<OptimizationLevel>>()
-            .Bind<ISettingDescription>(typeof(OptimizationLevel)).To<OptimizationLevelSettingDescription>()
-            .Bind<ICommandFactory<string>>("REPL Set a warning level parser").To<SettingCommandFactory<WarningLevel>>()
-            .Bind<ICommandRunner>("REPL Set a warning level").To<SettingCommandRunner<WarningLevel>>()
-            .Bind<ISettingDescription>(typeof(WarningLevel)).To<WarningLevelSettingDescription>()
-            .Bind<ICommandFactory<string>>("REPL Set an overflow check parser").To<SettingCommandFactory<CheckOverflow>>()
-            .Bind<ICommandRunner>("REPL Set an overflow check").To<SettingCommandRunner<CheckOverflow>>()
-            .Bind<ISettingDescription>(typeof(CheckOverflow)).To<CheckOverflowSettingDescription>()
-            .Bind<ICommandFactory<string>>("REPL Set allow unsafe parser").To<SettingCommandFactory<AllowUnsafe>>()
-            .Bind<ICommandRunner>("REPL Set allow unsafe").To<SettingCommandRunner<AllowUnsafe>>()
-            .Bind<ISettingDescription>(typeof(AllowUnsafe)).To<AllowUnsafeSettingDescription>()
-            .Bind<ICommandFactory<string>>("REPL Set NuGet restore setting parser").To<SettingCommandFactory<NuGetRestoreSetting>>()
-            .Bind<ICommandRunner>("REPL Set NuGet restore setting").To<SettingCommandRunner<NuGetRestoreSetting>>()
-            .Bind<ISettingDescription>(typeof(NuGetRestoreSetting)).To<NuGetRestoreSettingDescription>()
-            .Bind<IScriptSubmissionAnalyzer>().To<ScriptSubmissionAnalyzer>()
-            .Bind<ICommandRunner>("CSharp").To<CSharpScriptCommandRunner>()
-            .Bind<ICommandFactory<string>>("REPL Help parser").To<HelpCommandFactory>()
-            .Bind<ICommandRunner>("REPL Help runner").To<HelpCommandRunner>()
-            .Bind<ICommandFactory<string>>("REPL Set verbosity level parser").To<SettingCommandFactory<VerbosityLevel>>()
-            .Bind<ICommandRunner>("REPL Set verbosity level runner").To<SettingCommandRunner<VerbosityLevel>>()
-            .Bind<ICommandFactory<string>>("REPL Add NuGet reference parser").To<AddNuGetReferenceCommandFactory>()
-            .Bind<IFilePathResolver>().To<FilePathResolver>()
-            .Bind<ICommandRunner>("REPL Add package reference runner").To<AddNuGetReferenceCommandRunner>()
-            .Bind<IStartInfoFactory>().To<StartInfoFactory>()
-            .Bind<IProcessManager>().As(Lifetime.Transient).To<ProcessManager>()
-            .Bind<IProperties>("Default", "Ansi").To<Properties>()
-            .Bind<IProperties>("TeamCity").To<TeamCityProperties>()
+            .Bind().To(_ => new Setting<LanguageVersion>(LanguageVersion.Default))
+            .Bind().To(_ => new Setting<OptimizationLevel>(OptimizationLevel.Release))
+            .Bind().To(_ => new Setting<WarningLevel>((WarningLevel)ScriptOptions.Default.WarningLevel))
+            .Bind().To(_ => new Setting<CheckOverflow>(ScriptOptions.Default.CheckOverflow ? CheckOverflow.On : CheckOverflow.Off))
+            .Bind().To(_ => new Setting<AllowUnsafe>(ScriptOptions.Default.AllowUnsafe ? AllowUnsafe.On : AllowUnsafe.Off))
+            .Bind().To<AssembliesProvider>()
+            .Bind(Tag.Type).To<AssembliesScriptOptionsProvider>()
+            .Bind(Tag.Type).To<ConfigurableScriptOptionsFactory>()
+            .Bind(Tag.Type).Bind<IReferenceRegistry>().To<ReferencesScriptOptionsFactory>()
+            .Bind(Tag.Type).To<SourceFileScriptOptionsFactory>()
+            .Bind(Tag.Type).To<MetadataResolverOptionsFactory>()
+            .Bind(Tag.Type).To<ImportsOptionsFactory>()
+            .Bind(Tag.Unique).To<SettingCommandFactory<LanguageVersion>>()
+            .Bind(Tag.Unique).To<SettingCommandRunner<LanguageVersion>>()
+            .Bind(typeof(LanguageVersion)).To<LanguageVersionSettingDescription>()
+            .Bind(Tag.Unique).To<SettingCommandFactory<OptimizationLevel>>()
+            .Bind(Tag.Unique).To<SettingCommandRunner<OptimizationLevel>>()
+            .Bind(typeof(OptimizationLevel)).To<OptimizationLevelSettingDescription>()
+            .Bind(Tag.Unique).To<SettingCommandFactory<WarningLevel>>()
+            .Bind(Tag.Unique).To<SettingCommandRunner<WarningLevel>>()
+            .Bind(typeof(WarningLevel)).To<WarningLevelSettingDescription>()
+            .Bind(Tag.Unique).To<SettingCommandFactory<CheckOverflow>>()
+            .Bind(Tag.Unique).To<SettingCommandRunner<CheckOverflow>>()
+            .Bind(typeof(CheckOverflow)).To<CheckOverflowSettingDescription>()
+            .Bind(Tag.Unique).To<SettingCommandFactory<AllowUnsafe>>()
+            .Bind(Tag.Unique).To<SettingCommandRunner<AllowUnsafe>>()
+            .Bind(typeof(AllowUnsafe)).To<AllowUnsafeSettingDescription>()
+            .Bind(Tag.Unique).To<SettingCommandFactory<NuGetRestoreSetting>>()
+            .Bind(Tag.Unique).To<SettingCommandRunner<NuGetRestoreSetting>>()
+            .Bind(typeof(NuGetRestoreSetting)).To<NuGetRestoreSettingDescription>()
+            .Bind().To<ScriptSubmissionAnalyzer>()
+            .Bind(Tag.Unique).To<CSharpScriptCommandRunner>()
+            .Bind(Tag.Unique).To<HelpCommandFactory>()
+            .Bind(Tag.Unique).To<HelpCommandRunner>()
+            .Bind(Tag.Unique).To<SettingCommandFactory<VerbosityLevel>>()
+            .Bind(Tag.Unique).To<SettingCommandRunner<VerbosityLevel>>()
+            .Bind(Tag.Unique).To<AddNuGetReferenceCommandFactory>()
+            .Bind().To<FilePathResolver>()
+            .Bind(Tag.Unique).To<AddNuGetReferenceCommandRunner>()
+            .Bind().To<StartInfoFactory>()
+            .Bind().As(Lifetime.Transient).To<ProcessManager>()
+            .Bind("Default", "Ansi").To<Properties>()
+            .Bind("TeamCity").To<TeamCityProperties>()
 
             // Public
-            .Bind<IHost>().To<HostService>()
-            .Bind<IServiceCollection>().To(_ => CreateServiceCollection(this))
-            .Bind<IServiceProvider>().To(ctx =>
+            .Bind().To<HostService>()
+            .Bind().To(_ => CreateServiceCollection(this))
+            .Bind().To(ctx =>
             {
                 ctx.Inject<IServiceCollection>(out var serviceCollection);
                 return CreateServiceProvider(serviceCollection);
             })
-            .Bind<IProperties>().To(ctx =>
+            .Bind().To(ctx =>
             {
                 ctx.Inject<ICISpecific<IProperties>>(out var properties);
                 return properties.Instance;
             })
-            .Bind<INuGet>().To<NuGetService>()
-            .Bind<ICommandLineRunner>().To<CommandLineRunner>()
-            .Bind<IBuildRunner>().To<BuildRunner>()
+            .Bind().To<NuGetService>()
+            .Bind().To<CommandLineRunner>()
+            .Bind().To<BuildRunner>()
 
             // TeamCity Service messages
-            .Bind<ITeamCityServiceMessages>().To<TeamCityServiceMessages>()
-            .Bind<IServiceMessageFormatter>().To<ServiceMessageFormatter>()
-            .Bind<IFlowIdGenerator, IFlowContext>().To<FlowIdGenerator>()
-            .Bind<DateTime>().As(Lifetime.Transient).To(_ => DateTime.Now)
-            .Bind<IServiceMessageUpdater>().To<TimestampUpdater>()
-            .Bind<ITeamCityWriter>().To(
+            .Bind().To<TeamCityServiceMessages>()
+            .Bind().To<ServiceMessageFormatter>()
+            .Bind().To<FlowIdGenerator>()
+            .Bind().As(Lifetime.Transient).To(_ => DateTime.Now)
+            .Bind().To<TimestampUpdater>()
+            .Bind().To(
                 ctx =>
                 {
                     ctx.Inject<ITeamCityServiceMessages>(out var teamCityServiceMessages);
@@ -282,7 +283,7 @@ internal partial class Composition: ServiceProviderFactory<Composition>
                             ctx.Inject<IConsole>(out var console);
                             console.WriteToOut((default, str + "\n"));
                         });
-                }).Root<ITeamCityWriter>()
-            .Bind<IServiceMessageParser>().To<ServiceMessageParser>();
+                })
+            .Bind().To<ServiceMessageParser>();
     }
 }
