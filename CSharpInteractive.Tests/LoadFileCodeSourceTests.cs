@@ -21,7 +21,7 @@ public class LoadFileCodeSourceTests
         var expectedResult = source.ToArray();
 
         // Then
-        expectedResult.ShouldBe(["#load \"wd\\zx\\Abc\""]);
+        expectedResult.ShouldBe([$"#load \"{Path.Combine("wd", "zx", "Abc")}\""]);
         _workingDirectoryContext.Verify(i => i.CreateScope(source));
         _workingDirectoryToken.Verify(i => i.Dispose());
     }
