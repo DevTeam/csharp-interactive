@@ -111,7 +111,13 @@ var attempt = 5;
 IBuildResult? buildResult = default;
 while (buildResult?.ExitCode != 0 && attempt-- > 0)
 {
-    buildResult = buildCommand.Build(_ => { });
+    buildResult = buildCommand.Build(i =>
+    {
+        if (i.State == BuildMessageState.Failure)
+        {
+            WriteLine(i.Text, Color.Error);
+        }
+    });
 }
 
 Assertion.Succeed(buildResult!);
