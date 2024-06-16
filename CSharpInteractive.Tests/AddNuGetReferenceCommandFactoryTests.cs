@@ -1,8 +1,10 @@
 namespace CSharpInteractive.Tests;
 
+using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 using NuGet.Versioning;
 
+[SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows")]
 public class AddNuGetReferenceCommandFactoryTests
 {
     private readonly Mock<ILog<AddNuGetReferenceCommandFactory>> _log;

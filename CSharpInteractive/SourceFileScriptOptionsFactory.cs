@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis.Scripting;
 
 internal class SourceFileScriptOptionsFactory(Func<SourceReferenceResolver> sourceReferenceResolverFactory) : IScriptOptionsFactory
 {
-
     public ScriptOptions Create(ScriptOptions baseOptions) =>
         baseOptions.WithSourceResolver(sourceReferenceResolverFactory());
 }

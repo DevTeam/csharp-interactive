@@ -25,7 +25,7 @@ public partial record DotNetBuildServerShutdown(
     string ShortName = "")
 {
     public DotNetBuildServerShutdown(params string[] args)
-        : this(args, Enumerable.Empty<(string, string)>(), Enumerable.Empty<DotNetBuildServer>())
+        : this(args, [], [])
     { }
     
     public IStartInfo GetStartInfo(IHost host) =>

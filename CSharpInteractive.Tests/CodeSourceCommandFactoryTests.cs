@@ -5,6 +5,8 @@ using CSharpInteractive;
 using Environment = System.Environment;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
+[SuppressMessage("ReSharper", "GenericEnumeratorNotDisposed")]
+[SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows")]
 public class CodeSourceCommandFactoryTests
 {
     private const string SourceName = "Abc";
@@ -23,7 +25,7 @@ public class CodeSourceCommandFactoryTests
     {
         _log = new Mock<ILog<CodeSourceCommandFactory>>();
         _replCommandFactory1 = new Mock<ICommandFactory<string>>();
-        _replCommandFactory1.Setup(i => i.Create(It.IsAny<string>())).Returns(Enumerable.Empty<ICommand>());
+        _replCommandFactory1.Setup(i => i.Create(It.IsAny<string>())).Returns([]);
         _replCommandFactory1.SetupGet(i => i.Order).Returns(1);
         _replCommandFactory2 = new Mock<ICommandFactory<string>>();
         _replCommandFactory2.Setup(i => i.Create("#help")).Returns(new[] {HelpCommand.Shared});

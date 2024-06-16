@@ -95,7 +95,7 @@ public class NuGetReferenceResolverTests
 
         // When
         var projectAssetsJson = Path.Combine("TMP", "project.assets.json");
-        _nugetAssetsReader.Setup(i => i.ReadReferencingAssemblies(projectAssetsJson)).Returns(Enumerable.Empty<ReferencingAssembly>());
+        _nugetAssetsReader.Setup(i => i.ReadReferencingAssemblies(projectAssetsJson)).Returns([]);
         var result = resolver.TryResolveAssemblies(_command.PackageId, _command.VersionRange, out var assemblies);
 
         // Then

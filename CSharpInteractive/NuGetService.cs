@@ -41,7 +41,7 @@ internal class NuGetService(
         if (restoreResult == false)
         {
             log.Warning($"Cannot restore the NuGet package {settings.PackageId} {settings.VersionRange}".Trim() + '.');
-            return Enumerable.Empty<NuGetPackage>();
+            return [];
         }
 
         var output = Path.GetDirectoryName(projectAssetsJson);

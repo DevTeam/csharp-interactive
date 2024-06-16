@@ -51,7 +51,7 @@ public partial record DotNetPack(
     string ShortName = "")
 {
     public DotNetPack(params string[] args)
-        : this(Enumerable.Empty<(string, string)>(), args, Enumerable.Empty<(string, string)>())
+        : this([], args, [])
     { }
 
     public IStartInfo GetStartInfo(IHost host) =>

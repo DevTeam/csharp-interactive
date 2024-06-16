@@ -17,6 +17,6 @@ public record NuGetRestoreSettings(
     bool? NoCache = default)
 {
     public NuGetRestoreSettings(string packageId)
-        : this(packageId, Enumerable.Empty<string>(), Enumerable.Empty<string>())
+        : this(packageId, [], [])
     { }
 }

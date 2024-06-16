@@ -30,11 +30,11 @@ public class ScriptContentReplacerTests
         
         var code1Source = Mock.Of<ICodeSource>();
         _codeSourceFactory.Setup(i => i("code1")).Returns(code1Source);
-        _commandFactory.Setup(i => i.Create(code1Source)).Returns(Enumerable.Empty<ICommand>());
+        _commandFactory.Setup(i => i.Create(code1Source)).Returns([]);
         
         var code2Source = Mock.Of<ICodeSource>();
         _codeSourceFactory.Setup(i => i("code2")).Returns(code2Source);
-        _commandFactory.Setup(i => i.Create(code2Source)).Returns(Enumerable.Empty<ICommand>());
+        _commandFactory.Setup(i => i.Create(code2Source)).Returns([]);
         
         var addNuGetReferenceCommand = new AddNuGetReferenceCommand("PackId", VersionRange.Parse("1.2.3"));
         var refSource = Mock.Of<ICodeSource>();

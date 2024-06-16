@@ -3,6 +3,7 @@ namespace CSharpInteractive;
 
 using System.Text.RegularExpressions;
 
+[SuppressMessage("Performance", "SYSLIB1045:Convert to \'GeneratedRegexAttribute\'.")]
 internal class CommandLineParser(
     IFileSystem fileSystem,
     IMSBuildArgumentsTool msBuildArgumentsTool) : ICommandLineParser

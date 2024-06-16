@@ -82,13 +82,13 @@ public partial record DockerRun(
         : this(
             commandLine,
             image,
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<(string, string)>(),
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<(string, string)>())
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [])
     { }
 
     public IStartInfo GetStartInfo(IHost host)

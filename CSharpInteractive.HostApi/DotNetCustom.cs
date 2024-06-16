@@ -23,7 +23,7 @@ public partial record DotNetCustom(
     string ShortName = "")
 {
     public DotNetCustom(params string[] args)
-        : this(args, Enumerable.Empty<(string, string)>())
+        : this(args, [])
     { }
     
     public IStartInfo GetStartInfo(IHost host) =>

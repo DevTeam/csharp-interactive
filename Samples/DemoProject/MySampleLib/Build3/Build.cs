@@ -34,7 +34,7 @@ class Build : IBuild
 
         var testInContainer = new DockerRun(
                 test.WithExecutablePath("dotnet"),
-                $"mcr.microsoft.com/dotnet/sdk:6.0")
+                "mcr.microsoft.com/dotnet/sdk:6.0")
             .WithPlatform("linux")
             .AddVolumes((Environment.CurrentDirectory, "/project"))
             .WithContainerWorkingDirectory("/project");

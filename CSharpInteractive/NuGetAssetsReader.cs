@@ -23,7 +23,7 @@ internal class NuGetAssetsReader(
         if (lockFile == null)
         {
             log.Warning($"Cannot process the lock file \"{projectAssetsJson}\".");
-            return Enumerable.Empty<NuGetPackage>();
+            return [];
         }
 
         return lockFile.Libraries.Select(i =>

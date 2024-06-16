@@ -40,7 +40,7 @@ public partial record DotNetNuGetPush(
     string ShortName = "")
 {
     public DotNetNuGetPush(params string[] args)
-        : this(args, Enumerable.Empty<(string, string)>(), Enumerable.Empty<string>(), Enumerable.Empty<string>())
+        : this(args, [], [], [])
     { }
 
     public IStartInfo GetStartInfo(IHost host) =>

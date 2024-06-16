@@ -4,6 +4,7 @@ namespace CSharpInteractive;
 using System.Text.RegularExpressions;
 using NuGet.Versioning;
 
+[SuppressMessage("Performance", "SYSLIB1045:Convert to \'GeneratedRegexAttribute\'.")]
 internal class AddNuGetReferenceCommandFactory(ILog<AddNuGetReferenceCommandFactory> log) : ICommandFactory<string>
 {
     private static readonly Regex NuGetReferenceRegex = new("""^\s*#r\s+"nuget:\s*([^,\s]+?)(,(.+?)|\s*)"\s*$""", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);

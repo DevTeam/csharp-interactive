@@ -47,7 +47,7 @@ public class AssembliesScriptOptionsProviderTests
     public void ShouldAddImports()
     {
         // Given
-        _assembliesProvider.Setup(i => i.GetAssemblies(It.IsAny<IEnumerable<Type>>())).Returns(Enumerable.Empty<Assembly>());
+        _assembliesProvider.Setup(i => i.GetAssemblies(It.IsAny<IEnumerable<Type>>())).Returns([]);
         var provider = CreateInstance();
 
         // When

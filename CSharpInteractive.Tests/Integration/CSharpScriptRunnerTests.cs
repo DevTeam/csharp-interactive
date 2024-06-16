@@ -1,5 +1,6 @@
 namespace CSharpInteractive.Tests.Integration;
 
+using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
@@ -7,6 +8,7 @@ using Environment = System.Environment;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "true")]
+[SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows")]
 public class CSharpScriptRunnerTests
 {
     private readonly Mock<ILog<CSharpScriptRunner>> _log;

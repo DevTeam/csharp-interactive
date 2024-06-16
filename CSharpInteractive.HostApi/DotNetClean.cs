@@ -37,7 +37,7 @@ public partial record DotNetClean(
     string ShortName = "")
 {
     public DotNetClean(params string[] args)
-        : this(Enumerable.Empty<(string, string)>(), args, Enumerable.Empty<(string, string)>())
+        : this([], args, [])
     { }
 
     public IStartInfo GetStartInfo(IHost host) =>

@@ -39,7 +39,7 @@ public class MessageIndicesReaderTests
         var expectedIndices = reader.Read("data").ToArray();
 
         // Then
-        expectedIndices.ShouldBe(Array.Empty<ulong>());
+        expectedIndices.ShouldBe([]);
     }
 
     [Fact]

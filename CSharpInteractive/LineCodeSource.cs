@@ -1,3 +1,4 @@
+// ReSharper disable NotDisposedResourceIsReturned
 namespace CSharpInteractive;
 
 using System.Collections;

@@ -3,6 +3,7 @@ namespace CSharpInteractive;
 
 using System.Text.RegularExpressions;
 
+[SuppressMessage("Performance", "SYSLIB1045:Convert to \'GeneratedRegexAttribute\'.")]
 internal class TargetFrameworkMonikerParser : ITargetFrameworkMonikerParser
 {
     private static readonly Regex NetFull = new("^net\\d+$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);

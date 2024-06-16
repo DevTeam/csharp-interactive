@@ -80,7 +80,7 @@ public partial record DotNetTest(
     string ShortName = "")
 {
     public DotNetTest(params string[] args)
-        : this(Enumerable.Empty<(string, string)>(), args, Enumerable.Empty<(string, string)>(), Enumerable.Empty<(string, string)>(), Enumerable.Empty<string>())
+        : this([], args, [], [], [])
     { }
 
     public IStartInfo GetStartInfo(IHost host)

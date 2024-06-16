@@ -18,10 +18,10 @@ internal class Settings(
     private InteractionMode _interactionMode = InteractionMode.Interactive;
     private bool _showHelpAndExit;
     private bool _showVersionAndExit;
-    private IEnumerable<ICodeSource> _codeSources = Enumerable.Empty<ICodeSource>();
+    private IEnumerable<ICodeSource> _codeSources = [];
     private IReadOnlyList<string> _scriptArguments = ImmutableArray<string>.Empty;
     private IReadOnlyDictionary<string, string> _scriptProperties = new Dictionary<string, string>();
-    private IEnumerable<string> _nuGetSources = Enumerable.Empty<string>();
+    private IEnumerable<string> _nuGetSources = [];
 
     public VerbosityLevel VerbosityLevel
     {

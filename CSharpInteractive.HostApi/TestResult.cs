@@ -62,9 +62,9 @@ public readonly record struct TestResult(
         return sb.ToString();
     }
 
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private class TestResultDebugView(TestResult testResult)
     {
-
         public TestState State => testResult.State;
         
         public string Name => testResult.Name;

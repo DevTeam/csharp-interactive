@@ -66,11 +66,11 @@ public class MetadataResolverTests
     }
 
     private TestMetadataResolver CreateInstance(params PortableExecutableReference[] references) =>
+        // ReSharper disable once UseCollectionExpression
         new(_environment.Object, references.ToImmutableArray());
     
     private class TestMetadataResolver(IEnvironment environment, ImmutableArray<PortableExecutableReference> references) : MetadataResolver(environment)
     {
-
         protected override ImmutableArray<PortableExecutableReference> ShouldResolveReferenceInternal(string reference, string? baseFilePath, MetadataReferenceProperties properties) => 
             references;
     }

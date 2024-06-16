@@ -11,10 +11,8 @@ public class CommandLineRunnerTests
     private readonly Mock<IStartInfo> _startInfo = new();
     private readonly ProcessResult _processResult;
 
-    public CommandLineRunnerTests()
-    {
-        _processResult = new ProcessResult(_startInfo.Object, ProcessState.Finished, 12, Array.Empty<Text>(), 33);
-    }
+    public CommandLineRunnerTests() => 
+        _processResult = new ProcessResult(_startInfo.Object, ProcessState.Finished, 12, [], 33);
 
     [Fact]
     public void ShouldRunProcess()

@@ -1,6 +1,7 @@
 using HostApi;
 // ReSharper disable CheckNamespace
 // ReSharper disable ArrangeTypeModifiers
+// ReSharper disable MemberCanBePrivate.Global
 
 static class Property
 {

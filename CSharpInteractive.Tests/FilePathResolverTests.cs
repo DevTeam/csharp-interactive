@@ -132,7 +132,7 @@ public class FilePathResolverTests
         _fileSystem.Setup(i => i.IsFileExist(It.Is<string>(j => j == "sc/Existing".Replace('/', Path.DirectorySeparatorChar)))).Returns(false);
         _fileSystem.Setup(i => i.IsDirectoryExist(It.Is<string>(j => j == "sc/Existing".Replace('/', Path.DirectorySeparatorChar)))).Returns(true);
         _fileSystem.Setup(i => i.EnumerateFileSystemEntries("sc/Existing".Replace('/', Path.DirectorySeparatorChar), "*.csx", SearchOption.TopDirectoryOnly))
-            .Returns(Enumerable.Empty<string>());
+            .Returns([]);
 
         // When
         var actualResult = resolver.TryResolve("Existing", out _);

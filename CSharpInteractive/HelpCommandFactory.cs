@@ -3,6 +3,7 @@ namespace CSharpInteractive;
 
 using System.Text.RegularExpressions;
 
+[SuppressMessage("Performance", "SYSLIB1045:Convert to \'GeneratedRegexAttribute\'.")]
 internal class HelpCommandFactory(ILog<HelpCommandFactory> log) : ICommandFactory<string>
 {
     private static readonly Regex Regex = new(@"^#help\s*$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);

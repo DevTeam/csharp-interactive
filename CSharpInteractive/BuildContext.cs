@@ -24,7 +24,7 @@ internal class BuildContext : IBuildContext
             "testfailed" => OnTestFailed(message),
             "message" => OnMessage(message),
             "buildproblem" => OnBuildProblem(message),
-            _ => Enumerable.Empty<BuildMessage>()
+            _ => []
         }).ToArray();
 
     public IReadOnlyList<BuildMessage> ProcessOutput(in Output output)

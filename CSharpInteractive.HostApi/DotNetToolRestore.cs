@@ -35,7 +35,7 @@ public partial record DotNetToolRestore(
     string ShortName = "")
 {
     public DotNetToolRestore(params string[] args)
-        : this(args, Enumerable.Empty<(string, string)>(), Enumerable.Empty<string>())
+        : this(args, [], [])
     { }
 
     public IStartInfo GetStartInfo(IHost host) =>

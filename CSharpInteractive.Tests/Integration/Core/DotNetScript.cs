@@ -9,7 +9,7 @@ internal static class DotNetScript
         Create("script.csx", default, args, lines);
 
     public static CommandLine Create(params string[] lines) =>
-        Create(Enumerable.Empty<string>(), lines);
+        Create([], lines);
 
     public static CommandLine Create() =>
         new(

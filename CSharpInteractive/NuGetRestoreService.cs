@@ -56,8 +56,8 @@ internal class NuGetRestoreService : INuGetRestoreService, ISettingSetter<NuGetR
         };
 
         _log.Trace(() => [new Text($"Restore nuget package {settings.PackageId} {settings.VersionRange} to \"{outputPath}\" and \"{settings.PackagesPath}\".")]);
-        var restoreGraphItems = new[]
-        {
+        ITaskItem[] restoreGraphItems =
+        [
             CreateTaskItem("RestoreSpec"),
 
             // { "ConfigFilePaths", @"C:\Users\Nikol\AppData\Roaming\NuGet\NuGet.Config;C:\Program Files (x86)\NuGet\Config\Microsoft.VisualStudio.FallbackLocation.config;C:\Program Files (x86)\NuGet\Config\Microsoft.VisualStudio.Offline.config;C:\Program Files (x86)\NuGet\Config\Xamarin.Offline.config" }
@@ -82,7 +82,7 @@ internal class NuGetRestoreService : INuGetRestoreService, ISettingSetter<NuGetR
                 "TargetFrameworkInformation",
                 ("TargetFramework", tfm),
                 ("TargetFrameworkMoniker", targetFrameworkMoniker))
-        };
+        ];
 
         projectAssetsJson = Path.Combine(outputPath, "project.assets.json");
         return new RestoreTask
@@ -101,7 +101,7 @@ internal class NuGetRestoreService : INuGetRestoreService, ISettingSetter<NuGetR
         }.Execute();
     }
 
-    private static ITaskItem CreateTaskItem(string type, params (string key, string? value)[] properties)
+    private static TaskItem CreateTaskItem(string type, params (string key, string? value)[] properties)
     {
         const string projectFile = Project + ".csproj";
         var taskItem = new TaskItem(type);

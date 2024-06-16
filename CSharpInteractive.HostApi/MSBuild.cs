@@ -67,20 +67,20 @@ public partial record MSBuild(
 {
     public MSBuild()
         : this(
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<(string, string)>(),
-            Enumerable.Empty<(string, string)>(),
-            Enumerable.Empty<(string, string)>(),
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>(),
-            Enumerable.Empty<string>())
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [])
     { }
 
     public IStartInfo GetStartInfo(IHost host) =>
         host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
-            .WithArgs(ExecutablePath == string.Empty ? ["msbuild"] : Array.Empty<string>())
+            .WithArgs(ExecutablePath == string.Empty ? ["msbuild"] : [])
             .AddArgs(new[] {Project}.Where(i => !string.IsNullOrWhiteSpace(i)).ToArray())
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())

@@ -24,7 +24,7 @@ public partial record DotNetNew(
     string ShortName = "")
 {
     public DotNetNew(string templateName, params string[] args)
-        : this(args, Enumerable.Empty<(string, string)>(), templateName)
+        : this(args, [], templateName)
     { }
     
     public IStartInfo GetStartInfo(IHost host) =>
