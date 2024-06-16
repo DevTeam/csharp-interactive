@@ -30,11 +30,11 @@ public class DockerDotNetBuildScenario : BaseScenario
         var dockerRun = new DockerRun()
             .WithAutoRemove(true)
             .WithInteractive(true)
-            .WithTty(true)
             .WithImage("mcr.microsoft.com/dotnet/sdk")
             .WithPlatform("linux")
             .WithContainerWorkingDirectory("/MyProjects")
             .AddVolumes((ToAbsoluteLinuxPath(Environment.CurrentDirectory), "/MyProjects"));
+
 
         // Creates a new library project in a docker container
         var exitCode = dockerRun
