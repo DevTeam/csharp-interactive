@@ -1,7 +1,5 @@
 using System.Xml;
 using HostApi;
-using Microsoft.Build.Tasks;
-using NuGet.Packaging;
 using NuGet.Versioning;
 // ReSharper disable CheckNamespace
 
@@ -127,7 +125,7 @@ internal static class Tools
 
     public static void Exit()
     {
-        if (!Tools.UnderTeamCity)
+        if (!Console.IsInputRedirected && !UnderTeamCity)
         {
             var foregroundColor = Console.ForegroundColor;
             try
