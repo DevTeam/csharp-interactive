@@ -14,7 +14,6 @@ internal class ConfigurableScriptOptionsFactory(
     ISettingGetter<AllowUnsafe> allowUnsafe)
     : IScriptOptionsFactory
 {
-
     public ScriptOptions Create(ScriptOptions baseOptions) =>
         baseOptions
             .WithLanguageVersion(languageVersion.GetSetting())

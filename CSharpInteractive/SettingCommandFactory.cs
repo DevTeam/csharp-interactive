@@ -7,7 +7,6 @@ internal class SettingCommandFactory<TOption> : ICommandFactory<string>
     where TOption: struct, Enum
 {
     private readonly Regex _regex;
-
     private readonly ILog<SettingCommandFactory<TOption>> _log;
     private readonly IStringService _stringService;
     private readonly ISettingDescription _setting;

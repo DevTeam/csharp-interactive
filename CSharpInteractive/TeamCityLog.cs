@@ -11,7 +11,6 @@ internal class TeamCityLog<T>(
     IStatistics statistics)
     : ILog<T>
 {
-
     public void Error(ErrorId id, params Text[] error)
     {
         var message = error.ToSimpleString();

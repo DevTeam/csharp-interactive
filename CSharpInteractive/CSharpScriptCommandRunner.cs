@@ -4,7 +4,6 @@ namespace CSharpInteractive;
 
 internal class CSharpScriptCommandRunner(ICSharpScriptRunner scriptRunner) : ICommandRunner
 {
-
     public CommandResult TryRun(ICommand command)
     {
         switch (command)

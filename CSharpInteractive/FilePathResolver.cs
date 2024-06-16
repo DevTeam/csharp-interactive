@@ -6,7 +6,6 @@ internal class FilePathResolver(
     IEnvironment environment,
     IFileSystem fileSystem) : IFilePathResolver
 {
-
     public bool TryResolve(string? fileOrDirectoryPath, out string fullScriptPath)
     {
         var state = State.Unknown;

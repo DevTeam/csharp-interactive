@@ -7,7 +7,6 @@ using HostApi;
 
 internal class TeamCityLineFormatter(IColorTheme colorTheme) : ITeamCityLineFormatter
 {
-
     // ReSharper disable once MemberCanBePrivate.Global
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
     internal char EscapeSymbol { get; set; } = '\x001B';

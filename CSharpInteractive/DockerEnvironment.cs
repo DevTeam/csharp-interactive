@@ -8,7 +8,6 @@ internal class DockerEnvironment(
     IEnvironment environment,
     IFileExplorer fileExplorer) : ITraceSource, IDockerEnvironment
 {
-
     public string Path
     {
         get

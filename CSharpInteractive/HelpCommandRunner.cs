@@ -3,7 +3,6 @@ namespace CSharpInteractive;
 
 internal class HelpCommandRunner(IInfo info) : ICommandRunner
 {
-
     public CommandResult TryRun(ICommand command)
     {
         if (command is not HelpCommand)

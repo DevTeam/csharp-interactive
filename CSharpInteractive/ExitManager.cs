@@ -7,7 +7,6 @@ internal class ExitManager(
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     CancellationTokenSource cancellationTokenSource) : IActive
 {
-
     public IDisposable Activate()
     {
         if (settings.InteractionMode != InteractionMode.Interactive)

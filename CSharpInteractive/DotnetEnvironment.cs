@@ -12,7 +12,6 @@ internal class DotNetEnvironment(
     IFileExplorer fileExplorer)
     : IDotNetEnvironment, ITraceSource
 {
-
     public string Path
     {
         get

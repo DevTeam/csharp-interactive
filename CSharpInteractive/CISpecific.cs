@@ -11,7 +11,6 @@ internal class CISpecific<T>(
     [Tag("Ansi")] Func<T> ansiFactory)
     : ICISpecific<T>
 {
-
     public T Instance => settings.CIType switch
     {
         CIType.TeamCity => teamcityFactory(),

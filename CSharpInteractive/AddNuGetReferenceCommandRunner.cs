@@ -8,7 +8,6 @@ internal class AddNuGetReferenceCommandRunner(
     INuGetReferenceResolver nuGetReferenceResolver,
     IReferenceRegistry referenceRegistry) : ICommandRunner
 {
-
     public CommandResult TryRun(ICommand command)
     {
         if (command is not AddNuGetReferenceCommand addPackageReferenceCommand)

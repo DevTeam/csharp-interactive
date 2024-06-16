@@ -6,7 +6,6 @@ internal class SettingCommandRunner<TOption>(
     ISettingSetter<TOption> settingSetter) : ICommandRunner
     where TOption: struct, Enum
 {
-
     public CommandResult TryRun(ICommand command)
     {
         if (command is not SettingCommand<TOption> settingCommand)

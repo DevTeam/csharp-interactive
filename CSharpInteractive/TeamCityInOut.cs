@@ -8,7 +8,6 @@ internal class TeamCityInOut(
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     ITeamCityWriter teamCityWriter) : IStdOut, IStdErr
 {
-
     public void Write(params Text[] text) => teamCityWriter.WriteMessage(lineFormatter.Format(text));
 
     void IStdOut.WriteLine(params Text[] line) => teamCityWriter.WriteMessage(lineFormatter.Format(line));

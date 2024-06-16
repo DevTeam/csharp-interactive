@@ -7,7 +7,6 @@ internal class ConsoleInOut(
     ITextToColorStrings textToColorStrings,
     IColorTheme colorTheme) : IStdOut, IStdErr
 {
-
     void IStdErr.WriteLine(params Text[] line) => WriteStdErr(line + Text.NewLine);
 
     public void Write(params Text[] text) => console.WriteToOut(text.SelectMany(i => textToColorStrings.Convert(i.Value, colorTheme.GetConsoleColor(i.Color))).ToArray());

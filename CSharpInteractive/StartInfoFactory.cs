@@ -8,7 +8,6 @@ internal class StartInfoFactory(
     ILog<StartInfoFactory> log,
     IEnvironment environment) : IStartInfoFactory
 {
-
     public ProcessStartInfo Create(IStartInfo info)
     {
         var workingDirectory = info.WorkingDirectory;
