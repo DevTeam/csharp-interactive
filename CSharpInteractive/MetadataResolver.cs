@@ -33,7 +33,7 @@ internal class MetadataResolver(IEnvironment environment) : MetadataReferenceRes
 
     internal IEnumerable<string> SearchPaths => _baseResolver.Value.SearchPaths;
 
-    internal string BaseDirectory => _baseResolver.Value.BaseDirectory;
+    internal string BaseDirectory => _baseResolver.Value.BaseDirectory ?? "";
 
     private static ScriptMetadataResolver CreateResolver(IEnvironment environment)
     {

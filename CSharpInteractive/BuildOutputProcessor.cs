@@ -11,7 +11,13 @@ internal class BuildOutputProcessor(IServiceMessageParser serviceMessageParser) 
         var messages = new List<BuildMessage>();
         foreach (var message in serviceMessageParser.ParseServiceMessages(output.Line).Where(message => message != default))
         {
-            messages.Add(new BuildMessage(BuildMessageState.ServiceMessage, message));
+            var buildMessage = new BuildMessage(BuildMessageState.ServiceMessage, message);
+            if (buildMessage.TestResult.HasValue)
+            {
+                buildMessage = buildMessage.WithState(BuildMessageState.TestResult);
+            }
+
+            messages.Add(buildMessage);
             messages.AddRange(context.ProcessMessage(output, message));
         }
 

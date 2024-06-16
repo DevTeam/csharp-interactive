@@ -10,8 +10,8 @@ internal class BuildContext : IBuildContext
     private readonly List<BuildMessage> _errors = [];
     private readonly List<BuildMessage> _warnings = [];
     private readonly List<TestResult> _tests = [];
-    private readonly HashSet<TestKey> _testKeys = [];
-    private readonly Dictionary<TestKey, TestContext> _currentTests = new();
+    private readonly HashSet<BuildMessage.TestKey> _testKeys = [];
+    private readonly Dictionary<BuildMessage.TestKey, TestContext> _currentTests = new();
 
     [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public IReadOnlyList<BuildMessage> ProcessMessage(in Output output, IServiceMessage message) => (
@@ -52,7 +52,7 @@ internal class BuildContext : IBuildContext
 
     private IEnumerable<BuildMessage> OnStdOut(IServiceMessage message, IStartInfo startInfo, int processId)
     {
-        var testKey = CreateKey(message);
+        var testKey = BuildMessage.CreateKey(message);
         var output = message.GetValue("out") ?? string.Empty;
         GetTestContext(testKey).AddStdOut(startInfo, processId, output);
         yield return new BuildMessage(BuildMessageState.StdOut).WithText(output);
@@ -60,7 +60,7 @@ internal class BuildContext : IBuildContext
 
     private IEnumerable<BuildMessage> OnStdErr(IServiceMessage message, IStartInfo info, int processId)
     {
-        var testKey = CreateKey(message);
+        var testKey = BuildMessage.CreateKey(message);
         var output = message.GetValue("out") ?? string.Empty;
         GetTestContext(testKey).AddStdErr(info, processId, output);
         var buildMessage = new BuildMessage(BuildMessageState.StdError).WithText(output);
@@ -70,7 +70,7 @@ internal class BuildContext : IBuildContext
     
     private IEnumerable<BuildMessage> OnTestFinished(IServiceMessage message)
     {
-        var testKey = CreateKey(message);
+        var testKey = BuildMessage.CreateKey(message);
         if (_testKeys.Remove(testKey))
         {
             yield break;
@@ -85,62 +85,28 @@ internal class BuildContext : IBuildContext
         }
 
         
-        _tests.Add(CreateResult(testKey, message, TestState.Passed).WithDuration(duration).WithOutput(ctx.Output));
+        _tests.Add(BuildMessage.CreateResult(testKey, message, TestState.Passed).WithDuration(duration).WithOutput(ctx.Output));
     }
 
     private IEnumerable<BuildMessage> OnTestIgnored(IServiceMessage message)
     {
-        var testKey = CreateKey(message);
+        var testKey = BuildMessage.CreateKey(message);
         _testKeys.Add(testKey);
         var ctx = GetTestContext(testKey, true);
-        _tests.Add(CreateResult(testKey, message, TestState.Ignored).WithMessage(message.GetValue("message") ?? string.Empty).WithOutput(ctx.Output));
+        _tests.Add(BuildMessage.CreateResult(testKey, message, TestState.Ignored).WithMessage(message.GetValue("message") ?? string.Empty).WithOutput(ctx.Output));
         yield break;
     }
 
     private IEnumerable<BuildMessage> OnTestFailed(IServiceMessage message)
     {
-        var testKey = CreateKey(message);
+        var testKey = BuildMessage.CreateKey(message);
         _testKeys.Add(testKey);
         var ctx = GetTestContext(testKey, true);
-        _tests.Add(CreateResult(testKey, message, TestState.Failed).WithMessage(message.GetValue("message") ?? string.Empty).WithDetails(message.GetValue("details") ?? string.Empty).WithOutput(ctx.Output));
+        _tests.Add(BuildMessage.CreateResult(testKey, message, TestState.Failed).WithMessage(message.GetValue("message") ?? string.Empty).WithDetails(message.GetValue("details") ?? string.Empty).WithOutput(ctx.Output));
         yield break;
     }
     
-    private static TestResult CreateResult(TestKey key, IServiceMessage message, TestState state)
-    {
-        var testSource = message.GetValue("testSource") ?? string.Empty;
-        var displayName = message.GetValue("displayName") ?? string.Empty; 
-        var resultDisplayName = message.GetValue("resultDisplayName") ?? string.Empty;
-        var codeFilePath = message.GetValue("codeFilePath") ?? string.Empty;
-        var fullyQualifiedName = message.GetValue("fullyQualifiedName") ?? string.Empty;
-        var (flowId, suiteName, testName) = key;
-        var result = new TestResult(state, testName)
-                .WithSuiteName(suiteName)
-                .WithFlowId(flowId)
-                .WithSource(testSource)
-                .WithDisplayName(displayName)
-                .WithResultDisplayName(resultDisplayName)
-                .WithCodeFilePath(codeFilePath)
-                .WithFullyQualifiedName(fullyQualifiedName);
-        
-        if (Guid.TryParse(message.GetValue("id"), out var id))
-        {
-            result = result.WithId(id);
-        }
-
-        if (Uri.TryCreate(message.GetValue("executorUri"), UriKind.RelativeOrAbsolute, out var executorUri))
-        {
-            result = result.WithExecutorUri(executorUri);
-        }
-
-        if (int.TryParse(message.GetValue("lineNumber"), out var lineNumber))
-        {
-            result = result.WithLineNumber(lineNumber);
-        }
-        
-        return result;
-    }
-
+    
     private IEnumerable<BuildMessage> OnMessage(IServiceMessage message)
     {
         var text = message.GetValue("text") ?? string.Empty;
@@ -223,7 +189,7 @@ internal class BuildContext : IBuildContext
         return buildMessage;
     }
 
-    private TestContext GetTestContext(TestKey testKey, bool remove = false)
+    private TestContext GetTestContext(BuildMessage.TestKey testKey, bool remove = false)
     {
         if (!_currentTests.TryGetValue(testKey, out var testContext))
         {
@@ -243,17 +209,6 @@ internal class BuildContext : IBuildContext
 
         return testContext;
     }
-
-    private static TestKey CreateKey(IServiceMessage message)
-    {
-        var flowId = message.GetValue("flowId") ?? string.Empty;
-        var suiteName = message.GetValue("suiteName") ?? string.Empty; 
-        var name = message.GetValue("name") ?? string.Empty;
-        return new TestKey(flowId, suiteName, name);
-    }
-
-    // ReSharper disable once NotAccessedPositionalProperty.Local
-    private readonly record struct TestKey(string FlowId, string SuiteName, string TestName);
 
     private class TestContext
     {

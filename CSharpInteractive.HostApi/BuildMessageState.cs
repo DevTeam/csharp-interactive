@@ -9,5 +9,6 @@ public enum BuildMessageState
     Warning,
     StdError,
     Failure,
-    BuildProblem
+    BuildProblem,
+    TestResult
 }
