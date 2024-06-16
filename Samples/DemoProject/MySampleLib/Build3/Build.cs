@@ -7,29 +7,20 @@ interface IBuild
     Task<string> BuildAsync();
 }
 
-class Build : IBuild
+class Build(
+    Settings settings,
+    IBuildRunner runner) : IBuild
 {
-    private readonly Settings _settings;
-    private readonly IBuildRunner _runner;
-
-    public Build(
-        Settings settings,
-        IBuildRunner runner)
-    {
-        _settings = settings;
-        _runner = runner;
-    }
-
     public async Task<string> BuildAsync()
     {
         var build = new DotNetBuild()
-            .WithConfiguration(_settings.Configuration)
-            .AddProps(("version", _settings.Version.ToString()));
+            .WithConfiguration(settings.Configuration)
+            .AddProps(("version", settings.Version.ToString()));
 
-        await Assertion.Succeed(_runner.RunAsync(build));
+        await Assertion.Succeed(runner.RunAsync(build));
 
         var test = new DotNetTest()
-            .WithConfiguration(_settings.Configuration)
+            .WithConfiguration(settings.Configuration)
             .WithNoBuild(true);
 
         var testInContainer = new DockerRun(
@@ -41,21 +32,21 @@ class Build : IBuild
 
         await Assertion.Succeed(
             Task.WhenAll(
-                _runner.RunAsync(test),
-                _runner.RunAsync(testInContainer)
+                runner.RunAsync(test),
+                runner.RunAsync(testInContainer)
             )
         );
 
-        var output = Path.Combine("bin", _settings.Configuration, "output");
+        var output = Path.Combine("bin", settings.Configuration, "output");
 
         var publish = new DotNetPublish()
             .WithWorkingDirectory("BlazorServerApp")
-            .WithConfiguration(_settings.Configuration)
+            .WithConfiguration(settings.Configuration)
             .WithNoBuild(true)
             .WithOutput(output)
-            .AddProps(("version", _settings.Version.ToString()));
+            .AddProps(("version", settings.Version.ToString()));
 
-        await Assertion.Succeed(_runner.RunAsync(publish));
+        await Assertion.Succeed(runner.RunAsync(publish));
         return Path.Combine("BlazorServerApp", output);
     }
 }

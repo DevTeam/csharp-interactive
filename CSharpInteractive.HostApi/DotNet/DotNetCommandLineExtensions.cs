@@ -5,8 +5,6 @@
 // ReSharper disable MemberCanBePrivate.Global
 namespace HostApi.DotNet;
 
-using Cmd;
-
 [ExcludeFromCodeCoverage]
 internal static class DotNetCommandLineExtensions
 {

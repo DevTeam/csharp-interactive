@@ -3,7 +3,6 @@ namespace CSharpInteractive.Tests;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
-using JetBrains.TeamCity.ServiceMessages;
 using JetBrains.TeamCity.ServiceMessages.Read;
 using JetBrains.TeamCity.ServiceMessages.Write;
 
@@ -71,7 +70,7 @@ public class MessagesReaderTests
         var actualMessages = reader.Read("data", "data.msg").ToArray();
 
         // Then
-        actualMessages.ShouldBe(Array.Empty<IServiceMessage>());
+        actualMessages.ShouldBe([]);
     }
 
     [Theory]

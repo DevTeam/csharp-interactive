@@ -4,7 +4,6 @@ using System.Text;
 using Core;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
-using JetBrains.TeamCity.ServiceMessages.Read;
 
 internal static class TestTool
 {

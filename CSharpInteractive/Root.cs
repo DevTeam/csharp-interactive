@@ -1,4 +1,5 @@
 // ReSharper disable NotAccessedPositionalProperty.Global
+// ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive;
 
 using HostApi;

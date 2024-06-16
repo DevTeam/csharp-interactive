@@ -1,4 +1,5 @@
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive;
 
 using System.Net.Http;

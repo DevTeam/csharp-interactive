@@ -4,7 +4,6 @@
 // ReSharper disable CommentTypo
 namespace HostApi;
 
-using Cmd;
 using DotNet;
 
 /// <summary>

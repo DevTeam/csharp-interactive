@@ -3,8 +3,6 @@
 // ReSharper disable UnusedType.Global
 namespace HostApi;
 
-using Docker;
-
 /// <summary>
 /// The docker custom command is used to execute any docker commands with any arguments.
 /// </summary>
