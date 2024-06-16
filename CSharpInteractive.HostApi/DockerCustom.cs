@@ -26,7 +26,7 @@ public partial record DockerCustom(
     { }
 
     public IStartInfo GetStartInfo(IHost host) =>
-        new CommandLine(string.IsNullOrWhiteSpace(ExecutablePath) ? host.GetService<IDockerSettings>().DockerExecutablePath : ExecutablePath)
+        new CommandLine(string.IsNullOrWhiteSpace(ExecutablePath) ? host.GetService<HostComponents>().DockerSettings.DockerExecutablePath : ExecutablePath)
             .WithShortName(ToString())
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())

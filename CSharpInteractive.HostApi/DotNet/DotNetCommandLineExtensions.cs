@@ -19,8 +19,8 @@ internal static class DotNetCommandLineExtensions
             return executablePath;
         }
 
-        executablePath = host.GetService<IDotNetSettings>().DotNetExecutablePath;
-        return host.GetService<IVirtualContext>().IsActive
+        executablePath = host.GetService<HostComponents>().DotNetSettings.DotNetExecutablePath;
+        return host.GetService<HostComponents>().VirtualContext.IsActive
             ? Path.GetFileNameWithoutExtension(executablePath)
             : executablePath;
     }
@@ -43,8 +43,10 @@ internal static class DotNetCommandLineExtensions
 
     public static CommandLine AddMSBuildLoggers(this CommandLine cmd, IHost host, DotNetVerbosity? verbosity = default)
     {
-        var virtualContext = host.GetService<IVirtualContext>();
-        var settings = host.GetService<IDotNetSettings>();
+        // ReSharper disable once UseDeconstruction
+        var components = host.GetService<HostComponents>();
+        var virtualContext = components.VirtualContext;
+        var settings = components.DotNetSettings;
         return settings.LoggersAreRequired
             ? cmd
                 .AddArgs("/noconsolelogger")

@@ -18,8 +18,8 @@ public static class Host
 public static class Components
 #endif
 {
-    private static readonly ScriptHostComponents HostComponents = Composition.Shared.ScriptHostComponents;
-    private static readonly IHost CurHost = HostComponents.Host;
+    private static readonly Root Root = Composition.Shared.Root;
+    private static readonly IHost CurHost = Root.Host;
 
 #if APPLICATION
     private static readonly IDisposable FinishToken;
@@ -32,8 +32,8 @@ public static class Components
             return;
         }
 
-        HostComponents.Info.ShowHeader();
-        FinishToken = Disposable.Create(HostComponents.ExitTracker.Track(), HostComponents.Statistics.Start());
+        Root.Info.ShowHeader();
+        FinishToken = Disposable.Create(Root.ExitTracker.Track(), Root.Statistics.Start());
         AppDomain.CurrentDomain.ProcessExit += (_, _) => Finish();
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
     }
@@ -49,7 +49,7 @@ public static class Components
         {
             try
             {
-                HostComponents.Log.Error(ErrorId.Unhandled, ex.Message);
+                Root.Log.Error(ErrorId.Unhandled, ex.Message);
             }
             catch (Exception)
             {
@@ -62,7 +62,7 @@ public static class Components
     {
         try
         {
-            HostComponents.Log.Error(ErrorId.Exception, [new Text(e.ExceptionObject.ToString() ?? "Unhandled exception.")]);
+            Root.Log.Error(ErrorId.Exception, [new Text(e.ExceptionObject.ToString() ?? "Unhandled exception.")]);
             Finish();
             System.Environment.Exit(1);
         }
@@ -94,16 +94,16 @@ public static class Components
     public static T GetService<T>() => CurHost.GetService<T>();
     
     public static int? Run(this ICommandLine commandLine, Action<Output>? handler = default, TimeSpan timeout = default) => 
-        HostComponents.CommandLineRunner.Run(commandLine, handler, timeout);
+        Root.CommandLineRunner.Run(commandLine, handler, timeout);
 
     public static Task<int?> RunAsync(this ICommandLine commandLine, Action<Output>? handler = default, CancellationToken cancellationToken = default) =>
-        HostComponents.CommandLineRunner.RunAsync(commandLine, handler, cancellationToken);
+        Root.CommandLineRunner.RunAsync(commandLine, handler, cancellationToken);
     
     public static IBuildResult Build(this ICommandLine commandLine, Action<BuildMessage>? handler = default, TimeSpan timeout = default) => 
-        HostComponents.BuildRunner.Run(commandLine, handler, timeout);
+        Root.BuildRunner.Run(commandLine, handler, timeout);
 
     public static Task<IBuildResult> BuildAsync(this ICommandLine commandLine, Action<BuildMessage>? handler = default, CancellationToken cancellationToken = default) =>
-        HostComponents.BuildRunner.RunAsync(commandLine, handler, cancellationToken);
+        Root.BuildRunner.RunAsync(commandLine, handler, cancellationToken);
     
     [Obsolete]
     [SuppressMessage("Design", "CA1041:Provide ObsoleteAttribute message")]

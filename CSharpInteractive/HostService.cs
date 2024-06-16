@@ -4,6 +4,7 @@
 namespace CSharpInteractive;
 
 using HostApi;
+using Microsoft.Extensions.DependencyInjection;
 
 internal class HostService(
     ILog<HostService> log,
@@ -59,5 +60,5 @@ internal class HostService(
         }
     }
 
-    public T GetService<T>() => Composition.Shared.Resolve<T>();
+    public T GetService<T>() => Composition.Shared.Root.GetService<T>()!;
 }

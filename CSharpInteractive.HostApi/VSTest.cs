@@ -65,8 +65,10 @@ public partial record VSTest(
 
     public IStartInfo GetStartInfo(IHost host)
     {
-        var virtualContext = host.GetService<IVirtualContext>();
-        var settings = host.GetService<IDotNetSettings>();
+        // ReSharper disable once UseDeconstruction
+        var components = host.GetService<HostComponents>();
+        var virtualContext = components.VirtualContext;
+        var settings = components.DotNetSettings;
         var cmd = host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithArgs("vstest")

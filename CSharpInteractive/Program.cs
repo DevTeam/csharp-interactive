@@ -5,13 +5,9 @@ public class Program
     // ReSharper disable once UnusedMember.Global
     public static int Main()
     {
-        try
+        using (Composition.Shared)
         {
-            return Composition.Shared.Program.Run();
-        }
-        finally
-        {
-            Composition.Shared.Dispose();
+            return Composition.Shared.Root.Program.Run();
         }
     }
 

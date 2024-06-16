@@ -17,7 +17,7 @@ public class NuGetTests
         var tempPath = CreateTempDirectory();
 
         // When
-        var nuget = Composition.Shared.Resolve<INuGet>();
+        var nuget = Composition.Shared.Root.NuGet;
         var result = nuget.Restore(new NuGetRestoreSettings("IoC.Container").WithVersionRange(VersionRange.Parse("1.3.6")).WithTargetFrameworkMoniker("net5.0").WithPackagesPath(tempPath)).ToList();
 
         // Then
@@ -31,7 +31,7 @@ public class NuGetTests
         // Given
 
         // When
-        var nuget = Composition.Shared.Resolve<INuGet>();
+        var nuget = Composition.Shared.Root.NuGet;
         var result = nuget.Restore(new NuGetRestoreSettings("IoC.Container")).ToList();
 
         // Then

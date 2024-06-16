@@ -8,9 +8,6 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.Versioning;
 using HostApi;
-using HostApi.Cmd;
-using HostApi.Docker;
-using HostApi.DotNet;
 using JetBrains.TeamCity.ServiceMessages.Read;
 using JetBrains.TeamCity.ServiceMessages.Write;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
@@ -18,55 +15,26 @@ using JetBrains.TeamCity.ServiceMessages.Write.Special.Impl.Updater;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Scripting;
-using Microsoft.Extensions.DependencyInjection;
 using Pure.DI;
-using Pure.DI.MS;
 
-internal partial class Composition: ServiceProviderFactory<Composition>
+internal partial class Composition
 {
     public static readonly Composition Shared = new();
     
     private void Setup()
     {
         DI.Setup(nameof(Composition))
-            .DependsOn(Base)
-            .Hint(Hint.OnCannotResolve, "Off")
-            
-            // Provides collection of service descriptors
-            .Root<IServiceCollection>()
-            // Defines a mechanism for retrieving a service object
-            .Root<IServiceProvider>()
-            .Root<IEnvironment>()
-            .Root<IDotNetEnvironment>()
-            .Root<IDockerSettings>()
-            .Root<IDotNetSettings>()
-            // Command line context to register paths resolver
-            .Root<IPathResolverContext>()
-            // Command line context to resolver a path
-            .Root<IVirtualContext>()
-            // This root contains all dependencies for the application host
-            .Root<ScriptHostComponents>("ScriptHostComponents")
-            // Host API
-            .Root<IHost>()
-            // Public nuget service
-            .Root<INuGet>()
-            // Command line runner
-            .Root<ICommandLineRunner>()
-            // Build runner
-            .Root<IBuildRunner>()
-            // TeamCity parser
-            .Root<IServiceMessageParser>()
-            // TeamCity writer
-            .Root<ITeamCityWriter>()
+            .Hint(Hint.Resolve, "Off")
+            .Root<Root>("Root")
             
             .DefaultLifetime(Lifetime.Singleton)
 #if TOOL
-            .Root<Program>("Program")
             .Bind().To(_ => RunningMode.Tool)
 #endif
 #if APPLICATION
             .Bind().To(_ => RunningMode.Application)
 #endif
+            .Bind().To<Root>()
             .Bind().To(_ => typeof(Composition).Assembly)
             .Bind().To(_ => new CSharpParseOptions().LanguageVersion)
             .Bind("RuntimePath").To(_ => Path.GetDirectoryName(typeof(object).Assembly.Location) ?? string.Empty)
@@ -252,12 +220,6 @@ internal partial class Composition: ServiceProviderFactory<Composition>
 
             // Public
             .Bind().To<HostService>()
-            .Bind().To(_ => CreateServiceCollection(this))
-            .Bind().To(ctx =>
-            {
-                ctx.Inject<IServiceCollection>(out var serviceCollection);
-                return CreateServiceProvider(serviceCollection);
-            })
             .Bind().To(ctx =>
             {
                 ctx.Inject<ICISpecific<IProperties>>(out var properties);

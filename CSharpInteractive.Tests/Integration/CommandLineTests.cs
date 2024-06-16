@@ -4,6 +4,7 @@ namespace CSharpInteractive.Tests.Integration;
 using System.Diagnostics;
 using Core;
 using HostApi;
+using Microsoft.Extensions.DependencyInjection;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "true")]
@@ -102,5 +103,5 @@ public class CommandLineTests
         stopwatch.ElapsedMilliseconds.ShouldBeGreaterThanOrEqualTo(100);
     }
 
-    private static T GetService<T>() => Composition.Shared.Resolve<T>();
+    private static T GetService<T>() => Composition.Shared.Root.GetService<T>()!;
 }

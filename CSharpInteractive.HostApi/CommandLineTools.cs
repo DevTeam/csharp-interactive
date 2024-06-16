@@ -10,7 +10,6 @@ public static class CommandLineTools
 
     private class CustomCommandLine(ICommandLine baseCommandLine, Func<CommandLine, ICommandLine> customizer) : ICommandLine
     {
-
         public IStartInfo GetStartInfo(IHost host) =>
             customizer(new CommandLine(baseCommandLine.GetStartInfo(host))).GetStartInfo(host);
     }

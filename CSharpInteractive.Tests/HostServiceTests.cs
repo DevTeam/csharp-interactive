@@ -131,7 +131,7 @@ public class HostServiceTests
     public void ShouldProvideHostViaServiceProvider()
     {
         // Given
-        var host = Composition.Shared.Resolve<IHost>();
+        var host = Composition.Shared.Root.Host;
 
         // When
         var actualHost = host.GetService<IServiceProvider>().GetService(typeof(IHost));

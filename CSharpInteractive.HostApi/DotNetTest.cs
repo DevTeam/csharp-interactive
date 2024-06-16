@@ -86,8 +86,10 @@ public partial record DotNetTest(
     public IStartInfo GetStartInfo(IHost host)
     {
         var blameHangTimeout = BlameHangTimeout?.TotalMilliseconds;
-        var virtualContext = host.GetService<IVirtualContext>();
-        var settings = host.GetService<IDotNetSettings>();
+        // ReSharper disable once UseDeconstruction
+        var components = host.GetService<HostComponents>();
+        var virtualContext = components.VirtualContext;
+        var settings = components.DotNetSettings;
         var cmd = host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithArgs("test")

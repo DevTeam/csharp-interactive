@@ -32,19 +32,19 @@ public class BaseScenario : IHost, IDisposable
 
     public IProperties Props { get; } = new Properties();
 
-    public T GetService<T>() => Composition.Shared.Resolve<T>();
+    public T GetService<T>() => Composition.Shared.Root.Host.GetService<T>();
 
-    public void WriteLine() => Composition.Shared.Resolve<IHost>().WriteLine();
+    public void WriteLine() => Composition.Shared.Root.Host.WriteLine();
 
-    public void WriteLine<T>(T line, Color color = Color.Default) => Composition.Shared.Resolve<IHost>().WriteLine(line, color);
+    public void WriteLine<T>(T line, Color color = Color.Default) => Composition.Shared.Root.Host.WriteLine(line, color);
 
-    public void Error(string? error, string? errorId = default) => Composition.Shared.Resolve<IHost>().Error(error, errorId);
+    public void Error(string? error, string? errorId = default) => Composition.Shared.Root.Host.Error(error, errorId);
 
-    public void Warning(string? warning) => Composition.Shared.Resolve<IHost>().Warning(warning);
+    public void Warning(string? warning) => Composition.Shared.Root.Host.Warning(warning);
 
-    public void Info(string? text) => Composition.Shared.Resolve<IHost>().Info(text);
+    public void Info(string? text) => Composition.Shared.Root.Host.Info(text);
 
-    public void Trace(string? trace, string? origin = default) => Composition.Shared.Resolve<IHost>().Trace(trace, origin);
+    public void Trace(string? trace, string? origin = default) => Composition.Shared.Root.Host.Trace(trace, origin);
 
     private class Properties : IProperties
     {
