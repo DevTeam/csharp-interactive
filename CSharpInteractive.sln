@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpInteractive.Tool", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpInteractive.Templates", "CSharpInteractive.Templates\CSharpInteractive.Templates.csproj", "{F8533CEF-6965-48A9-BBDF-4BD791E3F92F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Artifacts", "Artifacts", "{12A64310-BCF1-4B76-938C-F5DD7593B55F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{12A64310-BCF1-4B76-938C-F5DD7593B55F}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE

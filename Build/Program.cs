@@ -107,20 +107,8 @@ var buildCommand = new DotNetBuild()
     .WithConfiguration(configuration)
     .WithProps(buildProps);
 
-var attempt = 5;
-IBuildResult? buildResult = default;
-while (buildResult?.ExitCode != 0 && attempt-- > 0)
-{
-    buildResult = buildCommand.Build(i =>
-    {
-        if (i.State == BuildMessageState.Failure)
-        {
-            WriteLine(i.Text, Color.Error);
-        }
-    });
-}
-
-Assertion.Succeed(buildResult!);
+var buildResult = buildCommand.Build();
+Assertion.Succeed(buildResult);
 
 var reportDir = Path.Combine(currentDir, ".reports");
 if (Directory.Exists(reportDir))

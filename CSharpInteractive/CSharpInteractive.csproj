@@ -29,11 +29,10 @@
         <PackageReference Include="NuGet.Versioning" Version="6.4.0" />
         <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all" />
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="all" />
-        <PackageReference Include="Pure.DI" Version="2.1.20">
+        <PackageReference Include="Pure.DI" Version="2.1.23">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Pure.DI.MS" Version="2.1.6" />
         <PackageReference Include="Immutype" Version="1.0.14">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -114,6 +113,24 @@
         </Content>
 
         <Compile Remove="Program.cs" />
+
+        <Compile Update="ServiceCollectionFactory.g.cs">
+          <NuGetPackageId>Pure.DI.MS</NuGetPackageId>
+          <NuGetPackageVersion>2.1.6</NuGetPackageVersion>
+          <NuGetItemType>Compile</NuGetItemType>
+          <Pack>false</Pack>
+          <Private>False</Private>
+          <Link>Pure.DI\MS\ServiceCollectionFactory.g.cs</Link>
+        </Compile>
+
+        <Compile Update="ServiceProviderFactory.g.cs">
+          <NuGetPackageId>Pure.DI.MS</NuGetPackageId>
+          <NuGetPackageVersion>2.1.6</NuGetPackageVersion>
+          <NuGetItemType>Compile</NuGetItemType>
+          <Pack>false</Pack>
+          <Private>False</Private>
+          <Link>Pure.DI\MS\ServiceProviderFactory.g.cs</Link>
+        </Compile>
     </ItemGroup>
 
 </Project>
