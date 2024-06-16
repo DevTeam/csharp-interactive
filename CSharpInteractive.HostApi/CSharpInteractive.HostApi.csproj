@@ -1,5 +1,6 @@
 <!--suppress MsbuildTargetFrameworkTagInspection -->
 <Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -7,17 +8,18 @@
         <RootNamespace>HostApi</RootNamespace>
         <ImmutypeAPI>True</ImmutypeAPI>
     </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Immutype" Version="1.0.14">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="NuGet.Versioning" Version="6.4.0" />
-        <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1" />
-        <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
-        <InternalsVisibleTo Include="dotnet-csi" />
-        <InternalsVisibleTo Include="CSharpInteractive" />
-        <InternalsVisibleTo Include="CSharpInteractive.Tests" />
+        <PackageReference Include="NuGet.Versioning" Version="6.4.0"/>
+        <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1"/>
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+        <InternalsVisibleTo Include="dotnet-csi"/>
+        <InternalsVisibleTo Include="CSharpInteractive"/>
+        <InternalsVisibleTo Include="CSharpInteractive.Tests"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -33,9 +35,9 @@
         </Compile>
 
         <Compile Update="CommandLines.cs">
-          <AutoGen>True</AutoGen>
-          <DesignTime>True</DesignTime>
-          <DependentUpon>CommandLines.tt</DependentUpon>
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>CommandLines.tt</DependentUpon>
         </Compile>
     </ItemGroup>
 

@@ -1,5 +1,6 @@
 <!--suppress MsbuildTargetFrameworkTagInspection -->
 <Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <OutputType>Exe</OutputType>
@@ -13,7 +14,7 @@
         <OutputPath>bin/$(ProjectOutputPath)</OutputPath>
         <IntermediateOutputPath>obj/$(MSBuildThisFileName)/</IntermediateOutputPath>
     </PropertyGroup>
-    
+
     <PropertyGroup>
         <PackageType>DotNetCliTool</PackageType>
         <PackAsTool>true</PackAsTool>
@@ -28,10 +29,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.4.0" />
-        <PackageReference Include="NuGet.Build.Tasks" Version="6.4.0" />
-        <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.4.0"/>
+        <PackageReference Include="NuGet.Build.Tasks" Version="6.4.0"/>
+        <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all"/>
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="all"/>
         <PackageReference Include="Pure.DI" Version="2.1.23">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -40,23 +41,23 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1" />
-        <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" PrivateAssets="all" />
-        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.0-cs" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
-        <InternalsVisibleTo Include="CSharpInteractive.Tests" />
-        <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+        <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1"/>
+        <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" PrivateAssets="all"/>
+        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.32" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none"/>
+        <InternalsVisibleTo Include="CSharpInteractive.Tests"/>
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1"/>
     </ItemGroup>
-    
+
     <ItemGroup Condition="'$(TargetFramework)'=='net7.0'">
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
     </ItemGroup>
 
     <PropertyGroup>
@@ -65,14 +66,14 @@
 
     <Target Name="GetDependencyTargetPaths">
         <ItemGroup>
-            <MSBuildLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\msbuild15\*.*" />
-            <VSTestLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\vstest15\*.*" />
+            <MSBuildLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\msbuild15\*.*"/>
+            <VSTestLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\vstest15\*.*"/>
         </ItemGroup>
 
-        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(OutDir)\msbuild" />
-        <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(OutDir)\vstest" />
-        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(MSBuildProjectDirectory)\bin\msbuild" />
-        <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(MSBuildProjectDirectory)\bin\vstest" />
+        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(OutDir)\msbuild"/>
+        <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(OutDir)\vstest"/>
+        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(MSBuildProjectDirectory)\bin\msbuild"/>
+        <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(MSBuildProjectDirectory)\bin\vstest"/>
     </Target>
 
     <ItemGroup>
@@ -118,6 +119,7 @@
             <Visible>false</Visible>
         </Content>
 
-        <Compile Remove="CSharpInteractiveHostInitializer.cs" />
+        <Compile Remove="CSharpInteractiveHostInitializer.cs"/>
     </ItemGroup>
+    
 </Project>

@@ -1,18 +1,15 @@
+using System.Xml;
 using HostApi;
+using Microsoft.Build.Tasks;
+using NuGet.Packaging;
 using NuGet.Versioning;
-// ReSharper disable ArrangeTypeModifiers
 // ReSharper disable CheckNamespace
-// ReSharper disable ConvertIfStatementToReturnStatement
-// ReSharper disable UnusedMember.Global
 
-static class Tools
+internal static class Tools
 {
     public static bool UnderTeamCity => Environment.GetEnvironmentVariable("TEAMCITY_VERSION") != default;
-}
-
-static class Version
-{
-    public static NuGetVersion GetNext(NuGetRestoreSettings settings, NuGetVersion defaultVersion)
+    
+    public static NuGetVersion GetNextNuGetVersion(NuGetRestoreSettings settings, NuGetVersion defaultVersion)
     {
         var floatRange = defaultVersion.Release != string.Empty
             ? new FloatRange(NuGetVersionFloatBehavior.Prerelease, defaultVersion)
@@ -42,11 +39,8 @@ static class Version
 
         return release;
     }
-}
 
-static class Property
-{
-    public static string Get(string name, string defaultProp, bool showWarning = false)
+    public static string GetProperty(string name, string defaultProp, bool showWarning = false)
     {
         if (Props.TryGetValue(name, out var prop) && !string.IsNullOrWhiteSpace(prop))
         {
@@ -66,10 +60,7 @@ static class Property
 
         return defaultProp;
     }
-}
 
-static class Assertion
-{
     public static bool Succeed(int? exitCode, string shortName)
     {
         if (exitCode == 0)
@@ -171,5 +162,29 @@ static class Assertion
         }
         
         Environment.Exit(1);
+    }
+
+    public static bool TryGetCoverage(string dotCoverReportXml, out int coveragePercentage)
+    {
+        var dotCoverReportDoc = new XmlDocument();
+        dotCoverReportDoc.Load(dotCoverReportXml);
+        var coveragePercentageValue = dotCoverReportDoc.SelectNodes("Root")?.Item(0)?.Attributes?["CoveragePercent"]?.Value;
+        return int.TryParse(coveragePercentageValue, out coveragePercentage);
+    }
+
+    public static bool HasLinuxDocker()
+    {
+        var hasLinuxDocker = false;
+        new DockerCustom("info").WithShortName("Defining a docker container type")
+            .Run(output =>
+            {
+                WriteLine("    " + output.Line, Color.Details);
+                if (output.Line.Contains("OSType: linux"))
+                {
+                    hasLinuxDocker = true;
+                }
+            });
+        
+        return hasLinuxDocker;
     }
 }

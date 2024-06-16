@@ -10,9 +10,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" />
-        <ProjectReference Include="..\..\CSharpInteractive\CSharpInteractive.csproj" />
-        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.0-cs" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="build"/>
+        <ProjectReference Include="..\..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj"/>
+        <ProjectReference Include="..\..\CSharpInteractive\CSharpInteractive.csproj"/>
+        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.32" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none"/>
         <Using Include="System"/>
         <Using Include="System.Collections.Generic"/>
         <Using Include="System.IO"/>
@@ -29,12 +29,12 @@
 
     <Target Name="GetDependencyTargetPaths">
         <ItemGroup>
-            <MSBuildLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\msbuild15\*.*" />
-            <VSTestLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\vstest15\*.*" />
+            <MSBuildLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\msbuild15\*.*"/>
+            <VSTestLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\vstest15\*.*"/>
         </ItemGroup>
 
-        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(OutDir)\msbuild" />
-        <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(OutDir)\vstest" />
+        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(OutDir)\msbuild"/>
+        <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(OutDir)\vstest"/>
     </Target>
 
 </Project>

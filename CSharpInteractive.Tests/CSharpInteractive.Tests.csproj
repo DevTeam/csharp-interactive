@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
         <IsPackable>false</IsPackable>
@@ -7,24 +8,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-        <PackageReference Include="Moq" Version="4.20.70" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0"/>
+        <PackageReference Include="Moq" Version="4.20.70"/>
         <PackageReference Include="Pure.DI" Version="2.1.23">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Shouldly" Version="4.2.1" />
-        <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1" />
-        <PackageReference Include="xunit" Version="2.8.0" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.0">
+        <PackageReference Include="Shouldly" Version="4.2.1"/>
+        <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1"/>
+        <PackageReference Include="xunit" Version="2.8.1"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
-        <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" />
-        <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" />
-        <ProjectReference Include="..\CSharpInteractive\CSharpInteractive.Tool.csproj" />
-        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.0-cs" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
+        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"/>
+        <PackageReference Include="Xunit.SkippableFact" Version="1.4.13"/>
+        <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj"/>
+        <ProjectReference Include="..\CSharpInteractive\CSharpInteractive.Tool.csproj"/>
+        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.32" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none"/>
     </ItemGroup>
 
     <PropertyGroup>
@@ -33,16 +34,16 @@
 
     <Target Name="GetDependencyTargetPaths">
         <ItemGroup>
-            <MSBuildLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\msbuild15\*.*" />
-            <VSTestLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\vstest15\*.*" />
+            <MSBuildLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\msbuild15\*.*"/>
+            <VSTestLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\vstest15\*.*"/>
         </ItemGroup>
 
-        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(OutDir)\msbuild" />
-        <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(OutDir)\vstest" />
+        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(OutDir)\msbuild"/>
+        <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(OutDir)\vstest"/>
     </Target>
 
     <ItemGroup>
-        <None Remove="Integration\Resources\csinetstandard11.1.0.0.nupkg" />
+        <None Remove="Integration\Resources\csinetstandard11.1.0.0.nupkg"/>
         <Content Include="Integration\Resources\csinetstandard11.1.0.0.nupkg">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
