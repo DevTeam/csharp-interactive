@@ -85,7 +85,7 @@ internal class BuildContext : IBuildContext
         }
 
         
-        _tests.Add(BuildMessage.CreateResult(testKey, message, TestState.Passed).WithDuration(duration).WithOutput(ctx.Output));
+        _tests.Add(BuildMessage.CreateResult(testKey, message, TestState.Finished).WithDuration(duration).WithOutput(ctx.Output));
     }
 
     private IEnumerable<BuildMessage> OnTestIgnored(IServiceMessage message)

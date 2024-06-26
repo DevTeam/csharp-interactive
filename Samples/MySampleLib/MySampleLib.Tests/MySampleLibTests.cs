@@ -30,4 +30,10 @@ public class CalculatorTests
         // Then
         Assert.AreEqual(1, result);
     }
+    
+    [TestMethod]
+    [Ignore]
+    public void ShouldDiv()
+    {
+    }
 }

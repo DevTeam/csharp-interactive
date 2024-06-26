@@ -2,7 +2,7 @@ namespace HostApi;
 
 public enum TestState
 {
-    Passed,
+    Finished,
     Failed,
     Ignored
 }

@@ -29,7 +29,7 @@ public class BuildResultTests
                 .WithTests(
                     GetTests(TestState.Failed, failedTests)
                         .Concat(GetTests(TestState.Ignored, ignoredTests))
-                        .Concat(GetTests(TestState.Passed, passedTests))
+                        .Concat(GetTests(TestState.Finished, passedTests))
                         .ToArray());
 
         // When

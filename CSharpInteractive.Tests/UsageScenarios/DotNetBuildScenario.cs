@@ -36,7 +36,7 @@ public class DotNetBuildScenario : BaseScenario
         result = new DotNetTest().WithWorkingDirectory("MyLib").Build();
         result.ExitCode.ShouldBe(0);
         result.Summary.Tests.ShouldBe(1);
-        result.Tests.Count(test => test.State == TestState.Passed).ShouldBe(1);
+        result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
         // }
     }
 }

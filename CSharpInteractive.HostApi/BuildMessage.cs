@@ -78,7 +78,7 @@ public readonly record struct BuildMessage(
         switch(name?.ToLowerInvariant()) 
         {
             case "testfinished":
-                state = TestState.Passed;
+                state = TestState.Finished;
                 return true;
                 
             case "testignored":

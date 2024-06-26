@@ -88,7 +88,7 @@ public class BuildContextTests
         test.DisplayName.ShouldBe("Test1");
         test.FullyQualifiedName.ShouldBe("Full Test1");
         test.Duration.ShouldBe(TimeSpan.FromMilliseconds(123));
-        test.State.ShouldBe(TestState.Passed);
+        test.State.ShouldBe(TestState.Finished);
         test.Message.ShouldBeEmpty();
         test.Details.ShouldBeEmpty();
         test.Output.ShouldBe(new[]

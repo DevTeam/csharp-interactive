@@ -78,7 +78,7 @@ internal class BuildResult : IBuildResult
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (test.State)
             {
-                case TestState.Passed:
+                case TestState.Finished:
                     passedTests++;
                     break;
 

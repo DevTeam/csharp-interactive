@@ -20,7 +20,7 @@ if (buildResult.ExitCode != 0)
 }
 
 var testResult = new DotNetTest()
-    .WithShortName("Test")
+    .WithShortName("Tests")
     .WithNoBuild(true)
     .WithConfiguration(configuration)
     .Build(i =>
@@ -29,12 +29,12 @@ var testResult = new DotNetTest()
         {
             switch (testResult.State)
             {
-                case TestState.Passed:
-                    Info($"{testResult.FullyQualifiedName} - OK");
+                case TestState.Failed:
+                    Error($"{testResult.FullyQualifiedName}: {testResult.State}");
                     break;
                 
-                case TestState.Failed:
-                    Error($"{testResult.FullyQualifiedName} - Failed");
+                case TestState.Ignored:
+                    Warning($"{testResult.FullyQualifiedName}: {testResult.State}");
                     break;
             }
         }
@@ -42,7 +42,7 @@ var testResult = new DotNetTest()
 
 if (testResult.ExitCode != 0)
 {
-    Error("Test failed.");
+    Error("Tests failed.");
     return 1;
 }
 
