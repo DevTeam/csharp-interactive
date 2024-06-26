@@ -33,7 +33,7 @@
         <PackageReference Include="NuGet.Build.Tasks" Version="6.4.0"/>
         <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all"/>
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="all"/>
-        <PackageReference Include="Pure.DI" Version="2.1.23">
+        <PackageReference Include="Pure.DI" Version="2.1.24">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -43,7 +43,7 @@
         </PackageReference>
         <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1"/>
         <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" PrivateAssets="all"/>
-        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.0-cs" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none"/>
+        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.32" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none"/>
         <InternalsVisibleTo Include="CSharpInteractive.Tests"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     </ItemGroup>

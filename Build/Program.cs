@@ -1,4 +1,5 @@
-﻿using HostApi;
+﻿using System.Runtime.InteropServices;
+using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 using NuGet.Versioning;
 using static Tools;
@@ -16,6 +17,7 @@ if (!File.Exists(solutionFile))
     return 1;
 }
 
+const string defaultNuGetSource = "https://api.nuget.org/v3/index.json";
 var configuration = GetProperty("configuration", "Release");
 var apiKey = GetProperty("apiKey", "");
 var integrationTests = bool.Parse(GetProperty("integrationTests", UnderTeamCity.ToString()));
@@ -67,33 +69,49 @@ Succeed(
 
 foreach (var package in packages)
 {
-    var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", package.Id, packageVersion.ToString());
-    if (Directory.Exists(path))
+    var nuGetPackagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", package.Id, packageVersion.ToString());
+    if (Directory.Exists(nuGetPackagePath))
     {
-        Directory.Delete(path, true);
+        Directory.Delete(nuGetPackagePath, true);
+    }
+    
+    var packageOutput = Path.GetDirectoryName(package.Package);
+    if (Directory.Exists(packageOutput))
+    {
+        Directory.Delete(packageOutput, true);
     }
 }
 
 var buildProps = new[] {("version", packageVersion.ToString())};
-Succeed(new DotNetBuild()
+Succeed(new MSBuild()
+    .WithProject(Path.Combine(currentDir, "CSharpInteractive", "CSharpInteractive.Tool.csproj"))
+    .WithRestore(true)
+    .WithTarget("Rebuild;GetDependencyTargetPaths")
+    .WithProps(buildProps)
+    .Build());
+
+Succeed(new DotNetPack()
     .WithProject(solutionFile)
     .WithConfiguration(configuration)
     .WithProps(buildProps)
     .Build());
 
-var reportDir = Path.Combine(currentDir, ".reports");
-if (Directory.Exists(reportDir))
+foreach (var package in packages)
 {
-    Directory.Delete(reportDir, true);
+    if (!File.Exists(package.Package))
+    {
+        Error($"The NuGet package {package.Package} was not found.");
+        return 1;
+    }
+
+    GetService<ITeamCityWriter>().PublishArtifact($"{package.Package} => .");
 }
 
-var test = 
-    new DotNetTest()
-        .WithProject(solutionFile)
-        .WithConfiguration(configuration)
-        .WithNoBuild(true)
-        .WithProps(buildProps)
-        .WithFilter("Integration!=true&Docker!=true");
+var test = new DotNetTest()
+    .WithProject(solutionFile)
+    .WithConfiguration(configuration)
+    .WithProps(buildProps)
+    .WithFilter("Integration!=true&Docker!=true");
 
 var coveragePercentage = 0;
 var skipTests = bool.Parse(GetProperty("skipTests", "false"));
@@ -103,6 +121,7 @@ if (skipTests)
 }
 else
 {
+    var reportDir = Path.Combine(currentDir, ".reports");
     var dotCoverSnapshot = Path.Combine(reportDir, "dotCover.dcvr");
     Succeed(
         test
@@ -138,35 +157,22 @@ else
     }
 }
 
-foreach (var package in packages)
-{
-    var packageOutput = Path.GetDirectoryName(package.Package);
-    if (Directory.Exists(packageOutput))
-    {
-        Directory.Delete(packageOutput, true);
-    }
-
-    Succeed(new DotNetPack()
-        .WithConfiguration(configuration)
-        .WithProps(buildProps)
-        .WithProject(package.Project)
-        .Build());
-    
-    if (!File.Exists(package.Package))
-    {
-        Error($"The NuGet package {package.Package} was not found.");
-        return 1;
-    }
-
-    GetService<ITeamCityWriter>().PublishArtifact($"{package.Package} => .");
-}
-
 var uninstallTool = new DotNetCustom("tool", "uninstall", toolPackageId, "-g")
     .WithShortName("Uninstalling tool");
 
-if (uninstallTool.Run(output => WriteLine(output.Line)) != 0)
+if (uninstallTool.Run(_ => { } ) != 0)
 {
     Warning($"{uninstallTool} failed.");
+}
+
+if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+{
+    var toolsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".dotnet", "tools");
+    var pathEnvVar = Environment.GetEnvironmentVariable("PATH");
+    Info($"Prev PATH={pathEnvVar}");
+    pathEnvVar = $"{pathEnvVar}:{toolsDir}";
+    Info($"New PATH={pathEnvVar}");
+    Environment.SetEnvironmentVariable("PATH", pathEnvVar);
 }
 
 var installTool = new DotNetCustom("tool", "install", toolPackageId, "-g", "--version", packageVersion.ToString(), "--add-source", Path.Combine(outputDir, "CSharpInteractive.Tool"))
@@ -179,7 +185,7 @@ if (installTool.Run(output => WriteLine(output.Line)) != 0)
 
 Succeed(new DotNetCustom("csi", "/?").Run(), "Checking tool");
 
-var uninstallTemplates = new DotNetCustom("new", "-u", templatesPackageId)
+var uninstallTemplates = new DotNetCustom("new", "uninstall", templatesPackageId)
     .WithShortName("Uninstalling template");
 
 if (uninstallTemplates.Run(output => WriteLine(output.Line)) != 0)
@@ -187,21 +193,21 @@ if (uninstallTemplates.Run(output => WriteLine(output.Line)) != 0)
     Warning($"{uninstallTemplates} failed.");
 }
 
-var installTemplates = new DotNetCustom("new", "-i", $"{templatesPackageId}::{packageVersion.ToString()}", "--nuget-source", templateOutputDir)
+var installTemplates = new DotNetCustom("new", "install", $"{templatesPackageId}::{packageVersion.ToString()}", "--nuget-source", templateOutputDir)
     .WithShortName("Installing template");
 
 Succeed(installTemplates.Run(), installTemplates.ShortName);
 
 foreach (var framework in frameworks)
 {
-    var buildProjectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..8]);
+    var buildProjectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
     Directory.CreateDirectory(buildProjectDir);
     var sampleProjectName = $"sample project for {framework}";
     try
     {
         var sampleProjectDir = Path.Combine("Samples", "DemoProject", "MySampleLib", "MySampleLib.Tests");
-        Succeed(new DotNetCustom("new", "build", $"--package-version={packageVersion}", "-T", framework, "--no-restore").WithWorkingDirectory(buildProjectDir).Run(), $"Creating a new {sampleProjectName}");
-        Succeed(new DotNetBuild().WithProject(buildProjectDir).AddSources(Path.Combine(outputDir, "CSharpInteractive")).WithShortName($"Building the {sampleProjectName}").Build());
+        Succeed(new DotNetNew("build", $"--package-version={packageVersion}", "-T", framework, "--no-restore").WithWorkingDirectory(buildProjectDir).Run(), $"Creating a new {sampleProjectName}");
+        Succeed(new DotNetBuild().WithProject(buildProjectDir).WithSources(defaultNuGetSource, Path.Combine(outputDir, "CSharpInteractive")).WithShortName($"Building the {sampleProjectName}").Build());
         Succeed(new DotNetRun().WithProject(buildProjectDir).WithNoBuild(true).WithWorkingDirectory(sampleProjectDir).Run(), $"Running a build for the {sampleProjectName}");
         Succeed(new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx")).WithWorkingDirectory(sampleProjectDir).Run(), $"Running a build as a C# script for the {sampleProjectName}");
     }
@@ -213,7 +219,7 @@ foreach (var framework in frameworks)
 
 if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && packageVersion.Release != "dev")
 {
-    var push = new DotNetNuGetPush().WithApiKey(apiKey).WithSources("https://api.nuget.org/v3/index.json");
+    var push = new DotNetNuGetPush().WithApiKey(apiKey).WithSources(defaultNuGetSource);
     foreach (var package in packages.Where(i => i.Publish))
     {
         Succeed(push.WithPackage(package.Package).Run(), $"Pushing {Path.GetFileName(package.Package)}");
