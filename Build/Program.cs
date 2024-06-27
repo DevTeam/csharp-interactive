@@ -108,7 +108,7 @@ foreach (var package in packages)
 }
 
 var test = new DotNetTest()
-    .WithProject(solutionFile)
+    .WithProject(Path.Combine(currentDir, "CSharpInteractive.Tests", "CSharpInteractive.Tests.csproj"))
     .WithConfiguration(configuration)
     .WithProps(buildProps)
     .WithFilter("Integration!=true&Docker!=true");
@@ -205,7 +205,7 @@ foreach (var framework in frameworks)
     var sampleProjectName = $"sample project for {framework}";
     try
     {
-        var sampleProjectDir = Path.Combine("Samples", "DemoProject", "MySampleLib", "MySampleLib.Tests");
+        var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
         Succeed(new DotNetNew("build", $"--package-version={packageVersion}", "-T", framework, "--no-restore").WithWorkingDirectory(buildProjectDir).Run(), $"Creating a new {sampleProjectName}");
         Succeed(new DotNetBuild().WithProject(buildProjectDir).WithSources(defaultNuGetSource, Path.Combine(outputDir, "CSharpInteractive")).WithShortName($"Building the {sampleProjectName}").Build());
         Succeed(new DotNetRun().WithProject(buildProjectDir).WithNoBuild(true).WithWorkingDirectory(sampleProjectDir).Run(), $"Running a build for the {sampleProjectName}");
