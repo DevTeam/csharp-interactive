@@ -8,14 +8,22 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
 {
     public void Show(IStatistics statistics)
     {
-        foreach (var error in statistics.Errors)
-        {
-            log.Info(Text.Tab, new Text(error, Color.Error));
-        }
+        log.Info();
+        log.Info(new Text("Summary:", Color.Header));
 
+        foreach (var processResult in statistics.ProcessResults)
+        {
+           log.Info(Text.Tab + processResult.Description);
+        }
+        
         foreach (var warning in statistics.Warnings)
         {
             log.Info(Text.Tab, new Text(warning, Color.Warning));
+        }
+        
+        foreach (var error in statistics.Errors)
+        {
+            log.Info(Text.Tab, new Text(error, Color.Error));
         }
 
         if (statistics.Warnings.Count > 0)

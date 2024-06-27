@@ -5,7 +5,8 @@ using HostApi;
 
 internal class ProcessMonitor(
     ILog<ProcessMonitor> log,
-    IEnvironment environment) : IProcessMonitor
+    IEnvironment environment,
+    IStatistics statistics) : IProcessMonitor
 {
     private int? _processId;
 
@@ -38,27 +39,46 @@ internal class ProcessMonitor(
         }
     }
 
-    public ProcessResult Finished(IStartInfo startInfo, long elapsedMilliseconds, ProcessState state, int? exitCode = default, Exception? error = default) => 
-        new(
+    public ProcessResult Finished(IStartInfo startInfo, long elapsedMilliseconds, ProcessState state, int? exitCode = default, Exception? error = default)
+    {
+        var result = new ProcessResult(
             startInfo,
             state,
             elapsedMilliseconds,
-            GetFooter(startInfo,exitCode, elapsedMilliseconds, state).ToArray(),
+            GetFooter(startInfo, exitCode, elapsedMilliseconds, state).ToArray(),
             exitCode,
             error);
+        
+        statistics.RegisterProcessResult(result);
+        return result;
+    }
 
     private IEnumerable<Text> GetFooter(IStartInfo startInfo, int? exitCode, long elapsedMilliseconds, ProcessState? state)
     {
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-        var stateText = state switch
+        string? stateText;
+        Color stateColor;
+        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+        switch (state)
         {
-            ProcessState.Failed => exitCode.HasValue ? "failed" : "failed to start",
-            ProcessState.Canceled => "canceled",
-            _ => "finished"
-        };
+            case ProcessState.Failed:
+                stateText = exitCode.HasValue ? "failed" : "failed to start";
+                stateColor = Color.Error;
+                break;
+
+            case ProcessState.Canceled:
+                stateText = "canceled";
+                stateColor = Color.Warning;
+                break;
+            
+            default:
+                stateText = "finished";
+                stateColor = Color.Success;
+                break;
+        }
 
         yield return new Text($"{startInfo.GetDescription(_processId)} process ", Color.Highlighted);
-        yield return new Text(stateText, Color.Highlighted);
+        yield return new Text(stateText, stateColor);
         yield return new Text($" (in {elapsedMilliseconds} ms)");
         if (exitCode.HasValue)
         {

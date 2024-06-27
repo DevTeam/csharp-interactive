@@ -9,6 +9,7 @@ public class ProcessMonitorTests
 {
     private readonly Mock<ILog<ProcessMonitor>> _log = new();
     private readonly Mock<IEnvironment> _environment = new();
+    private readonly Mock<IStatistics> _statistics = new();
     private readonly Mock<IStartInfo> _startInfo = new();
 
     public ProcessMonitorTests()
@@ -70,7 +71,8 @@ public class ProcessMonitorTests
         var result = monitor.Finished(_startInfo.Object, 22, state, 33);
 
         // Then
-        result.Description.ShouldBe([new Text("99 \"Abc xyz\" process ", color), new Text(stateDescription, color), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
+        result.Description.ShouldBe([new Text("99 \"Abc xyz\" process ", color), new Text(stateDescription, Color.Success), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
+        _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
     [Fact]
@@ -85,7 +87,8 @@ public class ProcessMonitorTests
         var result = monitor.Finished(_startInfo.Object, 22, ProcessState.Failed, 33);
 
         // Then
-        result.Description.ShouldBe([new Text("99 \"Abc xyz\" process ", Color.Highlighted), new Text("failed", Color.Highlighted), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
+        result.Description.ShouldBe([new Text("99 \"Abc xyz\" process ", Color.Highlighted), new Text("failed", Color.Error), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
+        _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
     [Fact]
@@ -99,7 +102,8 @@ public class ProcessMonitorTests
         var result = monitor.Finished(_startInfo.Object, 22, ProcessState.Failed);
 
         // Then
-        result.Description.ShouldBe([new Text("\"Abc xyz\" process ", Color.Highlighted), new Text("failed to start", Color.Highlighted), new Text(" (in 22 ms)"), new Text(".")]);
+        result.Description.ShouldBe([new Text("\"Abc xyz\" process ", Color.Highlighted), new Text("failed to start", Color.Error), new Text(" (in 22 ms)"), new Text(".")]);
+        _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
     [Fact]
@@ -114,9 +118,10 @@ public class ProcessMonitorTests
         var result = monitor.Finished(_startInfo.Object, 22, ProcessState.Canceled);
 
         // Then
-        result.Description.ShouldBe([new Text("99 \"Abc xyz\" process ", Color.Highlighted), new Text("canceled", Color.Highlighted), new Text(" (in 22 ms)"), new Text(".")]);
+        result.Description.ShouldBe([new Text("99 \"Abc xyz\" process ", Color.Highlighted), new Text("canceled", Color.Warning), new Text(" (in 22 ms)"), new Text(".")]);
+        _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
     private ProcessMonitor CreateInstance() =>
-        new(_log.Object, _environment.Object);
+        new(_log.Object, _environment.Object, _statistics.Object);
 }

@@ -10,6 +10,7 @@ internal class Statistics : IStatistics
     private readonly Stopwatch _stopwatch = new();
     private readonly List<string> _errors = [];
     private readonly List<string> _warnings = [];
+    private readonly List<ProcessResult> _processResult = [];
 
     public IReadOnlyCollection<string> Errors
     {
@@ -29,6 +30,17 @@ internal class Statistics : IStatistics
             lock (_warnings)
             {
                 return new ReadOnlyCollection<string>(_warnings);   
+            }
+        }
+    }
+
+    public IReadOnlyCollection<ProcessResult> ProcessResults
+    {
+        get
+        {
+            lock (_processResult)
+            {
+                return new ReadOnlyCollection<ProcessResult>(_processResult);
             }
         }
     }
@@ -62,6 +74,14 @@ internal class Statistics : IStatistics
             {
                 _warnings.Add(warning);   
             }
+        }
+    }
+
+    public void RegisterProcessResult(ProcessResult result)
+    {
+        lock (_processResult)
+        {
+            _processResult.Add(result);
         }
     }
 }
