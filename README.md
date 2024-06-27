@@ -223,15 +223,11 @@ public void Run()
     exitCode.ShouldBe(0);
 }
 
-private class MyTask
+private class MyTask(ICommandLineRunner runner)
 {
-    private readonly ICommandLineRunner _runner;
-
-    public MyTask(ICommandLineRunner runner) => 
-        _runner = runner;
 
     public int? Run() => 
-        _runner.Run(new CommandLine("whoami"));
+        runner.Run(new CommandLine("whoami"));
 }
 
 ```

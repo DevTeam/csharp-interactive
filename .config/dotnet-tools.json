@@ -6,7 +6,15 @@
       "version": "2022.1.2",
       "commands": [
         "dotnet-dotcover"
-      ]
+      ],
+      "rollForward": false
+    },
+    "dotnet-csi": {
+      "version": "1.0.7",
+      "commands": [
+        "dotnet-csi"
+      ],
+      "rollForward": false
     }
   }
 }

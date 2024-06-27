@@ -59,26 +59,12 @@ internal static class Tools
         return defaultProp;
     }
 
-    public static bool Succeed(int? exitCode, string shortName)
+    public static void Build(ICommandLine commandLine)
     {
-        if (exitCode == 0)
-        {
-            return true;
-        }
-
-        Error($"{shortName} failed.");
-        Exit();
-        return false;
-    }
-
-    public static async Task<bool> Succeed(Task<int?> exitCodeTask, string shortName) =>
-        Succeed(await exitCodeTask, shortName);
-
-    private static bool CheckBuildResult(IBuildResult result)
-    {
+        var result = commandLine.Build();
         if (result.ExitCode == 0)
         {
-            return true;
+            return;
         }
 
         foreach (var failedTest in
@@ -90,39 +76,22 @@ internal static class Tools
         }
 
         Error($"{result.StartInfo.ShortName} failed");
-        return false;
+        throw new OperationCanceledException();
     }
-
-    public static void Succeed(IBuildResult result)
+    
+    public static void Run(ICommandLine commandLine)
     {
-        if (!CheckBuildResult(result))
+        var exitCode = commandLine.Run();
+        if (exitCode == 0)
         {
-            Exit();
-        }
-    }
-
-    public static async Task<bool> Succeed(Task<IBuildResult> resultTask)
-    {
-        if (CheckBuildResult(await resultTask))
-        {
-            return true;
+            return;
         }
 
-        Exit();
-        return true;
+        var startInfo = commandLine.GetStartInfo(GetService<IHost>());
+        Error($"{startInfo.ShortName} failed");
+        throw new OperationCanceledException();
     }
-
-    public static async Task<bool> Succeed(Task<IBuildResult[]> resultsTask)
-    {
-        if ((await resultsTask).All(CheckBuildResult))
-        {
-            return true;
-        }
-
-        Exit();
-        return true;
-    }
-
+    
     public static void Exit()
     {
         if (!Console.IsInputRedirected && !UnderTeamCity)
@@ -159,7 +128,7 @@ internal static class Tools
             }
         }
         
-        Environment.Exit(1);
+        throw new OperationCanceledException();
     }
 
     public static bool TryGetCoverage(string dotCoverReportXml, out int coveragePercentage)
