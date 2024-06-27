@@ -17,7 +17,6 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
         }
 
         var finished = processManager.WaitForExit(timeout);
-
         return process.Finish(finished);
     }
 

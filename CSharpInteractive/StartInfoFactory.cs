@@ -2,6 +2,7 @@
 namespace CSharpInteractive;
 
 using System.Diagnostics;
+using System.Text;
 using HostApi;
 
 internal class StartInfoFactory(
@@ -27,7 +28,9 @@ internal class StartInfoFactory(
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardOutput = true,
-            RedirectStandardError = true
+            RedirectStandardError = true,
+            StandardErrorEncoding = Encoding.UTF8,
+            StandardOutputEncoding = Encoding.UTF8
         };
 
         log.Trace(() => [new Text($"File name: \"{startInfo.FileName}\".")], description);

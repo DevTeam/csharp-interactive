@@ -23,22 +23,7 @@ var testResult = new DotNetTest()
     .WithShortName("Tests")
     .WithNoBuild(true)
     .WithConfiguration(configuration)
-    .Build(i =>
-    {
-        if (i.TestResult is { } testResult)
-        {
-            switch (testResult.State)
-            {
-                case TestState.Failed:
-                    Error($"{testResult.FullyQualifiedName}: {testResult.State}");
-                    break;
-                
-                case TestState.Ignored:
-                    Warning($"{testResult.FullyQualifiedName}: {testResult.State}");
-                    break;
-            }
-        }
-    });
+    .Build();
 
 if (testResult.ExitCode != 0)
 {

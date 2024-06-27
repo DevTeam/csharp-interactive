@@ -83,7 +83,6 @@ internal class BuildContext : IBuildContext
         {
             duration = TimeSpan.FromMilliseconds(durationMs);
         }
-
         
         _tests.Add(BuildMessage.CreateResult(testKey, message, TestState.Finished).WithDuration(duration).WithOutput(ctx.Output));
     }
@@ -191,23 +190,26 @@ internal class BuildContext : IBuildContext
 
     private TestContext GetTestContext(BuildMessage.TestKey testKey, bool remove = false)
     {
-        if (!_currentTests.TryGetValue(testKey, out var testContext))
+        lock (_currentTests)
         {
-            testContext = new TestContext();
-            if (!remove)
+            if (!_currentTests.TryGetValue(testKey, out var testContext))
             {
-                _currentTests.Add(testKey, testContext);
+                testContext = new TestContext();
+                if (!remove)
+                {
+                    _currentTests.Add(testKey, testContext);
+                }
             }
-        }
-        else
-        {
-            if (remove)
+            else
             {
-                _currentTests.Remove(testKey);
+                if (remove)
+                {
+                    _currentTests.Remove(testKey);
+                }
             }
+            
+            return testContext;
         }
-
-        return testContext;
     }
 
     private class TestContext
