@@ -13,16 +13,16 @@ internal class ProcessMonitor(
     public void Started(IStartInfo startInfo, int processId)
     {
         _processId = processId;
-        var executable = new List<Text>
+        var executable = new List<Text>(startInfo.GetDescriptionText(_processId))
         {
-            new($"{startInfo.GetDescription(processId)} process started ", Color.Highlighted),
-            new(startInfo.ExecutablePath.EscapeArg())
+            new(" process started "),
+            new(startInfo.ExecutablePath.Escape())
         };
 
         foreach (var arg in startInfo.Args)
         {
             executable.Add(Text.Space);
-            executable.Add(new Text(arg.EscapeArg()));
+            executable.Add(new Text(arg.Escape()));
         }
 
         log.Info(executable.ToArray());
@@ -35,7 +35,7 @@ internal class ProcessMonitor(
 
         if (!string.IsNullOrWhiteSpace(workingDirectory))
         {
-            log.Info(new Text("in directory: "), new Text(workingDirectory.EscapeArg()));
+            log.Info(new Text("in directory: "), new Text(workingDirectory.Escape()));
         }
     }
 
@@ -77,7 +77,12 @@ internal class ProcessMonitor(
                 break;
         }
 
-        yield return new Text($"{startInfo.GetDescription(_processId)} process ", Color.Highlighted);
+        foreach (var text in startInfo.GetDescriptionText(_processId))
+        {
+            yield return text;
+        }
+        
+        yield return new Text(" process ");
         yield return new Text(stateText, stateColor);
         yield return new Text($" (in {elapsedMilliseconds} ms)");
         if (exitCode.HasValue)

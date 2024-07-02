@@ -31,7 +31,7 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
 
         if (statistics.Warnings.Count > 0)
         {
-            log.Info(new Text($"{statistics.Warnings.Count} Warning(s)"));
+            log.Info(new Text($"{statistics.Warnings.Count} Warning(s)", Color.Warning));
         }
 
         if (statistics.Errors.Count > 0)

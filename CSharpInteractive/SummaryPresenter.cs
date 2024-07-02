@@ -9,12 +9,25 @@ internal class SummaryPresenter(
     IStatistics statistics,
     IPresenter<IStatistics> statisticsPresenter) : IPresenter<Summary>
 {
+    internal const string RunningSucceeded = "Running succeeded.";
+    internal const string RunningSucceededWithWarnings = "Running succeeded with warnings.";
+    internal const string RunningFailed = "Running FAILED.";
+    
     public void Show(Summary summary)
     {
         statisticsPresenter.Show(statistics);
-        var state = summary.Success == false || statistics.Errors.Count != 0
-            ? new Text("Running FAILED.", Color.Error)
-            : new Text("Running succeeded.", Color.Success);
-        log.Info(state);
+        if (summary.Success == false || statistics.Errors.Count > 0)
+        {
+            log.Info(new Text(RunningFailed, Color.Error));
+            return;
+        }
+        
+        if (statistics.Warnings.Count > 0)
+        {
+            log.Info(new Text(RunningSucceededWithWarnings, Color.Warning));
+            return;
+        }
+        
+        log.Info(new Text(RunningSucceeded, Color.Success));
     }
 }

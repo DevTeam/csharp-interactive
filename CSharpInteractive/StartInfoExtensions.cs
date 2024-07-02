@@ -10,7 +10,7 @@ internal static class StartInfoExtensions
         var sb = new StringBuilder();
         if (processId.HasValue)
         {
-            sb.Append(processId.Value);
+            sb.Append($"{processId.Value:00000}");
         }
 
         var shortName = startInfo?.ShortName;
@@ -22,7 +22,7 @@ internal static class StartInfoExtensions
                 sb.Append(' ');
             }
 
-            sb.Append(shortName.EscapeArg());
+            sb.Append(shortName.Escape());
         }
 
         if (sb.Length == 0)
@@ -32,8 +32,36 @@ internal static class StartInfoExtensions
 
         return sb.ToString();
     }
+    
+    public static IEnumerable<Text> GetDescriptionText(this IStartInfo? startInfo, int? processId = default)
+    {
+        if (processId.HasValue)
+        {
+            yield return new Text($"{processId.Value:00000}");
+        }
 
-    public static string EscapeArg(this string? text)
+        var sb = new StringBuilder();
+        var shortName = startInfo?.ShortName;
+        // ReSharper disable once InvertIf
+        if (!string.IsNullOrWhiteSpace(shortName))
+        {
+            if (processId.HasValue)
+            {
+                sb.Append(' ');
+            }
+
+            sb.Append(shortName.Escape());
+        }
+
+        if (sb.Length == 0)
+        {
+            sb.Append("The");
+        }
+
+        yield return new Text(sb.ToString(), Color.Highlighted);
+    }
+
+    public static string Escape(this string? text)
     {
         if (string.IsNullOrWhiteSpace(text))
         {

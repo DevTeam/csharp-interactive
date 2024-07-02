@@ -31,7 +31,7 @@ public class ProcessMonitorTests
         monitor.Started(_startInfo.Object, 99);
 
         // Then
-        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new[] {new("99 \"Abc xyz\" process started ", Color.Highlighted), new("\"Cm d\""), Text.Space, new("Arg1"), Text.Space, new("\"Arg 2\"")}))));
+        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new[] { new Text("00099"), new Text(" \"Abc xyz\"", Color.Highlighted), new Text(" process started "), new("\"Cm d\""), Text.Space, new("Arg1"), Text.Space, new("\"Arg 2\"")}))));
         _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new Text[] {new("in directory: "), new("\"W d\"")}))));
         _log.Verify(i => i.Trace(It.IsAny<Func<Text[]>>(), It.IsAny<string>()), Times.Never);
         _log.Verify(i => i.Warning(It.IsAny<Text[]>()), Times.Never);
@@ -51,7 +51,7 @@ public class ProcessMonitorTests
         monitor.Started(_startInfo.Object, 99);
 
         // Then
-        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new[] {new("99 \"Abc xyz\" process started ", Color.Highlighted), new("\"Cm d\""), Text.Space, new("Arg1"), Text.Space, new("\"Arg 2\"")}))));
+        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new[] {new Text("00099"), new Text(" \"Abc xyz\"", Color.Highlighted), new Text(" process started "), new("\"Cm d\""), Text.Space, new("Arg1"), Text.Space, new("\"Arg 2\"")}))));
         _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new Text[] {new("in directory: "), new("\"Cur Wd\"")}))));
         _log.Verify(i => i.Trace(It.IsAny<Func<Text[]>>(), It.IsAny<string>()), Times.Never);
         _log.Verify(i => i.Warning(It.IsAny<Text[]>()), Times.Never);
@@ -71,7 +71,7 @@ public class ProcessMonitorTests
         var result = monitor.Finished(_startInfo.Object, 22, state, 33);
 
         // Then
-        result.Description.ShouldBe([new Text("99 \"Abc xyz\" process ", color), new Text(stateDescription, Color.Success), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
+        result.Description.ShouldBe([new Text("00099"), new Text(" \"Abc xyz\"", color), new Text(" process "), new Text(stateDescription, Color.Success), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
         _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
@@ -87,7 +87,7 @@ public class ProcessMonitorTests
         var result = monitor.Finished(_startInfo.Object, 22, ProcessState.Failed, 33);
 
         // Then
-        result.Description.ShouldBe([new Text("99 \"Abc xyz\" process ", Color.Highlighted), new Text("failed", Color.Error), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
+        result.Description.ShouldBe([new Text("00099"), new Text(" \"Abc xyz\"", Color.Highlighted), new Text(" process "), new Text("failed", Color.Error), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
         _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
@@ -102,7 +102,7 @@ public class ProcessMonitorTests
         var result = monitor.Finished(_startInfo.Object, 22, ProcessState.Failed);
 
         // Then
-        result.Description.ShouldBe([new Text("\"Abc xyz\" process ", Color.Highlighted), new Text("failed to start", Color.Error), new Text(" (in 22 ms)"), new Text(".")]);
+        result.Description.ShouldBe([new Text("\"Abc xyz\"", Color.Highlighted), new Text(" process "), new Text("failed to start", Color.Error), new Text(" (in 22 ms)"), new Text(".")]);
         _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
@@ -118,7 +118,7 @@ public class ProcessMonitorTests
         var result = monitor.Finished(_startInfo.Object, 22, ProcessState.Canceled);
 
         // Then
-        result.Description.ShouldBe([new Text("99 \"Abc xyz\" process ", Color.Highlighted), new Text("canceled", Color.Warning), new Text(" (in 22 ms)"), new Text(".")]);
+        result.Description.ShouldBe([new Text("00099"), new Text(" \"Abc xyz\"", Color.Highlighted), new Text(" process "), new Text("canceled", Color.Warning), new Text(" (in 22 ms)"), new Text(".")]);
         _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 

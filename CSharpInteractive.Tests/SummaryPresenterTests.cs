@@ -12,16 +12,18 @@ public class SummaryPresenterTests
     private readonly Mock<IPresenter<IStatistics>> _statisticsPresenter = new();
 
     [Theory]
-    [InlineData(true, false, false)]
-    [InlineData(true, true, true)]
-    [InlineData(false, false, true)]
-    [InlineData(false, true, true)]
-    public void ShouldSummary(bool? success, bool hasError, bool showError)
+    [InlineData(true, false, false, SummaryPresenter.RunningSucceeded, Color.Success)]
+    [InlineData(true, false, true, SummaryPresenter.RunningSucceededWithWarnings, Color.Warning)]
+    [InlineData(false, false, true, SummaryPresenter.RunningFailed, Color.Error)]
+    [InlineData(true, true, true, SummaryPresenter.RunningFailed, Color.Error)]
+    [InlineData(false, true, true, SummaryPresenter.RunningFailed, Color.Error)]
+    [InlineData(false, false, false, SummaryPresenter.RunningFailed, Color.Error)]
+    [InlineData(true, true, false, SummaryPresenter.RunningFailed, Color.Error)]
+    [InlineData(false, true, false, SummaryPresenter.RunningFailed, Color.Error)]
+    public void ShouldSummary(bool? success, bool hasError, bool hasWarning, string message, Color color)
     {
         // Given
         var presenter = CreateInstance();
-
-        // When
         if (hasError)
         {
             _statistics.SetupGet(i => i.Errors).Returns(new[] {"Err"});
@@ -30,15 +32,23 @@ public class SummaryPresenterTests
         {
             _statistics.SetupGet(i => i.Errors).Returns(Array.Empty<string>());
         }
+        
+        if (hasWarning)
+        {
+            _statistics.SetupGet(i => i.Warnings).Returns(new[] {"Warn"});
+        }
+        else
+        {
+            _statistics.SetupGet(i => i.Warnings).Returns(Array.Empty<string>());
+        }
+
+        // When
 
         presenter.Show(new Summary(success));
 
         // Then
         _statisticsPresenter.Verify(i => i.Show(_statistics.Object));
-        var state = showError
-            ? new Text("Running FAILED.", Color.Error)
-            : new Text("Running succeeded.", Color.Success);
-        _log.Verify(i => i.Info(state));
+        _log.Verify(i => i.Info(new Text(message, color)));
     }
 
     private SummaryPresenter CreateInstance() =>
