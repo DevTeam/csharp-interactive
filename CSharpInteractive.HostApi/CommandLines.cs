@@ -1,6 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 namespace HostApi;
     
+[ExcludeFromCodeCoverage]
 public partial record CommandLine: ICommandLine
 {
     public static CommandLine operator +(CommandLine command, string arg) => command.AddArgs(arg);
