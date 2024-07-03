@@ -88,7 +88,7 @@ public readonly record struct BuildMessage(
             case "testfailed":
                 state = TestState.Failed;
                 return true;
-        };
+        }
 
         state = default;
         return false;

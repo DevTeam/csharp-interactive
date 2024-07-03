@@ -1,4 +1,5 @@
-﻿namespace MySampleLib;
+﻿// ReSharper disable MemberCanBeMadeStatic.Global
+namespace MySampleLib;
 
 public class Calculator : ICalculator
 {

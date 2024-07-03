@@ -1,5 +1,7 @@
 ﻿namespace CSharpInteractive;
 
+using Core;
+
 public class Program
 {
     // ReSharper disable once UnusedMember.Global

@@ -1,6 +1,7 @@
 namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
+using Core;
 using CSharpInteractive;
 using NuGet.Versioning;
 

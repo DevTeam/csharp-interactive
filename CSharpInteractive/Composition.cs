@@ -7,6 +7,7 @@ using System.Buffers;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.Versioning;
+using Core;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Read;
 using JetBrains.TeamCity.ServiceMessages.Write;
@@ -16,6 +17,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Scripting;
 using Pure.DI;
+using CommandLineParser = Core.CommandLineParser;
+using Debugger = Core.Debugger;
 
 internal partial class Composition
 {

@@ -1,6 +1,7 @@
 namespace CSharpInteractive.Tests;
 
 using System;
+using Core;
 using CSharpInteractive;
 using HostApi;
 using Environment = System.Environment;

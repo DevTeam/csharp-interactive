@@ -1,6 +1,7 @@
 namespace CSharpInteractive.Tests.Integration.Core;
 
 using CSharpInteractive;
+using CSharpInteractive.Core;
 using HostApi;
 
 internal static class DotNetScript

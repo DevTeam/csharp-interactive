@@ -7,6 +7,7 @@
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using CSharpInteractive;
+using CSharpInteractive.Core;
 using HostApi;
 using NuGet.Versioning;
 

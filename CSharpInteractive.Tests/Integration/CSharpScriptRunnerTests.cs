@@ -2,6 +2,7 @@ namespace CSharpInteractive.Tests.Integration;
 
 using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
+using CSharpInteractive.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
 using Environment = System.Environment;

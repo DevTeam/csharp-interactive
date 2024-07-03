@@ -1,5 +1,6 @@
 namespace CSharpInteractive.Tests;
 
+using Core;
 using CSharpInteractive;
 using Environment = System.Environment;
 

@@ -1,6 +1,7 @@
 namespace CSharpInteractive.Tests;
 
 using System.Collections.Immutable;
+using Core;
 using CSharpInteractive;
 using Microsoft.CodeAnalysis;
 

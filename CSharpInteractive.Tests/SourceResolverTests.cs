@@ -1,6 +1,7 @@
 namespace CSharpInteractive.Tests;
 
 using System.IO;
+using Core;
 using CSharpInteractive;
 
 public class SourceResolverTests

@@ -2,6 +2,7 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive;
 
+using Core;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Read;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
