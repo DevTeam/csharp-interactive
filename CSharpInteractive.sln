@@ -32,8 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4FA6
 		Samples\Scripts\Nuget.csx = Samples\Scripts\Nuget.csx
 		Samples\Scripts\RuntimeError.csx = Samples\Scripts\RuntimeError.csx
 		Samples\Scripts\TelegramBot.csx = Samples\Scripts\TelegramBot.csx
-		Samples\Scripts\Wsl.csx = Samples\Scripts\Wsl.csx
-		Samples\Scripts\xu.csx = Samples\Scripts\xu.csx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySampleLib", "MySampleLib", "{C83ECC4E-3E9F-42DC-AFF2-6DF1BF926DAA}"

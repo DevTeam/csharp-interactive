@@ -1,5 +1,5 @@
 //#l diagnostic
-using Cmd;
+using HostApi;
 
-var result = GetService<ICommandLine>().Run(new CommandLine("whoami.exe", "/all"));
-WriteLine(result);
+var exitCode = new CommandLine("whoami.exe", "/all").Run();
+Info(exitCode?.ToString() ?? "empty");

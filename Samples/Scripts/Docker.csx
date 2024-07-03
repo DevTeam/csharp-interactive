@@ -1,5 +1,5 @@
-using Cmd;
+using HostApi;
 
 var cmd = new CommandLine("whoami");
-var dockerCmd = new Docker.Run("ubuntu:20.04", cmd);
-GetService<ICommandLine>().Run(dockerCmd);
+var dockerCmd = new DockerRun(cmd, "ubuntu");
+dockerCmd.Run();

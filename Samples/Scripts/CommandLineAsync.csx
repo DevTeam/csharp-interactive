@@ -1,7 +1,6 @@
 #l diagnostic
-using Cmd;
+using HostApi;
 
-var result1 = GetService<ICommandLine>().RunAsync(new CommandLine("whoami.exe").AddArgs("/all"), i => WriteLine(i.Line));
-var result2 = GetService<ICommandLine>().RunAsync(new CommandLine("whoami.exe").AddArgs("/all"), i => WriteLine(i.Line));
-WriteLine(result1.Result);
-WriteLine(result2.Result);
+var task1 = new CommandLine("whoami.exe", "/all").RunAsync();
+var task2 = new CommandLine("whoami.exe", "/all").RunAsync();
+Task.WaitAll([task1, task2]);

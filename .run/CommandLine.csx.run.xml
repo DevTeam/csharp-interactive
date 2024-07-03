@@ -1,7 +1,7 @@
 ﻿<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Script hello.csx" type="DotNetProject" factoryName=".NET Project">
+  <configuration default="false" name="CommandLine.csx" type="DotNetProject" factoryName=".NET Project" folderName="Scripts">
     <option name="EXE_PATH" value="$PROJECT_DIR$/CSharpInteractive/bin/Debug/CSharpInteractive.Tool/net8.0/dotnet-csi.dll" />
-    <option name="PROGRAM_PARAMETERS" value="hello.csx abc" />
+    <option name="PROGRAM_PARAMETERS" value="CommandLine.csx" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Samples/Scripts" />
     <option name="PASS_PARENT_ENVS" value="1" />
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
