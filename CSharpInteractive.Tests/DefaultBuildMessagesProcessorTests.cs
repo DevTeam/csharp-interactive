@@ -11,15 +11,22 @@ public class DefaultBuildMessagesProcessorTests
     private readonly Mock<IBuildMessageLogWriter> _buildMessageLogWriter = new();
     private readonly Mock<IStartInfo> _startInfo = new();
 
-    [Fact]
-    public void ShouldSendServiceMessagesToTeamCityViaProcessOutputWhenIsUnderTeamCityAndHasNayServiceMessage()
+    [Theory]
+    [InlineData(BuildMessageState.ServiceMessage, true)]
+    [InlineData(BuildMessageState.TestResult, true)]
+    [InlineData(BuildMessageState.StdOut, false)]
+    [InlineData(BuildMessageState.StdError, false)]
+    [InlineData(BuildMessageState.BuildProblem, false)]
+    [InlineData(BuildMessageState.Failure, false)]
+    [InlineData(BuildMessageState.Warning, false)]
+    public void ShouldSendServiceMessagesToTeamCityViaProcessOutputWhenIsUnderTeamCityAndHasNayServiceMessage(BuildMessageState state, bool write)
     {
         // Given
         var output = new Output(_startInfo.Object, false, "Output", 11);
         var messages = new BuildMessage[]
         {
             new(BuildMessageState.StdOut, default, "Msg1"),
-            new(BuildMessageState.ServiceMessage, Mock.Of<IServiceMessage>())
+            new(state, Mock.Of<IServiceMessage>())
         };
 
         _teamCitySettings.SetupGet(i => i.CIType).Returns(CIType.TeamCity);
@@ -30,7 +37,7 @@ public class DefaultBuildMessagesProcessorTests
         processor.ProcessMessages(output, messages, nextHandler.Object);
 
         // Then
-        _processOutputWriter.Verify(i => i.Write(output));
+        _processOutputWriter.Verify(i => i.Write(output), Times.Exactly(write ? 1 : 0));
         nextHandler.Verify(i => i(It.IsAny<BuildMessage>()), Times.Never);
     }
 

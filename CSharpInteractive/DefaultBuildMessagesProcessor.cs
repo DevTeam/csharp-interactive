@@ -10,8 +10,9 @@ internal class DefaultBuildMessagesProcessor(
 {
     public void ProcessMessages(in Output output, IEnumerable<BuildMessage> messages, Action<BuildMessage> nextHandler)
     {
-        var curMessages = messages.ToArray();
-        if (ciSettings.CIType == CIType.TeamCity && curMessages.Any(i => i.State == BuildMessageState.ServiceMessage))
+        var curMessages = messages.ToList();
+        if (ciSettings.CIType == CIType.TeamCity
+            && curMessages.Any(i => i.State is BuildMessageState.ServiceMessage or BuildMessageState.TestResult))
         {
             processOutputWriter.Write(output);
         }
