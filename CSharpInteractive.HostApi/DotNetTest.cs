@@ -96,10 +96,7 @@ public partial record DotNetTest(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddMSBuildLoggers(host, Verbosity)
-            .AddArgs(
-                Loggers.Select(i => ("--logger", (string?)i))
-                    .Concat(new[] {("--logger", (string?)"logger://teamcity")})
-                    .ToArray())
+            .AddTestLoggers(host, Loggers)
             .AddArgs(
                 ("--settings", Settings),
                 ("--filter", Filter),

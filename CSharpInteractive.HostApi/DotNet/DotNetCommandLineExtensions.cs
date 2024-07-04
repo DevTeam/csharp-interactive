@@ -8,7 +8,10 @@ namespace HostApi.DotNet;
 [ExcludeFromCodeCoverage]
 internal static class DotNetCommandLineExtensions
 {
-    internal static CommandLine CreateCommandLine(this IHost host, string executablePath) => new(host.GetExecutablePath(executablePath));
+    private const string TeamcityLoggerName = "logger://teamcity";
+
+    internal static CommandLine CreateCommandLine(this IHost host, string executablePath) =>
+        new(host.GetExecutablePath(executablePath));
 
     private static string GetExecutablePath(this IHost host, string executablePath)
     {
@@ -50,12 +53,29 @@ internal static class DotNetCommandLineExtensions
                 .AddArgs("/noconsolelogger")
                 .AddMSBuildArgs(("/l", $"TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,{virtualContext.Resolve(settings.DotNetMSBuildLoggerDirectory)}/TeamCity.MSBuild.Logger.dll;TeamCity;plain"))
                 .AddProps("-p",
-                    ("VSTestLogger", "logger://teamcity"),
+                    ("VSTestLogger", TeamcityLoggerName),
                     ("VSTestTestAdapterPath", virtualContext.Resolve(settings.DotNetVSTestLoggerDirectory)),
                     ("VSTestVerbosity", (verbosity.HasValue ? (verbosity.Value >= DotNetVerbosity.Normal ? verbosity.Value : DotNetVerbosity.Normal) : DotNetVerbosity.Normal).ToString().ToLowerInvariant()))
                 .AddVars(("TEAMCITY_SERVICE_MESSAGES_PATH", virtualContext.Resolve(settings.TeamCityMessagesPath)))
             : cmd;
     }
+    
+    public static CommandLine AddTestLoggers(this CommandLine cmd, IHost host, IEnumerable<string> loggers)
+    {
+        // ReSharper disable once UseDeconstruction
+        var settings = host.GetService<HostComponents>().DotNetSettings;
+        if (settings.LoggersAreRequired)
+        {
+            loggers = loggers.Concat([TeamcityLoggerName]);
+        }
+        
+        return cmd.AddArgs(loggers.Select(i => ("--logger", (string?)i)).ToArray());
+    }
+    
+    public static CommandLine AddVSTestLoggers(this CommandLine cmd, IHost host) => 
+        host.GetService<HostComponents>().DotNetSettings.LoggersAreRequired
+            ? cmd.AddMSBuildArgs(("--Logger", TeamcityLoggerName))
+            : cmd;
 
     public static CommandLine AddNotEmptyArgs(this CommandLine cmd, params string[] args) =>
         cmd.AddArgs(args.Where(i => !string.IsNullOrWhiteSpace(i)).ToArray());

@@ -74,8 +74,8 @@ public partial record VSTest(
             .AddArgs(TestFileNames.Where(i => !string.IsNullOrWhiteSpace(i)).ToArray())
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
+            .AddVSTestLoggers(host)
             .AddMSBuildArgs(
-                ("--Logger", "logger://teamcity"),
                 ("--Logger", $"console;verbosity={(Verbosity.HasValue ? Verbosity.Value >= DotNetVerbosity.Normal ? Verbosity.Value : DotNetVerbosity.Normal : DotNetVerbosity.Normal).ToString().ToLowerInvariant()}"),
                 ("--TestAdapterPath", $"{string.Join(";", new[]{TestAdapterPath, virtualContext.Resolve(settings.DotNetVSTestLoggerDirectory)}.Where(i => !string.IsNullOrWhiteSpace(i)))}"),
                 ("--Tests", Tests),

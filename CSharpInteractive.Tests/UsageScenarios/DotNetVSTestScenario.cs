@@ -41,4 +41,26 @@ public class DotNetVSTestScenario : BaseScenario
         result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
         // }
     }
+    
+    [Fact]
+    public void RunAsCommandLine()
+    {
+        // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
+        var result = new DotNetNew("mstest", "-n", "MyTests", "--force").Build();
+        result.ExitCode.ShouldBe(0);
+
+        // Builds the test project, running a command like: "dotnet build -c Release" from the directory "MyTests"
+        result = new DotNetBuild().WithWorkingDirectory("MyTests").WithConfiguration("Release").WithOutput("MyOutput").Build();
+        result.ExitCode.ShouldBe(0);
+
+        // Runs tests via a command like: "dotnet vstest" from the directory "MyTests"
+        var lines = new List<string>();
+        var exitCode = new VSTest()
+            .AddTestFileNames(Path.Combine("MyOutput", "MyTests.dll"))
+            .WithWorkingDirectory("MyTests")
+            .Run(i => lines.Add(i.Line));
+
+        lines.Count(i => i.Contains("##teamcity[")).ShouldBe(0);
+        exitCode.ShouldBe(0);
+    }
 }

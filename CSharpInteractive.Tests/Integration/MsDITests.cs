@@ -4,7 +4,7 @@ namespace CSharpInteractive.Tests.Integration;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "true")]
-public class MsDiTests
+public class MsDITests
 {
     [Fact]
     public void ShouldSupportDIFromTheBox()
