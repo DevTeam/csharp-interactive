@@ -1,34 +1,18 @@
 ﻿using HostApi;
 
-if (!Props.TryGetValue("configuration", out var configuration))
-{
-    configuration = "Release";
-}
-
+var configuration = Props.Get("configuration", "Release");
 Info($"Configuration: {configuration}");
 
-var buildResult = new DotNetBuild()
+await new DotNetBuild()
     .WithShortName("Build")
     .WithConfiguration(configuration)
     .WithProject("MySampleLib.sln")
-    .Build();
+    .BuildAsync()
+    .EnsureSuccess();
 
-if (buildResult.ExitCode != 0)
-{
-    Error("Build failed.");
-    return 1;
-}
-
-var testResult = new DotNetTest()
+new DotNetTest()
     .WithShortName("Tests")
     .WithNoBuild(true)
     .WithConfiguration(configuration)
-    .Build();
-
-if (testResult.ExitCode != 0)
-{
-    Error("Tests failed.");
-    return 1;
-}
-
-return 0;
+    .Build()
+    .EnsureSuccess();

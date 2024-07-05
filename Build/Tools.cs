@@ -61,26 +61,6 @@ internal static class Tools
 
         return defaultProp;
     }
-
-    public static void Build(ICommandLine commandLine)
-    {
-        var result = commandLine.Build();
-        if (result.ExitCode == 0)
-        {
-            return;
-        }
-
-        foreach (var failedTest in
-                 from testResult in result.Tests
-                 where testResult.State == TestState.Failed
-                 select testResult.ToString())
-        {
-            Error(failedTest);
-        }
-
-        Error($"{result.StartInfo.ShortName} failed");
-        throw new OperationCanceledException();
-    }
     
     public static void Run(ICommandLine commandLine)
     {
@@ -95,45 +75,6 @@ internal static class Tools
         throw new OperationCanceledException();
     }
     
-    public static void Exit()
-    {
-        if (!Console.IsInputRedirected && !CI)
-        {
-            var foregroundColor = Console.ForegroundColor;
-            try
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                var timeout = TimeSpan.FromSeconds(10);
-                var period = TimeSpan.FromMilliseconds(10);
-                while (timeout > period)
-                {
-                    if (Console.KeyAvailable)
-                    {
-                        if (Console.ReadKey(true).Key == ConsoleKey.Y)
-                        {
-                            return;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    Thread.Sleep(period);
-                    timeout -= period;
-                    Console.SetCursorPosition(0, Console.CursorTop);
-                    Console.Write($"Continue this build? {(int)timeout.TotalSeconds:00} y/n");
-                }
-            }
-            finally
-            {
-                Console.ForegroundColor = foregroundColor;
-            }
-        }
-        
-        throw new OperationCanceledException();
-    }
-
     public static bool TryGetCoverage(string dotCoverReportXml, out int coveragePercentage)
     {
         var dotCoverReportDoc = new XmlDocument();

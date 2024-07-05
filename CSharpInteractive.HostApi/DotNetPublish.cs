@@ -3,7 +3,7 @@
 // ReSharper disable UnusedMember.Global
 namespace HostApi;
 
-using DotNet;
+using Internal.DotNet;
 
 /// <summary>
 /// The dotnet publish command compiles the application, reads through its dependencies specified in the project file, and publishes the resulting set of files to a directory.

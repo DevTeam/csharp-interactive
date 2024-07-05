@@ -13,18 +13,20 @@ internal class BuildResult : IBuildResult
     private readonly Lazy<BuildStatistics> _summary;
 
     // ReSharper disable once UnusedMember.Global
-    public BuildResult(IStartInfo startInfo)
-        : this(startInfo, Array.Empty<BuildMessage>(), Array.Empty<BuildMessage>(), Array.Empty<TestResult>(), default)
+    public BuildResult(IStartInfo startInfo, IStartInfoDescription startInfoDescription)
+        : this(startInfo, startInfoDescription, Array.Empty<BuildMessage>(), Array.Empty<BuildMessage>(), Array.Empty<TestResult>(), default)
     { }
 
     public BuildResult(
         IStartInfo startInfo,
+        IStartInfoDescription startInfoDescription,
         IReadOnlyList<BuildMessage> errors,
         IReadOnlyList<BuildMessage> warnings,
         IReadOnlyList<TestResult> tests,
         int? exitCode)
     {
         StartInfo = startInfo;
+        StartInfoDescription = startInfoDescription;
         Errors = errors;
         Warnings = warnings;
         Tests = tests;
@@ -35,6 +37,8 @@ internal class BuildResult : IBuildResult
     public BuildStatistics Summary => _summary.Value;
 
     public IStartInfo StartInfo { get; }
+    
+    internal IStartInfoDescription StartInfoDescription { get; }
 
     public IReadOnlyList<BuildMessage> Errors { get; }
 
@@ -47,10 +51,24 @@ internal class BuildResult : IBuildResult
     public override string ToString()
     {
         var sb = new StringBuilder();
-        sb.Append(string.IsNullOrWhiteSpace(StartInfo.ShortName) ? "Build" : $"\"{StartInfo.ShortName}\"");
-        sb.Append(" is ");
-        sb.Append(ExitCode.HasValue ? "finished" : "not finished");
-        if (Summary.IsEmpty != true)
+        sb.Append(StartInfoDescription.GetDescription(StartInfo));
+        if (sb.Length == 0)
+        {
+            sb.Append("Build");
+        }
+        
+        if (ExitCode is {} exitCode)
+        {
+            sb.Append(" completed with exit code ");
+            sb.Append(exitCode);
+            sb.Append(',');
+        }
+        else
+        {
+            sb.Append(" not completed");
+        }
+        
+        if (!Summary.IsEmpty)
         {
             sb.Append(" with ");
             sb.Append(Summary);

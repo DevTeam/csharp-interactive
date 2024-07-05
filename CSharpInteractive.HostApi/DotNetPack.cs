@@ -2,7 +2,7 @@
 // ReSharper disable UnusedMember.Global
 namespace HostApi;
 
-using DotNet;
+using Internal.DotNet;
 
 /// <summary>
 /// The dotnet pack command builds the project and creates NuGet packages. The result of this command is a NuGet package (that is, a .nupkg file).

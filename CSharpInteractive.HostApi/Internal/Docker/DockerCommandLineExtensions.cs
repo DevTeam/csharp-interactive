@@ -2,7 +2,7 @@
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
-namespace HostApi.Docker;
+namespace HostApi.Internal.Docker;
 
 [ExcludeFromCodeCoverage]
 internal static class DockerCommandLineExtensions

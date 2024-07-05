@@ -4,7 +4,7 @@
 // ReSharper disable UnusedType.Global
 namespace HostApi;
 
-using DotNet;
+using Internal.DotNet;
 
 [Target]
 public partial record MSBuild(

@@ -1,5 +1,5 @@
 // ReSharper disable UnusedParameter.Global
-namespace HostApi.Cmd;
+namespace HostApi.Internal.Cmd;
 
 internal interface IPathResolver
 {

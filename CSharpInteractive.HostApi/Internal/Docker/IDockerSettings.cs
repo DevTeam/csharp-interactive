@@ -1,4 +1,4 @@
-namespace HostApi.Docker;
+namespace HostApi.Internal.Docker;
 
 internal interface IDockerSettings
 {

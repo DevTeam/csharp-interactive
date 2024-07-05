@@ -3,7 +3,7 @@
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
-namespace HostApi.DotNet;
+namespace HostApi.Internal.DotNet;
 
 [ExcludeFromCodeCoverage]
 internal static class DotNetCommandLineExtensions

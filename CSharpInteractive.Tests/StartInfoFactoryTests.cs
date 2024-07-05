@@ -1,12 +1,12 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using HostApi;
 
 public class StartInfoFactoryTests
 {
     private readonly Mock<IEnvironment> _environment = new();
+    private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
 
     [Fact]
     public void ShouldCreateStartInfo()
@@ -45,5 +45,7 @@ public class StartInfoFactoryTests
     }
 
     private StartInfoFactory CreateInstance() =>
-        new(Mock.Of<ILog<StartInfoFactory>>(), _environment.Object);
+        new(Mock.Of<ILog<StartInfoFactory>>(),
+            _environment.Object,
+            _startInfoDescription.Object);
 }

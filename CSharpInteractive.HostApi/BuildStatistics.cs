@@ -28,67 +28,39 @@ public record BuildStatistics(
         }
 
         var sb = new StringBuilder();
-        foreach (var reason in FormatReasons(GetReasons(this).ToArray()))
+        AddValue(sb, GetName("error", Errors), Errors);
+        AddValue(sb, GetName("warning", Warnings), Warnings);
+        // ReSharper disable once InvertIf
+        if (Tests > 0)
         {
-            sb.Append(reason);
+            if (sb.Length > 0)
+            {
+                sb.Append(" and ");
+            }
+            
+            sb.Append(Tests);
+            sb.Append(" finished ");
+            sb.Append(GetName("test", Tests));
+            sb.Append(": ");
+            AddValue(sb, "failed", FailedTests, false);
+            AddValue(sb, "ignored", IgnoredTests);
+            AddValue(sb, "passed", PassedTests);
         }
 
         return sb.ToString();
     }
 
-    private static IEnumerable<string> FormatReasons(IReadOnlyList<string> reasons)
+    private static void AddValue(StringBuilder sb, string name, int value, bool addSeparator = true)
     {
-        for (var i = 0; i < reasons.Count; i++)
+        if (value <= 0) return;
+        if (addSeparator && sb.Length > 0)
         {
-            if (i == 0)
-            {
-                yield return reasons[i];
-                continue;
-            }
-
-            if (i == reasons.Count - 1)
-            {
-                yield return " and ";
-                yield return reasons[i];
-                continue;
-            }
-
-            yield return ", ";
-            yield return reasons[i];
+            sb.Append(", ");
         }
-    }
-
-    private static IEnumerable<string> GetReasons(BuildStatistics statistics)
-    {
-        if (statistics.Errors > 0)
-        {
-            yield return $"{statistics.Errors} {GetName("error", statistics.Errors)}";
-        }
-
-        if (statistics.Warnings > 0)
-        {
-            yield return $"{statistics.Warnings} {GetName("warning", statistics.Warnings)}";
-        }
-
-        if (statistics.FailedTests > 0)
-        {
-            yield return $"{statistics.FailedTests} failed";
-        }
-
-        if (statistics.IgnoredTests > 0)
-        {
-            yield return $"{statistics.IgnoredTests} ignored";
-        }
-
-        if (statistics.PassedTests > 0)
-        {
-            yield return $"{statistics.PassedTests} passed";
-        }
-
-        if (statistics.Tests > 0)
-        {
-            yield return $"{statistics.Tests} total {GetName("test", statistics.Tests)}";
-        }
+            
+        sb.Append(value);
+        sb.Append(' ');
+        sb.Append(name);
     }
 
     private static string GetName(string baseName, int count) =>

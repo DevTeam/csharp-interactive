@@ -3,6 +3,7 @@ namespace CSharpInteractive.Tests;
 using Core;
 using CSharpInteractive;
 using HostApi;
+using BuildResult = Core.BuildResult;
 
 public class BuildRunnerTests
 {
@@ -17,6 +18,7 @@ public class BuildRunnerTests
     private readonly Mock<IProcessMonitor> _processMonitor = new();
     private readonly Func<IProcessMonitor> _monitorFactory;
     private readonly Mock<IStartInfo> _startInfo = new();
+    private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
     private readonly Mock<ICommandLine> _process = new();
     private readonly Mock<IProcessResultHandler> _processResultHandler = new();
     private readonly ProcessResult _processResult;
@@ -24,7 +26,7 @@ public class BuildRunnerTests
     public BuildRunnerTests()
     {
         _processResult = new ProcessResult(_startInfo.Object, ProcessState.Finished, 33, []);
-        var buildResult = new BuildResult(_startInfo.Object).WithExitCode(33);
+        var buildResult = new BuildResult(_startInfo.Object, _startInfoDescription.Object).WithExitCode(33);
         _process.Setup(i => i.GetStartInfo(_host.Object)).Returns(_startInfo.Object);
         _resultFactory = () => _buildResult.Object;
         _monitorFactory = () => _processMonitor.Object;

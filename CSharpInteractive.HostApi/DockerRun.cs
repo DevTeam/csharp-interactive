@@ -7,8 +7,8 @@
 // ReSharper disable UnusedType.Global
 namespace HostApi;
 
-using Cmd;
-using Docker;
+using Internal.Cmd;
+using Internal.Docker;
 
 /// <summary>
 /// Docker runs a command in isolated containers. A container is a process which runs on a host. The host may be local or remote. When an operator executes docker run, the container process that runs is isolated in that it has its own file system, its own networking, and its own isolated process tree separate from the host.

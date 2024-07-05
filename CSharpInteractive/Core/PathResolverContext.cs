@@ -2,7 +2,7 @@
 namespace CSharpInteractive.Core;
 
 using HostApi;
-using HostApi.Cmd;
+using HostApi.Internal.Cmd;
 
 internal class PathResolverContext(IHost host) : IPathResolverContext, IVirtualContext
 {

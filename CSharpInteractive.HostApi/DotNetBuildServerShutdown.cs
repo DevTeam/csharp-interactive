@@ -4,7 +4,7 @@
 // ReSharper disable StringLiteralTypo
 namespace HostApi;
 
-using DotNet;
+using Internal.DotNet;
 
 /// <summary>
 /// The dotnet build server command is used to shut down build servers that are started from dotnet. 

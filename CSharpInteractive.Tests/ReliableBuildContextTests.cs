@@ -1,10 +1,10 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
 using JetBrains.TeamCity.ServiceMessages.Write;
+using BuildResult = Core.BuildResult;
 
 public class ReliableBuildContextTests
 {
@@ -13,6 +13,7 @@ public class ReliableBuildContextTests
     private readonly Mock<IMessagesReader> _messagesReader = new();
     private readonly Mock<IBuildContext> _baseBuildResult = new();
     private readonly Mock<IStartInfo> _startInfo = new();
+    private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
 
     [Fact]
     public void ShouldProcessMessageWithoutSourceByBaseImplementation()
@@ -35,7 +36,7 @@ public class ReliableBuildContextTests
     {
         // Given
         var result = CreateInstance();
-        var buildResult = new BuildResult(_startInfo.Object).WithExitCode(33);
+        var buildResult = new BuildResult(_startInfo.Object, _startInfoDescription.Object).WithExitCode(33);
         var messages = Mock.Of<IReadOnlyList<BuildMessage>>();
         var output = new Output(_startInfo.Object, false, string.Empty, 11);
         _baseBuildResult.Setup(i => i.ProcessMessage(output, It.IsAny<IServiceMessage>())).Returns(messages);

@@ -1,13 +1,13 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write;
 
 public class BuildContextTests
 {
     private readonly Mock<IStartInfo> _startInfo = new();
+    private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
 
     [Fact]
     public void ShouldProcessStdOutput()
@@ -316,5 +316,5 @@ public class BuildContextTests
         buildResult.Errors.ShouldBe(new[] {buildMessage});
     }
 
-    private static BuildContext CreateInstance() => new();
+    private BuildContext CreateInstance() => new(_startInfoDescription.Object);
 }

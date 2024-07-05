@@ -6,16 +6,17 @@ using HostApi;
 internal class ProcessMonitor(
     ILog<ProcessMonitor> log,
     IEnvironment environment,
-    IStatistics statistics) : IProcessMonitor
+    IStatistics statistics,
+    IStartInfoDescription startInfoDescription) : IProcessMonitor
 {
     private int? _processId;
 
     public void Started(IStartInfo startInfo, int processId)
     {
         _processId = processId;
-        var executable = new List<Text>(startInfo.GetDescriptionText(_processId))
+        var executable = new List<Text>(startInfoDescription.GetDescriptionText(startInfo, _processId))
         {
-            new(" process started "),
+            new(" started "),
             new(startInfo.ExecutablePath.Escape())
         };
 
@@ -77,12 +78,12 @@ internal class ProcessMonitor(
                 break;
         }
 
-        foreach (var text in startInfo.GetDescriptionText(_processId))
+        foreach (var text in startInfoDescription.GetDescriptionText(startInfo, _processId))
         {
             yield return text;
         }
         
-        yield return new Text(" process ");
+        yield return Text.Space;
         yield return new Text(stateText, stateColor);
         yield return new Text($" (in {elapsedMilliseconds} ms)");
         if (exitCode.HasValue)

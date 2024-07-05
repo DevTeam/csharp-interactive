@@ -2,7 +2,7 @@
 // ReSharper disable UnusedMember.Global
 namespace HostApi;
 
-using DotNet;
+using Internal.DotNet;
 
 /// <summary>
 /// The dotnet tool restore command finds the tool manifest file that is in scope for the current directory and installs the tools that are listed in it.

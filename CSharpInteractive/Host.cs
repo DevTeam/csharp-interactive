@@ -6,10 +6,12 @@
 
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
+using System.Text;
 using CSharpInteractive;
 using CSharpInteractive.Core;
 using HostApi;
 using NuGet.Versioning;
+using Environment = CSharpInteractive.Core.Environment;
 
 [ExcludeFromCodeCoverage]
 [SuppressMessage("Design", "CA1050:Declare types in namespaces")]
@@ -106,16 +108,56 @@ public static class Components
     public static Task<IBuildResult> BuildAsync(this ICommandLine commandLine, Action<BuildMessage>? handler = default, CancellationToken cancellationToken = default) =>
         Root.BuildRunner.RunAsync(commandLine, handler, cancellationToken);
     
+    public static IBuildResult EnsureSuccess(
+        this IBuildResult result,
+        Func<IBuildResult, bool>? isSuccess = default,
+        int? exitCode = 1)
+    {
+        isSuccess ??= r => r is {ExitCode: 0, Summary: {Errors: 0, FailedTests: 0}};
+        if (isSuccess(result))
+        {
+            return result;
+        }
+
+        var error = new StringBuilder();
+        error.Append(result);
+        if (exitCode.HasValue)
+        {
+            error.Append(" Termination with exit code ");
+            error.Append(exitCode);
+            error.Append('.');
+            Root.Log.Error(ErrorId.Build, result.ToString() ?? "FAILED.");
+            System.Environment.Exit(exitCode.Value);
+        }
+
+        Root.Log.Error(ErrorId.Build, error.ToString());
+        return result;
+    }
+
+    public static async Task<IBuildResult> EnsureSuccess(
+        this Task<IBuildResult> resultTask,
+        Func<IBuildResult, bool>? isSuccess = default,
+        int? exitCode = 1) => 
+        EnsureSuccess(await resultTask, isSuccess, exitCode);
+
     [Obsolete]
     [SuppressMessage("Design", "CA1041:Provide ObsoleteAttribute message")]
-    public static IEnumerable<NuGetPackage> Restore(this INuGet nuGet, string packageId, string? versionRange = default, string? targetFrameworkMoniker = default, string? packagesPath = default) =>
+    public static IEnumerable<NuGetPackage> Restore(
+        this INuGet nuGet,
+        string packageId,
+        string? versionRange = default,
+        string? targetFrameworkMoniker = default,
+        string? packagesPath = default) =>
         nuGet.Restore(
             new NuGetRestoreSettings(packageId)
                 .WithVersionRange(versionRange != default ? VersionRange.Parse(versionRange) : default)
                 .WithTargetFrameworkMoniker(targetFrameworkMoniker)
                 .WithPackagesPath(packagesPath));
 
-    public static bool TryGetValue<T>(this IProperties properties, string key, [MaybeNullWhen(false)] out T value)
+    public static bool TryGet<T>(
+        this IProperties properties,
+        string key,
+        [MaybeNullWhen(false)] out T value)
     {
         if (properties.TryGetValue(key, out var valStr))
         {
@@ -146,4 +188,12 @@ public static class Components
         value = default;
         return false;
     }
+
+    public static T Get<T>(
+        this IProperties properties,
+        string key,
+        T defaultValue) => 
+        properties.TryGet<T>(key, out var value)
+            ? value
+            : defaultValue;
 }

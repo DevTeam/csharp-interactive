@@ -7,13 +7,14 @@ using HostApi;
 
 internal class StartInfoFactory(
     ILog<StartInfoFactory> log,
-    IEnvironment environment) : IStartInfoFactory
+    IEnvironment environment,
+    IStartInfoDescription startInfoDescription) : IStartInfoFactory
 {
     public ProcessStartInfo Create(IStartInfo info)
     {
         var workingDirectory = info.WorkingDirectory;
         var directory = workingDirectory;
-        var description = info.GetDescription();
+        var description = startInfoDescription.GetDescription(info);
         log.Trace(() => [new Text($"Working directory: \"{directory}\".")], description);
         if (string.IsNullOrWhiteSpace(workingDirectory))
         {

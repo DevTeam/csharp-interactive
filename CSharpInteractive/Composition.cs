@@ -119,6 +119,7 @@ internal partial class Composition
                 .Bind().To<ScriptContentReplacer>()
 
             .DefaultLifetime(Lifetime.PerBlock)
+                .Bind().To<StartInfoDescription>()
                 .Bind().To<HostEnvironment>()
                 .Bind().To<ColorTheme>()
                 .Bind().To<TeamCityLineFormatter>()

@@ -5,7 +5,7 @@ namespace CSharpInteractive.Core;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
 
-internal class BuildContext : IBuildContext
+internal class BuildContext(IStartInfoDescription startInfoDescription) : IBuildContext
 {
     private readonly List<BuildMessage> _errors = [];
     private readonly List<BuildMessage> _warnings = [];
@@ -44,7 +44,9 @@ internal class BuildContext : IBuildContext
     }
 
     public IBuildResult Create(IStartInfo startInfo, int? exitCode) =>
-        new BuildResult(startInfo,
+        new BuildResult(
+            startInfo,
+            startInfoDescription,
             _errors.AsReadOnly(),
             _warnings.AsReadOnly(),
             _tests.AsReadOnly(),

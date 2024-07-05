@@ -3,7 +3,7 @@
 // ReSharper disable UnusedType.Global
 namespace HostApi;
 
-using DotNet;
+using Internal.DotNet;
 
 /// <summary>
 /// The dotnet custom command is used to execute any dotnet commands with any arguments. 

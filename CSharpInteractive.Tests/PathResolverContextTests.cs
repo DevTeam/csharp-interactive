@@ -3,7 +3,7 @@ namespace CSharpInteractive.Tests;
 using Core;
 using CSharpInteractive;
 using HostApi;
-using HostApi.Cmd;
+using HostApi.Internal.Cmd;
 
 public class PathResolverContextTests
 {

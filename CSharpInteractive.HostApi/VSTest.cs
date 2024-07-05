@@ -4,7 +4,7 @@
 // ReSharper disable CommentTypo
 namespace HostApi;
 
-using DotNet;
+using Internal.DotNet;
 
 /// <summary>
 /// The dotnet vstest command runs the VSTest.Console command-line application to run automated unit tests.

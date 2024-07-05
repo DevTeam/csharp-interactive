@@ -2,7 +2,7 @@
 // ReSharper disable UnusedMember.Global
 namespace HostApi;
 
-using DotNet;
+using Internal.DotNet;
 
 [Target]
 public partial record DotNetNuGetPush(

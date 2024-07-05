@@ -1,5 +1,5 @@
 // ReSharper disable InconsistentNaming
-namespace HostApi.DotNet;
+namespace HostApi.Internal.DotNet;
 
 internal interface IDotNetSettings
 {

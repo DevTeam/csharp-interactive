@@ -1,4 +1,4 @@
-namespace HostApi.Cmd;
+namespace HostApi.Internal.Cmd;
 
 internal interface IPathResolverContext
 {

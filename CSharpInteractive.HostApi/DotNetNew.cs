@@ -3,7 +3,7 @@
 // ReSharper disable UnusedType.Global
 namespace HostApi;
 
-using DotNet;
+using Internal.DotNet;
 
 /// <summary>
 /// The 'dotnet new' command creates a .NET project based on a template. 

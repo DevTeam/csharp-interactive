@@ -1,7 +1,7 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive.Core;
 
-using HostApi.DotNet;
+using HostApi.Internal.DotNet;
 
 internal class TeamCityContext(
     IEnvironment environment,

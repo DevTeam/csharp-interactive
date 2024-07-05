@@ -13,6 +13,7 @@ internal class ProcessManager : IProcessManager
     private readonly IProcessOutputWriter _processOutputWriter;
     private readonly IStartInfoFactory _startInfoFactory;
     private readonly IExitTracker _exitTracker;
+    private readonly IStartInfoDescription _startInfoDescription;
     private readonly Process _process;
     private int _disposed;
     private IStartInfo? _startInfo;
@@ -22,12 +23,14 @@ internal class ProcessManager : IProcessManager
         ILog<ProcessManager> log,
         IProcessOutputWriter processOutputWriter,
         IStartInfoFactory startInfoFactory,
-        IExitTracker exitTracker)
+        IExitTracker exitTracker,
+        IStartInfoDescription startInfoDescription)
     {
         _log = log;
         _processOutputWriter = processOutputWriter;
         _startInfoFactory = startInfoFactory;
         _exitTracker = exitTracker;
+        _startInfoDescription = startInfoDescription;
         _process = new Process {EnableRaisingEvents = true};
         _process.OutputDataReceived += ProcessOnOutputDataReceived;
         _process.ErrorDataReceived += ProcessOnErrorDataReceived;
@@ -69,7 +72,7 @@ internal class ProcessManager : IProcessManager
             // ignored
         }
 
-        _description = _startInfo.GetDescription(Id) + " process";
+        _description = _startInfoDescription.GetDescription(_startInfo, Id);
         _process.BeginOutputReadLine();
         _process.BeginErrorReadLine();
         error = default;

@@ -57,12 +57,12 @@ var packages = new[]
 
 Run(new DotNetToolRestore().WithShortName("Restoring tools"));
 
-Build(
-    new DotNetClean()
-        .WithProject(solutionFile)
-        .WithVerbosity(DotNetVerbosity.Quiet)
-        .WithConfiguration(configuration)
-);
+new DotNetClean()
+    .WithProject(solutionFile)
+    .WithVerbosity(DotNetVerbosity.Quiet)
+    .WithConfiguration(configuration)
+    .Build()
+    .EnsureSuccess();
 
 foreach (var package in packages)
 {
@@ -80,16 +80,20 @@ foreach (var package in packages)
 }
 
 var buildProps = new[] {("version", packageVersion.ToString())};
-Build(new MSBuild()
+new MSBuild()
     .WithProject(Path.Combine(currentDir, "CSharpInteractive", "CSharpInteractive.Tool.csproj"))
     .WithRestore(true)
     .WithTarget("Rebuild;GetDependencyTargetPaths")
-    .WithProps(buildProps));
+    .WithProps(buildProps)
+    .Build()
+    .EnsureSuccess();
 
-Build(new DotNetPack()
+new DotNetPack()
     .WithProject(solutionFile)
     .WithConfiguration(configuration)
-    .WithProps(buildProps));
+    .WithProps(buildProps)
+    .Build()
+    .EnsureSuccess();
 
 foreach (var package in packages)
 {
@@ -118,15 +122,16 @@ else
 {
     var reportDir = Path.Combine(currentDir, ".reports");
     var dotCoverSnapshot = Path.Combine(reportDir, "dotCover.dcvr");
-    Run(
-        test
-            .Customize(cmd =>
-                cmd.WithArgs("dotcover")
-                    .AddArgs(cmd.Args)
-                    .AddArgs(
-                        $"--dcOutput={dotCoverSnapshot}",
-                        "--dcFilters=+:module=CSharpInteractive.HostApi;+:module=dotnet-csi",
-                        "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage")));
+    test
+        .Customize(cmd =>
+            cmd.WithArgs("dotcover")
+                .AddArgs(cmd.Args)
+                .AddArgs(
+                    $"--dcOutput={dotCoverSnapshot}",
+                    "--dcFilters=+:module=CSharpInteractive.HostApi;+:module=dotnet-csi",
+                    "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"))
+        .Build()
+        .EnsureSuccess();
 
     var dotCoverReportXml = Path.Combine(reportDir, "dotCover.xml");
     Run(new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportXml}", "--reportType=TeamCityXml").WithShortName("Generating the code coverage reports"));
@@ -137,7 +142,6 @@ else
         {
             case < 75:
                 Error($"The coverage percentage {coveragePercentage} is too low.");
-                Exit();
                 break;
 
             case < 80:
@@ -201,7 +205,7 @@ foreach (var framework in frameworks)
     {
         var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
         Run(new DotNetNew("build", $"--package-version={packageVersion}", "-T", framework, "--no-restore").WithWorkingDirectory(buildProjectDir).WithShortName($"Creating a new {sampleProjectName}"));
-        Run(new DotNetBuild().WithProject(buildProjectDir).WithSources(defaultNuGetSource, Path.Combine(outputDir, "CSharpInteractive")).WithShortName($"Building the {sampleProjectName}"));
+        new DotNetBuild().WithProject(buildProjectDir).WithSources(defaultNuGetSource, Path.Combine(outputDir, "CSharpInteractive")).WithShortName($"Building the {sampleProjectName}").Build().EnsureSuccess();
         Run(new DotNetRun().WithProject(buildProjectDir).WithNoBuild(true).WithWorkingDirectory(sampleProjectDir).WithShortName($"Running a build for the {sampleProjectName}"));
         Run(new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx")).WithWorkingDirectory(sampleProjectDir).WithShortName($"Running a build as a C# script for the {sampleProjectName}"));
     }
@@ -216,7 +220,7 @@ if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && pac
     var push = new DotNetNuGetPush().WithApiKey(apiKey).WithSources(defaultNuGetSource);
     foreach (var package in packages.Where(i => i.Publish))
     {
-        Run(push.WithPackage(package.Package).WithShortName($"Pushing {Path.GetFileName(package.Package)}"));
+        push.WithPackage(package.Package).WithShortName($"Pushing {Path.GetFileName(package.Package)}").Build().EnsureSuccess();
     }
 }
 else
@@ -228,7 +232,7 @@ if (integrationTests || dockerLinuxTests)
 {
     var logicOp = integrationTests && dockerLinuxTests ? "|" : "&";
     var filter = $"Integration={integrationTests}{logicOp}Docker={dockerLinuxTests}";
-    Build(test.WithFilter(filter));
+    test.WithFilter(filter).Build().EnsureSuccess();
 }
 
 WriteLine("To use the csi tool:", Color.Highlighted);
