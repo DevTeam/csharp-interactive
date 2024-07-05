@@ -482,7 +482,7 @@ result.ExitCode.ShouldBe(0);
 result = new DotNetTest().WithWorkingDirectory("MyLib").Build();
 result.ExitCode.ShouldBe(0);
 result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Passed).ShouldBe(1);
+result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 ```
 
 
@@ -550,7 +550,7 @@ result = new MSBuild()
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
 result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Passed).ShouldBe(1);
+result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 ```
 
 
@@ -657,7 +657,7 @@ result = new DotNetTest().WithWorkingDirectory("MyTests").Build();
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
 result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Passed).ShouldBe(1);
+result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 ```
 
 
@@ -704,7 +704,7 @@ var result = testUnderDotCover.Build();
 
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
-result.Tests.Count(i => i.State == TestState.Passed).ShouldBe(1);
+result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1);
 
 // Generates a HTML code coverage report.
 exitCode = new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReport}", "--reportType=HTML").Run();
@@ -763,7 +763,7 @@ result = new VSTest()
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
 result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Passed).ShouldBe(1);
+result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 ```
 
 
@@ -858,10 +858,12 @@ using HostApi;
 // Creates a base docker command line
 var dockerRun = new DockerRun()
     .WithAutoRemove(true)
+    .WithInteractive(true)
     .WithImage("mcr.microsoft.com/dotnet/sdk")
     .WithPlatform("linux")
     .WithContainerWorkingDirectory("/MyProjects")
-    .AddVolumes((Environment.CurrentDirectory, "/MyProjects"));
+    .AddVolumes((ToAbsoluteLinuxPath(Environment.CurrentDirectory), "/MyProjects"));
+
 
 // Creates a new library project in a docker container
 var exitCode = dockerRun
@@ -878,6 +880,9 @@ var result = dockerRun
 // The "result" variable provides details about a build
 result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
 result.ExitCode.ShouldBe(0);
+
+string ToAbsoluteLinuxPath(string path) => 
+    "/" + path.Replace(":", "").Replace('\\', '/');
 ```
 
 

@@ -1,18 +1,23 @@
-// Run this from the working directory where the solution or project to build is located.
+// To run the script:
+// - Install "dotnet-csi" as a tool using the "dotnet tool" command, for example:
+//   dotnet tool install dotnet-csi -g
+// - Run this script from the working directory
+//   containing the solution or project to be built, for example: 
+//   dotnet csi ./build/Program.csx
 
-// Changes a verbosity level (Quiet, Normal, or Diagnostic).
+// To change the logging level (Quiet, Normal or Diagnostic):
 // #l Diagnostic
 
-// Adds a NuGet package and references to assemblies.
+// To add a reference to the NuGet package:
 // #r "nuget: MyPackage, 1.2.3"
 
-// Adds an assembly reference.
+// To add an assembly reference:
 // #r "MyAssembly.dll"
 
-// Includes code from a file in the order it should run.
+// To include code from the file in the order in which it should be executed:
 // #load "MyClass.cs"
 
-// Please see the page below for more details.
+// More information can be found on the page:
 // https://github.com/DevTeam/csharp-interactive
 
 #load "Program.cs"
