@@ -18,10 +18,11 @@ if (!File.Exists(solutionFile))
 }
 
 const string defaultNuGetSource = "https://api.nuget.org/v3/index.json";
+Environment.SetEnvironmentVariable("DOTNET_NUGET_SIGNATURE_VERIFICATION", "false");
 var configuration = GetProperty("configuration", "Release");
 var apiKey = GetProperty("apiKey", "");
-var integrationTests = bool.Parse(GetProperty("integrationTests", UnderTeamCity.ToString()));
-var defaultVersion = NuGetVersion.Parse(GetProperty("version", "1.0.0-dev", UnderTeamCity));
+var integrationTests = bool.Parse(GetProperty("integrationTests", CI.ToString()));
+var defaultVersion = NuGetVersion.Parse(GetProperty("version", "1.0.0-dev", CI));
 var outputDir = Path.Combine(currentDir, "CSharpInteractive", "bin", configuration);
 var templateOutputDir = Path.Combine(currentDir, "CSharpInteractive.Templates", "bin", configuration);
 var dockerLinuxTests = HasLinuxDocker();

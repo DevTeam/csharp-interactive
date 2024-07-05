@@ -2,10 +2,13 @@ using System.Xml;
 using HostApi;
 using NuGet.Versioning;
 // ReSharper disable CheckNamespace
+// ReSharper disable InconsistentNaming
 
 internal static class Tools
 {
-    public static bool UnderTeamCity => Environment.GetEnvironmentVariable("TEAMCITY_VERSION") != default;
+    public static bool CI => 
+        Environment.GetEnvironmentVariable("TEAMCITY_VERSION") is not null
+        || Environment.GetEnvironmentVariable("CI") == "true";
     
     public static NuGetVersion GetNextNuGetVersion(NuGetRestoreSettings settings, NuGetVersion defaultVersion)
     {
@@ -94,7 +97,7 @@ internal static class Tools
     
     public static void Exit()
     {
-        if (!Console.IsInputRedirected && !UnderTeamCity)
+        if (!Console.IsInputRedirected && !CI)
         {
             var foregroundColor = Console.ForegroundColor;
             try
