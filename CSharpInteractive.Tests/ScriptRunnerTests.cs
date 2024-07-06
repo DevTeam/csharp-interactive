@@ -32,8 +32,8 @@ public class ScriptRunnerTests
         // Given
         var runner = CreateInstance();
         _commandsRunner.Setup(i => i.Run(It.IsAny<IEnumerable<ICommand>>())).Returns(results);
-        _statistics.SetupGet(i => i.Errors).Returns(errors);
-        _statistics.SetupGet(i => i.Warnings).Returns(warnings);
+        _statistics.SetupGet(i => i.Errors).Returns(errors.Select(i => new Text[] { new(i)}).ToArray);
+        _statistics.SetupGet(i => i.Warnings).Returns(warnings.Select(i => new Text[] { new(i)}).ToArray);
 
         // When
         var actualExitCode = runner.Run();
@@ -122,7 +122,7 @@ public class ScriptRunnerTests
         var runner = CreateInstance();
         //_log.Setup(i => i.Error(ErrorId.UncompletedScript, It.IsAny<string>()));
         _commandSource.Setup(i => i.GetCommands()).Returns(new ICommand[] {new ScriptCommand(string.Empty, string.Empty), new CodeCommand()});
-        _statistics.Setup(i => i.Errors).Returns(new List<string>());
+        _statistics.Setup(i => i.Errors).Returns(new List<Text[]>());
         // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
         _commandsRunner.Setup(i => i.Run(It.IsAny<IEnumerable<ICommand>>())).Callback<IEnumerable<ICommand>>(i => i.Count()).Returns(new CommandResult[] {new(new ScriptCommand(string.Empty, string.Empty), true)});
 

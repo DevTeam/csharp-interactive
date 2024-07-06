@@ -8,28 +8,28 @@ using System.Diagnostics;
 internal class Statistics : IStatistics
 {
     private readonly Stopwatch _stopwatch = new();
-    private readonly List<string> _errors = [];
-    private readonly List<string> _warnings = [];
+    private readonly List<Text[]> _errors = [];
+    private readonly List<Text[]> _warnings = [];
     private readonly List<ProcessResult> _processResult = [];
 
-    public IReadOnlyCollection<string> Errors
+    public IReadOnlyCollection<Text[]> Errors
     {
         get
         {
             lock (_errors)
             {
-                return new ReadOnlyCollection<string>(_errors);   
+                return new ReadOnlyCollection<Text[]>(_errors);   
             }
         }
     }
 
-    public IReadOnlyCollection<string> Warnings
+    public IReadOnlyCollection<Text[]> Warnings
     {
         get
         {
             lock (_warnings)
             {
-                return new ReadOnlyCollection<string>(_warnings);   
+                return new ReadOnlyCollection<Text[]>(_warnings);   
             }
         }
     }
@@ -53,10 +53,10 @@ internal class Statistics : IStatistics
         return Disposable.Create(() => _stopwatch.Stop());
     }
 
-    public void RegisterError(string error)
+    public void RegisterError(Text[] error)
     {
         error = error.Trim();
-        if (!string.IsNullOrWhiteSpace(error))
+        if (!error.IsEmptyOrWhiteSpace())
         {
             lock (_errors)
             {
@@ -65,10 +65,10 @@ internal class Statistics : IStatistics
         }
     }
 
-    public void RegisterWarning(string warning)
+    public void RegisterWarning(Text[] warning)
     {
         warning = warning.Trim();
-        if (!string.IsNullOrWhiteSpace(warning))
+        if (!warning.IsEmptyOrWhiteSpace())
         {
             lock (_warnings)
             {

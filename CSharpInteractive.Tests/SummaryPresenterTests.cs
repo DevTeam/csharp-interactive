@@ -27,20 +27,20 @@ public class SummaryPresenterTests
         var presenter = CreateInstance();
         if (hasError)
         {
-            _statistics.SetupGet(i => i.Errors).Returns(new[] {"Err"});
+            _statistics.SetupGet(i => i.Errors).Returns([new Text("Err")]);
         }
         else
         {
-            _statistics.SetupGet(i => i.Errors).Returns(Array.Empty<string>());
+            _statistics.SetupGet(i => i.Errors).Returns([]);
         }
         
         if (hasWarning)
         {
-            _statistics.SetupGet(i => i.Warnings).Returns(new[] {"Warn"});
+            _statistics.SetupGet(i => i.Warnings).Returns([new Text("Warn")]);
         }
         else
         {
-            _statistics.SetupGet(i => i.Warnings).Returns(Array.Empty<string>());
+            _statistics.SetupGet(i => i.Warnings).Returns([]);
         }
 
         // When

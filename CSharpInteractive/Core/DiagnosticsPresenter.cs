@@ -2,6 +2,7 @@
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 namespace CSharpInteractive.Core;
 
+using HostApi;
 using Microsoft.CodeAnalysis;
 
 [ExcludeFromCodeCoverage]
@@ -29,12 +30,12 @@ internal class DiagnosticsPresenter(ILog<DiagnosticsPresenter> log, IErrorContex
                     break;
 
                 case DiagnosticSeverity.Warning:
-                    log.Warning(prefix, new Text(diagnostic.ToString()));
+                    log.Warning(prefix, new Text(diagnostic.ToString(), Color.Warning));
                     break;
 
                 case DiagnosticSeverity.Error:
                     var errorId = $"{GetProperty(diagnostic.Id, string.Empty)},{diagnostic.Location.SourceSpan.Start},{diagnostic.Location.SourceSpan.Length}{GetProperty(GetFileName(sourceCommand.Name))}";
-                    log.Error(new ErrorId(errorId), prefix, new Text(diagnostic.ToString()));
+                    log.Error(new ErrorId(errorId), prefix, new Text(diagnostic.ToString(), Color.Error));
                     break;
             }
         }

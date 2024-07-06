@@ -52,7 +52,7 @@ public static class Components
         {
             try
             {
-                Root.Log.Error(ErrorId.Unhandled, ex.Message);
+                Root.Log.Error(ErrorId.Unhandled, ex);
             }
             catch (Exception)
             {
@@ -65,7 +65,15 @@ public static class Components
     {
         try
         {
-            Root.Log.Error(ErrorId.Exception, [new Text(e.ExceptionObject.ToString() ?? "Unhandled exception.")]);
+            if (e.ExceptionObject is Exception error)
+            {
+                Root.Log.Error(ErrorId.Exception, error);    
+            }
+            else
+            {
+                Root.Log.Error(ErrorId.Exception, [new Text(e.ExceptionObject.ToString() ?? "Unhandled exception.", Color.Error)]);
+            }
+            
             Finish();
             System.Environment.Exit(1);
         }

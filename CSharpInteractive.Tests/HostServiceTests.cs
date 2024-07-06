@@ -73,7 +73,7 @@ public class HostServiceTests
         host.Error("Err", "Id");
 
         // Then
-        _log.Verify(i => i.Error(new ErrorId("Id"), It.Is<Text[]>(text => text.Length == 1 && text[0].Value == "Err" && text[0].Color == Color.Default)));
+        _log.Verify(i => i.Error(new ErrorId("Id"), It.Is<Text[]>(text => text.Length == 1 && text[0].Value == "Err" && text[0].Color == Color.Error)));
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public class HostServiceTests
         host.Warning("Warn");
 
         // Then
-        _log.Verify(i => i.Warning(It.Is<Text[]>(text => text.Length == 1 && text[0].Value == "Warn" && text[0].Color == Color.Default)));
+        _log.Verify(i => i.Warning(It.Is<Text[]>(text => text.Length == 1 && text[0].Value == "Warn" && text[0].Color == Color.Warning)));
     }
 
     [Fact]

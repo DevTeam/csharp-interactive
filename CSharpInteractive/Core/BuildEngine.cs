@@ -2,6 +2,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Collections;
+using HostApi;
 using Microsoft.Build.Framework;
 
 [ExcludeFromCodeCoverage]
@@ -11,7 +12,7 @@ internal class BuildEngine(ILog<BuildEngine> log) : IBuildEngine
     {
         if (e.Message is { } message)
         {
-            log.Error(new ErrorId(e.Code), [new Text(message)]);
+            log.Error(new ErrorId(e.Code), [new Text(message, Color.Error)]);
         }
     }
 
@@ -19,7 +20,7 @@ internal class BuildEngine(ILog<BuildEngine> log) : IBuildEngine
     {
         if (e.Message is { } message)
         {
-            log.Warning([new Text(message)]);
+            log.Warning([new Text(message, Color.Warning)]);
         }
     }
 

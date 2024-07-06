@@ -2,9 +2,9 @@ namespace CSharpInteractive.Core;
 
 internal interface IStatistics
 {
-    IReadOnlyCollection<string> Errors { get; }
+    IReadOnlyCollection<Text[]> Errors { get; }
 
-    IReadOnlyCollection<string> Warnings { get; }
+    IReadOnlyCollection<Text[]> Warnings { get; }
     
     IReadOnlyCollection<ProcessResult> ProcessResults { get; }
 
@@ -12,9 +12,9 @@ internal interface IStatistics
 
     IDisposable Start();
 
-    void RegisterError(string error);
+    void RegisterError(Text[] error);
 
-    void RegisterWarning(string warning);
+    void RegisterWarning(Text[] warning);
     
     void RegisterProcessResult(ProcessResult result);
 }

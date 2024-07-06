@@ -2,6 +2,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Diagnostics;
+using HostApi;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
@@ -35,7 +36,7 @@ internal class CSharpScriptRunner(
                     {
                         success = false;
                         log.Trace(() => [new Text($"Exception: {exception}.")]);
-                        log.Error(ErrorId.Exception, [new Text(exception.ToString())]);
+                        log.Error(ErrorId.Exception, exception);
                         return true;
                     })
                 .Result;

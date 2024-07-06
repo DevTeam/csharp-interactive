@@ -1,8 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive.Core;
 
-using HostApi;
-
 internal class ProcessResultHandler(
     ILog<ProcessResultHandler> log,
     IExitTracker exitTracker) : IProcessResultHandler
@@ -25,11 +23,11 @@ internal class ProcessResultHandler(
             switch (result.State)
             {
                 case ProcessState.Failed:
-                    log.Error(ErrorId.Process, description.WithDefaultColor(Color.Default));
+                    log.Error(ErrorId.Process, description);
                     break;
 
                 case ProcessState.Canceled:
-                    log.Warning(description.WithDefaultColor(Color.Default));
+                    log.Warning(description);
                     break;
 
                 case ProcessState.Finished:

@@ -1,6 +1,8 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive.Core;
 
+using HostApi;
+
 internal class FilePathResolver(
     ILog<FilePathResolver> log,
     IEnvironment environment,
@@ -67,7 +69,7 @@ internal class FilePathResolver(
                 fullScriptPath = scripts[0];
                 return State.Found;
             case > 1:
-                log.Error(ErrorId.CannotFind, new Text($"Specify which script file to use because the folder \"{fullPath}\" contains more than one script file."));
+                log.Error(ErrorId.CannotFind, new Text($"Specify which script file to use because the folder \"{fullPath}\" contains more than one script file.", Color.Error));
                 return State.Error;
             default:
                 return State.Unknown;

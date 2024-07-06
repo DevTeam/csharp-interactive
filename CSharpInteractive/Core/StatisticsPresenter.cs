@@ -6,6 +6,11 @@ using HostApi;
 [ExcludeFromCodeCoverage]
 internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<IStatistics>
 {
+    private static readonly Text[] Tab = [Text.Tab];
+    private static readonly Text[] Empty = [Text.Tab, new Text("     ")];
+    private static readonly Text[] Error = [Text.Tab, new Text("ERR: ", Color.Error)];
+    private static readonly Text [] Warning = [Text.Tab, new Text("WRN: ", Color.Warning)];
+    
     public void Show(IStatistics statistics)
     {
         log.Info();
@@ -15,17 +20,17 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
 
             foreach (var processResult in statistics.ProcessResults)
             {
-                log.Info(Text.Tab + processResult.Description);
+                log.Info(processResult.Description.AddPrefix(_ => Tab));
             }
 
             foreach (var warning in statistics.Warnings)
             {
-                log.Info(Text.Tab, new Text(warning, Color.Warning));
+                log.Info(warning.AddPrefix(i => i == 0 ? Warning : Empty));
             }
-
+            
             foreach (var error in statistics.Errors)
             {
-                log.Info(Text.Tab, new Text(error, Color.Error));
+                log.Info(error.AddPrefix(i => i == 0 ? Error : Empty));
             }
         }
 

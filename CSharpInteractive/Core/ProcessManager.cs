@@ -107,7 +107,7 @@ internal class ProcessManager : IProcessManager
         }
         catch (Exception ex)
         {
-            _log.Warning(new Text($"{_description} was not terminated properly with error \"{ex.Message}\"."));
+            _log.Warning(new Text($"{_description} was not terminated properly with error \"{ex.Message}\".", Color.Warning));
             return false;
         }
 

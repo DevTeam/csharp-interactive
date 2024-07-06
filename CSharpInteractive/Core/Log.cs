@@ -18,8 +18,8 @@ internal class Log<T>(
             return;
         }
 
-        statistics.RegisterError(string.Join("", error.Select(i => i.Value)));
-        stdErr.WriteLine(GetMessage(error, Color.Default));
+        statistics.RegisterError(error);
+        stdErr.WriteLine(error);
     }
 
     public void Warning(params Text[] warning)
@@ -29,8 +29,8 @@ internal class Log<T>(
             return;
         }
 
-        statistics.RegisterWarning(string.Join("", warning.Select(i => i.Value)));
-        stdOut.WriteLine(GetMessage(warning, Color.Warning));
+        statistics.RegisterWarning(warning);
+        stdOut.WriteLine(warning);
     }
 
     public void Info(params Text[] message)

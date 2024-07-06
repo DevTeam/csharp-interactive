@@ -2,6 +2,7 @@ namespace CSharpInteractive.Tests;
 
 using Core;
 using CSharpInteractive;
+using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
 public class TeamCityLogTests
@@ -36,7 +37,7 @@ public class TeamCityLogTests
 
         // Then
         _teamCityWriter.Verify(i => i.WriteBuildProblem("id", "line1line2"));
-        _statistics.Verify(i => i.RegisterError("line1line2"));
+        _statistics.Verify(i => i.RegisterError(_text));
     }
 
     [Theory]
@@ -54,7 +55,7 @@ public class TeamCityLogTests
 
         // Then
         _teamCityWriter.Verify(i => i.WriteWarning("line1line2"));
-        _statistics.Verify(i => i.RegisterWarning("line1line2"));
+        _statistics.Verify(i => i.RegisterWarning(_text));
     }
 
     [Theory]

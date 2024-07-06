@@ -14,14 +14,14 @@ internal class TeamCityLog<T>(
     public void Error(ErrorId id, params Text[] error)
     {
         var message = error.ToSimpleString();
-        statistics.RegisterError(message);
+        statistics.RegisterError(error);
         teamCityWriter.WriteBuildProblem(id.Id, message);
     }
 
     public void Warning(params Text[] warning)
     {
         var message = warning.ToSimpleString();
-        statistics.RegisterWarning(message);
+        statistics.RegisterWarning(warning);
         teamCityWriter.WriteWarning(message);
     }
 

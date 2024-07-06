@@ -28,13 +28,13 @@ public class StatisticsTests
         var statistics = new Statistics();
 
         // When
-        statistics.RegisterError("error1");
-        statistics.RegisterError("");
-        statistics.RegisterError("   ");
-        statistics.RegisterError("error2");
+        statistics.RegisterError(new Text("error1"));
+        statistics.RegisterError(Text.Empty);
+        statistics.RegisterError(new Text("   "));
+        statistics.RegisterError(new Text("error2"));
 
         // Then
-        statistics.Errors.ToArray().ShouldBe(["error1", "error2"]);
+        statistics.Errors.ToArray().ShouldBe([new Text("error1"), new Text("error2")]);
     }
 
     [Fact]
@@ -44,12 +44,12 @@ public class StatisticsTests
         var statistics = new Statistics();
 
         // When
-        statistics.RegisterWarning("warning1");
-        statistics.RegisterWarning("");
-        statistics.RegisterWarning("   ");
-        statistics.RegisterWarning("warning2");
+        statistics.RegisterWarning(new Text("warning1"));
+        statistics.RegisterWarning(Text.Empty);
+        statistics.RegisterWarning(new Text("   "));
+        statistics.RegisterWarning(new Text("warning2"));
 
         // Then
-        statistics.Warnings.ToArray().ShouldBe(["warning1", "warning2"]);
+        statistics.Warnings.ToArray().ShouldBe([new Text("warning1"), new Text("warning2")]);
     }
 }
