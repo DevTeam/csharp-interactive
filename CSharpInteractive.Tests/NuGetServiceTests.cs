@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 using HostApi;
 using NuGet.Versioning;
 
@@ -62,9 +61,11 @@ public class NuGetServiceTests
         _nugetRestoreService.Setup(i => i.TryRestore(It.IsAny<NuGetRestoreSettings>(), out projectAssetsJson)).Returns(true);
 
         // When
-#pragma warning disable CS0612
-        var packages = nuGet.Restore("Abc", "1.2.3", ".NETCoreApp,Version=v3.1", packagesPath).ToArray();
-#pragma warning restore CS0612
+        var packages = nuGet.Restore(
+            new NuGetRestoreSettings("Abc")
+                .WithVersionRange(VersionRange.Parse("1.2.3"))
+                .WithTargetFrameworkMoniker(".NETCoreApp,Version=v3.1")
+                .WithPackagesPath(packagesPath)).ToArray();
 
         // Then
         _nugetRestoreService.Verify(i => i.TryRestore(

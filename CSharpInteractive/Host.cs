@@ -149,21 +149,7 @@ public static class Components
         int? failureExitCode = 1)
         where T : ICommandLineResult => 
         EnsureSuccess(await resultTask, isSuccess, failureExitCode);
-
-    [Obsolete]
-    [SuppressMessage("Design", "CA1041:Provide ObsoleteAttribute message")]
-    public static IEnumerable<NuGetPackage> Restore(
-        this INuGet nuGet,
-        string packageId,
-        string? versionRange = default,
-        string? targetFrameworkMoniker = default,
-        string? packagesPath = default) =>
-        nuGet.Restore(
-            new NuGetRestoreSettings(packageId)
-                .WithVersionRange(versionRange != default ? VersionRange.Parse(versionRange) : default)
-                .WithTargetFrameworkMoniker(targetFrameworkMoniker)
-                .WithPackagesPath(packagesPath));
-
+    
     public static bool TryGet<T>(
         this IProperties properties,
         string key,

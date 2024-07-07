@@ -46,8 +46,9 @@ public class NuGetTests
 
         // When
         var result = TestTool.Run(
-            "using HostApi;"
-            + $"GetService<INuGet>().Restore(\"IoC.Container\", \"1.3.6\", \"net5.0\", @\"{tempPath}\");");
+            "using HostApi;\n"
+            + "using NuGet.Versioning;\n"
+            + $"GetService<INuGet>().Restore(new NuGetRestoreSettings(\"IoC.Container\").WithVersionRange(VersionRange.Parse(\"1.3.6\")).WithTargetFrameworkMoniker(\"net5.0\").WithPackagesPath(@\"{tempPath}\"));");
 
         // Then
         result.ExitCode.ShouldBe(0, result.ToString());
