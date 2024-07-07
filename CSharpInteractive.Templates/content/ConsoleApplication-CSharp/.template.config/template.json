@@ -36,7 +36,7 @@
       "datatype": "text",
       "description": "Sets the referencing package version in the created project file.",
       "replaces": "$(PackageVersion)",
-      "defaultValue": "1.*",
+      "defaultValue": "1.1.*",
       "displayName": "Referencing package version"
     },
     "skipRestore": {
