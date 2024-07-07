@@ -67,7 +67,7 @@ public static class Components
         {
             if (e.ExceptionObject is Exception error)
             {
-                Root.Log.Error(ErrorId.Exception, error);    
+                Root.Log.Error(ErrorId.Exception, error);
             }
             else
             {
@@ -75,7 +75,14 @@ public static class Components
             }
             
             Finish();
-            System.Environment.Exit(1);
+            
+            var exitCode = 1;
+            if (e.ExceptionObject is ProcessTerminationException processTermination)
+            {
+                exitCode = processTermination.ExitCode;
+            }
+            
+            System.Environment.Exit(exitCode);
         }
         catch
         {
@@ -136,7 +143,7 @@ public static class Components
                 Root.Log.Error(ErrorId.Build, $"{result}.");
                 if (failureExitCode.HasValue)
                 {
-                    System.Environment.Exit(failureExitCode.Value);
+                    throw new ProcessTerminationException(failureExitCode.Value);
                 }
         
                 return result;

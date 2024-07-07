@@ -62,19 +62,6 @@ internal static class Tools
         return defaultProp;
     }
     
-    public static void Run(ICommandLine commandLine)
-    {
-        var exitCode = commandLine.Run();
-        if (exitCode == 0)
-        {
-            return;
-        }
-
-        var startInfo = commandLine.GetStartInfo(GetService<IHost>());
-        Error($"{startInfo.ShortName} failed");
-        throw new OperationCanceledException();
-    }
-    
     public static bool TryGetCoverage(string dotCoverReportXml, out int coveragePercentage)
     {
         var dotCoverReportDoc = new XmlDocument();

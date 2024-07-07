@@ -55,7 +55,7 @@ var packages = new[]
         false)
 };
 
-Run(new DotNetToolRestore().WithShortName("Restoring tools"));
+new DotNetToolRestore().WithShortName("Restoring tools").Run().EnsureSuccess();
 
 new DotNetClean()
     .WithProject(solutionFile)
@@ -134,7 +134,7 @@ else
         .EnsureSuccess();
 
     var dotCoverReportXml = Path.Combine(reportDir, "dotCover.xml");
-    Run(new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportXml}", "--reportType=TeamCityXml").WithShortName("Generating the code coverage reports"));
+    new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportXml}", "--reportType=TeamCityXml").WithShortName("Generating the code coverage reports").Run().EnsureSuccess();
     
     if (TryGetCoverage(dotCoverReportXml, out coveragePercentage))
     {
@@ -158,7 +158,7 @@ else
 var uninstallTool = new DotNetCustom("tool", "uninstall", toolPackageId, "-g")
     .WithShortName("Uninstalling tool");
 
-if (uninstallTool.Run(_ => { } ) != 0)
+if (uninstallTool.Run(_ => { } ).ExitCode != 0)
 {
     Warning($"{uninstallTool} failed.");
 }
@@ -176,17 +176,17 @@ if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 var installTool = new DotNetCustom("tool", "install", toolPackageId, "-g", "--version", packageVersion.ToString(), "--add-source", Path.Combine(outputDir, "CSharpInteractive.Tool"))
     .WithShortName("Installing tool");
 
-if (installTool.Run(output => WriteLine(output.Line)) != 0)
+if (installTool.Run(output => WriteLine(output.Line)).ExitCode != 0)
 {
     Warning($"{installTool} failed.");
 }
 
-Run(new DotNetCustom("csi", "/?").WithShortName("Checking tool"));
+new DotNetCustom("csi", "/?").WithShortName("Checking tool").Run().EnsureSuccess();
 
 var uninstallTemplates = new DotNetCustom("new", "uninstall", templatesPackageId)
     .WithShortName("Uninstalling template");
 
-if (uninstallTemplates.Run(output => WriteLine(output.Line)) != 0)
+if (uninstallTemplates.Run(output => WriteLine(output.Line)).ExitCode != 0)
 {
     Warning($"{uninstallTemplates} failed.");
 }
@@ -194,7 +194,7 @@ if (uninstallTemplates.Run(output => WriteLine(output.Line)) != 0)
 var installTemplates = new DotNetCustom("new", "install", $"{templatesPackageId}::{packageVersion.ToString()}", "--nuget-source", templateOutputDir)
     .WithShortName("Installing template");
 
-Run(installTemplates.WithShortName(installTemplates.ShortName));
+installTemplates.WithShortName(installTemplates.ShortName).Run().EnsureSuccess();
 
 foreach (var framework in frameworks)
 {
@@ -204,10 +204,10 @@ foreach (var framework in frameworks)
     try
     {
         var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
-        Run(new DotNetNew("build", $"--package-version={packageVersion}", "-T", framework, "--no-restore").WithWorkingDirectory(buildProjectDir).WithShortName($"Creating a new {sampleProjectName}"));
+        new DotNetNew("build", $"--package-version={packageVersion}", "-T", framework, "--no-restore").WithWorkingDirectory(buildProjectDir).WithShortName($"Creating a new {sampleProjectName}").Run().EnsureSuccess();
         new DotNetBuild().WithProject(buildProjectDir).WithSources(defaultNuGetSource, Path.Combine(outputDir, "CSharpInteractive")).WithShortName($"Building the {sampleProjectName}").Build().EnsureSuccess();
-        Run(new DotNetRun().WithProject(buildProjectDir).WithNoBuild(true).WithWorkingDirectory(sampleProjectDir).WithShortName($"Running a build for the {sampleProjectName}"));
-        Run(new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx")).WithWorkingDirectory(sampleProjectDir).WithShortName($"Running a build as a C# script for the {sampleProjectName}"));
+        new DotNetRun().WithProject(buildProjectDir).WithNoBuild(true).WithWorkingDirectory(sampleProjectDir).WithShortName($"Running a build for the {sampleProjectName}").Run().EnsureSuccess();
+        new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx")).WithWorkingDirectory(sampleProjectDir).WithShortName($"Running a build as a C# script for the {sampleProjectName}").Run().EnsureSuccess();
     }
     finally
     {

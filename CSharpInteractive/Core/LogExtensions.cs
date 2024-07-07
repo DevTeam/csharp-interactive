@@ -15,6 +15,11 @@ internal static class LogExtensions
 
     public static ILog<T> Error<T>(this ILog<T> log, ErrorId id, Exception error)
     {
+        if (error is ProcessTerminationException)
+        {
+            return log;
+        }
+        
         log.Error(id, error.ToText());
         return log;
     }
