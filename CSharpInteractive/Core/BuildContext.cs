@@ -5,7 +5,7 @@ namespace CSharpInteractive.Core;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
 
-internal class BuildContext(IStartInfoDescription startInfoDescription) : IBuildContext
+internal class BuildContext: IBuildContext
 {
     private readonly List<BuildMessage> _errors = [];
     private readonly List<BuildMessage> _warnings = [];
@@ -43,14 +43,12 @@ internal class BuildContext(IStartInfoDescription startInfoDescription) : IBuild
         return new[] {message};
     }
 
-    public IBuildResult Create(IStartInfo startInfo, int? exitCode) =>
+    public IBuildResult Create(ICommandLineResult commandLineResult) =>
         new BuildResult(
-            startInfo,
-            startInfoDescription,
+            commandLineResult,
             _errors.AsReadOnly(),
             _warnings.AsReadOnly(),
-            _tests.AsReadOnly(),
-            exitCode);
+            _tests.AsReadOnly());
 
     private IEnumerable<BuildMessage> OnStdOut(IServiceMessage message, IStartInfo startInfo, int processId)
     {

@@ -6,77 +6,70 @@ using System.Text;
 using HostApi;
 using Immutype;
 
-[Target]
 [DebuggerTypeProxy(typeof(BuildResultDebugView))]
-internal class BuildResult : IBuildResult
+[Target]
+internal class BuildResult : IBuildResult, ISuccessDeterminant
 {
     private readonly Lazy<BuildStatistics> _summary;
 
     // ReSharper disable once UnusedMember.Global
-    public BuildResult(IStartInfo startInfo, IStartInfoDescription startInfoDescription)
-        : this(startInfo, startInfoDescription, Array.Empty<BuildMessage>(), Array.Empty<BuildMessage>(), Array.Empty<TestResult>(), default)
+    public BuildResult(ICommandLineResult commandLineResult)
+        : this(commandLineResult, Array.Empty<BuildMessage>(), Array.Empty<BuildMessage>(), Array.Empty<TestResult>())
     { }
-
+    
     public BuildResult(
-        IStartInfo startInfo,
-        IStartInfoDescription startInfoDescription,
+        ICommandLineResult commandLineResult,
         IReadOnlyList<BuildMessage> errors,
         IReadOnlyList<BuildMessage> warnings,
-        IReadOnlyList<TestResult> tests,
-        int? exitCode)
+        IReadOnlyList<TestResult> tests)
     {
-        StartInfo = startInfo;
-        StartInfoDescription = startInfoDescription;
+        CommandLineResult = commandLineResult;
         Errors = errors;
         Warnings = warnings;
         Tests = tests;
-        ExitCode = exitCode;
         _summary = new Lazy<BuildStatistics>(CalculateSummary, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    public BuildStatistics Summary => _summary.Value;
+    public ICommandLineResult CommandLineResult { get; }
 
-    public IStartInfo StartInfo { get; }
+    public IStartInfo StartInfo => CommandLineResult.StartInfo;
+
+    public ProcessState State => CommandLineResult.State;
+
+    public long ElapsedMilliseconds => CommandLineResult.ElapsedMilliseconds;
     
-    internal IStartInfoDescription StartInfoDescription { get; }
+    public int? ExitCode => CommandLineResult.ExitCode;
 
+    public Exception? Error => CommandLineResult.Error;
+
+    public BuildStatistics Summary => _summary.Value;
+    
     public IReadOnlyList<BuildMessage> Errors { get; }
 
     public IReadOnlyList<BuildMessage> Warnings { get; }
 
     public IReadOnlyList<TestResult> Tests { get; }
 
-    public int? ExitCode { get; }
-
     public override string ToString()
     {
         var sb = new StringBuilder();
-        sb.Append(StartInfoDescription.GetDescription(StartInfo));
-        if (sb.Length == 0)
-        {
-            sb.Append("Build");
-        }
-        
-        if (ExitCode is {} exitCode)
-        {
-            sb.Append(" completed with exit code ");
-            sb.Append(exitCode);
-            sb.Append(',');
-        }
-        else
-        {
-            sb.Append(" not completed");
-        }
-        
+        sb.Append(CommandLineResult);
+        // ReSharper disable once InvertIf
         if (!Summary.IsEmpty)
         {
             sb.Append(" with ");
             sb.Append(Summary);
         }
-
-        sb.Append('.');
+        
         return sb.ToString();
     }
+
+    public bool? IsSuccess => 
+        ExitCode == 0
+        && Error is null
+        && State == ProcessState.Finished
+        && Errors.Count == 0
+        && Summary is {FailedTests: 0, Errors: 0};
 
     private BuildStatistics CalculateSummary()
     {
@@ -119,8 +112,11 @@ internal class BuildResult : IBuildResult
             passedTests);
     }
 
-    private class BuildResultDebugView(IBuildResult buildResult)
+    private class BuildResultDebugView(BuildResult buildResult)
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
+        public ICommandLineResult CommandLineResult => buildResult.CommandLineResult;
+        
         public BuildStatistics Summary => buildResult.Summary;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
@@ -131,9 +127,5 @@ internal class BuildResult : IBuildResult
 
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
         public IReadOnlyList<TestResult> Tests => buildResult.Tests;
-
-        public IStartInfo StartInfo => buildResult.StartInfo;
-
-        public int? ExitCode => buildResult.ExitCode;
     }
 }

@@ -24,12 +24,12 @@ public class CommandLineAsyncScenario : BaseScenario
         // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
-        int? exitCode = await GetService<ICommandLineRunner>().RunAsync(new CommandLine("cmd", "/C", "DIR"));
+        var task = await GetService<ICommandLineRunner>().RunAsync(new CommandLine("cmd", "/C", "DIR"));
         
         // or the same thing using the extension method
-        exitCode = await new CommandLine("cmd", "/c", "DIR").RunAsync();
+        task = await new CommandLine("cmd", "/c", "DIR").RunAsync();
         // }
 
-        exitCode.HasValue.ShouldBeTrue();
+        task.ExitCode.HasValue.ShouldBeTrue();
     }
 }

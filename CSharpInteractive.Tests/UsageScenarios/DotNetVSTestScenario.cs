@@ -58,7 +58,8 @@ public class DotNetVSTestScenario : BaseScenario
         var exitCode = new VSTest()
             .AddTestFileNames(Path.Combine("MyOutput", "MyTests.dll"))
             .WithWorkingDirectory("MyTests")
-            .Run(i => lines.Add(i.Line));
+            .Run(i => lines.Add(i.Line))
+            .ExitCode;
 
         lines.Count(i => i.Contains("##teamcity[")).ShouldBe(0);
         exitCode.ShouldBe(0);

@@ -98,7 +98,7 @@ public sealed class ProcessRunnerTests: IDisposable
         var exception = cannotStart;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(false);
         _processManager.SetupGet(i => i.Id).Returns(99);
-        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Failed, default, exception)).Returns(_processResult);
+        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.FailedToStart, default, exception)).Returns(_processResult);
         var instance = CreateInstance();
 
         // When
@@ -106,7 +106,7 @@ public sealed class ProcessRunnerTests: IDisposable
 
         // Then
         _processManager.Verify(i => i.WaitForExit(TimeSpan.Zero), Times.Never);
-        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Failed, default, exception));
+        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.FailedToStart, default, exception));
     }
 
     [Fact]

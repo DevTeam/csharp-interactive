@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using HostApi;
 using BuildResult = Core.BuildResult;
 
@@ -17,6 +16,7 @@ public class BuildRunnerTests
     private readonly Mock<IBuildOutputProcessor> _buildOutputConverter = new();
     private readonly Mock<IProcessMonitor> _processMonitor = new();
     private readonly Func<IProcessMonitor> _monitorFactory;
+    private readonly Mock<ICommandLineResult> _commandLineResult = new();
     private readonly Mock<IStartInfo> _startInfo = new();
     private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
     private readonly Mock<ICommandLine> _process = new();
@@ -26,11 +26,11 @@ public class BuildRunnerTests
     public BuildRunnerTests()
     {
         _processResult = new ProcessResult(_startInfo.Object, ProcessState.Finished, 33, []);
-        var buildResult = new BuildResult(_startInfo.Object, _startInfoDescription.Object).WithExitCode(33);
+        var buildResult = new BuildResult(_commandLineResult.Object);
         _process.Setup(i => i.GetStartInfo(_host.Object)).Returns(_startInfo.Object);
         _resultFactory = () => _buildResult.Object;
         _monitorFactory = () => _processMonitor.Object;
-        _buildResult.Setup(i => i.Create(_startInfo.Object, 33)).Returns(buildResult);
+        _buildResult.Setup(i => i.Create(_commandLineResult.Object)).Returns(buildResult);
     }
 
     [Fact]
@@ -120,5 +120,6 @@ public class BuildRunnerTests
             _monitorFactory,
             _defaultBuildMessagesProcessor.Object,
             _customBuildMessagesProcessor.Object,
-            _processResultHandler.Object);
+            _processResultHandler.Object,
+            _startInfoDescription.Object);
 }

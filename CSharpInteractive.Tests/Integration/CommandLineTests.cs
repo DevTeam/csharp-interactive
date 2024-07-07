@@ -17,9 +17,10 @@ public class CommandLineTests
         var events = new List<Output>();
 
         // When
-        var exitCode = GetService<ICommandLineRunner>().Run(DotNetScript.Create("WriteLine(\"Hello\");"), e => events.Add(e));
+        var result = GetService<ICommandLineRunner>().Run(DotNetScript.Create("WriteLine(\"Hello\");"), e => events.Add(e));
 
         // Then
+        var exitCode = result.ExitCode;
         exitCode.HasValue.ShouldBeTrue();
         exitCode.ShouldBe(0);
         events.Any(i => i.IsError).ShouldBeFalse();
@@ -33,11 +34,12 @@ public class CommandLineTests
         var events = new List<Output>();
 
         // When
-        var exitCode = GetService<ICommandLineRunner>().Run(
+        var result = GetService<ICommandLineRunner>().Run(
             DotNetScript.Create("WriteLine(\"VAL=\" + System.Environment.GetEnvironmentVariable(\"ABC\"));").AddVars(("ABC", "123")),
             e => events.Add(e));
 
         // Then
+        var exitCode = result.ExitCode;
         exitCode.HasValue.ShouldBeTrue();
         exitCode.ShouldBe(0);
         events.Any(i => i.IsError).ShouldBeFalse();
@@ -52,13 +54,14 @@ public class CommandLineTests
 
         // When
         stopwatch.Start();
-        var exitCode = GetService<ICommandLineRunner>().Run(
+        var result = GetService<ICommandLineRunner>().Run(
             DotNetScript.Create("System.Threading.Thread.Sleep(TimeSpan.FromSeconds(15));"),
             _ => { },
             TimeSpan.FromMilliseconds(100));
         stopwatch.Stop();
 
         // Then
+        var exitCode = result.ExitCode;
         exitCode.HasValue.ShouldBeFalse();
         stopwatch.ElapsedMilliseconds.ShouldBeLessThanOrEqualTo(10000);
         stopwatch.ElapsedMilliseconds.ShouldBeGreaterThanOrEqualTo(100);
@@ -71,9 +74,10 @@ public class CommandLineTests
         var events = new List<Output>();
 
         // When
-        var exitCode = await GetService<ICommandLineRunner>().RunAsync(DotNetScript.Create("WriteLine(\"Hello\");"), e => events.Add(e));
+        var result = await GetService<ICommandLineRunner>().RunAsync(DotNetScript.Create("WriteLine(\"Hello\");"), e => events.Add(e));
 
         // Then
+        var exitCode = result.ExitCode;
         exitCode.HasValue.ShouldBeTrue();
         exitCode.ShouldBe(0);
         events.Any(i => i.IsError).ShouldBeFalse();

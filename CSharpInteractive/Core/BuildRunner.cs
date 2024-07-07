@@ -18,7 +18,8 @@ internal class BuildRunner(
     Func<IProcessMonitor> monitorFactory,
     [Tag("default")] IBuildMessagesProcessor defaultBuildMessagesProcessor,
     [Tag("custom")] IBuildMessagesProcessor customBuildMessagesProcessor,
-    IProcessResultHandler processResultHandler)
+    IProcessResultHandler processResultHandler,
+    IStartInfoDescription startInfoDescription)
     : IBuildRunner
 {
     public IBuildResult Run(ICommandLine commandLine, Action<BuildMessage>? handler = default, TimeSpan timeout = default)
@@ -28,7 +29,8 @@ internal class BuildRunner(
         var processInfo = new ProcessInfo(startInfo, monitorFactory(), output => Handle(handler, output, buildContext));
         var result = processRunner.Run(processInfo, timeout);
         processResultHandler.Handle(result, handler);
-        return buildContext.Create(startInfo, result.ExitCode);
+        return buildContext.Create(
+            new CommandLineResult(startInfoDescription, startInfo, result.State, result.ElapsedMilliseconds, result.ExitCode, result.Error));
     }
 
     public async Task<IBuildResult> RunAsync(ICommandLine commandLine, Action<BuildMessage>? handler = default, CancellationToken cancellationToken = default)
@@ -38,7 +40,8 @@ internal class BuildRunner(
         var processInfo = new ProcessInfo(startInfo, monitorFactory(), output => Handle(handler, output, buildContext));
         var result = await processRunner.RunAsync(processInfo, cancellationToken);
         processResultHandler.Handle(result, handler);
-        return buildContext.Create(startInfo, result.ExitCode);
+        return buildContext.Create(
+            new CommandLineResult(startInfoDescription, startInfo, result.State, result.ElapsedMilliseconds, result.ExitCode, result.Error));
     }
 
     private IStartInfo CreateStartInfo(ICommandLine commandLine)

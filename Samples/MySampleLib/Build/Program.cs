@@ -7,7 +7,7 @@ await new DotNetBuild()
     .WithShortName("Build")
     .WithConfiguration(configuration)
     .WithProject("MySampleLib.sln")
-    .BuildAsync()
+    .RunAsync()
     .EnsureSuccess();
 
 new DotNetTest()

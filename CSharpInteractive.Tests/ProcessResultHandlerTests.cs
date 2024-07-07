@@ -73,7 +73,7 @@ public class ProcessResultHandlerTests
         var handler = CreateInstance();
 
         // When
-        handler.Handle(new ProcessResult(_startInfo.Object, ProcessState.Failed, 12, _description), default(Action<object>));
+        handler.Handle(new ProcessResult(_startInfo.Object, ProcessState.FailedToStart, 12, _description), default(Action<object>));
 
         // Then
         _log.Verify(i => i.Error(ErrorId.Process, _description));
@@ -87,7 +87,7 @@ public class ProcessResultHandlerTests
         var error = new Exception("Some error.");
 
         // When
-        handler.Handle(new ProcessResult(_startInfo.Object, ProcessState.Failed, 12, _description, default, error), default(Action<object>));
+        handler.Handle(new ProcessResult(_startInfo.Object, ProcessState.FailedToStart, 12, _description, default, error), default(Action<object>));
 
         // Then
         _log.Verify(i => i.Error(ErrorId.Process, It.Is<Text[]>(text => text.Length == 3)));

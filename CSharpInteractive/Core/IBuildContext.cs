@@ -10,5 +10,5 @@ internal interface IBuildContext
 
     IReadOnlyList<BuildMessage> ProcessOutput(in Output output);
 
-    IBuildResult Create(IStartInfo startInfo, int? exitCode);
+    IBuildResult Create(ICommandLineResult commandLineResult);
 }

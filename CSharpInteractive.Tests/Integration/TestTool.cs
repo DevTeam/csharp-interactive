@@ -22,8 +22,8 @@ internal static class TestTool
     public static IProcessResult Run(in CommandLine commandLine)
     {
         var events = new List<Output>();
-        var exitCode = Composition.Shared.Root.CommandLineRunner.Run(commandLine, e => events.Add(e));
-        return new ProcessResult(exitCode!.Value, events);
+        var result = Composition.Shared.Root.CommandLineRunner.Run(commandLine, e => events.Add(e));
+        return new ProcessResult(result.ExitCode!.Value, events);
     }
 
     private static CommandLine CreateScriptCommandLine(IEnumerable<string> args, IEnumerable<string> scriptArgs, IEnumerable<(string, string)> vars, params string[] lines) =>

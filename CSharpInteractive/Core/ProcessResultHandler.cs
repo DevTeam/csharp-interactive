@@ -1,6 +1,8 @@
 // ReSharper disable ClassNeverInstantiated.Global
 namespace CSharpInteractive.Core;
 
+using HostApi;
+
 internal class ProcessResultHandler(
     ILog<ProcessResultHandler> log,
     IExitTracker exitTracker) : IProcessResultHandler
@@ -22,7 +24,7 @@ internal class ProcessResultHandler(
         {
             switch (result.State)
             {
-                case ProcessState.Failed:
+                case ProcessState.FailedToStart:
                     log.Error(ErrorId.Process, description);
                     break;
 

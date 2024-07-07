@@ -27,9 +27,8 @@ public class DockerRunScenario : BaseScenario
         // Runs the command line in a docker container
         var result = new DockerRun(cmd, "mcr.microsoft.com/dotnet/sdk")
             .WithAutoRemove(true)
-            .Run();
-
-        result.ShouldBe(0);
+            .Run()
+            .EnsureSuccess();
         // }
     }
 }

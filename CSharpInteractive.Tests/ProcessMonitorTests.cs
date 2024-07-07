@@ -87,10 +87,10 @@ public class ProcessMonitorTests
         monitor.Started(_startInfo.Object, 99);
 
         // When
-        var result = monitor.Finished(_startInfo.Object, 22, ProcessState.Failed, 33);
+        var result = monitor.Finished(_startInfo.Object, 22, ProcessState.FailedToStart, 33);
 
         // Then
-        result.Description.ShouldBe([Description, Text.Space, new Text("failed", Color.Error), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
+        result.Description.ShouldBe([Description, Text.Space, new Text("failed to start", Color.Error), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
         _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
@@ -102,7 +102,7 @@ public class ProcessMonitorTests
         var monitor = CreateInstance();
 
         // When
-        var result = monitor.Finished(_startInfo.Object, 22, ProcessState.Failed);
+        var result = monitor.Finished(_startInfo.Object, 22, ProcessState.FailedToStart);
 
         // Then
         result.Description.ShouldBe([Description, Text.Space, new Text("failed to start", Color.Error), new Text(" (in 22 ms)"), new Text(".")]);

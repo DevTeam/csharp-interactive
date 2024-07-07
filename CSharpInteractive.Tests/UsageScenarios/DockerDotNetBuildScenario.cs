@@ -37,11 +37,9 @@ public class DockerDotNetBuildScenario : BaseScenario
 
 
         // Creates a new library project in a docker container
-        var exitCode = dockerRun
+        dockerRun
             .WithCommandLine(new DotNetCustom("new", "classlib", "-n", "MyLib", "--force"))
-            .Run();
-
-        exitCode.ShouldBe(0);
+            .Run().EnsureSuccess();
 
         // Builds the library project in a docker container
         var result = dockerRun

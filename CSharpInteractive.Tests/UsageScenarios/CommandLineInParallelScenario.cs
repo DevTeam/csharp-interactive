@@ -24,12 +24,12 @@ public class CommandLineInParallelScenario : BaseScenario
         // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
-        Task<int?> task = new CommandLine("cmd", "/c", "DIR").RunAsync();
-        int? exitCode = new CommandLine("cmd", "/c", "SET").Run();
+        var task = new CommandLine("cmd", "/c", "DIR").RunAsync();
+        var result = new CommandLine("cmd", "/c", "SET").Run();
         task.Wait();
         // }
 
-        task.Result.HasValue.ShouldBeTrue();
-        exitCode.HasValue.ShouldBeTrue();
+        task.Result.ExitCode.HasValue.ShouldBeTrue();
+        result.ExitCode.HasValue.ShouldBeTrue();
     }
 }

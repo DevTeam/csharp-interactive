@@ -6,9 +6,9 @@ using JetBrains.TeamCity.ServiceMessages.Write;
 
 public class BuildContextTests
 {
+    private readonly Mock<ICommandLineResult> _commandLineResult = new();
     private readonly Mock<IStartInfo> _startInfo = new();
-    private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
-
+    
     [Fact]
     public void ShouldProcessStdOutput()
     {
@@ -18,7 +18,7 @@ public class BuildContextTests
 
         // When
         var messages = result.ProcessOutput(new Output(Mock.Of<IStartInfo>(), false, "Abc", 33));
-        var buildResult = result.Create(Mock.Of<IStartInfo>(), 22);
+        var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
         messages.ShouldBe(new[] {msg});
@@ -34,7 +34,7 @@ public class BuildContextTests
 
         // When
         var messages = result.ProcessOutput(new Output(Mock.Of<IStartInfo>(), true, "Abc", 33));
-        var buildResult = result.Create(Mock.Of<IStartInfo>(), 22);
+        var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
         messages.ShouldBe(new[] {msg});
@@ -80,7 +80,7 @@ public class BuildContextTests
         result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdOut).WithText("Some output")]);
         result.ProcessMessage(output, testStderr).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdError).WithText("Some error")]);
         result.ProcessMessage(output, testFinished).ShouldBeEmpty();
-        var buildResult = result.Create(_startInfo.Object, 33);
+        var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
         buildResult.Tests.Count.ShouldBe(1);
@@ -131,7 +131,7 @@ public class BuildContextTests
         // When
         result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdOut).WithText("Some output")]);
         result.ProcessMessage(output, testFailed).ShouldBeEmpty();
-        var buildResult = result.Create(_startInfo.Object, 33);
+        var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
         buildResult.Tests.Count.ShouldBe(1);
@@ -175,7 +175,7 @@ public class BuildContextTests
         // When
         result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdOut).WithText("Some output")]);
         result.ProcessMessage(output, testIgnored).ShouldBeEmpty();
-        var buildResult = result.Create(_startInfo.Object, 33);
+        var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
         buildResult.Tests.Count.ShouldBe(1);
@@ -244,7 +244,7 @@ public class BuildContextTests
 
         // When
         result.ProcessMessage(output, message).ShouldBe(new[] {buildMessage});
-        var buildResult = result.Create(_startInfo.Object, 33);
+        var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
         buildResult.Tests.Count.ShouldBe(0);
@@ -309,12 +309,12 @@ public class BuildContextTests
 
         // When
         result.ProcessMessage(output, buildProblem).ShouldBe(new[] {buildMessage});
-        var buildResult = result.Create(_startInfo.Object, 33);
+        var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
         buildResult.Tests.Count.ShouldBe(0);
         buildResult.Errors.ShouldBe(new[] {buildMessage});
     }
 
-    private BuildContext CreateInstance() => new(_startInfoDescription.Object);
+    private static BuildContext CreateInstance() => new();
 }

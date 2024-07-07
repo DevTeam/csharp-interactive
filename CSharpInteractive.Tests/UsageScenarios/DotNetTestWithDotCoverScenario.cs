@@ -21,17 +21,16 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var exitCode = new DotNetNew("mstest", "-n", "MyTests", "--force").Run();
-        exitCode.ShouldBe(0);
+        new DotNetNew("mstest", "-n", "MyTests", "--force")
+            .Run().EnsureSuccess();
 
         // Creates the tool manifest and installs the dotCover tool locally
         // It is better to run the following 2 commands manually
         // and commit these changes to a source control
-        exitCode = new DotNetNew("tool-manifest").Run();
-        exitCode.ShouldBe(0);
-        
-        exitCode = new DotNetCustom("tool",  "install", "--local", "JetBrains.dotCover.GlobalTool").Run();
-        exitCode.ShouldBe(0);
+        new DotNetNew("tool-manifest").Run().EnsureSuccess();
+
+        new DotNetCustom("tool", "install", "--local", "JetBrains.dotCover.GlobalTool")
+            .Run().EnsureSuccess();
         
         // Creates a test command
         var test = new DotNetTest().WithProject("MyTests");
@@ -57,8 +56,8 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
         result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1);
         
         // Generates a HTML code coverage report.
-        exitCode = new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReport}", "--reportType=HTML").Run();
-        exitCode.ShouldBe(0);
+        new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReport}", "--reportType=HTML")
+            .Run().EnsureSuccess();
         
         // Check for a dotCover report
         File.Exists(dotCoverReport).ShouldBeTrue();

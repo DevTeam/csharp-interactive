@@ -104,10 +104,10 @@ public static class Components
     // ReSharper disable once UnusedMethodReturnValue.Global
     public static T GetService<T>() => CurHost.GetService<T>();
     
-    public static int? Run(this ICommandLine commandLine, Action<Output>? handler = default, TimeSpan timeout = default) => 
+    public static ICommandLineResult Run(this ICommandLine commandLine, Action<Output>? handler = default, TimeSpan timeout = default) => 
         Root.CommandLineRunner.Run(commandLine, handler, timeout);
 
-    public static Task<int?> RunAsync(this ICommandLine commandLine, Action<Output>? handler = default, CancellationToken cancellationToken = default) =>
+    public static Task<ICommandLineResult> RunAsync(this ICommandLine commandLine, Action<Output>? handler = default, CancellationToken cancellationToken = default) =>
         Root.CommandLineRunner.RunAsync(commandLine, handler, cancellationToken);
     
     public static IBuildResult Build(this ICommandLine commandLine, Action<BuildMessage>? handler = default, TimeSpan timeout = default) => 
@@ -116,37 +116,39 @@ public static class Components
     public static Task<IBuildResult> BuildAsync(this ICommandLine commandLine, Action<BuildMessage>? handler = default, CancellationToken cancellationToken = default) =>
         Root.BuildRunner.RunAsync(commandLine, handler, cancellationToken);
     
-    public static IBuildResult EnsureSuccess(
-        this IBuildResult result,
-        Func<IBuildResult, bool>? isSuccess = default,
-        int? exitCode = 1)
+    public static T EnsureSuccess<T>(
+        this T result,
+        Func<ICommandLineResult, bool?>? isSuccess = default,
+        int? failureExitCode = 1)
+        where T : ICommandLineResult
     {
-        isSuccess ??= r => r is {ExitCode: 0, Summary: {Errors: 0, FailedTests: 0}};
-        if (isSuccess(result))
+        isSuccess ??= r => r is ISuccessDeterminant successDeterminant ? successDeterminant.IsSuccess : true;
+        switch (isSuccess(result))
         {
-            return result;
+            case true:
+                return result;
+            
+            case null:
+                Root.Log.Warning($"{result}.");
+                return result;
+            
+            case false:
+                Root.Log.Error(ErrorId.Build, $"{result}.");
+                if (failureExitCode.HasValue)
+                {
+                    System.Environment.Exit(failureExitCode.Value);
+                }
+        
+                return result;
         }
-
-        var error = new StringBuilder();
-        error.Append(result);
-        if (exitCode.HasValue)
-        {
-            error.Append(" Termination with exit code ");
-            error.Append(exitCode);
-            error.Append('.');
-            Root.Log.Error(ErrorId.Build, result.ToString() ?? "FAILED.");
-            System.Environment.Exit(exitCode.Value);
-        }
-
-        Root.Log.Error(ErrorId.Build, error.ToString());
-        return result;
     }
-
-    public static async Task<IBuildResult> EnsureSuccess(
-        this Task<IBuildResult> resultTask,
-        Func<IBuildResult, bool>? isSuccess = default,
-        int? exitCode = 1) => 
-        EnsureSuccess(await resultTask, isSuccess, exitCode);
+    
+    public static async Task<T> EnsureSuccess<T>(
+        this Task<T> resultTask,
+        Func<ICommandLineResult, bool?>? isSuccess = default,
+        int? failureExitCode = 1)
+        where T : ICommandLineResult => 
+        EnsureSuccess(await resultTask, isSuccess, failureExitCode);
 
     [Obsolete]
     [SuppressMessage("Design", "CA1041:Provide ObsoleteAttribute message")]

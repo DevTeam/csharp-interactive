@@ -30,7 +30,7 @@ internal class ReliableBuildContext(
     public IReadOnlyList<BuildMessage> ProcessOutput(in Output output) =>
         baseBuildContext.ProcessOutput(output);
 
-    public IBuildResult Create(IStartInfo startInfo, int? exitCode)
+    public IBuildResult Create(ICommandLineResult commandLineResult)
     {
         var items =
             from source in _sources
@@ -47,6 +47,6 @@ internal class ReliableBuildContext(
             baseBuildContext.ProcessMessage(output, message);
         }
 
-        return baseBuildContext.Create(startInfo, exitCode);
+        return baseBuildContext.Create(commandLineResult);
     }
 }

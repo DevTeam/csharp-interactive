@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using HostApi;
 
 public class CommandLineRunnerTests
@@ -10,6 +9,7 @@ public class CommandLineRunnerTests
     private readonly Mock<IProcessRunner> _processRunner = new();
     private readonly Mock<IProcessResultHandler> _processResultHandler = new();
     private readonly Mock<IStartInfo> _startInfo = new();
+    private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
     private readonly ProcessResult _processResult;
 
     public CommandLineRunnerTests() => 
@@ -25,7 +25,7 @@ public class CommandLineRunnerTests
         _processRunner.Setup(i => i.Run(It.IsAny<ProcessInfo>(), TimeSpan.FromSeconds(1))).Returns(_processResult);
 
         // When
-        var exitCode = cmdService.Run(process.Object, Handler, TimeSpan.FromSeconds(1));
+        var exitCode = cmdService.Run(process.Object, Handler, TimeSpan.FromSeconds(1)).ExitCode;
 
         // Then
         exitCode.ShouldBe(33);
@@ -44,7 +44,7 @@ public class CommandLineRunnerTests
         _processRunner.Setup(i => i.RunAsync(It.IsAny<ProcessInfo>(), token)).Returns(Task.FromResult(_processResult));
 
         // When
-        var exitCode = await cmdService.RunAsync(process.Object, Handler, token);
+        var exitCode = (await cmdService.RunAsync(process.Object, Handler, token)).ExitCode;
 
         // Then
         exitCode.ShouldBe(33);
@@ -54,5 +54,5 @@ public class CommandLineRunnerTests
     private static void Handler(Output obj) { }
 
     private CommandLineRunner CreateInstance() =>
-        new(_host.Object, _processRunner.Object, Mock.Of<IProcessMonitor>, _processResultHandler.Object);
+        new(_host.Object, _processRunner.Object, Mock.Of<IProcessMonitor>, _processResultHandler.Object, _startInfoDescription.Object);
 }

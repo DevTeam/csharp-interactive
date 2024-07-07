@@ -43,11 +43,11 @@ public class DotNetTestScenario : BaseScenario
 
         // Runs tests via a command like: "dotnet test" from the directory "MyTests"
         var lines = new List<string>();
-        var exitCode = new DotNetTest()
+        new DotNetTest()
             .WithWorkingDirectory("MyTests")
-            .Run(i => lines.Add(i.Line));
+            .Run(i => lines.Add(i.Line))
+            .EnsureSuccess();
         
         lines.Count(i => i.Contains("##teamcity[")).ShouldBe(0);
-        exitCode.ShouldBe(0);
     }
 }

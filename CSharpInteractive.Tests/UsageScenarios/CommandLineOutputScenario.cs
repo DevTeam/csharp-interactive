@@ -26,7 +26,7 @@ public class CommandLineOutputScenario : BaseScenario
         var lines = new List<string>();
         int? exitCode = new CommandLine("cmd", "/c", "SET")
             .AddVars(("MyEnv", "MyVal"))
-            .Run(output => lines.Add(output.Line));
+            .Run(output => lines.Add(output.Line)).ExitCode;
 
         lines.ShouldContain("MyEnv=MyVal");
         // }

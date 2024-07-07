@@ -4,7 +4,6 @@ using Core;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
 using JetBrains.TeamCity.ServiceMessages.Write;
-using BuildResult = Core.BuildResult;
 
 public class ReliableBuildContextTests
 {
@@ -12,8 +11,8 @@ public class ReliableBuildContextTests
     private readonly Mock<IFileSystem> _fileSystem = new();
     private readonly Mock<IMessagesReader> _messagesReader = new();
     private readonly Mock<IBuildContext> _baseBuildResult = new();
+    private readonly Mock<ICommandLineResult> _commandLineResult = new();
     private readonly Mock<IStartInfo> _startInfo = new();
-    private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
 
     [Fact]
     public void ShouldProcessMessageWithoutSourceByBaseImplementation()
@@ -36,11 +35,11 @@ public class ReliableBuildContextTests
     {
         // Given
         var result = CreateInstance();
-        var buildResult = new BuildResult(_startInfo.Object, _startInfoDescription.Object).WithExitCode(33);
+        var buildResult = new BuildResult(_commandLineResult.Object);
         var messages = Mock.Of<IReadOnlyList<BuildMessage>>();
         var output = new Output(_startInfo.Object, false, string.Empty, 11);
         _baseBuildResult.Setup(i => i.ProcessMessage(output, It.IsAny<IServiceMessage>())).Returns(messages);
-        _baseBuildResult.Setup(i => i.Create(_startInfo.Object, 33)).Returns(buildResult);
+        _baseBuildResult.Setup(i => i.Create(_commandLineResult.Object)).Returns(buildResult);
         _teamCitySettings.SetupGet(i => i.ServiceMessagesPath).Returns("Messages");
 
         var message1 = new ServiceMessage("some message") {{"source", "Abc"}};
@@ -74,11 +73,11 @@ public class ReliableBuildContextTests
         result.ProcessMessage(output, message4).ShouldBeEmpty();
         result.ProcessMessage(output, message2).ShouldBeEmpty();
         result.ProcessMessage(output, message5).ShouldBeEmpty();
-        var actualBuildResult = result.Create(_startInfo.Object, 33);
+        var actualBuildResult = result.Create(_commandLineResult.Object);
 
         // Then
         actualBuildResult.ShouldBe(buildResult);
-        _baseBuildResult.Verify(i => i.Create(_startInfo.Object, 33));
+        _baseBuildResult.Verify(i => i.Create(_commandLineResult.Object));
         _baseBuildResult.Verify(i => i.ProcessMessage(output, msg1));
         _baseBuildResult.Verify(i => i.ProcessMessage(output, msg11));
         _baseBuildResult.Verify(i => i.ProcessMessage(output, msg2));

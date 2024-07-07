@@ -3,12 +3,12 @@ namespace HostApi;
 
 public interface ICommandLineRunner
 {
-    int? Run(
+    ICommandLineResult Run(
         ICommandLine commandLine,
         Action<Output>? handler = default,
         TimeSpan timeout = default);
 
-    Task<int?> RunAsync(
+    Task<ICommandLineResult> RunAsync(
         ICommandLine commandLine,
         Action<Output>? handler = default,
         CancellationToken cancellationToken = default);

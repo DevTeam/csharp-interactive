@@ -62,8 +62,8 @@ internal class ProcessMonitor(
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (state)
         {
-            case ProcessState.Failed:
-                stateText = exitCode.HasValue ? "failed" : "failed to start";
+            case ProcessState.FailedToStart:
+                stateText = "failed to start";
                 stateColor = Color.Error;
                 break;
 

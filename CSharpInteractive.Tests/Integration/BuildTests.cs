@@ -15,7 +15,7 @@ public class BuildTests
             "using System.Linq;",
             "var cmdRunner = GetService<ICommandLineRunner>();",
             "var buildRunner = GetService<IBuildRunner>();",
-            "var exitCode = cmdRunner.Run(new DotNetCustom(\"new\", \"mstest\"));",
+            "var exitCode = cmdRunner.Run(new DotNetCustom(\"new\", \"mstest\")).ExitCode;",
             "WriteLine(\"Custom=\" + exitCode);",
             "var result = buildRunner.Run(new DotNetRestore());",
             "WriteLine(\"Restore=\" + result.Tests.Count());",

@@ -21,9 +21,7 @@ public class DotNetBuildServerShutdownScenario : BaseScenario
         // ## using HostApi;
 
         // Shuts down all build servers that are started from dotnet.
-        var exitCode = new DotNetBuildServerShutdown().Run();
-
-        exitCode.ShouldBe(0);
+        new DotNetBuildServerShutdown().Run().EnsureSuccess();
         // }
     }
 }
