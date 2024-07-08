@@ -24,6 +24,7 @@ internal class BuildRunner(
 {
     public IBuildResult Run(ICommandLine commandLine, Action<BuildMessage>? handler = default, TimeSpan timeout = default)
     {
+        ArgumentNullException.ThrowIfNull(commandLine);
         var buildContext = buildContextFactory();
         var startInfo = CreateStartInfo(commandLine);
         var processInfo = new ProcessInfo(startInfo, monitorFactory(), output => Handle(handler, output, buildContext));
@@ -35,6 +36,7 @@ internal class BuildRunner(
 
     public async Task<IBuildResult> RunAsync(ICommandLine commandLine, Action<BuildMessage>? handler = default, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(commandLine);
         var buildContext = buildContextFactory();
         var startInfo = CreateStartInfo(commandLine);
         var processInfo = new ProcessInfo(startInfo, monitorFactory(), output => Handle(handler, output, buildContext));

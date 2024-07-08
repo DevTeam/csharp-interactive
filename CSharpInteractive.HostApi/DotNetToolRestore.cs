@@ -38,8 +38,10 @@ public partial record DotNetToolRestore(
         : this(args, [], [])
     { }
 
-    public IStartInfo GetStartInfo(IHost host) =>
-        host.CreateCommandLine(ExecutablePath)
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithArgs("tool", "restore")
             .WithWorkingDirectory(WorkingDirectory)
@@ -56,6 +58,7 @@ public partial record DotNetToolRestore(
                 ("--ignore-failed-sources", IgnoreFailedSources)
             )
             .AddArgs(Args.ToArray());
+    }
 
     public override string ToString() => "dotnet tool restore".GetShortName(ShortName, ToolManifest);
 }

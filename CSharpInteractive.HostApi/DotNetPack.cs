@@ -54,8 +54,10 @@ public partial record DotNetPack(
         : this([], args, [])
     { }
 
-    public IStartInfo GetStartInfo(IHost host) =>
-        host.CreateCommandLine(ExecutablePath)
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithArgs("pack")
             .AddNotEmptyArgs(Project)
@@ -81,6 +83,7 @@ public partial record DotNetPack(
             )
             .AddProps("-p", Props.ToArray())
             .AddArgs(Args.ToArray());
+    }
 
     public override string ToString() => "dotnet pack".GetShortName(ShortName, Project);
 }

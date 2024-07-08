@@ -26,12 +26,15 @@ public partial record DotNetCustom(
         : this(args, [])
     { }
     
-    public IStartInfo GetStartInfo(IHost host) =>
-        host.CreateCommandLine(ExecutablePath)
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .WithArgs(Args.ToArray());
+    }
 
     public override string ToString() => (ExecutablePath == string.Empty ? "dotnet" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Args.FirstOrDefault() ?? string.Empty);
 }

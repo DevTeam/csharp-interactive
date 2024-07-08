@@ -53,8 +53,10 @@ public partial record DotNetRun(
         : this([], args, [])
     { }
 
-    public IStartInfo GetStartInfo(IHost host) =>
-        host.CreateCommandLine(ExecutablePath)
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithArgs("run")
             .WithWorkingDirectory(WorkingDirectory)
@@ -78,6 +80,7 @@ public partial record DotNetRun(
             )
             .AddProps("--property", Props.ToArray())
             .AddArgs(Args.ToArray());
+    }
 
     public override string ToString() => "dotnet run".GetShortName(ShortName, Project);
 }

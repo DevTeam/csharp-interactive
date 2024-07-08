@@ -16,9 +16,14 @@ internal class TeamCityProperties(
 
     public string this[string key]
     {
-        get => properties[key];
+        get
+        {
+            ArgumentNullException.ThrowIfNull(key);
+            return properties[key];
+        }
         set
         {
+            ArgumentNullException.ThrowIfNull(key);
             properties[key] = value;
             teamCityWriter.WriteBuildParameter($"system.{key}", value);
         }
@@ -28,5 +33,9 @@ internal class TeamCityProperties(
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)properties).GetEnumerator();
 
-    public bool TryGetValue(string key, out string value) => properties.TryGetValue(key, out value);
+    public bool TryGetValue(string key, out string value)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+        return properties.TryGetValue(key, out value);
+    }
 }

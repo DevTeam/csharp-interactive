@@ -28,14 +28,17 @@ public partial record DotNetBuildServerShutdown(
         : this(args, [], [])
     { }
     
-    public IStartInfo GetStartInfo(IHost host) =>
-        host.CreateCommandLine(ExecutablePath)
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .WithArgs("build-server", "shutdown")
             .AddArgs(GetServerArg().ToArray())
             .AddArgs(Args.ToArray());
+    }
 
     public override string ToString() => "dotnet build-server shutdown".GetShortName(ShortName);
     

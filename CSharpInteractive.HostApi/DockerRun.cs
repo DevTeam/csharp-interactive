@@ -7,6 +7,7 @@
 // ReSharper disable UnusedType.Global
 namespace HostApi;
 
+using Internal;
 using Internal.Cmd;
 using Internal.Docker;
 
@@ -93,6 +94,7 @@ public partial record DockerRun(
 
     public IStartInfo GetStartInfo(IHost host)
     {
+        if (host == null) throw new ArgumentNullException(nameof(host));
         var directoryMap = new Dictionary<string, string>();
         var pathResolver = new PathResolver(Platform, directoryMap);
         using var pathResolverToken = host.GetService<HostComponents>().PathResolverContext.Register(pathResolver);

@@ -36,8 +36,12 @@ public partial record CommandLine(
 
     public string ShortName => !string.IsNullOrWhiteSpace(_shortName) ? _shortName : Path.GetFileNameWithoutExtension(ExecutablePath);
 
-    public IStartInfo GetStartInfo(IHost host) => this;
-    
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return this;
+    }
+
     public override string ToString()
     {
         var sb = new StringBuilder();

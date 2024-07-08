@@ -43,8 +43,10 @@ public partial record DotNetNuGetPush(
         : this(args, [], [], [])
     { }
 
-    public IStartInfo GetStartInfo(IHost host) =>
-        host.CreateCommandLine(ExecutablePath)
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithArgs("nuget", "push")
             .AddNotEmptyArgs(Package)
@@ -65,6 +67,7 @@ public partial record DotNetNuGetPush(
                 ("--skip-duplicate", SkipDuplicate)
             )
             .AddArgs(Args.ToArray());
+    }
 
     public override string ToString() => "dotnet nuget push".GetShortName(ShortName, Package);
 }

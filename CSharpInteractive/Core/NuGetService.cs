@@ -15,6 +15,7 @@ internal class NuGetService(
 {
     public IEnumerable<NuGetPackage> Restore(NuGetRestoreSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(settings);
         var packagesPath = settings.PackagesPath;
         if (string.IsNullOrWhiteSpace(packagesPath))
         {

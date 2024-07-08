@@ -3,6 +3,8 @@
 // ReSharper disable UnusedType.Global
 namespace HostApi;
 
+using Internal;
+
 /// <summary>
 /// The docker custom command is used to execute any docker commands with any arguments.
 /// </summary>
@@ -23,12 +25,15 @@ public partial record DockerCustom(
         : this(args, [])
     { }
 
-    public IStartInfo GetStartInfo(IHost host) =>
-        new CommandLine(string.IsNullOrWhiteSpace(ExecutablePath) ? host.GetService<HostComponents>().DockerSettings.DockerExecutablePath : ExecutablePath)
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return new CommandLine(string.IsNullOrWhiteSpace(ExecutablePath) ? host.GetService<HostComponents>().DockerSettings.DockerExecutablePath : ExecutablePath)
             .WithShortName(ToString())
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .WithArgs(Args.ToArray());
+    }
 
     public override string ToString() => string.IsNullOrWhiteSpace(ShortName) ? ((ExecutablePath == string.Empty ? "docker" : Path.GetFileNameWithoutExtension(ExecutablePath)) + " " + Args.FirstOrDefault()).TrimEnd() : ShortName;
 }

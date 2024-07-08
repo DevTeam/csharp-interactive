@@ -25,9 +25,14 @@ internal class Properties(
 
     public string this[string key]
     {
-        get => TryGetValue(key, out var value) ? value : string.Empty;
+        get
+        {
+            ArgumentNullException.ThrowIfNull(key);
+            return TryGetValue(key, out var value) ? value : string.Empty;
+        }
         set
         {
+            ArgumentNullException.ThrowIfNull(key);
             lock (_props)
             {
                 log.Trace(() => [new Text($"Props[\"{key}\"]=\"{value}\"")]);
@@ -59,6 +64,7 @@ internal class Properties(
 
     public bool TryGetValue(string key, out string value)
     {
+        ArgumentNullException.ThrowIfNull(key);
         lock (_props)
         {
             _props.TryGetValue(key, out var curValue);

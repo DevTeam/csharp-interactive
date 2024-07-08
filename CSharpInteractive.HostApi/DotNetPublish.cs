@@ -64,8 +64,10 @@ public partial record DotNetPublish(
         : this([], args, [], [])
     { }
 
-    public IStartInfo GetStartInfo(IHost host) =>
-        host.CreateCommandLine(ExecutablePath)
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithArgs("publish")
             .AddNotEmptyArgs(Project)
@@ -95,6 +97,7 @@ public partial record DotNetPublish(
             )
             .AddProps("-p", Props.ToArray())
             .AddArgs(Args.ToArray());
+    }
 
     public override string ToString() => "dotnet publish".GetShortName(ShortName, Project);
 }

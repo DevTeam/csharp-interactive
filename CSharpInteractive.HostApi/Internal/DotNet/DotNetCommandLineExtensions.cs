@@ -5,6 +5,8 @@
 // ReSharper disable MemberCanBePrivate.Global
 namespace HostApi.Internal.DotNet;
 
+using System.Diagnostics.Contracts;
+
 [ExcludeFromCodeCoverage]
 internal static class DotNetCommandLineExtensions
 {
@@ -13,6 +15,7 @@ internal static class DotNetCommandLineExtensions
     internal static CommandLine CreateCommandLine(this IHost host, string executablePath) =>
         new(host.GetExecutablePath(executablePath));
 
+    [Pure]
     private static string GetExecutablePath(this IHost host, string executablePath)
     {
         if (!string.IsNullOrWhiteSpace(executablePath))
@@ -26,6 +29,7 @@ internal static class DotNetCommandLineExtensions
             : executablePath;
     }
     
+    [Pure]
     public static string GetShortName(this string baseName, string shortName, string path = "")
     {
         if (!string.IsNullOrWhiteSpace(shortName))
@@ -42,6 +46,7 @@ internal static class DotNetCommandLineExtensions
         return $"{baseName} {Path.GetFileName(path)}";
     }
 
+    [Pure]
     public static CommandLine AddMSBuildLoggers(this CommandLine cmd, IHost host, DotNetVerbosity? verbosity = default)
     {
         // ReSharper disable once UseDeconstruction
@@ -60,6 +65,7 @@ internal static class DotNetCommandLineExtensions
             : cmd;
     }
     
+    [Pure]
     public static CommandLine AddTestLoggers(this CommandLine cmd, IHost host, IEnumerable<string> loggers)
     {
         // ReSharper disable once UseDeconstruction
@@ -72,14 +78,17 @@ internal static class DotNetCommandLineExtensions
         return cmd.AddArgs(loggers.Select(i => ("--logger", (string?)i)).ToArray());
     }
     
+    [Pure]
     public static CommandLine AddVSTestLoggers(this CommandLine cmd, IHost host) => 
         host.GetService<HostComponents>().DotNetSettings.LoggersAreRequired
             ? cmd.AddMSBuildArgs(("--Logger", TeamcityLoggerName))
             : cmd;
 
+    [Pure]
     public static CommandLine AddNotEmptyArgs(this CommandLine cmd, params string[] args) =>
         cmd.AddArgs(args.Where(i => !string.IsNullOrWhiteSpace(i)).ToArray());
 
+    [Pure]
     public static CommandLine AddArgs(this CommandLine cmd, params (string name, string? value)[] args) =>
         cmd.AddArgs((
                 from arg in args
@@ -88,6 +97,7 @@ internal static class DotNetCommandLineExtensions
             .SelectMany(i => i)
             .ToArray());
 
+    [Pure]
     public static CommandLine AddMSBuildArgs(this CommandLine cmd, params (string name, string? value)[] args) =>
         cmd.AddArgs((
                 from arg in args
@@ -95,6 +105,7 @@ internal static class DotNetCommandLineExtensions
                 select $"{arg.name}:{arg.value}")
             .ToArray());
 
+    [Pure]
     public static CommandLine AddBooleanArgs(this CommandLine cmd, params (string name, bool? value)[] args) =>
         cmd.AddArgs((
                 from arg in args
@@ -102,6 +113,7 @@ internal static class DotNetCommandLineExtensions
                 select arg.name)
             .ToArray());
 
+    [Pure]
     public static CommandLine AddProps(this CommandLine cmd, string propertyName, params (string name, string value)[] props) =>
         cmd.AddArgs(props.Select(i => $"{propertyName}:{i.name}={i.value}")
             .ToArray());

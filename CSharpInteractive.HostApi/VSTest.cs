@@ -4,6 +4,7 @@
 // ReSharper disable CommentTypo
 namespace HostApi;
 
+using Internal;
 using Internal.DotNet;
 
 /// <summary>
@@ -64,6 +65,7 @@ public partial record VSTest(
 
     public IStartInfo GetStartInfo(IHost host)
     {
+        if (host == null) throw new ArgumentNullException(nameof(host));
         // ReSharper disable once UseDeconstruction
         var components = host.GetService<HostComponents>();
         var virtualContext = components.VirtualContext;

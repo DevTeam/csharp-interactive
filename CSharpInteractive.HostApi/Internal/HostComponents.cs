@@ -1,9 +1,9 @@
 ﻿// ReSharper disable ClassNeverInstantiated.Global
-namespace HostApi;
+namespace HostApi.Internal;
 
-using Internal.Cmd;
-using Internal.Docker;
-using Internal.DotNet;
+using HostApi.Internal.Cmd;
+using HostApi.Internal.Docker;
+using HostApi.Internal.DotNet;
 
 internal record HostComponents(
     // Settings

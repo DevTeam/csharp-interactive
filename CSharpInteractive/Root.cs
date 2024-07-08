@@ -4,6 +4,7 @@ namespace CSharpInteractive;
 
 using Core;
 using HostApi;
+using HostApi.Internal;
 using JetBrains.TeamCity.ServiceMessages.Read;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 using Microsoft.Extensions.DependencyInjection;

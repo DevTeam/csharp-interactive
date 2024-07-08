@@ -4,6 +4,7 @@
 // ReSharper disable CommentTypo
 namespace HostApi;
 
+using Internal;
 using Internal.DotNet;
 
 /// <summary>
@@ -84,6 +85,7 @@ public partial record DotNetTest(
 
     public IStartInfo GetStartInfo(IHost host)
     {
+        if (host == null) throw new ArgumentNullException(nameof(host));
         var blameHangTimeout = BlameHangTimeout?.TotalMilliseconds;
         // ReSharper disable once UseDeconstruction
         var components = host.GetService<HostComponents>();

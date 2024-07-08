@@ -4,9 +4,12 @@
 // ReSharper disable MemberCanBePrivate.Global
 namespace HostApi.Internal.Docker;
 
+using System.Diagnostics.Contracts;
+
 [ExcludeFromCodeCoverage]
 internal static class DockerCommandLineExtensions
 {
+    [Pure]
     public static CommandLine AddBooleanArgs(this CommandLine cmd, params (string name, bool? value)[] args) =>
         cmd.AddArgs((
                 from arg in args
@@ -14,6 +17,7 @@ internal static class DockerCommandLineExtensions
                 select arg.name)
             .ToArray());
 
+    [Pure]
     public static CommandLine AddArgs(this CommandLine cmd, params (string name, string value)[] args) =>
         cmd.AddArgs((
                 from arg in args
@@ -22,6 +26,7 @@ internal static class DockerCommandLineExtensions
             .SelectMany(i => i)
             .ToArray());
 
+    [Pure]
     public static CommandLine AddArgs(this CommandLine cmd, string name, IEnumerable<string> values) =>
         cmd.AddArgs((
                 from val in values
@@ -30,6 +35,7 @@ internal static class DockerCommandLineExtensions
             .SelectMany(i => i)
             .ToArray());
 
+    [Pure]
     public static CommandLine AddValues(this CommandLine cmd, string name, string delimiter, params (string key, string value)[] values) =>
         cmd.AddArgs((
                 from val in values

@@ -77,8 +77,10 @@ public partial record MSBuild(
             [])
     { }
 
-    public IStartInfo GetStartInfo(IHost host) =>
-        host.CreateCommandLine(ExecutablePath)
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithArgs(ExecutablePath == string.Empty ? ["msbuild"] : [])
             .AddArgs(new[] {Project}.Where(i => !string.IsNullOrWhiteSpace(i)).ToArray())
@@ -112,7 +114,8 @@ public partial record MSBuild(
             .AddProps("-restoreProperty", RestoreProps.ToArray())
             .AddProps("-p", Props.ToArray())
             .AddArgs(Args.ToArray());
-    
+    }
+
     public override string ToString() => (ExecutablePath == string.Empty ? "dotnet msbuild" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Project);
 
     private static string JoinWithSemicolons(IEnumerable<string> arg) => 
