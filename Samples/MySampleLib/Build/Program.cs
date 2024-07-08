@@ -1,5 +1,7 @@
 ﻿using HostApi;
 
+AppDomain.CurrentDomain.ProcessExit += (_, _) => { while (true) { } }; 
+
 var configuration = Props.Get("configuration", "Release");
 Info($"Configuration: {configuration}");
 
@@ -10,18 +12,9 @@ await new DotNetBuild()
     .RunAsync()
     .EnsureSuccess();
 
-await EunTestsAsync();
-
-async Task EunTestsAsync()
-{
-    await Task.Delay(100);
-    
-    await new DotNetTest()
-        .WithShortName("Tests")
-        .WithNoBuild(true)
-        .WithConfiguration(configuration)
-        .BuildAsync()
-        .EnsureSuccess();
-
-    await Task.Delay(100);
-}
+await new DotNetTest()
+    .WithShortName("Tests")
+    .WithNoBuild(true)
+    .WithConfiguration(configuration)
+    .BuildAsync()
+    .EnsureSuccess();

@@ -2,10 +2,11 @@
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 namespace CSharpInteractive.Core;
 
+using System.Reflection;
+
 [ExcludeFromCodeCoverage]
 internal class ExitTracker(
     ISettings settings,
-    IEnvironment environment,
     IPresenter<Summary> summaryPresenter,
     CancellationTokenSource cancellationTokenSource)
     : IExitTracker
@@ -27,22 +28,54 @@ internal class ExitTracker(
                 return Disposable.Create(() => AppDomain.CurrentDomain.ProcessExit -= CurrentDomainOnProcessExit);
         }
     }
-
-    private void CurrentDomainOnProcessExit(object? sender, EventArgs e)
+    
+    public void Exit(int exitCode)
     {
-        _isTerminating = true;
+        Finish();
+        ClearEvents(typeof(AppContext));
+        System.Environment.Exit(exitCode);
+    }
+    
+    private static void ClearEvents(Type type)
+    {
+        var events = type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+        foreach (var eventInfo in events)
+        {
+            var fieldInfo = type.GetField(eventInfo.Name, BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+            if (fieldInfo?.GetValue(default) is not Delegate eventHandler)
+            {
+                continue;
+            }
 
+            foreach (var invocation in eventHandler.GetInvocationList())
+            {
+                eventInfo?.GetRemoveMethod(fieldInfo.IsPrivate)?.Invoke(default, [invocation]);
+            }
+        }
+    }
+    
+    private void CurrentDomainOnProcessExit(object? sender, EventArgs e) =>
+        Finish();
+
+    private void ConsoleOnCancelKeyPress(object? sender, ConsoleCancelEventArgs e) => 
+        Exit(0);
+
+    private void Finish()
+    {
+        if (_isTerminating)
+        {
+            return;
+        }
+        
+        _isTerminating = true;
+        summaryPresenter.Show(Summary.Empty);
         try
         {
             cancellationTokenSource.Cancel();
         }
-        catch
+        catch (Exception)
         {
-            // ignored
+            //
         }
-        
-        summaryPresenter.Show(Summary.Empty);
     }
-
-    private void ConsoleOnCancelKeyPress(object? sender, ConsoleCancelEventArgs e) => environment.Exit(0);
 }

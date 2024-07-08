@@ -3,10 +3,38 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
     </PropertyGroup>
-    
+
     <ItemGroup>
-        <PackageReference Include="CSharpInteractive" Version="1.1.0-beta2" />
+        <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj"/>
+        <ProjectReference Include="..\CSharpInteractive\CSharpInteractive.csproj"/>
+        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.32" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none"/>
+        <Using Include="System"/>
+        <Using Include="System.Collections.Generic"/>
+        <Using Include="System.IO"/>
+        <Using Include="System.Linq"/>
+        <Using Include="System.Net.Http"/>
+        <Using Include="System.Threading"/>
+        <Using Include="System.Threading.Tasks"/>
+        <Using Include="Host" Static="True"/>
     </ItemGroup>
+
+    <PropertyGroup>
+        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+    </PropertyGroup>
+
+    <Target Name="GetDependencyTargetPaths">
+        <ItemGroup>
+            <MSBuildLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\msbuild15\*.*"/>
+            <VSTestLoggerFiles Include="$(PKGTeamCity_Dotnet_Integration)\build\_common\vstest15\*.*"/>
+        </ItemGroup>
+
+        <Copy SourceFiles="@(MSBuildLoggerFiles)" DestinationFolder="$(OutDir)\msbuild"/>
+        <Copy SourceFiles="@(VSTestLoggerFiles)" DestinationFolder="$(OutDir)\vstest"/>
+    </Target>
 
 </Project>

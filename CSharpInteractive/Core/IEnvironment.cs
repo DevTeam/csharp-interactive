@@ -12,6 +12,4 @@ internal interface IEnvironment
     IEnumerable<string> GetCommandLineArgs();
 
     string GetPath(SpecialFolder specialFolder);
-
-    void Exit(int exitCode);
 }

@@ -5,13 +5,14 @@
 // ReSharper disable CheckNamespace
 
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Linq.Expressions;
 using System.Text;
 using CSharpInteractive;
 using CSharpInteractive.Core;
 using HostApi;
 using NuGet.Versioning;
-using Environment = CSharpInteractive.Core.Environment;
 
 [ExcludeFromCodeCoverage]
 [SuppressMessage("Design", "CA1050:Declare types in namespaces")]
@@ -37,9 +38,12 @@ public static class Components
 
         Root.Info.ShowHeader();
         FinishToken = Disposable.Create(Root.ExitTracker.Track(), Root.Statistics.Start());
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => Finish();
+        AppDomain.CurrentDomain.ProcessExit += OnCurrentDomainOnProcessExit;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
     }
+    
+    private static void OnCurrentDomainOnProcessExit(object? o, EventArgs eventArgs) => 
+        Finish();
 
     private static void Finish()
     {
@@ -74,15 +78,7 @@ public static class Components
                 Root.Log.Error(ErrorId.Exception, [new Text(e.ExceptionObject.ToString() ?? "Unhandled exception.", Color.Error)]);
             }
             
-            Finish();
-            
-            var exitCode = 1;
-            if (e.ExceptionObject is ProcessTerminationException processTermination)
-            {
-                exitCode = processTermination.ExitCode;
-            }
-            
-            System.Environment.Exit(exitCode);
+            Root.ExitTracker.Exit(1);
         }
         catch
         {
@@ -141,11 +137,22 @@ public static class Components
             
             case false:
                 Root.Log.Error(ErrorId.Build, $"{result}.");
-                if (failureExitCode.HasValue)
+                if (failureExitCode is not { } exitCode)
                 {
-                    throw new ProcessTerminationException(failureExitCode.Value);
+                    return result;
                 }
-        
+
+                try
+                {
+#if APPLICATION
+                    Finish();
+#endif
+                }
+                finally
+                {
+                    Root.ExitTracker.Exit(exitCode);   
+                }
+
                 return result;
         }
     }

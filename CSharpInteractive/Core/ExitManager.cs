@@ -4,6 +4,7 @@ namespace CSharpInteractive.Core;
 [ExcludeFromCodeCoverage]
 internal class ExitManager(
     ISettings settings,
+    IExitTracker exitTracker,
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     CancellationTokenSource cancellationTokenSource) : IActive
 {
@@ -30,6 +31,6 @@ internal class ExitManager(
     private void ConsoleOnCancelKeyPress(object? sender, ConsoleCancelEventArgs e)
     {
         cancellationTokenSource.Dispose();
-        System.Environment.Exit(0);
+        exitTracker.Exit(0);
     }
 }

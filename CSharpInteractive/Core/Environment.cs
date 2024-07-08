@@ -72,8 +72,6 @@ internal class Environment:
         };
     }
 
-    public void Exit(int exitCode) => System.Environment.Exit(exitCode);
-
     public IEnumerable<Text> Trace
     {
         get
