@@ -19,16 +19,11 @@ internal class ProcessInFlowRunner(
         return baseProcessRunner.Run(processInfo.WithStartInfo(WrapInFlow(processInfo.StartInfo)), timeout);
     }
 
-    public Task<ProcessResult> RunAsync(ProcessInfo processInfo, CancellationToken cancellationToken)
+    public async Task<ProcessResult> RunAsync(ProcessInfo processInfo, CancellationToken cancellationToken)
     {
-        var flow = CreateFlow();
-        return baseProcessRunner.RunAsync(processInfo.WithStartInfo(WrapInFlow(processInfo.StartInfo)), cancellationToken)
-            .ContinueWith(
-                task =>
-                {
-                    flow.Dispose();
-                    return task.Result;
-                }, cancellationToken);
+        using var flow = CreateFlow();
+        var result = await baseProcessRunner.RunAsync(processInfo.WithStartInfo(WrapInFlow(processInfo.StartInfo)), cancellationToken);
+        return result;
     }
 
     private IStartInfo WrapInFlow(IStartInfo startInfo) =>

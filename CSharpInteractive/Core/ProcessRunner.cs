@@ -35,16 +35,19 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
             var finished = !cancellationToken.IsCancellationRequested;
             return process.Finish(finished);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException canceledException)
         {
-            process.Finish(false);
+            return process.Finish(false, canceledException);
+        }
+        catch (Exception error)
+        {
+            process.Finish(false, error);
             throw;
         }
     }
 
     private class Process(ProcessInfo processInfo, IProcessManager processManager)
     {
-
         private IProcessManager ProcessManager { get; } = processManager;
 
         private ProcessInfo ProcessInfo { get; } = processInfo;
@@ -83,7 +86,7 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
             return true;
         }
     
-        public ProcessResult Finish(bool finished)
+        public ProcessResult Finish(bool finished, Exception? error = default)
         {
             if (Handler != default)
             {
@@ -93,7 +96,7 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
             if (finished)
             {
                 Stopwatch.Stop();
-                return Monitor.Finished(StartInfo, Stopwatch.ElapsedMilliseconds, ProcessState.Finished, ProcessManager.ExitCode);
+                return Monitor.Finished(StartInfo, Stopwatch.ElapsedMilliseconds, ProcessState.Finished, ProcessManager.ExitCode, error);
             }
 
             ProcessManager.Kill();
