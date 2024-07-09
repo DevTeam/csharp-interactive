@@ -37,7 +37,6 @@ internal class ProcessInFlowRunner(
     [DebuggerTypeProxy(typeof(CommandLine.CommandLineDebugView))]
     private class StartInfoInFlow(IStartInfo baseStartIfo, string flowId) : IStartInfo
     {
-
         public string ShortName => baseStartIfo.ShortName;
 
         public string ExecutablePath => baseStartIfo.ExecutablePath;

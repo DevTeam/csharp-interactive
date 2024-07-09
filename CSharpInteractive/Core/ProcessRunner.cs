@@ -73,10 +73,6 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
                 Stopwatch.Stop();
                 {
                     processResult = Monitor.Finished(StartInfo, Stopwatch.ElapsedMilliseconds, ProcessState.FailedToStart, default, error);
-                    if (Handler != default)
-                    {
-                        ProcessManager.OnOutput -= Handler;
-                    }
                     return false;
                 }
             }
@@ -88,11 +84,6 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
     
         public ProcessResult Finish(bool finished, Exception? error = default)
         {
-            if (Handler != default)
-            {
-                ProcessManager.OnOutput -= Handler;
-            }
-
             if (finished)
             {
                 Stopwatch.Stop();
