@@ -59,17 +59,20 @@ internal class BuildRunner(
         }
     }
 
-    private void Handle(Action<BuildMessage>? handler, in Output output, IBuildContext buildContext)
+    private void Handle(Action<BuildMessage>? handler, Output output, IBuildContext buildContext)
     {
-        var messages = buildOutputProcessor.Convert(output, buildContext);
+        var messages = buildOutputProcessor.Convert(output, buildContext).ToList();
         if (handler != default)
         {
             customBuildMessagesProcessor.ProcessMessages(output, messages, handler);
         }
-        else
+        
+        if (!output.Handled)
         {
             defaultBuildMessagesProcessor.ProcessMessages(output, messages, EmptyHandler);
         }
+        
+        output.Handled = true;
     }
 
     private static void EmptyHandler(BuildMessage obj) { }

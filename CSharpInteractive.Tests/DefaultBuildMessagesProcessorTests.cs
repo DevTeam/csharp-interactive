@@ -1,12 +1,12 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
 
 public class DefaultBuildMessagesProcessorTests
 {
+    private static readonly Output Output = new(Mock.Of<IStartInfo>(), false, "", 99);
     private readonly Mock<ICISettings> _teamCitySettings = new();
     private readonly Mock<IProcessOutputWriter> _processOutputWriter = new();
     private readonly Mock<IBuildMessageLogWriter> _buildMessageLogWriter = new();
@@ -26,8 +26,8 @@ public class DefaultBuildMessagesProcessorTests
         var output = new Output(_startInfo.Object, false, "Output", 11);
         var messages = new BuildMessage[]
         {
-            new(BuildMessageState.StdOut, default, "Msg1"),
-            new(state, Mock.Of<IServiceMessage>())
+            new(Output, BuildMessageState.StdOut, default, "Msg1"),
+            new(Output, state, Mock.Of<IServiceMessage>())
         };
 
         _teamCitySettings.SetupGet(i => i.CIType).Returns(CIType.TeamCity);
@@ -47,8 +47,8 @@ public class DefaultBuildMessagesProcessorTests
     {
         // Given
         var output = new Output(_startInfo.Object, false, "Output", 11);
-        var msg1 = new BuildMessage(BuildMessageState.StdOut, default, "Msg1");
-        var msg2 = new BuildMessage(BuildMessageState.ServiceMessage, Mock.Of<IServiceMessage>());
+        var msg1 = new BuildMessage(Output, BuildMessageState.StdOut, default, "Msg1");
+        var msg2 = new BuildMessage(Output, BuildMessageState.ServiceMessage, Mock.Of<IServiceMessage>());
 
         _teamCitySettings.SetupGet(i => i.CIType).Returns(CIType.Unknown);
         var nextHandler = new Mock<Action<BuildMessage>>();
@@ -69,8 +69,8 @@ public class DefaultBuildMessagesProcessorTests
     {
         // Given
         var output = new Output(_startInfo.Object, false, "Output", 11);
-        var msg1 = new BuildMessage(BuildMessageState.StdOut, default, "Msg1");
-        var msg2 = new BuildMessage(BuildMessageState.StdError, default, "Error");
+        var msg1 = new BuildMessage(Output, BuildMessageState.StdOut, default, "Msg1");
+        var msg2 = new BuildMessage(Output, BuildMessageState.StdError, default, "Error");
 
         _teamCitySettings.SetupGet(i => i.CIType).Returns(CIType.TeamCity);
         var nextHandler = new Mock<Action<BuildMessage>>();

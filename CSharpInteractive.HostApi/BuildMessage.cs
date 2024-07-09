@@ -7,7 +7,8 @@ using JetBrains.TeamCity.ServiceMessages;
 
 [ExcludeFromCodeCoverage]
 [Target]
-public readonly record struct BuildMessage(
+public record BuildMessage(
+    Output Output,
     BuildMessageState State,
     IServiceMessage? ServiceMessage = default,
     string Text = "",

@@ -5,6 +5,7 @@ using HostApi;
 
 public class BuildResultTests
 {
+    private static readonly Output Output = new(Mock.Of<IStartInfo>(), false, "", 99);
     private readonly Mock<ICommandLineResult> _commandLineResult = new();
     
     [Theory]
@@ -18,15 +19,16 @@ public class BuildResultTests
     public void ShouldSupportToString(int errors, int warnings, int failedTests, int ignoredTests, int passedTests, string expected)
     {
         // Given
-        var result = new BuildResult(_commandLineResult.Object)
-            .WithErrors(Enumerable.Repeat(new BuildMessage(BuildMessageState.StdError), errors).ToArray())
-            .WithWarnings(Enumerable.Repeat(new BuildMessage(BuildMessageState.Warning), warnings).ToArray())
-            .WithTests(
-                GetTests(TestState.Failed, failedTests)
-                    .Concat(GetTests(TestState.Ignored, ignoredTests))
-                    .Concat(GetTests(TestState.Finished, passedTests))
-                    .ToArray());
-
+        var result = new BuildResult(_commandLineResult.Object) with
+        {
+            Errors = Enumerable.Repeat(new BuildMessage(Output, BuildMessageState.StdError), errors).ToArray(),
+            Warnings = Enumerable.Repeat(new BuildMessage(Output, BuildMessageState.Warning), warnings).ToArray(),
+            Tests = GetTests(TestState.Failed, failedTests)
+                .Concat(GetTests(TestState.Ignored, ignoredTests))
+                .Concat(GetTests(TestState.Finished, passedTests))
+                .ToArray()
+        };
+        
         // When
         var actual = result.ToString();
 

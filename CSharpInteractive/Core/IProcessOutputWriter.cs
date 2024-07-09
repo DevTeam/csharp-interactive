@@ -4,5 +4,5 @@ using HostApi;
 
 internal interface IProcessOutputWriter
 {
-    void Write(in Output output);
+    void Write(Output output);
 }

@@ -6,9 +6,9 @@ using JetBrains.TeamCity.ServiceMessages;
 
 internal interface IBuildContext
 {
-    IReadOnlyList<BuildMessage> ProcessMessage(in Output output, IServiceMessage message);
+    IReadOnlyList<BuildMessage> ProcessMessage(Output output, IServiceMessage message);
 
-    IReadOnlyList<BuildMessage> ProcessOutput(in Output output);
+    IReadOnlyList<BuildMessage> ProcessOutput(Output output);
 
     IBuildResult Create(ICommandLineResult commandLineResult);
 }

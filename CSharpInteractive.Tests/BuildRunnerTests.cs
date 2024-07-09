@@ -6,6 +6,7 @@ using BuildResult = Core.BuildResult;
 
 public class BuildRunnerTests
 {
+    private static readonly Output Output = new(Mock.Of<IStartInfo>(), false, "", 99);
     private readonly Mock<IProcessRunner> _processRunner = new();
     private readonly Mock<IHost> _host = new();
     private readonly Mock<ITeamCityContext> _teamCityContext = new();
@@ -33,14 +34,16 @@ public class BuildRunnerTests
         _buildResult.Setup(i => i.Create(_commandLineResult.Object)).Returns(buildResult);
     }
 
-    [Fact]
-    public void ShouldRunBuildWhenHasHandler()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ShouldRunBuildWhenHasHandler(bool handled)
     {
         // Given
         var buildMessages = new BuildMessage[]
         {
-            new(),
-            new()
+            new(Output, BuildMessageState.StdOut),
+            new(Output, BuildMessageState.StdOut)
         };
 
         var output = new Output(_startInfo.Object, true, "Msg1", 11);
@@ -50,14 +53,18 @@ public class BuildRunnerTests
         _processRunner.Setup(i => i.Run(It.IsAny<ProcessInfo>(), TimeSpan.FromSeconds(1)))
             .Callback<ProcessInfo, TimeSpan>((processRun, _) => processRun.Handler!(output))
             .Returns(_processResult);
-
+        
         var customHandler = Mock.Of<Action<BuildMessage>>();
+        _customBuildMessagesProcessor.Setup(i => i.ProcessMessages(output, buildMessages, customHandler))
+            .Callback<Output, IReadOnlyCollection<BuildMessage>, Action<BuildMessage>>((o, _, _) => { o.Handled = handled; });
 
         // When
         buildService.Run(_process.Object, customHandler, TimeSpan.FromSeconds(1));
 
         // Then
+        output.Handled.ShouldBeTrue();
         _customBuildMessagesProcessor.Verify(i => i.ProcessMessages(output, buildMessages, customHandler));
+        _defaultBuildMessagesProcessor.Verify(i => i.ProcessMessages(output, buildMessages, It.IsAny<Action<BuildMessage>>()), Times.Exactly(handled ? 0 : 1));
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = true);
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = false);
         _processResultHandler.Verify(i => i.Handle(_processResult, customHandler));
@@ -69,8 +76,8 @@ public class BuildRunnerTests
         // Given
         var buildMessages = new BuildMessage[]
         {
-            new(),
-            new()
+            new(Output, BuildMessageState.StdOut),
+            new(Output, BuildMessageState.StdOut)
         };
 
         var output = new Output(_startInfo.Object, true, "Msg1", 11);
@@ -85,6 +92,7 @@ public class BuildRunnerTests
         buildService.Run(_process.Object, default, TimeSpan.FromSeconds(1));
 
         // Then
+        output.Handled.ShouldBeTrue();
         _defaultBuildMessagesProcessor.Verify(i => i.ProcessMessages(output, buildMessages, It.IsAny<Action<BuildMessage>>()));
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = true);
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = false);

@@ -4,5 +4,5 @@ using HostApi;
 
 internal interface IBuildMessagesProcessor
 {
-    void ProcessMessages(in Output output, IEnumerable<BuildMessage> messages, Action<BuildMessage> nextHandler);
+    void ProcessMessages(Output output, IReadOnlyCollection<BuildMessage> messages, Action<BuildMessage> nextHandler);
 }

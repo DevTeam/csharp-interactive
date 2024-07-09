@@ -4,5 +4,5 @@ using HostApi;
 
 internal interface IBuildOutputProcessor
 {
-    IEnumerable<BuildMessage> Convert(in Output output, IBuildContext context);
+    IEnumerable<BuildMessage> Convert(Output output, IBuildContext context);
 }

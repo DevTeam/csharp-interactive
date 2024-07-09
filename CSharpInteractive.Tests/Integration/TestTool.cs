@@ -22,7 +22,11 @@ internal static class TestTool
     public static IProcessResult Run(in CommandLine commandLine)
     {
         var events = new List<Output>();
-        var result = Composition.Shared.Root.CommandLineRunner.Run(commandLine, e => events.Add(e));
+        var result = Composition.Shared.Root.CommandLineRunner.Run(commandLine, output =>
+        {
+            output.Handled = true;
+            events.Add(output);
+        });
         return new ProcessResult(result.ExitCode!.Value, events);
     }
 

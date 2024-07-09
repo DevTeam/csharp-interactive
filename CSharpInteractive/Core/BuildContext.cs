@@ -14,33 +14,33 @@ internal class BuildContext: IBuildContext
     private readonly Dictionary<BuildMessage.TestKey, TestContext> _currentTests = new();
 
     [SuppressMessage("ReSharper", "StringLiteralTypo")]
-    public IReadOnlyList<BuildMessage> ProcessMessage(in Output output, IServiceMessage message) => (
+    public IReadOnlyList<BuildMessage> ProcessMessage(Output output, IServiceMessage message) => (
         message.Name.ToLowerInvariant() switch
         {
-            "teststdout" => OnStdOut(message, output.StartInfo, output.ProcessId),
-            "teststderr" => OnStdErr(message, output.StartInfo, output.ProcessId),
+            "teststdout" => OnStdOut(output, message, output.StartInfo, output.ProcessId),
+            "teststderr" => OnStdErr(output, message, output.StartInfo, output.ProcessId),
             "testfinished" => OnTestFinished(message),
             "testignored" => OnTestIgnored(message),
             "testfailed" => OnTestFailed(message),
-            "message" => OnMessage(message),
-            "buildproblem" => OnBuildProblem(message),
+            "message" => OnMessage(output, message),
+            "buildproblem" => OnBuildProblem(output, message),
             _ => []
         }).ToArray();
 
-    public IReadOnlyList<BuildMessage> ProcessOutput(in Output output)
+    public IReadOnlyList<BuildMessage> ProcessOutput(Output output)
     {
         BuildMessage message;
         if (output.IsError)
         {
-            message = new BuildMessage(BuildMessageState.StdError, default, output.Line);
+            message = new BuildMessage(output, BuildMessageState.StdError, default, output.Line);
             _errors.Add(message);
         }
         else
         {
-            message = new BuildMessage(BuildMessageState.StdOut, default, output.Line);
+            message = new BuildMessage(output, BuildMessageState.StdOut, default, output.Line);
         }
 
-        return new[] {message};
+        return new[] { message };
     }
 
     public IBuildResult Create(ICommandLineResult commandLineResult) =>
@@ -50,20 +50,20 @@ internal class BuildContext: IBuildContext
             _warnings.AsReadOnly(),
             _tests.AsReadOnly());
 
-    private IEnumerable<BuildMessage> OnStdOut(IServiceMessage message, IStartInfo startInfo, int processId)
+    private IEnumerable<BuildMessage> OnStdOut(Output srcOutput, IServiceMessage message, IStartInfo startInfo, int processId)
     {
         var testKey = BuildMessage.CreateKey(message);
         var output = message.GetValue("out") ?? string.Empty;
         GetTestContext(testKey).AddStdOut(startInfo, processId, output);
-        yield return new BuildMessage(BuildMessageState.StdOut).WithText(output);
+        yield return new BuildMessage(srcOutput, BuildMessageState.StdOut).WithText(output);
     }
 
-    private IEnumerable<BuildMessage> OnStdErr(IServiceMessage message, IStartInfo info, int processId)
+    private IEnumerable<BuildMessage> OnStdErr(Output srcOutput, IServiceMessage message, IStartInfo info, int processId)
     {
         var testKey = BuildMessage.CreateKey(message);
         var output = message.GetValue("out") ?? string.Empty;
         GetTestContext(testKey).AddStdErr(info, processId, output);
-        var buildMessage = new BuildMessage(BuildMessageState.StdError).WithText(output);
+        var buildMessage = new BuildMessage(srcOutput, BuildMessageState.StdError).WithText(output);
         _errors.Add(buildMessage);
         yield return buildMessage;
     }
@@ -106,7 +106,7 @@ internal class BuildContext: IBuildContext
     }
     
     
-    private IEnumerable<BuildMessage> OnMessage(IServiceMessage message)
+    private IEnumerable<BuildMessage> OnMessage(Output srcOutput, IServiceMessage message)
     {
         var text = message.GetValue("text") ?? string.Empty;
         var state = message.GetValue("status").ToUpperInvariant() switch
@@ -117,7 +117,7 @@ internal class BuildContext: IBuildContext
             _ => BuildMessageState.StdOut
         };
         
-        var buildMessage = CreateMessage(message, state, text);
+        var buildMessage = CreateMessage(srcOutput, message, state, text);
         // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
         if (!string.IsNullOrWhiteSpace(buildMessage.Text))
         {
@@ -139,17 +139,18 @@ internal class BuildContext: IBuildContext
         yield return buildMessage;
     }
 
-    private IEnumerable<BuildMessage> OnBuildProblem(IServiceMessage message)
+    private IEnumerable<BuildMessage> OnBuildProblem(Output srcOutput, IServiceMessage message)
     {
         var description = message.GetValue("description") ?? string.Empty;
-        var buildMessage = CreateMessage(message, BuildMessageState.BuildProblem, description);
+        var buildMessage = CreateMessage(srcOutput, message, BuildMessageState.BuildProblem, description);
         _errors.Add(buildMessage);
         yield return buildMessage;
     }
 
-    private static BuildMessage CreateMessage(IServiceMessage message, BuildMessageState state, string text)
+    private static BuildMessage CreateMessage(Output srcOutput, IServiceMessage message, BuildMessageState state, string text)
     {
         var buildMessage = new BuildMessage(
+            srcOutput,
             state,
             default,
             text,

@@ -28,8 +28,9 @@ public record BuildStatistics(
         }
 
         var sb = new StringBuilder();
-        AddValue(sb, GetName("error", Errors), Errors);
-        AddValue(sb, GetName("warning", Warnings), Warnings);
+        var initialLength = sb.Length;
+        AddValue(sb, GetName("error", Errors), Errors, initialLength);
+        AddValue(sb, GetName("warning", Warnings), Warnings, initialLength);
         // ReSharper disable once InvertIf
         if (Tests > 0)
         {
@@ -41,19 +42,24 @@ public record BuildStatistics(
             sb.Append(Tests);
             sb.Append(" finished ");
             sb.Append(GetName("test", Tests));
-            sb.Append(": ");
-            AddValue(sb, "failed", FailedTests, false);
-            AddValue(sb, "ignored", IgnoredTests);
-            AddValue(sb, "passed", PassedTests);
+            // ReSharper disable once InvertIf
+            if (FailedTests > 0 || IgnoredTests > 0 || PassedTests > 0)
+            {
+                sb.Append(": ");
+                initialLength = sb.Length;
+                AddValue(sb, "failed", FailedTests, initialLength);
+                AddValue(sb, "ignored", IgnoredTests, initialLength);
+                AddValue(sb, "passed", PassedTests, initialLength);
+            }
         }
 
         return sb.ToString();
     }
 
-    private static void AddValue(StringBuilder sb, string name, int value, bool addSeparator = true)
+    private static void AddValue(StringBuilder sb, string name, int value, int initialLength)
     {
         if (value <= 0) return;
-        if (addSeparator && sb.Length > 0)
+        if (sb.Length > initialLength)
         {
             sb.Append(", ");
         }

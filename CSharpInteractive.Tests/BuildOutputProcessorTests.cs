@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
 using JetBrains.TeamCity.ServiceMessages.Read;
@@ -18,10 +17,10 @@ public class BuildOutputProcessorTests
         // Given
         Mock<IServiceMessage> msg1 = new();
         Mock<IServiceMessage> msg2 = new();
-        BuildMessage buildMsg1 = new();
-        BuildMessage buildMsg2 = new();
-        BuildMessage buildMsg3 = new();
         var output = new Output(_startInfo.Object, false, "Messages", 33);
+        BuildMessage buildMsg1 = new(output, BuildMessageState.StdOut);
+        BuildMessage buildMsg2 = new(output, BuildMessageState.StdOut);
+        BuildMessage buildMsg3 = new(output, BuildMessageState.StdOut);
         _serviceMessageParser.Setup(i => i.ParseServiceMessages("Messages")).Returns(new[] {msg1.Object, msg2.Object});
         _buildResult.Setup(i => i.ProcessMessage(output, msg1.Object)).Returns(new[] {buildMsg1, buildMsg2});
         _buildResult.Setup(i => i.ProcessMessage(output, msg2.Object)).Returns(new[] {buildMsg3});
@@ -33,10 +32,10 @@ public class BuildOutputProcessorTests
         // Then
         messages.ShouldBe(
         [
-            new BuildMessage(BuildMessageState.ServiceMessage, msg1.Object),
+            new BuildMessage(output, BuildMessageState.ServiceMessage, msg1.Object),
                 buildMsg1,
                 buildMsg2,
-                new BuildMessage(BuildMessageState.ServiceMessage, msg2.Object),
+                new BuildMessage(output, BuildMessageState.ServiceMessage, msg2.Object),
                 buildMsg3
         ]);
     }
@@ -50,7 +49,7 @@ public class BuildOutputProcessorTests
         var output = new Output(_startInfo.Object, isError, "some output", 33);
         _serviceMessageParser.Setup(i => i.ParseServiceMessages("some output")).Returns([]);
         _buildResult.Setup(i => i.ProcessMessage(output, It.IsAny<IServiceMessage>())).Returns(Array.Empty<BuildMessage>());
-        BuildMessage buildMsg = new();
+        BuildMessage buildMsg = new(output, BuildMessageState.StdOut);
         _buildResult.Setup(i => i.ProcessOutput(output)).Returns(new[] {buildMsg});
         var processor = CreateInstance();
 

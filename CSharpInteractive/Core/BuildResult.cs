@@ -4,33 +4,20 @@ namespace CSharpInteractive.Core;
 using System.Diagnostics;
 using System.Text;
 using HostApi;
-using Immutype;
 
 [DebuggerTypeProxy(typeof(BuildResultDebugView))]
-[Target]
-internal class BuildResult : IBuildResult, ISuccessDeterminant
+internal record BuildResult(ICommandLineResult CommandLineResult,
+    IReadOnlyList<BuildMessage> Errors,
+    IReadOnlyList<BuildMessage> Warnings,
+    IReadOnlyList<TestResult> Tests) : IBuildResult, ISuccessDeterminant
 {
-    private readonly Lazy<BuildStatistics> _summary;
-
+    private readonly object _lockObject = new();
+    private BuildStatistics? _buildStatistics;
+    
     // ReSharper disable once UnusedMember.Global
     public BuildResult(ICommandLineResult commandLineResult)
         : this(commandLineResult, Array.Empty<BuildMessage>(), Array.Empty<BuildMessage>(), Array.Empty<TestResult>())
     { }
-    
-    public BuildResult(
-        ICommandLineResult commandLineResult,
-        IReadOnlyList<BuildMessage> errors,
-        IReadOnlyList<BuildMessage> warnings,
-        IReadOnlyList<TestResult> tests)
-    {
-        CommandLineResult = commandLineResult;
-        Errors = errors;
-        Warnings = warnings;
-        Tests = tests;
-        _summary = new Lazy<BuildStatistics>(CalculateSummary, LazyThreadSafetyMode.ExecutionAndPublication);
-    }
-
-    public ICommandLineResult CommandLineResult { get; }
 
     public IStartInfo StartInfo => CommandLineResult.StartInfo;
 
@@ -42,13 +29,16 @@ internal class BuildResult : IBuildResult, ISuccessDeterminant
 
     public Exception? Error => CommandLineResult.Error;
 
-    public BuildStatistics Summary => _summary.Value;
-    
-    public IReadOnlyList<BuildMessage> Errors { get; }
-
-    public IReadOnlyList<BuildMessage> Warnings { get; }
-
-    public IReadOnlyList<TestResult> Tests { get; }
+    public BuildStatistics Summary
+    {
+        get
+        {
+            lock (_lockObject)
+            {
+                return _buildStatistics ??= CalculateSummary();
+            }
+        }
+    }
 
     public override string ToString()
     {

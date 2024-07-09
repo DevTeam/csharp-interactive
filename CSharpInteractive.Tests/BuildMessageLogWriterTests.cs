@@ -1,11 +1,11 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using HostApi;
 
 public class BuildMessageLogWriterTests
 {
+    private static readonly Output Output = new(Mock.Of<IStartInfo>(), false, "", 99);
     private readonly Mock<ILog<BuildMessageLogWriter>> _log = new();
     private readonly Mock<IStdOut> _stdOut = new();
     private readonly Mock<IStdErr> _stdErr = new();
@@ -17,7 +17,7 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(new BuildMessage(BuildMessageState.StdOut, default, "Abc"));
+        writer.Write(new BuildMessage(Output, BuildMessageState.StdOut, default, "Abc"));
 
         // Then
         _stdOut.Verify(i => i.WriteLine(It.Is<Text[]>(text => text.SequenceEqual(new[] {new Text("Abc")}))));
@@ -30,7 +30,7 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(new BuildMessage(BuildMessageState.StdError, default, "Abc"));
+        writer.Write(new BuildMessage(Output, BuildMessageState.StdError, default, "Abc"));
 
         // Then
         _stdErr.Verify(i => i.WriteLine(It.Is<Text[]>(text => text.SequenceEqual(new[] {new Text("Abc")}))));
@@ -43,7 +43,7 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(new BuildMessage(BuildMessageState.Warning, default, "Abc"));
+        writer.Write(new BuildMessage(Output, BuildMessageState.Warning, default, "Abc"));
 
         // Then
         _log.Verify(i => i.Warning(It.IsAny<Text[]>()));
@@ -58,7 +58,7 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(new BuildMessage(state, default, "Abc"));
+        writer.Write(new BuildMessage(Output, state, default, "Abc"));
 
         // Then
         _log.Verify(i => i.Error(ErrorId.Build, It.IsAny<Text[]>()));

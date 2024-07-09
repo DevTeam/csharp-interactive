@@ -14,10 +14,11 @@ public class BuildContextTests
     {
         // Given
         var result = CreateInstance();
-        var msg = new BuildMessage(BuildMessageState.StdOut, default, "Abc");
+        var output = new Output(Mock.Of<IStartInfo>(), false, "Abc", 33);
+        var msg = new BuildMessage(output, BuildMessageState.StdOut, default, "Abc");
 
         // When
-        var messages = result.ProcessOutput(new Output(Mock.Of<IStartInfo>(), false, "Abc", 33));
+        var messages = result.ProcessOutput(output);
         var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
@@ -30,14 +31,15 @@ public class BuildContextTests
     {
         // Given
         var result = CreateInstance();
-        var msg = new BuildMessage(BuildMessageState.StdError, default, "Abc");
+        var output = new Output(Mock.Of<IStartInfo>(), true, "Abc", 33);
+        var msg = new BuildMessage(output, BuildMessageState.StdError, default, "Abc");
 
         // When
-        var messages = result.ProcessOutput(new Output(Mock.Of<IStartInfo>(), true, "Abc", 33));
+        var messages = result.ProcessOutput(output);
         var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
-        messages.ShouldBe(new[] {msg});
+        messages.ShouldBe(new[] { msg });
         buildResult.Errors.ShouldContain(msg);
     }
 
@@ -74,12 +76,14 @@ public class BuildContextTests
             {"lineNumber", "23"}
         };
 
-        var output = new Output(_startInfo.Object, false, string.Empty, 11);
+        var stdOutput = new Output(_startInfo.Object, false, "Some output", 11);
+        var errOutput = new Output(_startInfo.Object, true, "Some error", 11);
+        var finishedOutput = new Output(Mock.Of<IStartInfo>(), false, "Abc", 33);
 
         // When
-        result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdOut).WithText("Some output")]);
-        result.ProcessMessage(output, testStderr).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdError).WithText("Some error")]);
-        result.ProcessMessage(output, testFinished).ShouldBeEmpty();
+        result.ProcessMessage(stdOutput, testStdout).ToArray().ShouldBe([new BuildMessage(stdOutput, BuildMessageState.StdOut).WithText("Some output")]);
+        result.ProcessMessage(errOutput, testStderr).ToArray().ShouldBe([new BuildMessage(errOutput, BuildMessageState.StdError).WithText("Some error")]);
+        result.ProcessMessage(finishedOutput, testFinished).ShouldBeEmpty();
         var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
@@ -92,11 +96,7 @@ public class BuildContextTests
         test.State.ShouldBe(TestState.Finished);
         test.Message.ShouldBeEmpty();
         test.Details.ShouldBeEmpty();
-        test.Output.ShouldBe(new[]
-        {
-            new Output(_startInfo.Object, false, "Some output", 11),
-            new Output(_startInfo.Object, true, "Some error", 11)
-        });
+        test.Output.ShouldBe(new[] {stdOutput, errOutput});
         test.ExecutorUri.ShouldBe(new Uri("executor://mstestadapter/v2", UriKind.RelativeOrAbsolute));
         test.LineNumber.ShouldBe(23);
     }
@@ -129,7 +129,7 @@ public class BuildContextTests
         var output = new Output(_startInfo.Object, false, string.Empty, 11);
 
         // When
-        result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdOut).WithText("Some output")]);
+        result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(output, BuildMessageState.StdOut).WithText("Some output")]);
         result.ProcessMessage(output, testFailed).ShouldBeEmpty();
         var buildResult = result.Create(_commandLineResult.Object);
 
@@ -173,7 +173,7 @@ public class BuildContextTests
         var output = new Output(_startInfo.Object, false, string.Empty, 11);
 
         // When
-        result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(BuildMessageState.StdOut).WithText("Some output")]);
+        result.ProcessMessage(output, testStdout).ToArray().ShouldBe([new BuildMessage(output, BuildMessageState.StdOut).WithText("Some output")]);
         result.ProcessMessage(output, testIgnored).ShouldBeEmpty();
         var buildResult = result.Create(_commandLineResult.Object);
 
@@ -224,7 +224,9 @@ public class BuildContextTests
             {"importance", "High"}
         };
 
+        var output = new Output(_startInfo.Object, false, string.Empty, 11);
         var buildMessage = new BuildMessage(
+            output,
             state,
             default,
             "some text",
@@ -239,8 +241,6 @@ public class BuildContextTests
             3,
             4,
             DotNetMessageImportance.High);
-
-        var output = new Output(_startInfo.Object, false, string.Empty, 11);
 
         // When
         result.ProcessMessage(output, message).ShouldBe(new[] {buildMessage});
@@ -290,7 +290,9 @@ public class BuildContextTests
             {"importance", "High"}
         };
 
+        var output = new Output(_startInfo.Object, false, string.Empty, 11);
         var buildMessage = new BuildMessage(
+            output,
             BuildMessageState.BuildProblem,
             default,
             "Problem description",
@@ -305,7 +307,6 @@ public class BuildContextTests
             3,
             4,
             DotNetMessageImportance.High);
-        var output = new Output(_startInfo.Object, false, string.Empty, 11);
 
         // When
         result.ProcessMessage(output, buildProblem).ShouldBe(new[] {buildMessage});

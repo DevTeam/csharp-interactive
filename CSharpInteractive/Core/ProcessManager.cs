@@ -139,7 +139,8 @@ internal class ProcessManager : IProcessManager
             _log.Trace(() => [isError ? StdErrPrefix : StdOutPrefix, new Text(line)], _description);
             handler(output);
         }
-        else
+
+        if (!output.Handled)
         {
             _processOutputWriter.Write(output);
         }

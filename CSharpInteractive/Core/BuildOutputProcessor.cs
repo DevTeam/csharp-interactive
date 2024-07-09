@@ -6,12 +6,12 @@ using JetBrains.TeamCity.ServiceMessages.Read;
 
 internal class BuildOutputProcessor(IServiceMessageParser serviceMessageParser) : IBuildOutputProcessor
 {
-    public IEnumerable<BuildMessage> Convert(in Output output, IBuildContext context)
+    public IEnumerable<BuildMessage> Convert(Output output, IBuildContext context)
     {
         var messages = new List<BuildMessage>();
         foreach (var message in serviceMessageParser.ParseServiceMessages(output.Line).Where(message => message != default))
         {
-            var buildMessage = new BuildMessage(BuildMessageState.ServiceMessage, message);
+            var buildMessage = new BuildMessage(output, BuildMessageState.ServiceMessage, message);
             if (buildMessage.TestResult.HasValue)
             {
                 buildMessage = buildMessage.WithState(BuildMessageState.TestResult);

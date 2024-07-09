@@ -3,29 +3,20 @@
 var configuration = Props.Get("configuration", "Release");
 Info($"Configuration: {configuration}");
 
-/*await new DotNetBuild()
+new DotNetBuild()
     .WithShortName("Solution build")
     .WithConfiguration(configuration)
     .WithNoLogo(true)
     .WithVerbosity(DotNetVerbosity.Quiet)
-    .RunAsync()
-    .EnsureSuccess();*/
-
-/*await new DotNetTest()
-    .WithShortName("Tests")
-    .WithNoLogo(true)
-    .WithVerbosity(DotNetVerbosity.Quiet)
-    .WithNoBuild(true)
-    .WithConfiguration(configuration)
-    .BuildAsync()
-    .EnsureSuccess();*/
+    .Build()
+    .EnsureSuccess();
 
 using var cts = new CancellationTokenSource();
 await new DotNetTest()
     .WithShortName("Tests")
     .WithNoLogo(true)
     .WithVerbosity(DotNetVerbosity.Quiet)
-    // .WithNoBuild(true)
+    .WithNoBuild(true)
     .WithConfiguration(configuration)
     .BuildAsync(i =>
     {

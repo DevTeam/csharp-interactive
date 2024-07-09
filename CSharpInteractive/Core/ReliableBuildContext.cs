@@ -15,7 +15,7 @@ internal class ReliableBuildContext(
 {
     private readonly Dictionary<string, Output> _sources = new();
 
-    public IReadOnlyList<BuildMessage> ProcessMessage(in Output output, IServiceMessage message)
+    public IReadOnlyList<BuildMessage> ProcessMessage(Output output, IServiceMessage message)
     {
         var source = message.GetValue("source");
         if (string.IsNullOrWhiteSpace(source))
@@ -23,11 +23,11 @@ internal class ReliableBuildContext(
             return baseBuildContext.ProcessMessage(output, message);
         }
 
-        _sources.TryAdd(source, output.WithLine(string.Empty));
+        _sources.TryAdd(source, output with { Line = string.Empty });
         return Array.Empty<BuildMessage>();
     }
 
-    public IReadOnlyList<BuildMessage> ProcessOutput(in Output output) =>
+    public IReadOnlyList<BuildMessage> ProcessOutput(Output output) =>
         baseBuildContext.ProcessOutput(output);
 
     public IBuildResult Create(ICommandLineResult commandLineResult)
