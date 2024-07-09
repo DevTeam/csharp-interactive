@@ -89,17 +89,29 @@ internal static class TextExtensions
         return text.ToArray();
     }
 
-    private static Text[] SplitLines(this string str, Color color = Color.Default)
+    public static Text[] SplitLines(this string str, Color color = Color.Default, int maxLines = int.MaxValue)
     {
         var text = new List<Text>();
-        foreach (var line in str.Split('\n'))
+        var lines = str.Split('\n');
+        var counter = 0;
+        foreach (var line in lines)
         {
+            // ReSharper disable once InvertIf
+            var dif = lines.Length - counter;
+            if (counter >= maxLines && dif > 0)
+            {
+                text.Add(Text.NewLine);
+                text.Add(new Text($"... +{lines.Length - counter} line{(dif > 1 ? "s" : "")}", Color.Trace));
+                break;
+            }
+            
             if (text.Count > 0)
             {
                 text.Add(Text.NewLine);  
             }
             
             text.Add(new Text(line.TrimEnd(), color));
+            counter++;
         }
 
         return text.ToArray();

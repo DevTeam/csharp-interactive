@@ -10,6 +10,7 @@ public class CommandLineRunnerTests
     private readonly Mock<IProcessResultHandler> _processResultHandler = new();
     private readonly Mock<IStartInfo> _startInfo = new();
     private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
+    private readonly Mock<ICommandLineStatistics> _statistics = new();
     private readonly ProcessResult _processResult;
 
     public CommandLineRunnerTests() => 
@@ -25,11 +26,12 @@ public class CommandLineRunnerTests
         _processRunner.Setup(i => i.Run(It.IsAny<ProcessInfo>(), TimeSpan.FromSeconds(1))).Returns(_processResult);
 
         // When
-        var exitCode = cmdService.Run(process.Object, Handler, TimeSpan.FromSeconds(1)).ExitCode;
+        var result = cmdService.Run(process.Object, Handler, TimeSpan.FromSeconds(1));
 
         // Then
-        exitCode.ShouldBe(33);
+        result.ExitCode.ShouldBe(33);
         _processResultHandler.Verify(i => i.Handle<Output>(_processResult, Handler));
+        _statistics.Verify(i => i.Register(new CommandLineInfo(result, _processResult)));
     }
 
     [Fact]
@@ -44,15 +46,21 @@ public class CommandLineRunnerTests
         _processRunner.Setup(i => i.RunAsync(It.IsAny<ProcessInfo>(), token)).Returns(Task.FromResult(_processResult));
 
         // When
-        var exitCode = (await cmdService.RunAsync(process.Object, Handler, token)).ExitCode;
+        var result = await cmdService.RunAsync(process.Object, Handler, token);
 
         // Then
-        exitCode.ShouldBe(33);
+        result.ExitCode.ShouldBe(33);
         _processResultHandler.Verify(i => i.Handle<Output>(_processResult, Handler));
+        _statistics.Verify(i => i.Register(new CommandLineInfo(result, _processResult)));
     }
 
     private static void Handler(Output obj) { }
 
     private CommandLineRunner CreateInstance() =>
-        new(_host.Object, _processRunner.Object, Mock.Of<IProcessMonitor>, _processResultHandler.Object, _startInfoDescription.Object);
+        new(_host.Object,
+            _processRunner.Object,
+            Mock.Of<IProcessMonitor>,
+            _processResultHandler.Object,
+            _startInfoDescription.Object,
+            _statistics.Object);
 }

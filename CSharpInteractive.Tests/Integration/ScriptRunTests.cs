@@ -11,7 +11,7 @@ using HostApi;
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class ScriptRunTests
 {
-    private const int InitialLinesCount = 4;
+    private const int InitialLinesCount = 3;
 
     [Fact]
     public void ShouldRunEmptyScript()
@@ -166,7 +166,7 @@ public class ScriptRunTests
         // Then
         result.ExitCode.ShouldBe(0, result.ToString());
         result.StdErr.ShouldBeEmpty(result.ToString());
-        result.StdOut.Count.ShouldBe(InitialLinesCount + 4, result.ToString());
+        result.StdOut.Count.ShouldBe(InitialLinesCount + 5, result.ToString());
         result.StdOut.Contains("My warning").ShouldBeTrue(result.ToString());
     }
 

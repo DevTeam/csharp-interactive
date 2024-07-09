@@ -2,13 +2,14 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 using HostApi;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class SummaryPresenterTests
 {
     private readonly Mock<ILog<SummaryPresenter>> _log = new();
+    private readonly Mock<ICommandLineStatistics> _commandLineStatistics = new();
+    private readonly Mock<IPresenter<ICommandLineStatistics>> _commandLineStatisticsPresenter = new();
     private readonly Mock<IStatistics> _statistics = new();
     private readonly Mock<IPresenter<IStatistics>> _statisticsPresenter = new();
 
@@ -48,10 +49,15 @@ public class SummaryPresenterTests
         presenter.Show(new Summary(success));
 
         // Then
+        _commandLineStatisticsPresenter.Verify(i => i.Show(_commandLineStatistics.Object));
         _statisticsPresenter.Verify(i => i.Show(_statistics.Object));
         _log.Verify(i => i.Info(new Text(message, color)));
     }
 
     private SummaryPresenter CreateInstance() =>
-        new(_log.Object, _statistics.Object, _statisticsPresenter.Object);
+        new(_log.Object,
+            _commandLineStatistics.Object,
+            _commandLineStatisticsPresenter.Object,
+            _statistics.Object,
+            _statisticsPresenter.Object);
 }

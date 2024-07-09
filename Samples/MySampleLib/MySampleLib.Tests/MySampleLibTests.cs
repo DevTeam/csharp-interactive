@@ -1,39 +1,50 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace MySampleLib.Tests;
 
-[TestClass]
+using System;
+using Xunit;
+
 public class CalculatorTests
 {
-    [TestMethod]
-    public void ShouldAdd()
+    [Theory]
+    [InlineData(0, 0, 0)]
+    [InlineData(3, 2, 5)]
+    [InlineData(3, -2, 1)]
+    public void ShouldAdd(int op1, int op2, int expected)
     {
         // Given
         var calculator = new Calculator();
 
         // When
-        var result = calculator.Add(1, 2);
+        var actual = calculator.Add(op1, op2);
 
         // Then
-        Assert.AreEqual(3, result);
+        Assert.Equal(expected, actual);
     }
     
-    [TestMethod]
-    public void ShouldSub()
+    [Theory]
+    [InlineData(0, 0, 0)]
+    [InlineData(3, 2, 1)]
+    [InlineData(3, -2, 5)]
+    public void ShouldSub(int op1, int op2, int expected)
     {
         // Given
         var calculator = new Calculator();
 
         // When
-        var result = calculator.Sub(2, 1);
+        var actual = calculator.Sub(op1, op2);
 
         // Then
-        Assert.AreEqual(1, result);
+        Assert.Equal(expected, actual);
     }
     
-    [TestMethod]
-    [Ignore]
+    [Fact(Skip = "")]
     public void ShouldDiv()
     {
+    }
+    
+    [Fact]
+    public void ShouldMul()
+    {
+        throw new Exception("Some exception");
     }
 }

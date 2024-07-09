@@ -2,12 +2,12 @@ namespace CSharpInteractive.Core;
 
 internal interface IStatistics
 {
+    bool IsEmpty { get; }
+    
     IReadOnlyCollection<Text[]> Errors { get; }
 
     IReadOnlyCollection<Text[]> Warnings { get; }
     
-    IReadOnlyCollection<ProcessResult> ProcessResults { get; }
-
     TimeSpan TimeElapsed { get; }
 
     IDisposable Start();
@@ -15,6 +15,4 @@ internal interface IStatistics
     void RegisterError(Text[] error);
 
     void RegisterWarning(Text[] warning);
-    
-    void RegisterProcessResult(ProcessResult result);
 }

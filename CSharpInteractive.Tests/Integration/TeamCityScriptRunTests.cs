@@ -4,7 +4,7 @@ namespace CSharpInteractive.Tests.Integration;
 [Trait("Integration", "true")]
 public class ScriptRunTeamCityScriptRunTests
 {
-    private const int InitialMessagesCount = 4;
+    private const int InitialMessagesCount = 3;
 
     [Fact]
     public void ShouldAddSystemNamespace()

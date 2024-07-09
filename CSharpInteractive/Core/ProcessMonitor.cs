@@ -6,7 +6,6 @@ using HostApi;
 internal class ProcessMonitor(
     ILog<ProcessMonitor> log,
     IEnvironment environment,
-    IStatistics statistics,
     IStartInfoDescription startInfoDescription) : IProcessMonitor
 {
     private int? _processId;
@@ -40,19 +39,14 @@ internal class ProcessMonitor(
         }
     }
 
-    public ProcessResult Finished(IStartInfo startInfo, long elapsedMilliseconds, ProcessState state, int? exitCode = default, Exception? error = default)
-    {
-        var result = new ProcessResult(
+    public ProcessResult Finished(IStartInfo startInfo, long elapsedMilliseconds, ProcessState state, int? exitCode = default, Exception? error = default) =>
+        new(
             startInfo,
             state,
             elapsedMilliseconds,
             GetFooter(startInfo, exitCode, elapsedMilliseconds, state).ToArray(),
             exitCode,
             error);
-        
-        statistics.RegisterProcessResult(result);
-        return result;
-    }
 
     private IEnumerable<Text> GetFooter(IStartInfo startInfo, int? exitCode, long elapsedMilliseconds, ProcessState? state)
     {

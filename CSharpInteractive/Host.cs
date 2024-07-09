@@ -24,7 +24,7 @@ public static class Components
 {
     private static readonly Root Root = Composition.Shared.Root;
     private static readonly IHost CurHost = Root.Host;
-
+    
 #if APPLICATION
     private static readonly IDisposable FinishToken;
 
@@ -154,7 +154,7 @@ public static class Components
                 {
                     return result;
                 }
-
+                
                 try
                 {
 #if APPLICATION
@@ -179,7 +179,7 @@ public static class Components
         ArgumentNullException.ThrowIfNull(resultTask);
         return EnsureSuccess(await resultTask, isSuccess, failureExitCode);
     }
-
+    
     public static bool TryGet<T>(
         this IProperties properties,
         string key,

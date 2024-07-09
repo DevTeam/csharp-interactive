@@ -7,31 +7,17 @@ using HostApi;
 internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<IStatistics>
 {
     private static readonly Text[] Tab = [Text.Tab];
-    private static readonly Text[] Empty = [Text.Tab, new Text("     ")];
-    private static readonly Text[] Error = [Text.Tab, new Text("ERR: ", Color.Error)];
-    private static readonly Text [] Warning = [Text.Tab, new Text("WRN: ", Color.Warning)];
     
     public void Show(IStatistics statistics)
     {
-        log.Info();
-        if (statistics.ProcessResults.Count > 0 || statistics.Warnings.Count > 0 || statistics.Errors.Count > 0)
+        foreach (var warning in statistics.Warnings)
         {
-            log.Info(new Text("Summary:", Color.Header));
-
-            foreach (var processResult in statistics.ProcessResults)
-            {
-                log.Info(processResult.Description.AddPrefix(_ => Tab));
-            }
-
-            foreach (var warning in statistics.Warnings)
-            {
-                log.Info(warning.AddPrefix(i => i == 0 ? Warning : Empty));
-            }
+            log.Info(warning.AddPrefix(_ => Tab));
+        }
             
-            foreach (var error in statistics.Errors)
-            {
-                log.Info(error.AddPrefix(i => i == 0 ? Error : Empty));
-            }
+        foreach (var error in statistics.Errors)
+        {
+            log.Info(error.AddPrefix(_ => Tab));
         }
 
         if (statistics.Warnings.Count > 0)

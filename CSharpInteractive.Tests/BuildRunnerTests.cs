@@ -20,6 +20,7 @@ public class BuildRunnerTests
     private readonly Mock<ICommandLineResult> _commandLineResult = new();
     private readonly Mock<IStartInfo> _startInfo = new();
     private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
+    private readonly Mock<ICommandLineStatistics> _statistics = new();
     private readonly Mock<ICommandLine> _process = new();
     private readonly Mock<IProcessResultHandler> _processResultHandler = new();
     private readonly ProcessResult _processResult;
@@ -59,7 +60,7 @@ public class BuildRunnerTests
             .Callback<Output, IReadOnlyCollection<BuildMessage>, Action<BuildMessage>>((o, _, _) => { o.Handled = handled; });
 
         // When
-        buildService.Run(_process.Object, customHandler, TimeSpan.FromSeconds(1));
+        var result = buildService.Run(_process.Object, customHandler, TimeSpan.FromSeconds(1));
 
         // Then
         output.Handled.ShouldBeTrue();
@@ -68,6 +69,7 @@ public class BuildRunnerTests
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = true);
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = false);
         _processResultHandler.Verify(i => i.Handle(_processResult, customHandler));
+        _statistics.Verify(i => i.Register(new CommandLineInfo(result, _processResult)));
     }
 
     [Fact]
@@ -89,7 +91,7 @@ public class BuildRunnerTests
             .Returns(_processResult);
 
         // When
-        buildService.Run(_process.Object, default, TimeSpan.FromSeconds(1));
+        var result = buildService.Run(_process.Object, default, TimeSpan.FromSeconds(1));
 
         // Then
         output.Handled.ShouldBeTrue();
@@ -97,6 +99,7 @@ public class BuildRunnerTests
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = true);
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = false);
         _processResultHandler.Verify(i => i.Handle(_processResult, default(Action<BuildMessage>)));
+        _statistics.Verify(i => i.Register(new CommandLineInfo(result, _processResult)));
     }
 
     [Fact]
@@ -110,17 +113,17 @@ public class BuildRunnerTests
         var handler = Mock.Of<Action<BuildMessage>>();
 
         // When
-        await buildService.RunAsync(_process.Object, handler, token);
+        var result = await buildService.RunAsync(_process.Object, handler, token);
 
         // Then
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = true);
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = false);
         _processResultHandler.Verify(i => i.Handle(_processResult, handler));
+        _statistics.Verify(i => i.Register(new CommandLineInfo(result, _processResult)));
     }
 
     private BuildRunner CreateInstance() =>
-        new(
-            _processRunner.Object,
+        new(_processRunner.Object,
             _host.Object,
             _teamCityContext.Object,
             _resultFactory,
@@ -129,5 +132,6 @@ public class BuildRunnerTests
             _defaultBuildMessagesProcessor.Object,
             _customBuildMessagesProcessor.Object,
             _processResultHandler.Object,
-            _startInfoDescription.Object);
+            _startInfoDescription.Object,
+            _statistics.Object);
 }

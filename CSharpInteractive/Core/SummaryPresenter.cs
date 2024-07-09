@@ -6,8 +6,11 @@ using HostApi;
 
 internal class SummaryPresenter(
     ILog<SummaryPresenter> log,
+    ICommandLineStatistics commandLineStatistics,
+    IPresenter<ICommandLineStatistics> commandLineStatisticsPresenter,
     IStatistics statistics,
-    IPresenter<IStatistics> statisticsPresenter) : IPresenter<Summary>
+    IPresenter<IStatistics> statisticsPresenter)
+    : IPresenter<Summary>
 {
     internal const string RunningSucceeded = "Running succeeded.";
     internal const string RunningSucceededWithWarnings = "Running succeeded with warnings.";
@@ -15,7 +18,14 @@ internal class SummaryPresenter(
     
     public void Show(Summary summary)
     {
-        statisticsPresenter.Show(statistics);
+        log.Info();
+        if (!commandLineStatistics.IsEmpty || !statistics.IsEmpty)
+        {
+            log.Info(new Text("Summary:", Color.Header));
+            commandLineStatisticsPresenter.Show(commandLineStatistics);
+            statisticsPresenter.Show(statistics);
+        }
+
         if (summary.Success == false || statistics.Errors.Count > 0)
         {
             log.Info(new Text(RunningFailed, Color.Error));

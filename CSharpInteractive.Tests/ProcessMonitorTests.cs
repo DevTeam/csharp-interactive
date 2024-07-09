@@ -10,7 +10,6 @@ public class ProcessMonitorTests
     private static readonly Text Description = new("My process description", Color.Details); 
     private readonly Mock<ILog<ProcessMonitor>> _log = new();
     private readonly Mock<IEnvironment> _environment = new();
-    private readonly Mock<IStatistics> _statistics = new();
     private readonly Mock<IStartInfo> _startInfo = new();
     private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
 
@@ -75,7 +74,6 @@ public class ProcessMonitorTests
 
         // Then
         result.Description.ShouldBe([Description, Text.Space, new Text(stateDescription, Color.Success), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
-        _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
     [Fact]
@@ -91,7 +89,6 @@ public class ProcessMonitorTests
 
         // Then
         result.Description.ShouldBe([Description, Text.Space, new Text("failed to start", Color.Error), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
-        _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
     [Fact]
@@ -106,7 +103,6 @@ public class ProcessMonitorTests
 
         // Then
         result.Description.ShouldBe([Description, Text.Space, new Text("failed to start", Color.Error), new Text(" (in 22 ms)"), new Text(".")]);
-        _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
     [Fact]
@@ -122,12 +118,10 @@ public class ProcessMonitorTests
 
         // Then
         result.Description.ShouldBe([Description, Text.Space, new Text("canceled", Color.Warning), new Text(" (in 22 ms)"), new Text(".")]);
-        _statistics.Verify(i => i.RegisterProcessResult(result));
     }
 
     private ProcessMonitor CreateInstance() =>
         new(_log.Object,
             _environment.Object,
-            _statistics.Object,
             _startInfoDescription.Object);
 }

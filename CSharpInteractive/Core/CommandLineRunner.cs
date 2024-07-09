@@ -8,22 +8,27 @@ internal class CommandLineRunner(
     IProcessRunner processRunner,
     Func<IProcessMonitor> monitorFactory,
     IProcessResultHandler processResultHandler,
-    IStartInfoDescription startInfoDescription)
+    IStartInfoDescription startInfoDescription,
+    ICommandLineStatistics statistics)
     : ICommandLineRunner
 {
     public ICommandLineResult Run(ICommandLine commandLine, Action<Output>? handler = default, TimeSpan timeout = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
-        var result = processRunner.Run(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), handler), timeout);
-        processResultHandler.Handle(result, handler);
-        return new CommandLineResult(startInfoDescription, result.StartInfo, result.State, result.ElapsedMilliseconds, result.ExitCode, result.Error);
+        var processResult = processRunner.Run(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), handler), timeout);
+        processResultHandler.Handle(processResult, handler);
+        var commandLineResult = new CommandLineResult(startInfoDescription, processResult.StartInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error);
+        statistics.Register(new CommandLineInfo(commandLineResult, processResult));
+        return commandLineResult;
     }
 
     public async Task<ICommandLineResult> RunAsync(ICommandLine commandLine, Action<Output>? handler = default, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
-        var result = await processRunner.RunAsync(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), handler), cancellationToken);
-        processResultHandler.Handle(result, handler);
-        return new CommandLineResult(startInfoDescription, result.StartInfo, result.State, result.ElapsedMilliseconds, result.ExitCode, result.Error);
+        var processResult = await processRunner.RunAsync(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), handler), cancellationToken);
+        processResultHandler.Handle(processResult, handler);
+        var commandLineResult = new CommandLineResult(startInfoDescription, processResult.StartInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error);
+        statistics.Register(new CommandLineInfo(commandLineResult, processResult));
+        return commandLineResult;
     }
 }

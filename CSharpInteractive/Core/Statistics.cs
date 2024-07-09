@@ -7,16 +7,18 @@ using System.Diagnostics;
 
 internal class Statistics : IStatistics
 {
+    private readonly object _lockObject = new();
     private readonly Stopwatch _stopwatch = new();
     private readonly List<Text[]> _errors = [];
     private readonly List<Text[]> _warnings = [];
-    private readonly List<ProcessResult> _processResult = [];
+    
+    public bool IsEmpty => Errors.Count == 0 && Warnings.Count == 0;
 
     public IReadOnlyCollection<Text[]> Errors
     {
         get
         {
-            lock (_errors)
+            lock (_lockObject)
             {
                 return new ReadOnlyCollection<Text[]>(_errors);   
             }
@@ -27,24 +29,14 @@ internal class Statistics : IStatistics
     {
         get
         {
-            lock (_warnings)
+            lock (_lockObject)
             {
                 return new ReadOnlyCollection<Text[]>(_warnings);   
             }
         }
     }
 
-    public IReadOnlyCollection<ProcessResult> ProcessResults
-    {
-        get
-        {
-            lock (_processResult)
-            {
-                return new ReadOnlyCollection<ProcessResult>(_processResult);
-            }
-        }
-    }
-
+    
     public TimeSpan TimeElapsed => _stopwatch.Elapsed;
 
     public IDisposable Start()
@@ -58,9 +50,9 @@ internal class Statistics : IStatistics
         error = error.Trim();
         if (!error.IsEmptyOrWhiteSpace())
         {
-            lock (_errors)
+            lock (_lockObject)
             {
-                _errors.Add(error);   
+                _errors.Add(error);
             }
         }
     }
@@ -70,18 +62,10 @@ internal class Statistics : IStatistics
         warning = warning.Trim();
         if (!warning.IsEmptyOrWhiteSpace())
         {
-            lock (_warnings)
+            lock (_lockObject)
             {
-                _warnings.Add(warning);   
+                _warnings.Add(warning);
             }
-        }
-    }
-
-    public void RegisterProcessResult(ProcessResult result)
-    {
-        lock (_processResult)
-        {
-            _processResult.Add(result);
         }
     }
 }

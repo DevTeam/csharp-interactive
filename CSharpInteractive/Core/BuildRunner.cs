@@ -19,7 +19,8 @@ internal class BuildRunner(
     [Tag("default")] IBuildMessagesProcessor defaultBuildMessagesProcessor,
     [Tag("custom")] IBuildMessagesProcessor customBuildMessagesProcessor,
     IProcessResultHandler processResultHandler,
-    IStartInfoDescription startInfoDescription)
+    IStartInfoDescription startInfoDescription,
+    ICommandLineStatistics statistics)
     : IBuildRunner
 {
     public IBuildResult Run(ICommandLine commandLine, Action<BuildMessage>? handler = default, TimeSpan timeout = default)
@@ -28,10 +29,12 @@ internal class BuildRunner(
         var buildContext = buildContextFactory();
         var startInfo = CreateStartInfo(commandLine);
         var processInfo = new ProcessInfo(startInfo, monitorFactory(), output => Handle(handler, output, buildContext));
-        var result = processRunner.Run(processInfo, timeout);
-        processResultHandler.Handle(result, handler);
-        return buildContext.Create(
-            new CommandLineResult(startInfoDescription, startInfo, result.State, result.ElapsedMilliseconds, result.ExitCode, result.Error));
+        var processResult = processRunner.Run(processInfo, timeout);
+        processResultHandler.Handle(processResult, handler);
+        var buildResult = buildContext.Create(
+            new CommandLineResult(startInfoDescription, startInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error));
+        statistics.Register(new CommandLineInfo(buildResult, processResult));
+        return buildResult;
     }
 
     public async Task<IBuildResult> RunAsync(ICommandLine commandLine, Action<BuildMessage>? handler = default, CancellationToken cancellationToken = default)
@@ -40,10 +43,12 @@ internal class BuildRunner(
         var buildContext = buildContextFactory();
         var startInfo = CreateStartInfo(commandLine);
         var processInfo = new ProcessInfo(startInfo, monitorFactory(), output => Handle(handler, output, buildContext));
-        var result = await processRunner.RunAsync(processInfo, cancellationToken);
-        processResultHandler.Handle(result, handler);
-        return buildContext.Create(
-            new CommandLineResult(startInfoDescription, startInfo, result.State, result.ElapsedMilliseconds, result.ExitCode, result.Error));
+        var processResult = await processRunner.RunAsync(processInfo, cancellationToken);
+        processResultHandler.Handle(processResult, handler);
+        var buildResult = buildContext.Create(
+            new CommandLineResult(startInfoDescription, startInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error));
+        statistics.Register(new CommandLineInfo(buildResult, processResult));
+        return buildResult;
     }
 
     private IStartInfo CreateStartInfo(ICommandLine commandLine)

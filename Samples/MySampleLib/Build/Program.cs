@@ -4,26 +4,21 @@ var configuration = Props.Get("configuration", "Release");
 Info($"Configuration: {configuration}");
 
 new DotNetBuild()
-    .WithShortName("Solution build")
     .WithConfiguration(configuration)
     .WithNoLogo(true)
-    .WithVerbosity(DotNetVerbosity.Quiet)
     .Build()
     .EnsureSuccess();
 
-using var cts = new CancellationTokenSource();
+var cts = new CancellationTokenSource();
 await new DotNetTest()
-    .WithShortName("Tests")
-    .WithNoLogo(true)
-    .WithVerbosity(DotNetVerbosity.Quiet)
-    .WithNoBuild(true)
     .WithConfiguration(configuration)
+    .WithNoLogo(true)
+    .WithNoBuild(true)
     .BuildAsync(i =>
     {
-        if (i.TestResult is { State: TestState.Failed } testResult)
+        if (i.TestResult is { State: TestState.Failed })
         {
-            Error($"{testResult.FullyQualifiedName} - failed");
-            cts.Cancel();
+            // cts.Cancel();
         }
     }, cts.Token)
     .EnsureSuccess();
