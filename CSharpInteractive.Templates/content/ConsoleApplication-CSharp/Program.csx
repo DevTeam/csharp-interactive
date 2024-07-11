@@ -14,7 +14,8 @@
 // To add an assembly reference:
 // #r "MyAssembly.dll"
 
-// To include code from the file in the order in which it should be executed:
+// To include code from the file
+// in the order in which it should be executed:
 // #load "MyClass.cs"
 
 // More information can be found on the page:

@@ -12,8 +12,6 @@
         <Copyright>Copyright (C) $([System.DateTime]::Now.Year) $(Company)</Copyright>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/DevTeam/csharp-interactive</RepositoryUrl>
-        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath>obj/Generated</CompilerGeneratedFilesOutputPath>
         <ImmutypeAPI>False</ImmutypeAPI>
     </PropertyGroup>
 

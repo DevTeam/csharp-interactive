@@ -10,6 +10,8 @@ The tool requires [.NET 6+ runtime](https://dotnet.microsoft.com/en-us/download)
 
 ## Usage
 
+### Script runner
+
 After installing tool you can use this tool to run C# scripts from the command line. dotnet-csi is available as a [NuGet package](https://www.nuget.org/packages/dotnet-csi/).
 
 Before installing dotnet-csi as a local tool dot not forget to create .NET local tool manifest file if it is not exist:
@@ -72,7 +74,7 @@ Supported arguments:
 
 ```using HostApi;``` directive in a script allows you to use host API types without specifying the fully qualified namespace of these types.
 
-## Debug scripts easy!
+### .NET application
 
 Install the C# script template [CSharpInteractive.Templates](https://www.nuget.org/packages/CSharpInteractive.Templates)
 
@@ -92,11 +94,9 @@ This projects contains the script *__./Build/Program.csx__*. To run this script 
 dotnet csi Build
 ```
 
-To run this script as a console application:
+To run as a .NET console application:
 
 ```shell
 dotnet run --project Build
 ```
-
-Open the *__./Build/Build.csproj__* in IDE and debug the script.
 

@@ -1,4 +1,4 @@
 ﻿using HostApi;
 
-// Builds a dotnet solution or project
-return new DotNetBuild().Build().ExitCode ?? 1;
+// Build a dotnet solution or project
+new DotNetBuild().Build().EnsureSuccess();

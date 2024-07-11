@@ -56,7 +56,7 @@ internal static class DotNetCommandLineExtensions
         return settings.LoggersAreRequired
             ? cmd
                 .AddArgs("/noconsolelogger")
-                .AddMSBuildArgs(("/l", $"TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,{virtualContext.Resolve(settings.DotNetMSBuildLoggerDirectory)}/TeamCity.MSBuild.Logger.dll;TeamCity;plain"))
+                .AddMSBuildArgs(("/l", $"TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,{virtualContext.Resolve(settings.DotNetMSBuildLoggerDirectory)}/TeamCity.MSBuild.Logger.dll;TEAMCITY;PLAIN;NOSUMMARY"))
                 .AddProps("-p",
                     ("VSTestLogger", TeamcityLoggerName),
                     ("VSTestTestAdapterPath", virtualContext.Resolve(settings.DotNetVSTestLoggerDirectory)),

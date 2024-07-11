@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
         <IsPackable>true</IsPackable>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     </PropertyGroup>
 
 </Project>

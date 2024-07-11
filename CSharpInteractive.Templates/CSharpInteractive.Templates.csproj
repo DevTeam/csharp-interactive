@@ -15,6 +15,7 @@
         <Title>C# script Templates</Title>
         <Description>$(Company) $(Title) $(Version) $(TargetFramework)</Description>
         <PackageType>Template</PackageType>
+        <PackageReadmeFile>content/ConsoleApplication-CSharp/README.md</PackageReadmeFile>
         <SuppressDependenciesWhenPacking>True</SuppressDependenciesWhenPacking>
     </PropertyGroup>
 

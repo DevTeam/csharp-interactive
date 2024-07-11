@@ -35,7 +35,6 @@ internal class Statistics : IStatistics
             }
         }
     }
-
     
     public TimeSpan TimeElapsed => _stopwatch.Elapsed;
 

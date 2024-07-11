@@ -134,7 +134,8 @@ else
         .EnsureSuccess();
 
     var dotCoverReportXml = Path.Combine(reportDir, "dotCover.xml");
-    new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportXml}", "--reportType=TeamCityXml").WithShortName("Generating the code coverage reports").Run().EnsureSuccess();
+    new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportXml}", "--reportType=TeamCityXml").WithShortName("Generating the code coverage reports")
+        .Run().EnsureSuccess();
     
     if (TryGetCoverage(dotCoverReportXml, out coveragePercentage))
     {
@@ -176,20 +177,22 @@ if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 var installTool = new DotNetCustom("tool", "install", toolPackageId, "-g", "--version", packageVersion.ToString(), "--add-source", Path.Combine(outputDir, "CSharpInteractive.Tool"))
     .WithShortName("Installing tool");
 
-if (installTool.Run(output => WriteLine(output.Line)).ExitCode != 0)
+installTool.Run(output =>
 {
-    Warning($"{installTool} failed.");
-}
+    output.Handled = true;
+    WriteLine(output.Line);
+}).EnsureSuccess(r => default);
 
 new DotNetCustom("csi", "/?").WithShortName("Checking tool").Run().EnsureSuccess();
 
 var uninstallTemplates = new DotNetCustom("new", "uninstall", templatesPackageId)
     .WithShortName("Uninstalling template");
 
-if (uninstallTemplates.Run(output => WriteLine(output.Line)).ExitCode != 0)
+uninstallTemplates.Run(output =>
 {
-    Warning($"{uninstallTemplates} failed.");
-}
+    output.Handled = true;
+    WriteLine(output.Line);
+}).EnsureSuccess(r => default);;
 
 var installTemplates = new DotNetCustom("new", "install", $"{templatesPackageId}::{packageVersion.ToString()}", "--nuget-source", templateOutputDir)
     .WithShortName("Installing template");
@@ -204,10 +207,28 @@ foreach (var framework in frameworks)
     try
     {
         var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
-        new DotNetNew("build", $"--package-version={packageVersion}", "-T", framework, "--no-restore").WithWorkingDirectory(buildProjectDir).WithShortName($"Creating a new {sampleProjectName}").Run().EnsureSuccess();
-        new DotNetBuild().WithProject(buildProjectDir).WithSources(defaultNuGetSource, Path.Combine(outputDir, "CSharpInteractive")).WithShortName($"Building the {sampleProjectName}").Build().EnsureSuccess();
-        new DotNetRun().WithProject(buildProjectDir).WithNoBuild(true).WithWorkingDirectory(sampleProjectDir).WithShortName($"Running a build for the {sampleProjectName}").Run().EnsureSuccess();
-        new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx")).WithWorkingDirectory(sampleProjectDir).WithShortName($"Running a build as a C# script for the {sampleProjectName}").Run().EnsureSuccess();
+        new DotNetNew("build", $"--package-version={packageVersion}", "-T", framework, "--no-restore")
+            .WithWorkingDirectory(buildProjectDir)
+            .WithShortName($"Creating a new {sampleProjectName}")
+            .Run().EnsureSuccess();
+        
+        new DotNetBuild()
+            .WithProject(buildProjectDir)
+            .WithSources(defaultNuGetSource, Path.Combine(outputDir, "CSharpInteractive"))
+            .WithShortName($"Building the {sampleProjectName}")
+            .Build().EnsureSuccess();
+        
+        new DotNetRun()
+            .WithProject(buildProjectDir)
+            .WithNoBuild(true)
+            .WithWorkingDirectory(sampleProjectDir)
+            .WithShortName($"Running a build for the {sampleProjectName}")
+            .Run().EnsureSuccess();
+        
+        new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx"))
+            .WithWorkingDirectory(sampleProjectDir)
+            .WithShortName($"Running a build as a C# script for the {sampleProjectName}")
+            .Run().EnsureSuccess();
     }
     finally
     {
@@ -220,7 +241,9 @@ if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && pac
     var push = new DotNetNuGetPush().WithApiKey(apiKey).WithSources(defaultNuGetSource);
     foreach (var package in packages.Where(i => i.Publish))
     {
-        push.WithPackage(package.Package).WithShortName($"Pushing {Path.GetFileName(package.Package)}").Build().EnsureSuccess();
+        push.WithPackage(package.Package)
+            .WithShortName($"Pushing {Path.GetFileName(package.Package)}")
+            .Build().EnsureSuccess();
     }
 }
 else
@@ -232,7 +255,9 @@ if (integrationTests || dockerLinuxTests)
 {
     var logicOp = integrationTests && dockerLinuxTests ? "|" : "&";
     var filter = $"Integration={integrationTests}{logicOp}Docker={dockerLinuxTests}";
-    test.WithFilter(filter).Build().EnsureSuccess();
+    test
+        .WithFilter(filter)
+        .Build().EnsureSuccess();
 }
 
 WriteLine("To use the csi tool:", Color.Highlighted);
