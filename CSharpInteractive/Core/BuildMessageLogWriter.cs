@@ -7,8 +7,7 @@ using Pure.DI;
 internal class BuildMessageLogWriter(
     ILog<BuildMessageLogWriter> log,
     [Tag("Default")] IStdOut stdOut,
-    [Tag("Default")] IStdErr stdErr,
-    ICommandLineStatisticsRegistry statisticsRegistry)
+    [Tag("Default")] IStdErr stdErr)
     : IBuildMessageLogWriter
 {
     public void Write(ProcessInfo processInfo, BuildMessage message)
@@ -26,14 +25,12 @@ internal class BuildMessageLogWriter(
 
             case BuildMessageState.Warning:
                 var warning = new Text(message.Text, Color.Warning);
-                statisticsRegistry.RegisterWarning(processInfo, warning);
                 log.Warning(warning);
                 break;
 
             case BuildMessageState.Failure:
             case BuildMessageState.BuildProblem:
                 var error = new Text(message.Text, Color.Error);
-                statisticsRegistry.RegisterError(processInfo, error);
                 log.Error(ErrorId.Build, error);
                 break;
         }

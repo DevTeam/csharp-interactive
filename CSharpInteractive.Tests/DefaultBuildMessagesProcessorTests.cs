@@ -6,7 +6,7 @@ using JetBrains.TeamCity.ServiceMessages;
 
 public class DefaultBuildMessagesProcessorTests
 {
-    private static readonly ProcessInfo ProcessInfo = new(Mock.Of<IStartInfo>(), Mock.Of<IProcessMonitor>());
+    private static readonly ProcessInfo ProcessInfo = new(Mock.Of<IStartInfo>(), Mock.Of<IProcessMonitor>(), 1);
     private static readonly Output Output = new(Mock.Of<IStartInfo>(), false, "", 99);
     private readonly Mock<ICISettings> _teamCitySettings = new();
     private readonly Mock<IProcessOutputWriter> _processOutputWriter = new();

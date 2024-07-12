@@ -28,14 +28,15 @@ internal class BuildRunner(
         ArgumentNullException.ThrowIfNull(commandLine);
         var buildContext = buildContextFactory();
         var startInfo = CreateStartInfo(commandLine);
-        var processInfo = new ProcessInfo(startInfo, monitorFactory());
+        var processInfo = new ProcessInfo(startInfo, monitorFactory(), ProcessInfo.CreateRunId());
         var info = processInfo;
         processInfo = processInfo.WithHandler(output => Handle(info, handler, output, buildContext));
         var processResult = processRunner.Run(processInfo, timeout);
         processResultHandler.Handle(processResult, handler);
         var buildResult = buildContext.Create(
             new CommandLineResult(startInfoDescription, startInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error));
-        statisticsRegistry.Register(new CommandLineInfo(buildResult, processResult));
+        var commandLineInfo = new CommandLineInfo(buildResult, processResult);
+        statisticsRegistry.Register(commandLineInfo);
         return buildResult;
     }
 
@@ -44,14 +45,15 @@ internal class BuildRunner(
         ArgumentNullException.ThrowIfNull(commandLine);
         var buildContext = buildContextFactory();
         var startInfo = CreateStartInfo(commandLine);
-        var processInfo = new ProcessInfo(startInfo, monitorFactory());
+        var processInfo = new ProcessInfo(startInfo, monitorFactory(), ProcessInfo.CreateRunId());
         var info = processInfo;
         processInfo = processInfo.WithHandler(output => Handle(info, handler, output, buildContext));
         var processResult = await processRunner.RunAsync(processInfo, cancellationToken);
         processResultHandler.Handle(processResult, handler);
         var buildResult = buildContext.Create(
             new CommandLineResult(startInfoDescription, startInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error));
-        statisticsRegistry.Register(new CommandLineInfo(buildResult, processResult));
+        var commandLineInfo = new CommandLineInfo(buildResult, processResult);
+        statisticsRegistry.Register(commandLineInfo);
         return buildResult;
     }
 

@@ -15,7 +15,7 @@ public class CommandLineRunnerTests
 
     public CommandLineRunnerTests()
     {
-        var processInfo = new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>());
+        var processInfo = new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>(), 1);
         _processResult = new ProcessResult(processInfo, ProcessState.Finished, 12, [], 33);
     }
 

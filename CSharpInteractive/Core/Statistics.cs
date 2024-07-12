@@ -5,14 +5,15 @@ namespace CSharpInteractive.Core;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-internal class Statistics : IStatisticsRegistry, IStatistics
+internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatisticsRegistry
 {
     private readonly object _lockObject = new();
     private readonly Stopwatch _stopwatch = new();
     private readonly List<Text[]> _errors = [];
     private readonly List<Text[]> _warnings = [];
+    private readonly List<CommandLineInfo> _info = [];
     
-    public bool IsEmpty => Errors.Count == 0 && Warnings.Count == 0;
+    public bool IsEmpty => Errors.Count == 0 && Warnings.Count == 0 && CommandLines.Count == 0;
 
     public IReadOnlyCollection<Text[]> Errors
     {
@@ -65,6 +66,25 @@ internal class Statistics : IStatisticsRegistry, IStatistics
             {
                 _warnings.Add(warning);
             }
+        }
+    }
+    
+    public IReadOnlyCollection<CommandLineInfo> CommandLines
+    {
+        get
+        {
+            lock (_info)
+            {
+                return new ReadOnlyCollection<CommandLineInfo>(_info);
+            }
+        }
+    }
+    
+    public void Register(CommandLineInfo info)
+    {
+        lock (_info)
+        {
+            _info.Add(info);
         }
     }
 }

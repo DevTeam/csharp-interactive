@@ -21,7 +21,7 @@ public class ProcessInFlowRunnerTests
 
     public ProcessInFlowRunnerTests()
     {
-        _processInfo = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        _processInfo = new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler);
         _processResult = new ProcessResult(_processInfo, ProcessState.Finished, 33, [], 12);
         _flowContext.SetupGet(i => i.CurrentFlowId).Returns("FlowId123");
         _startInfo.SetupGet(i => i.Vars).Returns(InitialVars);

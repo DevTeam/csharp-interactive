@@ -8,8 +8,6 @@ using HostApi;
 public class SummaryPresenterTests
 {
     private readonly Mock<ILog<SummaryPresenter>> _log = new();
-    private readonly Mock<ICommandLineStatistics> _commandLineStatistics = new();
-    private readonly Mock<IPresenter<ICommandLineStatistics>> _commandLineStatisticsPresenter = new();
     private readonly Mock<IStatistics> _statistics = new();
     private readonly Mock<IPresenter<IStatistics>> _statisticsPresenter = new();
 
@@ -26,6 +24,7 @@ public class SummaryPresenterTests
     {
         // Given
         var presenter = CreateInstance();
+        _statistics.SetupGet(i => i.CommandLines).Returns(ArraySegment<CommandLineInfo>.Empty);
         if (hasError)
         {
             _statistics.SetupGet(i => i.Errors).Returns([new Text("Err")]);
@@ -49,15 +48,12 @@ public class SummaryPresenterTests
         presenter.Show(new Summary(success));
 
         // Then
-        _commandLineStatisticsPresenter.Verify(i => i.Show(_commandLineStatistics.Object));
         _statisticsPresenter.Verify(i => i.Show(_statistics.Object));
         _log.Verify(i => i.Info(new Text(message, color)));
     }
 
     private SummaryPresenter CreateInstance() =>
         new(_log.Object,
-            _commandLineStatistics.Object,
-            _commandLineStatisticsPresenter.Object,
             _statistics.Object,
             _statisticsPresenter.Object);
 }

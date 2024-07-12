@@ -104,7 +104,6 @@ internal partial class Composition
                     return lineCodeSource;
                 }))
                 .Bind().To<Statistics>()
-                .Bind().To<CommandLineStatistics>()
                 .Bind().To<CommandsRunner>()
                 .Bind().To<CodeSourceCommandFactory>()
                 .Bind().To<CSharpScriptRunner>()
@@ -134,7 +133,6 @@ internal partial class Composition
                 .Bind().To<StringService>()
                 .Bind().To<TracePresenter>()
                 .Bind().To<StatisticsPresenter>()
-                .Bind().To<CommandLineStatisticsPresenter>()
                 .Bind().To<DiagnosticsPresenter>()
                 .Bind().To<ScriptStatePresenter>()
                 .Bind().To<BuildEngine>()

@@ -16,7 +16,7 @@ public class ProcessMonitorTests
 
     public ProcessMonitorTests()
     {
-        _processInfo = new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>());
+        _processInfo = new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>(), 1);
         _startInfoDescription.Setup(i => i.GetDescriptionText(_startInfo.Object, It.IsAny<int?>())).Returns([Description]);
         _startInfo.SetupGet(i => i.ExecutablePath).Returns("Cm d");
         _startInfo.SetupGet(i => i.WorkingDirectory).Returns("W d");

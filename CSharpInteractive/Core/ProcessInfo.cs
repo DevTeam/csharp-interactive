@@ -7,10 +7,11 @@ using Immutype;
 internal record ProcessInfo(
     IStartInfo StartInfo,
     IProcessMonitor Monitor,
+    int RunId,
     Action<Output>? Handler = default)
 {
     private static int _lastRunId;
-    private readonly int _runId = Interlocked.Increment(ref _lastRunId);
-
-    public int RunId => _runId;
+    
+    public static int CreateRunId() =>
+        Interlocked.Increment(ref _lastRunId);
 }

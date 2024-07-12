@@ -5,12 +5,11 @@ using HostApi;
 
 public class BuildMessageLogWriterTests
 {
-    private static readonly ProcessInfo ProcessInfo = new(Mock.Of<IStartInfo>(), Mock.Of<IProcessMonitor>());
+    private static readonly ProcessInfo ProcessInfo = new(Mock.Of<IStartInfo>(), Mock.Of<IProcessMonitor>(), 1);
     private static readonly Output Output = new(Mock.Of<IStartInfo>(), false, "", 99);
     private readonly Mock<ILog<BuildMessageLogWriter>> _log = new();
     private readonly Mock<IStdOut> _stdOut = new();
     private readonly Mock<IStdErr> _stdErr = new();
-    private readonly Mock<ICommandLineStatisticsRegistry> _statisticsRegistry = new();
 
     [Fact]
     public void ShouldWriteInfo()
@@ -48,7 +47,6 @@ public class BuildMessageLogWriterTests
         writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.Warning, default, "Abc"));
 
         // Then
-        _statisticsRegistry.Verify(i => i.RegisterWarning(ProcessInfo, It.IsAny<Text[]>()));
         _log.Verify(i => i.Warning(It.IsAny<Text[]>()));
     }
 
@@ -64,13 +62,11 @@ public class BuildMessageLogWriterTests
         writer.Write(ProcessInfo, new BuildMessage(Output, state, default, "Abc"));
 
         // Then
-        _statisticsRegistry.Verify(i => i.RegisterError(ProcessInfo, It.IsAny<Text[]>()));
         _log.Verify(i => i.Error(ErrorId.Build, It.IsAny<Text[]>()));
     }
 
     private BuildMessageLogWriter CreateInstance() =>
         new(_log.Object,
             _stdOut.Object,
-            _stdErr.Object,
-            _statisticsRegistry.Object);
+            _stdErr.Object);
 }

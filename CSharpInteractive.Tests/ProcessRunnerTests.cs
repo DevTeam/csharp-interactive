@@ -14,7 +14,7 @@ public sealed class ProcessRunnerTests: IDisposable
 
     public ProcessRunnerTests()
     {
-        _processResult = new ProcessResult(new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>()), ProcessState.Finished, 12, [new Text("Abc")]);
+        _processResult = new ProcessResult(new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>(), 1), ProcessState.Finished, 12, [new Text("Abc")]);
     }
 
     [Fact]
@@ -30,7 +30,7 @@ public sealed class ProcessRunnerTests: IDisposable
         var instance = CreateInstance();
 
         // When
-        instance.Run(new ProcessInfo(_startInfo.Object, _monitor.Object, Handler), timeout).ShouldBe(_processResult);
+        instance.Run(new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler), timeout).ShouldBe(_processResult);
 
         // Then
         _processManager.Verify(i => i.WaitForExit(timeout));
@@ -44,7 +44,7 @@ public sealed class ProcessRunnerTests: IDisposable
     {
         // Given
         var timeout = TimeSpan.FromSeconds(5);
-        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler);
         Exception? exception;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
         _processManager.Setup(i => i.WaitForExit(timeout)).Returns(true);
@@ -68,7 +68,7 @@ public sealed class ProcessRunnerTests: IDisposable
     {
         // Given
         var timeout = TimeSpan.Zero;
-        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler);
         Exception? exception;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
         _processManager.Setup(i => i.WaitForExit(TimeSpan.Zero)).Returns(true);
@@ -92,7 +92,7 @@ public sealed class ProcessRunnerTests: IDisposable
     {
         // Given
         var timeout = TimeSpan.Zero;
-        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler);
         var cannotStart = new Exception("Cannot start");
         var exception = cannotStart;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(false);
@@ -113,7 +113,7 @@ public sealed class ProcessRunnerTests: IDisposable
     {
         // Given
         var timeout = TimeSpan.Zero;
-        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object,  1, Handler);
         Exception? exception;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
         _processManager.SetupGet(i => i.ExitCode).Returns(1);
@@ -132,7 +132,7 @@ public sealed class ProcessRunnerTests: IDisposable
     public void ShouldRun()
     {
         // Given
-        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler);
         Exception? exception;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
         _processManager.Setup(i => i.WaitForExit(TimeSpan.FromDays(1))).Returns(true);
@@ -154,7 +154,7 @@ public sealed class ProcessRunnerTests: IDisposable
     public void ShouldRunWhenStateProviderIsNotDefined()
     {
         // Given
-        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler);
         Exception? exception;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
         _processManager.Setup(i => i.WaitForExit(TimeSpan.FromDays(1))).Returns(true);
@@ -175,7 +175,7 @@ public sealed class ProcessRunnerTests: IDisposable
     public async Task ShouldRunAsync()
     {
         // Given
-        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler);
         Exception? exception;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
         _processManager.SetupGet(i => i.ExitCode).Returns(2);
@@ -199,7 +199,7 @@ public sealed class ProcessRunnerTests: IDisposable
     public async Task ShouldKillWhenCanceled()
     {
         // Given
-        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler);
         Exception? exception;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
         _processManager.SetupGet(i => i.ExitCode).Returns(2);
@@ -223,7 +223,7 @@ public sealed class ProcessRunnerTests: IDisposable
     public async Task ShouldThrowException()
     {
         // Given
-        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, Handler);
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler);
         Exception? exception;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
         _processManager.SetupGet(i => i.ExitCode).Returns(2);

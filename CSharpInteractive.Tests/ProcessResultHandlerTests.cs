@@ -15,7 +15,7 @@ public class ProcessResultHandlerTests
     
     public ProcessResultHandlerTests()
     {
-        _processInfo = new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>());
+        _processInfo = new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>(), 1);
     }
     
     [Theory]
