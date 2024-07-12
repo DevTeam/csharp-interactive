@@ -17,7 +17,7 @@ internal class CommandLineRunner(
         ArgumentNullException.ThrowIfNull(commandLine);
         var processResult = processRunner.Run(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), handler), timeout);
         processResultHandler.Handle(processResult, handler);
-        var commandLineResult = new CommandLineResult(startInfoDescription, processResult.StartInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error);
+        var commandLineResult = new CommandLineResult(startInfoDescription, processResult.ProcessInfo.StartInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error);
         statistics.Register(new CommandLineInfo(commandLineResult, processResult));
         return commandLineResult;
     }
@@ -27,7 +27,7 @@ internal class CommandLineRunner(
         ArgumentNullException.ThrowIfNull(commandLine);
         var processResult = await processRunner.RunAsync(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), handler), cancellationToken);
         processResultHandler.Handle(processResult, handler);
-        var commandLineResult = new CommandLineResult(startInfoDescription, processResult.StartInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error);
+        var commandLineResult = new CommandLineResult(startInfoDescription, processResult.ProcessInfo.StartInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error);
         statistics.Register(new CommandLineInfo(commandLineResult, processResult));
         return commandLineResult;
     }

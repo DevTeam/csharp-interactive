@@ -14,7 +14,7 @@ public sealed class ProcessRunnerTests: IDisposable
 
     public ProcessRunnerTests()
     {
-        _processResult = new ProcessResult(_startInfo.Object, ProcessState.Finished, 12, [new Text("Abc")]);
+        _processResult = new ProcessResult(new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>()), ProcessState.Finished, 12, [new Text("Abc")]);
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
         _processManager.Setup(i => i.WaitForExit(timeout)).Returns(false);
         _processManager.SetupGet(i => i.Id).Returns(99);
-        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Canceled, default, default)).Returns(_processResult);
+        _monitor.Setup(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Canceled, default, default)).Returns(_processResult);
         var instance = CreateInstance();
 
         // When
@@ -36,7 +36,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.Verify(i => i.WaitForExit(timeout));
         _processManager.Verify(i => i.Kill());
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
-        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Canceled, default, default));
+        _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Canceled, default, default));
     }
     
     [Fact]
@@ -50,7 +50,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.Setup(i => i.WaitForExit(timeout)).Returns(true);
         _processManager.SetupGet(i => i.ExitCode).Returns(1);
         _processManager.SetupGet(i => i.Id).Returns(99);
-        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 1, default)).Returns(_processResult);
+        _monitor.Setup(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 1, default)).Returns(_processResult);
         var instance = CreateInstance();
 
         // When
@@ -60,7 +60,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.Verify(i => i.WaitForExit(timeout));
         _processManager.Verify(i => i.Kill(), Times.Never);
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
-        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 1, default));
+        _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 1, default));
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.Setup(i => i.WaitForExit(TimeSpan.Zero)).Returns(true);
         _processManager.SetupGet(i => i.ExitCode).Returns(1);
         _processManager.SetupGet(i => i.Id).Returns(99);
-        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 1, default)).Returns(_processResult);
+        _monitor.Setup(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 1, default)).Returns(_processResult);
         var instance = CreateInstance();
 
         // When
@@ -84,7 +84,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.Verify(i => i.WaitForExit(TimeSpan.Zero));
         _processManager.Verify(i => i.Kill(), Times.Never);
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
-        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 1, default));
+        _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 1, default));
     }
 
     [Fact]
@@ -97,7 +97,7 @@ public sealed class ProcessRunnerTests: IDisposable
         var exception = cannotStart;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(false);
         _processManager.SetupGet(i => i.Id).Returns(99);
-        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.FailedToStart, default, exception)).Returns(_processResult);
+        _monitor.Setup(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.FailedToStart, default, exception)).Returns(_processResult);
         var instance = CreateInstance();
 
         // When
@@ -105,7 +105,7 @@ public sealed class ProcessRunnerTests: IDisposable
 
         // Then
         _processManager.Verify(i => i.WaitForExit(TimeSpan.Zero), Times.Never);
-        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.FailedToStart, default, exception));
+        _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.FailedToStart, default, exception));
     }
 
     [Fact]
@@ -138,7 +138,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.Setup(i => i.WaitForExit(TimeSpan.FromDays(1))).Returns(true);
         _processManager.SetupGet(i => i.ExitCode).Returns(1);
         _processManager.SetupGet(i => i.Id).Returns(99);
-        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 1, default)).Returns(_processResult);
+        _monitor.Setup(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 1, default)).Returns(_processResult);
         var instance = CreateInstance();
 
         // When
@@ -147,7 +147,7 @@ public sealed class ProcessRunnerTests: IDisposable
         // Then
         _processManager.Verify(i => i.Kill(), Times.Never);
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
-        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 1, default));
+        _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 1, default));
     }
 
     [Fact]
@@ -160,7 +160,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.Setup(i => i.WaitForExit(TimeSpan.FromDays(1))).Returns(true);
         _processManager.SetupGet(i => i.ExitCode).Returns(1);
         _processManager.SetupGet(i => i.Id).Returns(99);
-        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 1, default)).Returns(_processResult);
+        _monitor.Setup(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 1, default)).Returns(_processResult);
         var instance = CreateInstance();
 
         // When
@@ -181,7 +181,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.SetupGet(i => i.ExitCode).Returns(2);
         _processManager.SetupAdd(i => i.OnExit += It.IsAny<Action>()).Callback<Action>(i => i());
         _processManager.SetupGet(i => i.Id).Returns(99);
-        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 2, default)).Returns(_processResult);
+        _monitor.Setup(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 2, default)).Returns(_processResult);
         var cancellationTokenSource = new CancellationTokenSource();
         var instance = CreateInstance();
 
@@ -192,7 +192,7 @@ public sealed class ProcessRunnerTests: IDisposable
         // Then
         _processManager.Verify(i => i.Kill(), Times.Never);
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
-        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 2, default));
+        _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 2, default));
     }
     
     [Fact]
@@ -205,7 +205,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.SetupGet(i => i.ExitCode).Returns(2);
         _processManager.SetupAdd(i => i.OnExit += It.IsAny<Action>()).Callback<Action>(i => i());
         _processManager.SetupGet(i => i.Id).Returns(99);
-        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 2, default)).Returns(_processResult);
+        _monitor.Setup(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 2, default)).Returns(_processResult);
         var cancellationTokenSource = new CancellationTokenSource();
         var instance = CreateInstance();
 
@@ -216,7 +216,7 @@ public sealed class ProcessRunnerTests: IDisposable
         // Then
         _processManager.Verify(i => i.Kill(), Times.Once);
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
-        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Canceled, default, default));
+        _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Canceled, default, default));
     }
     
     [Fact]
@@ -229,7 +229,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _processManager.SetupGet(i => i.ExitCode).Returns(2);
         _processManager.SetupAdd(i => i.OnExit += It.IsAny<Action>()).Callback<Action>(i => i());
         _processManager.SetupGet(i => i.Id).Returns(99);
-        _monitor.Setup(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Finished, 2, default)).Returns(_processResult);
+        _monitor.Setup(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 2, default)).Returns(_processResult);
         var cancellationTokenSource = new CancellationTokenSource();
         var instance = CreateInstance();
 
@@ -240,7 +240,7 @@ public sealed class ProcessRunnerTests: IDisposable
         // Then
         _processManager.Verify(i => i.Kill(), Times.Once);
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
-        _monitor.Verify(i => i.Finished(_startInfo.Object, It.IsAny<long>(), ProcessState.Canceled, default, default));
+        _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Canceled, default, default));
     }
 
     private void Handler(Output output) => _output.Add(output);

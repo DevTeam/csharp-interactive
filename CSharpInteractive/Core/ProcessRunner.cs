@@ -50,15 +50,13 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
     {
         private IProcessManager ProcessManager { get; } = processManager;
 
-        private ProcessInfo ProcessInfo { get; } = processInfo;
-
         private Stopwatch Stopwatch { get; } = new();
 
-        private IStartInfo StartInfo => ProcessInfo.StartInfo;
+        private IStartInfo StartInfo => processInfo.StartInfo;
 
-        private IProcessMonitor Monitor => ProcessInfo.Monitor;
+        private IProcessMonitor Monitor => processInfo.Monitor;
 
-        private Action<Output>? Handler => ProcessInfo.Handler;
+        private Action<Output>? Handler => processInfo.Handler;
         
         public bool TryStart([MaybeNullWhen(true)] out ProcessResult processResult)
         {
@@ -72,7 +70,7 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
             {
                 Stopwatch.Stop();
                 {
-                    processResult = Monitor.Finished(StartInfo, Stopwatch.ElapsedMilliseconds, ProcessState.FailedToStart, default, error);
+                    processResult = Monitor.Finished(processInfo, Stopwatch.ElapsedMilliseconds, ProcessState.FailedToStart, default, error);
                     return false;
                 }
             }
@@ -87,12 +85,12 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
             if (finished)
             {
                 Stopwatch.Stop();
-                return Monitor.Finished(StartInfo, Stopwatch.ElapsedMilliseconds, ProcessState.Finished, ProcessManager.ExitCode, error);
+                return Monitor.Finished(processInfo, Stopwatch.ElapsedMilliseconds, ProcessState.Finished, ProcessManager.ExitCode, error);
             }
 
             ProcessManager.Kill();
             Stopwatch.Stop();
-            return Monitor.Finished(StartInfo, Stopwatch.ElapsedMilliseconds, ProcessState.Canceled);
+            return Monitor.Finished(processInfo, Stopwatch.ElapsedMilliseconds, ProcessState.Canceled);
         }
     }
 }

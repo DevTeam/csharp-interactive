@@ -39,12 +39,12 @@ internal class ProcessMonitor(
         }
     }
 
-    public ProcessResult Finished(IStartInfo startInfo, long elapsedMilliseconds, ProcessState state, int? exitCode = default, Exception? error = default) =>
+    public ProcessResult Finished(ProcessInfo processInfo, long elapsedMilliseconds, ProcessState state, int? exitCode = default, Exception? error = default) =>
         new(
-            startInfo,
+            processInfo,
             state,
             elapsedMilliseconds,
-            GetFooter(startInfo, exitCode, elapsedMilliseconds, state).ToArray(),
+            GetFooter(processInfo.StartInfo, exitCode, elapsedMilliseconds, state).ToArray(),
             exitCode,
             error);
 

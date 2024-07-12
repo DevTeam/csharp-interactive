@@ -13,8 +13,11 @@ public class CommandLineRunnerTests
     private readonly Mock<ICommandLineStatistics> _statistics = new();
     private readonly ProcessResult _processResult;
 
-    public CommandLineRunnerTests() => 
-        _processResult = new ProcessResult(_startInfo.Object, ProcessState.Finished, 12, [], 33);
+    public CommandLineRunnerTests()
+    {
+        var processInfo = new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>());
+        _processResult = new ProcessResult(processInfo, ProcessState.Finished, 12, [], 33);
+    }
 
     [Fact]
     public void ShouldRunProcess()

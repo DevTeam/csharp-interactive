@@ -27,7 +27,8 @@ public class BuildRunnerTests
 
     public BuildRunnerTests()
     {
-        _processResult = new ProcessResult(_startInfo.Object, ProcessState.Finished, 33, []);
+        var processInfo = new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>());
+        _processResult = new ProcessResult(processInfo, ProcessState.Finished, 33, []);
         var buildResult = new BuildResult(_commandLineResult.Object);
         _process.Setup(i => i.GetStartInfo(_host.Object)).Returns(_startInfo.Object);
         _resultFactory = () => _buildResult.Object;

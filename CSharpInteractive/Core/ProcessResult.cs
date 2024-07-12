@@ -4,7 +4,7 @@ namespace CSharpInteractive.Core;
 using HostApi;
 
 internal record ProcessResult(
-    IStartInfo StartInfo,
+    ProcessInfo ProcessInfo,
     ProcessState State,
     long ElapsedMilliseconds,
     Text[] Description,

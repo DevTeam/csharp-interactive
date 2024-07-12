@@ -12,9 +12,11 @@ public class ProcessMonitorTests
     private readonly Mock<IEnvironment> _environment = new();
     private readonly Mock<IStartInfo> _startInfo = new();
     private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
+    private readonly ProcessInfo _processInfo;
 
     public ProcessMonitorTests()
     {
+        _processInfo = new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>());
         _startInfoDescription.Setup(i => i.GetDescriptionText(_startInfo.Object, It.IsAny<int?>())).Returns([Description]);
         _startInfo.SetupGet(i => i.ExecutablePath).Returns("Cm d");
         _startInfo.SetupGet(i => i.WorkingDirectory).Returns("W d");
@@ -70,7 +72,7 @@ public class ProcessMonitorTests
         monitor.Started(_startInfo.Object, 99);
 
         // When
-        var result = monitor.Finished(_startInfo.Object, 22, state, 33);
+        var result = monitor.Finished(_processInfo, 22, state, 33);
 
         // Then
         result.Description.ShouldBe([Description, Text.Space, new Text(stateDescription, Color.Success), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
@@ -85,7 +87,7 @@ public class ProcessMonitorTests
         monitor.Started(_startInfo.Object, 99);
 
         // When
-        var result = monitor.Finished(_startInfo.Object, 22, ProcessState.FailedToStart, 33);
+        var result = monitor.Finished(_processInfo, 22, ProcessState.FailedToStart, 33);
 
         // Then
         result.Description.ShouldBe([Description, Text.Space, new Text("failed to start", Color.Error), new Text(" (in 22 ms)"), new Text(" with exit code 33"), new Text(".")]);
@@ -99,7 +101,7 @@ public class ProcessMonitorTests
         var monitor = CreateInstance();
 
         // When
-        var result = monitor.Finished(_startInfo.Object, 22, ProcessState.FailedToStart);
+        var result = monitor.Finished(_processInfo, 22, ProcessState.FailedToStart);
 
         // Then
         result.Description.ShouldBe([Description, Text.Space, new Text("failed to start", Color.Error), new Text(" (in 22 ms)"), new Text(".")]);
@@ -114,7 +116,7 @@ public class ProcessMonitorTests
         monitor.Started(_startInfo.Object, 99);
 
         // When
-        var result = monitor.Finished(_startInfo.Object, 22, ProcessState.Canceled);
+        var result = monitor.Finished(_processInfo, 22, ProcessState.Canceled);
 
         // Then
         result.Description.ShouldBe([Description, Text.Space, new Text("canceled", Color.Warning), new Text(" (in 22 ms)"), new Text(".")]);
