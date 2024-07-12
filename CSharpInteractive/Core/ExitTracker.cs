@@ -32,6 +32,9 @@ internal class ExitTracker(
     public void Exit(int exitCode)
     {
         Finish();
+#if APPLICATION
+        Host.Finish();
+#endif
         ClearEvents(typeof(AppContext));
         System.Environment.Exit(exitCode);
     }

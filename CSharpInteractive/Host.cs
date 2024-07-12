@@ -45,7 +45,7 @@ public static class Components
     private static void OnCurrentDomainOnProcessExit(object? o, EventArgs eventArgs) => 
         Finish();
 
-    private static void Finish()
+    internal static void Finish()
     {
         try
         {
@@ -155,17 +155,7 @@ public static class Components
                     return result;
                 }
                 
-                try
-                {
-#if APPLICATION
-                    Finish();
-#endif
-                }
-                finally
-                {
-                    Root.ExitTracker.Exit(exitCode);   
-                }
-
+                Root.ExitTracker.Exit(exitCode);
                 return result;
         }
     }
