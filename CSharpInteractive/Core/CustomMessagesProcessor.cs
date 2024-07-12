@@ -5,7 +5,11 @@ using HostApi;
 
 internal class CustomMessagesProcessor : IBuildMessagesProcessor
 {
-    public void ProcessMessages(Output output, IReadOnlyCollection<BuildMessage> messages, Action<BuildMessage> nextHandler)
+    public void ProcessMessages(
+        ProcessInfo processInfo,
+        Output output,
+        IReadOnlyCollection<BuildMessage> messages,
+        Action<BuildMessage> nextHandler)
     {
         foreach (var buildMessage in messages)
         {

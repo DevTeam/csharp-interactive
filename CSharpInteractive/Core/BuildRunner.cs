@@ -28,7 +28,9 @@ internal class BuildRunner(
         ArgumentNullException.ThrowIfNull(commandLine);
         var buildContext = buildContextFactory();
         var startInfo = CreateStartInfo(commandLine);
-        var processInfo = new ProcessInfo(startInfo, monitorFactory(), output => Handle(handler, output, buildContext));
+        var processInfo = new ProcessInfo(startInfo, monitorFactory());
+        var info = processInfo;
+        processInfo = processInfo.WithHandler(output => Handle(info, handler, output, buildContext));
         var processResult = processRunner.Run(processInfo, timeout);
         processResultHandler.Handle(processResult, handler);
         var buildResult = buildContext.Create(
@@ -42,7 +44,9 @@ internal class BuildRunner(
         ArgumentNullException.ThrowIfNull(commandLine);
         var buildContext = buildContextFactory();
         var startInfo = CreateStartInfo(commandLine);
-        var processInfo = new ProcessInfo(startInfo, monitorFactory(), output => Handle(handler, output, buildContext));
+        var processInfo = new ProcessInfo(startInfo, monitorFactory());
+        var info = processInfo;
+        processInfo = processInfo.WithHandler(output => Handle(info, handler, output, buildContext));
         var processResult = await processRunner.RunAsync(processInfo, cancellationToken);
         processResultHandler.Handle(processResult, handler);
         var buildResult = buildContext.Create(
@@ -64,17 +68,17 @@ internal class BuildRunner(
         }
     }
 
-    private void Handle(Action<BuildMessage>? handler, Output output, IBuildContext buildContext)
+    private void Handle(ProcessInfo processInfo, Action<BuildMessage>? handler, Output output, IBuildContext buildContext)
     {
         var messages = buildOutputProcessor.Convert(output, buildContext).ToList();
         if (handler != default)
         {
-            customBuildMessagesProcessor.ProcessMessages(output, messages, handler);
+            customBuildMessagesProcessor.ProcessMessages(processInfo, output, messages, handler);
         }
         
         if (!output.Handled)
         {
-            defaultBuildMessagesProcessor.ProcessMessages(output, messages, EmptyHandler);
+            defaultBuildMessagesProcessor.ProcessMessages(processInfo, output, messages, EmptyHandler);
         }
         
         output.Handled = true;

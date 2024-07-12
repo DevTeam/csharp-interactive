@@ -5,6 +5,7 @@ using HostApi;
 
 public class CustomMessagesProcessorTests
 {
+    private static readonly ProcessInfo ProcessInfo = new(Mock.Of<IStartInfo>(), Mock.Of<IProcessMonitor>());
     private static readonly Output Output = new(Mock.Of<IStartInfo>(), false, "", 99);
     private readonly Mock<IStartInfo> _startInfo = new();
 
@@ -20,7 +21,7 @@ public class CustomMessagesProcessorTests
         var processor = CreateInstance();
 
         // When
-        processor.ProcessMessages(output, messages, nextHandler.Object);
+        processor.ProcessMessages(ProcessInfo, output, messages, nextHandler.Object);
 
         // Then
         nextHandler.Verify(i => i(msg1));

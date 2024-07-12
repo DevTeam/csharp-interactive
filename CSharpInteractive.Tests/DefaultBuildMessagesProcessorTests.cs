@@ -6,6 +6,7 @@ using JetBrains.TeamCity.ServiceMessages;
 
 public class DefaultBuildMessagesProcessorTests
 {
+    private static readonly ProcessInfo ProcessInfo = new(Mock.Of<IStartInfo>(), Mock.Of<IProcessMonitor>());
     private static readonly Output Output = new(Mock.Of<IStartInfo>(), false, "", 99);
     private readonly Mock<ICISettings> _teamCitySettings = new();
     private readonly Mock<IProcessOutputWriter> _processOutputWriter = new();
@@ -35,7 +36,7 @@ public class DefaultBuildMessagesProcessorTests
         var processor = CreateInstance();
 
         // When
-        processor.ProcessMessages(output, messages, nextHandler.Object);
+        processor.ProcessMessages(ProcessInfo, output, messages, nextHandler.Object);
 
         // Then
         _processOutputWriter.Verify(i => i.Write(output), Times.Exactly(write ? 1 : 0));
@@ -55,11 +56,11 @@ public class DefaultBuildMessagesProcessorTests
         var processor = CreateInstance();
 
         // When
-        processor.ProcessMessages(output, new[] {msg1, msg2}, nextHandler.Object);
+        processor.ProcessMessages(ProcessInfo, output, new[] {msg1, msg2}, nextHandler.Object);
 
         // Then
-        _buildMessageLogWriter.Verify(i => i.Write(msg1));
-        _buildMessageLogWriter.Verify(i => i.Write(msg2));
+        _buildMessageLogWriter.Verify(i => i.Write(ProcessInfo, msg1));
+        _buildMessageLogWriter.Verify(i => i.Write(ProcessInfo, msg2));
         _processOutputWriter.Verify(i => i.Write(It.IsAny<Output>()), Times.Never);
         nextHandler.Verify(i => i(It.IsAny<BuildMessage>()), Times.Never);
     }
@@ -77,11 +78,11 @@ public class DefaultBuildMessagesProcessorTests
         var processor = CreateInstance();
 
         // When
-        processor.ProcessMessages(output, new[] {msg1, msg2}, nextHandler.Object);
+        processor.ProcessMessages(ProcessInfo, output, new[] {msg1, msg2}, nextHandler.Object);
 
         // Then
-        _buildMessageLogWriter.Verify(i => i.Write(msg1));
-        _buildMessageLogWriter.Verify(i => i.Write(msg2));
+        _buildMessageLogWriter.Verify(i => i.Write(ProcessInfo, msg1));
+        _buildMessageLogWriter.Verify(i => i.Write(ProcessInfo, msg2));
         _processOutputWriter.Verify(i => i.Write(It.IsAny<Output>()), Times.Never);
         nextHandler.Verify(i => i(It.IsAny<BuildMessage>()), Times.Never);
     }

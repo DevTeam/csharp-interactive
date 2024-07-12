@@ -57,16 +57,16 @@ public class BuildRunnerTests
             .Returns(_processResult);
         
         var customHandler = Mock.Of<Action<BuildMessage>>();
-        _customBuildMessagesProcessor.Setup(i => i.ProcessMessages(output, buildMessages, customHandler))
-            .Callback<Output, IReadOnlyCollection<BuildMessage>, Action<BuildMessage>>((o, _, _) => { o.Handled = handled; });
+        _customBuildMessagesProcessor.Setup(i => i.ProcessMessages(It.IsAny<ProcessInfo>(), output, buildMessages, customHandler))
+            .Callback<ProcessInfo, Output, IReadOnlyCollection<BuildMessage>, Action<BuildMessage>>((_, o, _, _) => { o.Handled = handled; });
 
         // When
         var result = buildService.Run(_process.Object, customHandler, TimeSpan.FromSeconds(1));
 
         // Then
         output.Handled.ShouldBeTrue();
-        _customBuildMessagesProcessor.Verify(i => i.ProcessMessages(output, buildMessages, customHandler));
-        _defaultBuildMessagesProcessor.Verify(i => i.ProcessMessages(output, buildMessages, It.IsAny<Action<BuildMessage>>()), Times.Exactly(handled ? 0 : 1));
+        _customBuildMessagesProcessor.Verify(i => i.ProcessMessages(It.IsAny<ProcessInfo>(), output, buildMessages, customHandler));
+        _defaultBuildMessagesProcessor.Verify(i => i.ProcessMessages(It.IsAny<ProcessInfo>(), output, buildMessages, It.IsAny<Action<BuildMessage>>()), Times.Exactly(handled ? 0 : 1));
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = true);
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = false);
         _processResultHandler.Verify(i => i.Handle(_processResult, customHandler));
@@ -96,7 +96,7 @@ public class BuildRunnerTests
 
         // Then
         output.Handled.ShouldBeTrue();
-        _defaultBuildMessagesProcessor.Verify(i => i.ProcessMessages(output, buildMessages, It.IsAny<Action<BuildMessage>>()));
+        _defaultBuildMessagesProcessor.Verify(i => i.ProcessMessages(It.IsAny<ProcessInfo>(), output, buildMessages, It.IsAny<Action<BuildMessage>>()));
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = true);
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = false);
         _processResultHandler.Verify(i => i.Handle(_processResult, default(Action<BuildMessage>)));

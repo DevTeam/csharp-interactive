@@ -5,10 +5,12 @@ using HostApi;
 
 public class BuildMessageLogWriterTests
 {
+    private static readonly ProcessInfo ProcessInfo = new(Mock.Of<IStartInfo>(), Mock.Of<IProcessMonitor>());
     private static readonly Output Output = new(Mock.Of<IStartInfo>(), false, "", 99);
     private readonly Mock<ILog<BuildMessageLogWriter>> _log = new();
     private readonly Mock<IStdOut> _stdOut = new();
     private readonly Mock<IStdErr> _stdErr = new();
+    private readonly Mock<ICommandLineStatisticsRegistry> _statisticsRegistry = new();
 
     [Fact]
     public void ShouldWriteInfo()
@@ -17,7 +19,7 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(new BuildMessage(Output, BuildMessageState.StdOut, default, "Abc"));
+        writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.StdOut, default, "Abc"));
 
         // Then
         _stdOut.Verify(i => i.WriteLine(It.Is<Text[]>(text => text.SequenceEqual(new[] {new Text("Abc")}))));
@@ -30,7 +32,7 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(new BuildMessage(Output, BuildMessageState.StdError, default, "Abc"));
+        writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.StdError, default, "Abc"));
 
         // Then
         _stdErr.Verify(i => i.WriteLine(It.Is<Text[]>(text => text.SequenceEqual(new[] {new Text("Abc")}))));
@@ -43,9 +45,10 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(new BuildMessage(Output, BuildMessageState.Warning, default, "Abc"));
+        writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.Warning, default, "Abc"));
 
         // Then
+        _statisticsRegistry.Verify(i => i.RegisterWarning(ProcessInfo, It.IsAny<Text[]>()));
         _log.Verify(i => i.Warning(It.IsAny<Text[]>()));
     }
 
@@ -58,12 +61,16 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(new BuildMessage(Output, state, default, "Abc"));
+        writer.Write(ProcessInfo, new BuildMessage(Output, state, default, "Abc"));
 
         // Then
+        _statisticsRegistry.Verify(i => i.RegisterError(ProcessInfo, It.IsAny<Text[]>()));
         _log.Verify(i => i.Error(ErrorId.Build, It.IsAny<Text[]>()));
     }
 
     private BuildMessageLogWriter CreateInstance() =>
-        new(_log.Object, _stdOut.Object, _stdErr.Object);
+        new(_log.Object,
+            _stdOut.Object,
+            _stdErr.Object,
+            _statisticsRegistry.Object);
 }

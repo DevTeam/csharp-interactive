@@ -9,7 +9,11 @@ internal class DefaultBuildMessagesProcessor(
     IBuildMessageLogWriter buildMessageLogWriter)
     : IBuildMessagesProcessor
 {
-    public void ProcessMessages(Output output, IReadOnlyCollection<BuildMessage> messages, Action<BuildMessage> nextHandler)
+    public void ProcessMessages(
+        ProcessInfo processInfo,
+        Output output,
+        IReadOnlyCollection<BuildMessage> messages,
+        Action<BuildMessage> nextHandler)
     {
         if (ciSettings.CIType == CIType.TeamCity
             && messages.Any(i => i.State is BuildMessageState.ServiceMessage or BuildMessageState.TestResult))
@@ -20,7 +24,7 @@ internal class DefaultBuildMessagesProcessor(
         {
             foreach (var buildMessage in messages)
             {
-                buildMessageLogWriter.Write(buildMessage);
+                buildMessageLogWriter.Write(processInfo, buildMessage);
             }
         }
     }

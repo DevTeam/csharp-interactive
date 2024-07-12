@@ -7,9 +7,11 @@ using Pure.DI;
 internal class BuildMessageLogWriter(
     ILog<BuildMessageLogWriter> log,
     [Tag("Default")] IStdOut stdOut,
-    [Tag("Default")] IStdErr stdErr) : IBuildMessageLogWriter
+    [Tag("Default")] IStdErr stdErr,
+    ICommandLineStatisticsRegistry statisticsRegistry)
+    : IBuildMessageLogWriter
 {
-    public void Write(BuildMessage message)
+    public void Write(ProcessInfo processInfo, BuildMessage message)
     {
         // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
         switch (message.State)
@@ -23,12 +25,16 @@ internal class BuildMessageLogWriter(
                 break;
 
             case BuildMessageState.Warning:
-                log.Warning(message.Text);
+                var warning = new Text(message.Text, Color.Warning);
+                statisticsRegistry.RegisterWarning(processInfo, warning);
+                log.Warning(warning);
                 break;
 
             case BuildMessageState.Failure:
             case BuildMessageState.BuildProblem:
-                log.Error(ErrorId.Build, message.Text);
+                var error = new Text(message.Text, Color.Error);
+                statisticsRegistry.RegisterError(processInfo, error);
+                log.Error(ErrorId.Build, error);
                 break;
         }
     }
