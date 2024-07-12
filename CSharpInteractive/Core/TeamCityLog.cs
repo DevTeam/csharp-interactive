@@ -8,20 +8,20 @@ internal class TeamCityLog<T>(
     ISettings settings,
     ITeamCityWriter teamCityWriter,
     ITeamCityLineFormatter lineFormatter,
-    IStatistics statistics)
+    IStatisticsRegistry statisticsRegistry)
     : ILog<T>
 {
     public void Error(ErrorId id, params Text[] error)
     {
         var message = error.ToSimpleString();
-        statistics.RegisterError(error);
+        statisticsRegistry.RegisterError(error);
         teamCityWriter.WriteBuildProblem(id.Id, message);
     }
 
     public void Warning(params Text[] warning)
     {
         var message = warning.ToSimpleString();
-        statistics.RegisterWarning(warning);
+        statisticsRegistry.RegisterWarning(warning);
         teamCityWriter.WriteWarning(message);
     }
 

@@ -9,10 +9,4 @@ internal interface IStatistics
     IReadOnlyCollection<Text[]> Warnings { get; }
     
     TimeSpan TimeElapsed { get; }
-
-    IDisposable Start();
-
-    void RegisterError(Text[] error);
-
-    void RegisterWarning(Text[] warning);
 }

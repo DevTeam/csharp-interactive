@@ -5,7 +5,7 @@ namespace CSharpInteractive.Core;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-internal class Statistics : IStatistics
+internal class Statistics : IStatisticsRegistry, IStatistics
 {
     private readonly object _lockObject = new();
     private readonly Stopwatch _stopwatch = new();

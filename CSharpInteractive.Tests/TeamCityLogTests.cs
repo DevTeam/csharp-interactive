@@ -11,7 +11,7 @@ public class TeamCityLogTests
     private readonly Mock<ITeamCityLineFormatter> _lineFormatter;
     private readonly Mock<ITeamCityWriter> _teamCityWriter;
     private readonly Text[] _text = [new Text("line1"), new Text("line2")];
-    private readonly Mock<IStatistics> _statistics;
+    private readonly Mock<IStatisticsRegistry> _statisticsRegistry;
 
     public TeamCityLogTests()
     {
@@ -19,7 +19,7 @@ public class TeamCityLogTests
         _lineFormatter = new Mock<ITeamCityLineFormatter>();
         _lineFormatter.Setup(i => i.Format(It.IsAny<Text[]>())).Returns<Text[]>(i => "F_" + i.ToSimpleString());
         _teamCityWriter = new Mock<ITeamCityWriter>();
-        _statistics = new Mock<IStatistics>();
+        _statisticsRegistry = new Mock<IStatisticsRegistry>();
     }
 
     [Theory]
@@ -37,7 +37,7 @@ public class TeamCityLogTests
 
         // Then
         _teamCityWriter.Verify(i => i.WriteBuildProblem("id", "line1line2"));
-        _statistics.Verify(i => i.RegisterError(_text));
+        _statisticsRegistry.Verify(i => i.RegisterError(_text));
     }
 
     [Theory]
@@ -55,7 +55,7 @@ public class TeamCityLogTests
 
         // Then
         _teamCityWriter.Verify(i => i.WriteWarning("line1line2"));
-        _statistics.Verify(i => i.RegisterWarning(_text));
+        _statisticsRegistry.Verify(i => i.RegisterWarning(_text));
     }
 
     [Theory]
@@ -99,5 +99,5 @@ public class TeamCityLogTests
             _settings.Object,
             _teamCityWriter.Object,
             _lineFormatter.Object,
-            _statistics.Object);
+            _statisticsRegistry.Object);
 }

@@ -5,11 +5,11 @@ namespace CSharpInteractive.Core;
 internal class CommandsRunner(
     // ReSharper disable once ParameterTypeCanBeEnumerable.Local
     IReadOnlyCollection<ICommandRunner> commandRunners,
-    IStatistics statistics) : ICommandsRunner
+    IStatisticsRegistry statisticsRegistry) : ICommandsRunner
 {
     public IEnumerable<CommandResult> Run(IEnumerable<ICommand> commands)
     {
-        using (statistics.Start())
+        using (statisticsRegistry.Start())
         {
             foreach (var command in commands)
             {

@@ -20,7 +20,7 @@ internal class BuildRunner(
     [Tag("custom")] IBuildMessagesProcessor customBuildMessagesProcessor,
     IProcessResultHandler processResultHandler,
     IStartInfoDescription startInfoDescription,
-    ICommandLineStatistics statistics)
+    ICommandLineStatisticsRegistry statisticsRegistry)
     : IBuildRunner
 {
     public IBuildResult Run(ICommandLine commandLine, Action<BuildMessage>? handler = default, TimeSpan timeout = default)
@@ -33,7 +33,7 @@ internal class BuildRunner(
         processResultHandler.Handle(processResult, handler);
         var buildResult = buildContext.Create(
             new CommandLineResult(startInfoDescription, startInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error));
-        statistics.Register(new CommandLineInfo(buildResult, processResult));
+        statisticsRegistry.Register(new CommandLineInfo(buildResult, processResult));
         return buildResult;
     }
 
@@ -47,7 +47,7 @@ internal class BuildRunner(
         processResultHandler.Handle(processResult, handler);
         var buildResult = buildContext.Create(
             new CommandLineResult(startInfoDescription, startInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error));
-        statistics.Register(new CommandLineInfo(buildResult, processResult));
+        statisticsRegistry.Register(new CommandLineInfo(buildResult, processResult));
         return buildResult;
     }
 

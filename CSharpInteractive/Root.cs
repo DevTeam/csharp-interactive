@@ -15,7 +15,7 @@ internal record Root(
     Program Program,
 #endif
     IHost Host,
-    IStatistics Statistics,
+    IStatisticsRegistry StatisticsRegistry,
     ILog<Root> Log,
     IInfo Info,
     IExitTracker ExitTracker,

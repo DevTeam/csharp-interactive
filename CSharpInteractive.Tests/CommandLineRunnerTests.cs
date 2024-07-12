@@ -10,7 +10,7 @@ public class CommandLineRunnerTests
     private readonly Mock<IProcessResultHandler> _processResultHandler = new();
     private readonly Mock<IStartInfo> _startInfo = new();
     private readonly Mock<IStartInfoDescription> _startInfoDescription = new();
-    private readonly Mock<ICommandLineStatistics> _statistics = new();
+    private readonly Mock<ICommandLineStatisticsRegistry> _statisticsRegistry = new();
     private readonly ProcessResult _processResult;
 
     public CommandLineRunnerTests()
@@ -34,7 +34,7 @@ public class CommandLineRunnerTests
         // Then
         result.ExitCode.ShouldBe(33);
         _processResultHandler.Verify(i => i.Handle<Output>(_processResult, Handler));
-        _statistics.Verify(i => i.Register(new CommandLineInfo(result, _processResult)));
+        _statisticsRegistry.Verify(i => i.Register(new CommandLineInfo(result, _processResult)));
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class CommandLineRunnerTests
         // Then
         result.ExitCode.ShouldBe(33);
         _processResultHandler.Verify(i => i.Handle<Output>(_processResult, Handler));
-        _statistics.Verify(i => i.Register(new CommandLineInfo(result, _processResult)));
+        _statisticsRegistry.Verify(i => i.Register(new CommandLineInfo(result, _processResult)));
     }
 
     private static void Handler(Output obj) { }
@@ -65,5 +65,5 @@ public class CommandLineRunnerTests
             Mock.Of<IProcessMonitor>,
             _processResultHandler.Object,
             _startInfoDescription.Object,
-            _statistics.Object);
+            _statisticsRegistry.Object);
 }

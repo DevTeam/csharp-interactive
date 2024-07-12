@@ -9,7 +9,7 @@ internal class CommandLineRunner(
     Func<IProcessMonitor> monitorFactory,
     IProcessResultHandler processResultHandler,
     IStartInfoDescription startInfoDescription,
-    ICommandLineStatistics statistics)
+    ICommandLineStatisticsRegistry statisticsRegistry)
     : ICommandLineRunner
 {
     public ICommandLineResult Run(ICommandLine commandLine, Action<Output>? handler = default, TimeSpan timeout = default)
@@ -18,7 +18,7 @@ internal class CommandLineRunner(
         var processResult = processRunner.Run(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), handler), timeout);
         processResultHandler.Handle(processResult, handler);
         var commandLineResult = new CommandLineResult(startInfoDescription, processResult.ProcessInfo.StartInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error);
-        statistics.Register(new CommandLineInfo(commandLineResult, processResult));
+        statisticsRegistry.Register(new CommandLineInfo(commandLineResult, processResult));
         return commandLineResult;
     }
 
@@ -28,7 +28,7 @@ internal class CommandLineRunner(
         var processResult = await processRunner.RunAsync(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), handler), cancellationToken);
         processResultHandler.Handle(processResult, handler);
         var commandLineResult = new CommandLineResult(startInfoDescription, processResult.ProcessInfo.StartInfo, processResult.State, processResult.ElapsedMilliseconds, processResult.ExitCode, processResult.Error);
-        statistics.Register(new CommandLineInfo(commandLineResult, processResult));
+        statisticsRegistry.Register(new CommandLineInfo(commandLineResult, processResult));
         return commandLineResult;
     }
 }

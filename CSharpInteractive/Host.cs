@@ -37,7 +37,7 @@ public static class Components
         }
 
         Root.Info.ShowHeader();
-        FinishToken = Disposable.Create(Root.ExitTracker.Track(), Root.Statistics.Start());
+        FinishToken = Disposable.Create(Root.ExitTracker.Track(), Root.StatisticsRegistry.Start());
         AppDomain.CurrentDomain.ProcessExit += OnCurrentDomainOnProcessExit;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
     }

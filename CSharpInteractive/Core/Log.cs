@@ -8,7 +8,7 @@ internal class Log<T>(
     ISettings settings,
     IStdOut stdOut,
     IStdErr stdErr,
-    IStatistics statistics)
+    IStatisticsRegistry statisticsRegistry)
     : ILog<T>
 {
     public void Error(ErrorId id, params Text[] error)
@@ -18,7 +18,7 @@ internal class Log<T>(
             return;
         }
 
-        statistics.RegisterError(error);
+        statisticsRegistry.RegisterError(error);
         stdErr.WriteLine(error);
     }
 
@@ -29,7 +29,7 @@ internal class Log<T>(
             return;
         }
 
-        statistics.RegisterWarning(warning);
+        statisticsRegistry.RegisterWarning(warning);
         stdOut.WriteLine(warning);
     }
 

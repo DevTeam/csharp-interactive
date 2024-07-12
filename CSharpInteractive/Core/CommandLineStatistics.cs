@@ -2,7 +2,7 @@
 
 using System.Collections.ObjectModel;
 
-internal class CommandLineStatistics : ICommandLineStatistics
+internal class CommandLineStatistics : ICommandLineStatisticsRegistry, ICommandLineStatistics
 {
     private readonly List<CommandLineInfo> _info = [];
 
