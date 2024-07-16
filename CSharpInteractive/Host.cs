@@ -130,44 +130,101 @@ public static class Components
         ArgumentNullException.ThrowIfNull(commandLine);
         return Root.BuildRunner.RunAsync(commandLine, handler, cancellationToken);
     }
-
-    public static T EnsureSuccess<T>(
-        this T result,
-        Func<T, bool?>? isSuccess = default,
+    
+    private static T EnsureSuccess<T, TResult>(
+        T result,
+        Func<TResult, bool?>? isSuccess = default,
         int? failureExitCode = 1)
-        where T : ICommandLineResult
+        where T : IEnumerable<TResult>
+        where TResult: ICommandLineResult
     {
         ArgumentNullException.ThrowIfNull(result);
         isSuccess ??= r => r is ISuccessDeterminant successDeterminant ? successDeterminant.IsSuccess : true;
-        switch (isSuccess(result))
+        var hasError = false;
+        foreach (var nextResult in result)
         {
-            case true:
-                return result;
+            switch (isSuccess(nextResult))
+            {
+                case true:
+                    break;
             
-            case null:
-                Root.Log.Warning($"{result}.");
-                return result;
+                case null:
+                    Root.Log.Warning($"{nextResult}.");
+                    break;
             
-            case false:
-                Root.Log.Error(ErrorId.Build, $"{result}.");
-                if (failureExitCode is not { } exitCode)
-                {
-                    return result;
-                }
-                
-                Root.ExitTracker.Exit(exitCode);
-                return result;
+                case false:
+                    hasError = true;
+                    Root.Log.Error(ErrorId.Build, $"{nextResult}.");
+                    break;
+            }
         }
+
+        if (hasError && failureExitCode is {} exitCode)
+        {
+            Root.ExitTracker.Exit(exitCode);
+        }
+        
+        return result;
+    }
+
+    public static IEnumerable<TResult> EnsureSuccess<TResult>(
+        this IEnumerable<TResult> results,
+        Func<TResult, bool?>? isSuccess = default,
+        int? failureExitCode = 1)
+        where TResult: ICommandLineResult
+    {
+        ArgumentNullException.ThrowIfNull(results);
+        return EnsureSuccess<IEnumerable<TResult>, TResult>(results, isSuccess, failureExitCode);
     }
     
-    public static async Task<T> EnsureSuccess<T>(
-        this Task<T> resultTask,
-        Func<T, bool?>? isSuccess = default,
+    public static async Task<IEnumerable<TResult>> EnsureSuccess<TResult>(
+        this Task<IEnumerable<TResult>> result,
+        Func<TResult, bool?>? isSuccess = default,
         int? failureExitCode = 1)
-        where T : ICommandLineResult
+        where TResult: ICommandLineResult
     {
-        ArgumentNullException.ThrowIfNull(resultTask);
-        return EnsureSuccess(await resultTask, isSuccess, failureExitCode);
+        ArgumentNullException.ThrowIfNull(result);
+        return EnsureSuccess<IEnumerable<TResult>, TResult>(await result, isSuccess, failureExitCode);
+    }
+    
+    public static TResult[] EnsureSuccess<TResult>(
+        this TResult[] results,
+        Func<TResult, bool?>? isSuccess = default,
+        int? failureExitCode = 1)
+        where TResult: ICommandLineResult
+    {
+        ArgumentNullException.ThrowIfNull(results);
+        return EnsureSuccess<TResult[], TResult>(results, isSuccess, failureExitCode);
+    }
+    
+    public static async Task<TResult[]> EnsureSuccess<TResult>(
+        this Task<TResult[]> result,
+        Func<TResult, bool?>? isSuccess = default,
+        int? failureExitCode = 1)
+        where TResult: ICommandLineResult
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        return EnsureSuccess<TResult[], TResult>(await result, isSuccess, failureExitCode);
+    }
+
+    public static TResult EnsureSuccess<TResult>(
+        this TResult result,
+        Func<TResult, bool?>? isSuccess = default,
+        int? failureExitCode = 1)
+        where TResult : ICommandLineResult
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        return EnsureSuccess([result], isSuccess, failureExitCode).First();
+    }
+    
+    public static async Task<TResult> EnsureSuccess<TResult>(
+        this Task<TResult> result,
+        Func<TResult, bool?>? isSuccess = default,
+        int? failureExitCode = 1)
+        where TResult : ICommandLineResult
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        return EnsureSuccess(await result, isSuccess, failureExitCode);
     }
     
     public static bool TryGet<T>(

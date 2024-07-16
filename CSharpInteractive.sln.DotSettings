@@ -221,6 +221,8 @@
 	<s:Int64 x:Key="/Default/Environment/General/WorkspaceHostInitializationTimeout/@EntryValue">2000</s:Int64>
 	<s:String x:Key="/Default/Environment/Hierarchy/Build/SolBuilderDuo/UseMsbuildSolutionBuilder/@EntryValue">No</s:String>
 	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/SolutionBuilderNext/ParallelProcessesCount2/@EntryValue">8</s:Int64>
+	<s:String x:Key="/Default/Environment/Hierarchy/CSharpInteractiveOptions/ToolArguments/@EntryValue">csi</s:String>
+	<s:String x:Key="/Default/Environment/Hierarchy/CSharpInteractiveOptions/ToolPath/@EntryValue">C:\Program Files\dotnet\dotnet.exe</s:String>
 	<s:Boolean x:Key="/Default/Environment/OpenDocument/OpenDocumentAfterModification/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EApplication_002EExceptionReport_002EUserLoginInformationMigrateSettings/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EdotCover_002EInteractive_002ECore_002EFilterManagement_002EMigration_002EGlobalFilterSettingsManagerMigrateSettings/@EntryIndexedValue">True</s:Boolean>

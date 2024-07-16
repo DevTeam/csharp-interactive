@@ -61,7 +61,10 @@ public partial record CommandLine(
         return sb.ToString();
     }
 
-    private static string Escape(string text) => !text.TrimStart().StartsWith("\"") && text.Contains(' ') ? $"\"{text}\"" : text;
+    private static string Escape(string text) => 
+        !text.TrimStart().StartsWith("\"") && text.Contains(' ')
+            ? $"\"{text}\""
+            : text;
 
     internal class CommandLineDebugView(IStartInfo startInfo)
     {

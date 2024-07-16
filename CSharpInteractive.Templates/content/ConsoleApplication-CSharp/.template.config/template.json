@@ -8,7 +8,7 @@
   "name": "Build App",
   "generatorVersions": "[1.0.0.0-*)",
   "description": "A build project for creating a command-line application to run TeamCity C# script on Windows, Linux, macOS and under TeamCity build server.",
-  "groupIdentity": "TeamCity.Projects",
+  "groupIdentity": "Build.Projects",
   "precedence": "8000",
   "identity": "Build.Console",
   "shortName": "build",

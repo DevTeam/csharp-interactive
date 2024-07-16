@@ -122,7 +122,7 @@ public partial record DockerRun(
                 ("--name", Name ?? string.Empty),
                 ("--network", Network),
                 ("--platform", Platform),
-                ("--platform", Pull?.ToString() ?? string.Empty),
+                ("--pull", Pull?.ToString()?.ToLowerInvariant() ?? string.Empty),
                 ("--user", User),
                 ("--workdir", ContainerWorkingDirectory),
                 ("--env-file", EnvFile))
@@ -140,7 +140,10 @@ public partial record DockerRun(
             .WithVars(Vars.ToArray());
     }
     
-    public override string ToString() => !string.IsNullOrWhiteSpace(ShortName) ? ShortName : $"{CommandLine} in the docker container {Image}";
+    public override string ToString() => 
+        string.IsNullOrWhiteSpace(ShortName)
+            ? $"{CommandLine} in the docker container {Image}"
+            : ShortName;
     
     private class PathResolver(string platform, IDictionary<string, string> directoryMap) : IPathResolver
     {
@@ -174,10 +177,6 @@ public partial record DockerRun(
             return path;
         }
         
-        private bool IsWindows()
-        {
-            return platform.ToLower().Contains("windows");
-        }
-
+        private bool IsWindows() => platform.ToLower().Contains("windows");
     }
 }

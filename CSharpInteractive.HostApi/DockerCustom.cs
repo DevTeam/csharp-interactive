@@ -35,5 +35,8 @@ public partial record DockerCustom(
             .WithArgs(Args.ToArray());
     }
 
-    public override string ToString() => string.IsNullOrWhiteSpace(ShortName) ? ((ExecutablePath == string.Empty ? "docker" : Path.GetFileNameWithoutExtension(ExecutablePath)) + " " + Args.FirstOrDefault()).TrimEnd() : ShortName;
+    public override string ToString() => 
+        string.IsNullOrWhiteSpace(ShortName) 
+            ? ((ExecutablePath == string.Empty ? "docker" : Path.GetFileNameWithoutExtension(ExecutablePath)) + " " + Args.FirstOrDefault()).TrimEnd()
+            : ShortName;
 }
