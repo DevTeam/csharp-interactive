@@ -97,7 +97,6 @@ public partial record DotNetTest(
             .AddNotEmptyArgs(Project)
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
-            .AddMSBuildLoggers(host, Verbosity)
             .AddTestLoggers(host, Loggers)
             .AddArgs(
                 ("--settings", Settings),
@@ -130,6 +129,11 @@ public partial record DotNetTest(
             .AddProps("-p", Props.ToArray())
             .AddArgs(Args.ToArray());
 
+        if (string.IsNullOrWhiteSpace(Project) || Path.GetExtension(Project).ToLowerInvariant() != ".dll")
+        {
+            cmd = cmd.AddMSBuildLoggers(host, Verbosity);
+        }
+        
         var runSettings = RunSettings.Select(i => $"{i.name}={i.value}").ToArray();
         if (runSettings.Any())
         {

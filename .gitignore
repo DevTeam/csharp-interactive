@@ -2,8 +2,8 @@
 .idea/
 **/bin
 **/obj
-
 *.user
 .teamcity/target/
 .reports/
 .packages
+.publish

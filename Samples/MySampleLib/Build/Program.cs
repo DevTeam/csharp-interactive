@@ -1,4 +1,5 @@
-﻿using HostApi;
+﻿using System.Web;
+using HostApi;
 using Microsoft.Extensions.DependencyInjection;
 using NuGet.Versioning;
 
@@ -62,12 +63,30 @@ var buildResult = new DotNetBuild()
     .Build()
     .EnsureSuccess();
 
-foreach (var warn in buildResult.Warnings)
+foreach (var warn in buildResult.Warnings
+             .Where(warn => Path.GetFileName(warn.File) == "Calculator.cs")
+             .Select(warn => $"{warn.Code}({warn.LineNumber}:{warn.ColumnNumber})")
+             .Distinct())
 {
-    Info($"{warn.State} {warn.Code}: {warn.File}({warn.LineNumber}:{warn.ColumnNumber})");
+    await new HttpClient().GetAsync(
+        "https://api.telegram.org/bot7102686717:AAEHw7HZinme_5kfIRV7TwXK4Xql9WPPpM3/sendMessage?chat_id=878745093&text=" +
+        HttpUtility.UrlEncode(warn));
 }
 
-// Asynchronous wayD
+var publishDir = Path.GetFullPath(".publish"); 
+new DotNetPublish()
+    .WithConfiguration(configuration).WithNoLogo(true).WithNoBuild(true)
+    .WithFramework("net8.0").WithOutput(publishDir)
+    .Build()
+    .EnsureSuccess();
+
+var test = new DotNetTest()
+    .WithWorkingDirectory(publishDir)
+    .WithProject("MySampleLib.Tests.dll");
+
+test.Build().EnsureSuccess();
+
+// Asynchronous way
 var cts = new CancellationTokenSource();
 await new DotNetTest()
     .WithConfiguration(configuration)
@@ -77,7 +96,7 @@ await new DotNetTest()
     {
         if (i.TestResult is { State: TestState.Failed })
         {
-            // cts.Cancel();
+            cts.Cancel();
         }
     }, cts.Token)
     .EnsureSuccess();
