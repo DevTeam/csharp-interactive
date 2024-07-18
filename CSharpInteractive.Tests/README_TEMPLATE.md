@@ -123,8 +123,10 @@ public void Run()
 
 private class MyTask(ICommandLineRunner runner)
 {
-    public int? Run() => 
-        runner.Run(new CommandLine("whoami")).ExitCode;
+    public int? Run() => runner
+        .Run(new CommandLine("whoami"))
+        .EnsureSuccess()
+        .ExitCode;
 }
 
 ```
@@ -210,10 +212,10 @@ Trace("Some trace info");
 using HostApi;
 
 // Creates and run a simple command line 
-"whoami".AsCommandLine().Run();
+"whoami".AsCommandLine().Run().EnsureSuccess();
 
 // Creates and run a simple command line 
-new CommandLine("whoami").Run();
+new CommandLine("whoami").Run().EnsureSuccess();
 
 // Creates and run a command line with arguments 
 new CommandLine("cmd", "/c", "echo", "Hello").Run();
@@ -221,13 +223,20 @@ new CommandLine("cmd", "/c", "echo", "Hello").Run();
 // Same as previous statement
 new CommandLine("cmd", "/c")
     .AddArgs("echo", "Hello")
-    .Run();
+    .Run()
+    .EnsureSuccess();
 
-(new CommandLine("cmd") + "/c" + "echo" + "Hello").Run();
+(new CommandLine("cmd") + "/c" + "echo" + "Hello")
+    .Run()
+    .EnsureSuccess();
 
-"cmd".AsCommandLine("/c", "echo", "Hello").Run();
+"cmd".AsCommandLine("/c", "echo", "Hello")
+    .Run()
+    .EnsureSuccess();
 
-("cmd".AsCommandLine() + "/c" + "echo" + "Hello").Run();
+("cmd".AsCommandLine() + "/c" + "echo" + "Hello")
+    .Run()
+    .EnsureSuccess();
 
 // Just builds a command line with multiple environment variables
 var cmd = new CommandLine("cmd", "/c", "echo", "Hello")
@@ -255,10 +264,14 @@ cmd = new CommandLine("cmd", "/c", "echo", "Hello")
 // Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
-GetService<ICommandLineRunner>().Run(new CommandLine("cmd", "/c", "DIR")).EnsureSuccess();
+GetService<ICommandLineRunner>()
+    .Run(new CommandLine("cmd", "/c", "DIR"))
+    .EnsureSuccess();
 
 // or the same thing using the extension method
-new CommandLine("cmd", "/c", "DIR").Run().EnsureSuccess();
+new CommandLine("cmd", "/c", "DIR")
+    .Run()
+    .EnsureSuccess();
 
 // using operator '+'
 var cmd = new CommandLine("cmd") + "/c" + "DIR";
@@ -279,10 +292,14 @@ cmd.Run().EnsureSuccess();
 // Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
-var task = await GetService<ICommandLineRunner>().RunAsync(new CommandLine("cmd", "/C", "DIR"));
+await GetService<ICommandLineRunner>()
+    .RunAsync(new CommandLine("cmd", "/C", "DIR"))
+    .EnsureSuccess();
 
 // or the same thing using the extension method
-task = await new CommandLine("cmd", "/c", "DIR").RunAsync();
+var result = await new CommandLine("cmd", "/c", "DIR")
+    .RunAsync()
+    .EnsureSuccess();
 ```
 
 
@@ -296,9 +313,10 @@ task = await new CommandLine("cmd", "/c", "DIR").RunAsync();
 using HostApi;
 
 var lines = new List<string>();
-int? exitCode = new CommandLine("cmd", "/c", "SET")
+var result = new CommandLine("cmd", "/c", "SET")
     .AddVars(("MyEnv", "MyVal"))
-    .Run(output => lines.Add(output.Line)).ExitCode;
+    .Run(output => lines.Add(output.Line))
+    .EnsureSuccess();
 
 lines.ShouldContain("MyEnv=MyVal");
 ```
@@ -313,23 +331,30 @@ lines.ShouldContain("MyEnv=MyVal");
 // Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
-var task = new CommandLine("cmd", "/c", "DIR").RunAsync();
-var result = new CommandLine("cmd", "/c", "SET").Run();
-task.Wait();
+var task = new CommandLine("cmd", "/c", "DIR")
+    .RunAsync()
+    .EnsureSuccess();
+
+var result = new CommandLine("cmd", "/c", "SET")
+    .Run()
+    .EnsureSuccess();
+
+await task;
 ```
 
 
 
 ### Cancellation of asynchronous run
 
-The cancellation will kill a related process.
+Cancellation will destroy the process and its child processes.
 
 ``` CSharp
 // Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
 var cancellationTokenSource = new CancellationTokenSource();
-var task = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120").RunAsync(default, cancellationTokenSource.Token);
+var task = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
+    .RunAsync(default, cancellationTokenSource.Token);
 
 cancellationTokenSource.CancelAfter(TimeSpan.FromMilliseconds(100));
 task.IsCompleted.ShouldBeFalse();
@@ -345,7 +370,10 @@ If timeout expired a process will be killed.
 // Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
-int? exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120").Run(default, TimeSpan.FromMilliseconds(1)).ExitCode;
+int? exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
+    .Run(default, TimeSpan.FromMilliseconds(1))
+    .EnsureSuccess()
+    .ExitCode;
 
 exitCode.HasValue.ShouldBeFalse();
 ```
@@ -361,18 +389,26 @@ exitCode.HasValue.ShouldBeFalse();
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("xunit", "-n", "MyLib", "--force").Build();
-result.ExitCode.ShouldBe(0);
+new DotNetNew("xunit", "-n", "MyLib", "--force")
+    .Build()
+    .EnsureSuccess();
 
 // Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
-result = new DotNetBuild().WithWorkingDirectory("MyLib").Build();
+var result = new DotNetBuild()
+    .WithWorkingDirectory("MyLib")
+    .Build()
+    .EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
 result.ExitCode.ShouldBe(0);
 
 // Runs tests in docker
-result = new DotNetTest().WithWorkingDirectory("MyLib").Build();
+result = new DotNetTest()
+    .WithWorkingDirectory("MyLib")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 result.Summary.Tests.ShouldBe(1);
 result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
@@ -389,15 +425,25 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force").Build();
+var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
-result = new DotNetBuild().WithWorkingDirectory("MyLib").Build();
+result = new DotNetBuild()
+    .WithWorkingDirectory("MyLib")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Clean the project, running a command like: "dotnet clean" from the directory "MyLib"
-result = new DotNetClean().WithWorkingDirectory("MyLib").Build();
+result = new DotNetClean()
+    .WithWorkingDirectory("MyLib")
+    .Build()
+    .EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
@@ -415,7 +461,7 @@ using HostApi;
 
 // Gets the dotnet version, running a command like: "dotnet --version"
 NuGetVersion? version = default;
-var exitCode = new DotNetCustom("--version")
+new DotNetCustom("--version")
     .Run(message => NuGetVersion.TryParse(message.Line, out version))
     .EnsureSuccess();
 
@@ -433,13 +479,18 @@ version.ShouldNotBeNull();
 using HostApi;
 
 // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-var result = new DotNetNew("mstest", "-n", "MyTests", "--force").Build();
+var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Runs tests via a command like: "dotnet msbuild /t:VSTest" from the directory "MyTests"
 result = new MSBuild()
     .WithTarget("VSTest")
-    .WithWorkingDirectory("MyTests").Build();
+    .WithWorkingDirectory("MyTests")
+    .Build()
+    .EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
@@ -458,14 +509,18 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force").Build();
+var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Creates a NuGet package of version 1.2.3 for the project, running a command like: "dotnet pack /p:version=1.2.3" from the directory "MyLib"
 result = new DotNetPack()
         .WithWorkingDirectory("MyLib")
         .AddProps(("version", "1.2.3"))
-        .Build();
+        .Build()
+        .EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 ```
@@ -481,11 +536,19 @@ result.ExitCode.ShouldBe(0);
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force", "-f", "net8.0").Build();
+var result = new DotNetNew("classlib", "-n", "MyLib", "--force", "-f", "net8.0")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Publish the project, running a command like: "dotnet publish --framework net6.0" from the directory "MyLib"
-result = new DotNetPublish().WithWorkingDirectory("MyLib").WithFramework("net8.0").Build();
+result = new DotNetPublish()
+    .WithWorkingDirectory("MyLib")
+    .WithFramework("net8.0")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 ```
 
@@ -500,11 +563,18 @@ result.ExitCode.ShouldBe(0);
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force").Build();
+var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Restore the project, running a command like: "dotnet restore" from the directory "MyLib"
-result = new DotNetRestore().WithWorkingDirectory("MyLib").Build();
+result = new DotNetRestore()
+    .WithWorkingDirectory("MyLib")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 ```
 
@@ -519,12 +589,18 @@ result.ExitCode.ShouldBe(0);
 using HostApi;
 
 // Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
-var result = new DotNetNew("console", "-n", "MyApp", "--force").Build();
+var result = new DotNetNew("console", "-n", "MyApp", "--force")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Runs the console project using a command like: "dotnet run" from the directory "MyApp"
 var stdOut = new List<string>();
-result = new DotNetRun().WithWorkingDirectory("MyApp").Build(message => stdOut.Add(message.Text));
+result = new DotNetRun().WithWorkingDirectory("MyApp")
+    .Build(message => stdOut.Add(message.Text))
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Checks StdOut
@@ -542,11 +618,17 @@ stdOut.ShouldBe(new[] {"Hello, World!"});
 using HostApi;
 
 // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-var result = new DotNetNew("mstest", "-n", "MyTests", "--force").Build();
+var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Runs tests via a command like: "dotnet test" from the directory "MyTests"
-result = new DotNetTest().WithWorkingDirectory("MyTests").Build();
+result = new DotNetTest()
+    .WithWorkingDirectory("MyTests")
+    .Build()
+    .EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
@@ -566,18 +648,23 @@ using HostApi;
 
 // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
 new DotNetNew("mstest", "-n", "MyTests", "--force")
-    .Run().EnsureSuccess();
+    .Run()
+    .EnsureSuccess();
 
 // Creates the tool manifest and installs the dotCover tool locally
 // It is better to run the following 2 commands manually
 // and commit these changes to a source control
-new DotNetNew("tool-manifest").Run().EnsureSuccess();
+new DotNetNew("tool-manifest")
+    .Run()
+    .EnsureSuccess();
 
 new DotNetCustom("tool", "install", "--local", "JetBrains.dotCover.GlobalTool")
-    .Run().EnsureSuccess();
+    .Run()
+    .EnsureSuccess();
 
 // Creates a test command
-var test = new DotNetTest().WithProject("MyTests");
+var test = new DotNetTest()
+    .WithProject("MyTests");
 
 var dotCoverSnapshot = Path.Combine("MyTests", "dotCover.dcvr");
 var dotCoverReport = Path.Combine("MyTests", "dotCover.html");
@@ -593,7 +680,9 @@ var testUnderDotCover = test.Customize(cmd =>
     + "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage");
     
 // Runs tests under dotCover via a command like: "dotnet dotcover test ..."
-var result = testUnderDotCover.Build();
+var result = testUnderDotCover
+    .Build()
+    .EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
@@ -621,10 +710,16 @@ var projectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]
 Directory.CreateDirectory(projectDir);
     
 // Creates a local tool manifest 
-new DotNetNew("tool-manifest").WithWorkingDirectory(projectDir).Run().EnsureSuccess();
+new DotNetNew("tool-manifest")
+    .WithWorkingDirectory(projectDir)
+    .Run()
+    .EnsureSuccess();
 
 // Restore local tools
-new DotNetToolRestore().WithWorkingDirectory(projectDir).Run().EnsureSuccess();
+new DotNetToolRestore()
+    .WithWorkingDirectory(projectDir)
+    .Run()
+    .EnsureSuccess();
 ```
 
 
@@ -638,18 +733,28 @@ new DotNetToolRestore().WithWorkingDirectory(projectDir).Run().EnsureSuccess();
 using HostApi;
 
 // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-var result = new DotNetNew("mstest", "-n", "MyTests", "--force").Build();
+var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Builds the test project, running a command like: "dotnet build -c Release" from the directory "MyTests"
-result = new DotNetBuild().WithWorkingDirectory("MyTests").WithConfiguration("Release").WithOutput("MyOutput").Build();
+result = new DotNetBuild()
+    .WithWorkingDirectory("MyTests")
+    .WithConfiguration("Release")
+    .WithOutput("MyOutput")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Runs tests via a command like: "dotnet vstest" from the directory "MyTests"
 result = new VSTest()
     .AddTestFileNames(Path.Combine("MyOutput", "MyTests.dll"))
     .WithWorkingDirectory("MyTests")
-    .Build();
+    .Build()
+    .EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
@@ -668,7 +773,10 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force").Build();
+var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
+    .Build()
+    .EnsureSuccess();
+
 result.ExitCode.ShouldBe(0);
 
 // Builds the library project, running a command like: "dotnet msbuild /t:Build -restore /p:configuration=Release -verbosity=detailed" from the directory "MyLib"
@@ -678,7 +786,8 @@ result = new MSBuild()
     .WithRestore(true)
     .AddProps(("configuration", "Release"))
     .WithVerbosity(DotNetVerbosity.Detailed)
-    .Build();
+    .Build()
+    .EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
@@ -696,7 +805,9 @@ result.ExitCode.ShouldBe(0);
 using HostApi;
 
 // Shuts down all build servers that are started from dotnet.
-new DotNetBuildServerShutdown().Run().EnsureSuccess();
+new DotNetBuildServerShutdown()
+    .Run()
+    .EnsureSuccess();
 ```
 
 
@@ -709,7 +820,8 @@ new DotNetBuildServerShutdown().Run().EnsureSuccess();
 // Adds the namespace "HostApi" to use INuGet
 using HostApi;
 
-IEnumerable<NuGetPackage> packages = GetService<INuGet>().Restore(new NuGetRestoreSettings("IoC.Container").WithVersionRange(VersionRange.All));
+IEnumerable<NuGetPackage> packages = GetService<INuGet>()
+    .Restore(new NuGetRestoreSettings("IoC.Container").WithVersionRange(VersionRange.All));
 ```
 
 
@@ -757,12 +869,14 @@ var dockerRun = new DockerRun()
 // Creates a new library project in a docker container
 dockerRun
     .WithCommandLine(new DotNetCustom("new", "classlib", "-n", "MyLib", "--force"))
-    .Run().EnsureSuccess();
+    .Run()
+    .EnsureSuccess();
 
 // Builds the library project in a docker container
 var result = dockerRun
     .WithCommandLine(new DotNetBuild().WithProject("MyLib/MyLib.csproj"))
-    .Build();
+    .Build()
+    .EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();

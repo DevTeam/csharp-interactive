@@ -24,13 +24,14 @@ public class CommandLineOutputScenario : BaseScenario
         // ## using HostApi;
 
         var lines = new List<string>();
-        int? exitCode = new CommandLine("cmd", "/c", "SET")
+        var result = new CommandLine("cmd", "/c", "SET")
             .AddVars(("MyEnv", "MyVal"))
-            .Run(output => lines.Add(output.Line)).ExitCode;
+            .Run(output => lines.Add(output.Line))
+            .EnsureSuccess();
 
         lines.ShouldContain("MyEnv=MyVal");
         // }
 
-        exitCode.HasValue.ShouldBeTrue();
+        result.ExitCode.HasValue.ShouldBeTrue();
     }
 }

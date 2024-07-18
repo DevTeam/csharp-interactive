@@ -25,10 +25,16 @@ public class DotNetToolRestoreScenario : BaseScenario
         Directory.CreateDirectory(projectDir);
             
         // Creates a local tool manifest 
-        new DotNetNew("tool-manifest").WithWorkingDirectory(projectDir).Run().EnsureSuccess();
+        new DotNetNew("tool-manifest")
+            .WithWorkingDirectory(projectDir)
+            .Run()
+            .EnsureSuccess();
 
         // Restore local tools
-        new DotNetToolRestore().WithWorkingDirectory(projectDir).Run().EnsureSuccess();
+        new DotNetToolRestore()
+            .WithWorkingDirectory(projectDir)
+            .Run()
+            .EnsureSuccess();
         // }
         
         Directory.Delete(projectDir, true);

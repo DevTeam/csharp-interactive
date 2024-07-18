@@ -23,10 +23,14 @@ public class CommandLineScenario : BaseScenario
         // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
-        GetService<ICommandLineRunner>().Run(new CommandLine("cmd", "/c", "DIR")).EnsureSuccess();
+        GetService<ICommandLineRunner>()
+            .Run(new CommandLine("cmd", "/c", "DIR"))
+            .EnsureSuccess();
         
         // or the same thing using the extension method
-        new CommandLine("cmd", "/c", "DIR").Run().EnsureSuccess();
+        new CommandLine("cmd", "/c", "DIR")
+            .Run()
+            .EnsureSuccess();
         
         // using operator '+'
         var cmd = new CommandLine("cmd") + "/c" + "DIR";

@@ -30,5 +30,7 @@ public class DockerRunScenario : BaseScenario
             .Run()
             .EnsureSuccess();
         // }
+        
+        result.ExitCode.ShouldBe(0);
     }
 }

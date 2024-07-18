@@ -19,13 +19,14 @@ public class CommandLineAsyncCancellation : BaseScenario
         // $tag=10 Command Line API
         // $priority=06
         // $description=Cancellation of asynchronous run
-        // $header=The cancellation will kill a related process.
+        // $header=Cancellation will destroy the process and its child processes.
         // {
         // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
         var cancellationTokenSource = new CancellationTokenSource();
-        var task = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120").RunAsync(default, cancellationTokenSource.Token);
+        var task = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
+            .RunAsync(default, cancellationTokenSource.Token);
 
         cancellationTokenSource.CancelAfter(TimeSpan.FromMilliseconds(100));
         task.IsCompleted.ShouldBeFalse();

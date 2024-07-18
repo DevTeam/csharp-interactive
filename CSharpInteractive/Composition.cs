@@ -86,7 +86,7 @@ internal partial class Composition
                 })
                 .Bind().To<CISettings>()
                 .Bind().To<ExitTracker>()
-                .Bind<IEnvironment, IScriptContext, IErrorContext>().Bind<ITraceSource>(Tag.Type).To<Environment>()
+                .Bind().Bind<ITraceSource>(Tag.Type).To<Environment>()
                 .Bind<IEnvironmentVariables>().Bind<ITraceSource>(Tag.Type).To<EnvironmentVariables>()
                 .Bind().To<Settings>()
                 .Bind().To<Info>()

@@ -27,8 +27,10 @@ public class ServiceCollectionScenario : BaseScenario
 
     private class MyTask(ICommandLineRunner runner)
     {
-        public int? Run() => 
-            runner.Run(new CommandLine("whoami")).ExitCode;
+        public int? Run() => runner
+            .Run(new CommandLine("whoami"))
+            .EnsureSuccess()
+            .ExitCode;
     }
     
     // }

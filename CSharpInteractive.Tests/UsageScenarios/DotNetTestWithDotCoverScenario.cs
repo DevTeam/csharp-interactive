@@ -22,18 +22,23 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
 
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
         new DotNetNew("mstest", "-n", "MyTests", "--force")
-            .Run().EnsureSuccess();
+            .Run()
+            .EnsureSuccess();
 
         // Creates the tool manifest and installs the dotCover tool locally
         // It is better to run the following 2 commands manually
         // and commit these changes to a source control
-        new DotNetNew("tool-manifest").Run().EnsureSuccess();
+        new DotNetNew("tool-manifest")
+            .Run()
+            .EnsureSuccess();
 
         new DotNetCustom("tool", "install", "--local", "JetBrains.dotCover.GlobalTool")
-            .Run().EnsureSuccess();
+            .Run()
+            .EnsureSuccess();
         
         // Creates a test command
-        var test = new DotNetTest().WithProject("MyTests");
+        var test = new DotNetTest()
+            .WithProject("MyTests");
         
         var dotCoverSnapshot = Path.Combine("MyTests", "dotCover.dcvr");
         var dotCoverReport = Path.Combine("MyTests", "dotCover.html");
@@ -49,7 +54,9 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
             + "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage");
             
         // Runs tests under dotCover via a command like: "dotnet dotcover test ..."
-        var result = testUnderDotCover.Build();
+        var result = testUnderDotCover
+            .Build()
+            .EnsureSuccess();
 
         // The "result" variable provides details about a build
         result.ExitCode.ShouldBe(0);

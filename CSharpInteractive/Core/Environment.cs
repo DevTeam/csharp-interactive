@@ -7,12 +7,17 @@ using System.Runtime.InteropServices;
 
 internal class Environment:
     IEnvironment,
+    ITestEnvironment,
     ITraceSource,
     IScriptContext,
     IErrorContext
 {
     private static readonly OSPlatform UnknownOSPlatform = OSPlatform.Create("Unknown");
     private readonly LinkedList<ICodeSource> _sources = [];
+
+    public bool IsTesting { get; set; }
+
+    public int? ExitCode { get; set; }
 
     public OSPlatform OperatingSystemPlatform
     {
@@ -70,6 +75,17 @@ internal class Environment:
             SpecialFolder.Working => GetWorkingDirectory(),
             _ => throw new ArgumentOutOfRangeException(nameof(specialFolder), specialFolder, null)
         };
+    }
+
+    public void Exit(int exitCode)
+    {
+        ExitCode = exitCode;
+        if (IsTesting)
+        {
+            return;
+        }
+
+        System.Environment.Exit(exitCode);
     }
 
     public IEnumerable<Text> Trace

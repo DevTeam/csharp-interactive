@@ -15,6 +15,7 @@ public class BaseScenario : IHost, IDisposable
 
     public BaseScenario()
     {
+        Composition.Shared.Root.TestEnvironment.ExitCode = default;
         _tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
         Directory.CreateDirectory(_tempDir);
         _prevCurDir = Environment.CurrentDirectory;
@@ -81,5 +82,6 @@ public class BaseScenario : IHost, IDisposable
         }
         
         Environment.CurrentDirectory = _prevCurDir;
+        Composition.Shared.Root.TestEnvironment.ExitCode.ShouldBe(0);
     }
 }

@@ -26,10 +26,10 @@ public class CommandLinesScenario : BaseScenario
         // ## using HostApi;
         
         // Creates and run a simple command line 
-        "whoami".AsCommandLine().Run();
+        "whoami".AsCommandLine().Run().EnsureSuccess();
 
         // Creates and run a simple command line 
-        new CommandLine("whoami").Run();
+        new CommandLine("whoami").Run().EnsureSuccess();
 
         // Creates and run a command line with arguments 
         new CommandLine("cmd", "/c", "echo", "Hello").Run();
@@ -37,13 +37,20 @@ public class CommandLinesScenario : BaseScenario
         // Same as previous statement
         new CommandLine("cmd", "/c")
             .AddArgs("echo", "Hello")
-            .Run();
+            .Run()
+            .EnsureSuccess();
         
-        (new CommandLine("cmd") + "/c" + "echo" + "Hello").Run();
+        (new CommandLine("cmd") + "/c" + "echo" + "Hello")
+            .Run()
+            .EnsureSuccess();
         
-        "cmd".AsCommandLine("/c", "echo", "Hello").Run();
+        "cmd".AsCommandLine("/c", "echo", "Hello")
+            .Run()
+            .EnsureSuccess();
         
-        ("cmd".AsCommandLine() + "/c" + "echo" + "Hello").Run();
+        ("cmd".AsCommandLine() + "/c" + "echo" + "Hello")
+            .Run()
+            .EnsureSuccess();
         
         // Just builds a command line with multiple environment variables
         var cmd = new CommandLine("cmd", "/c", "echo", "Hello")

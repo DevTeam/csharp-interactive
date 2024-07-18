@@ -11,7 +11,7 @@ using HostApi;
 public class CommandLineInParallelScenario : BaseScenario
 {
     [SkippableFact]
-    public void Run()
+    public async Task Run()
     {
         Skip.IfNot(Environment.OSVersion.Platform == PlatformID.Win32NT);
         Skip.IfNot(string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_VERSION")));
@@ -24,9 +24,15 @@ public class CommandLineInParallelScenario : BaseScenario
         // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
-        var task = new CommandLine("cmd", "/c", "DIR").RunAsync();
-        var result = new CommandLine("cmd", "/c", "SET").Run();
-        task.Wait();
+        var task = new CommandLine("cmd", "/c", "DIR")
+            .RunAsync()
+            .EnsureSuccess();
+        
+        var result = new CommandLine("cmd", "/c", "SET")
+            .Run()
+            .EnsureSuccess();
+        
+        await task;
         // }
 
         task.Result.ExitCode.HasValue.ShouldBeTrue();

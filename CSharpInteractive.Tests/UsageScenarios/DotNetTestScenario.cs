@@ -21,11 +21,17 @@ public class DotNetTestScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var result = new DotNetNew("mstest", "-n", "MyTests", "--force").Build();
+        var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
+            .Build()
+            .EnsureSuccess();
+        
         result.ExitCode.ShouldBe(0);
 
         // Runs tests via a command like: "dotnet test" from the directory "MyTests"
-        result = new DotNetTest().WithWorkingDirectory("MyTests").Build();
+        result = new DotNetTest()
+            .WithWorkingDirectory("MyTests")
+            .Build()
+            .EnsureSuccess();
 
         // The "result" variable provides details about a build
         result.ExitCode.ShouldBe(0);

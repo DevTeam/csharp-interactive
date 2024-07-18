@@ -15,6 +15,7 @@ internal record Root(
     Program Program,
 #endif
     IHost Host,
+    ITestEnvironment TestEnvironment,
     IStatisticsRegistry StatisticsRegistry,
     ILog<Root> Log,
     IInfo Info,

@@ -22,11 +22,18 @@ public class DotNetRestoreScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-        var result = new DotNetNew("classlib", "-n", "MyLib", "--force").Build();
+        var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
+            .Build()
+            .EnsureSuccess();
+        
         result.ExitCode.ShouldBe(0);
 
         // Restore the project, running a command like: "dotnet restore" from the directory "MyLib"
-        result = new DotNetRestore().WithWorkingDirectory("MyLib").Build();
+        result = new DotNetRestore()
+            .WithWorkingDirectory("MyLib")
+            .Build()
+            .EnsureSuccess();
+        
         result.ExitCode.ShouldBe(0);
         // }
     }

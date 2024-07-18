@@ -8,6 +8,7 @@ using System.Reflection;
 internal class ExitTracker(
     ISettings settings,
     IPresenter<Summary> summaryPresenter,
+    IEnvironment environment,
     CancellationTokenSource cancellationTokenSource)
     : IExitTracker
 {
@@ -36,7 +37,7 @@ internal class ExitTracker(
         Host.Finish();
 #endif
         ClearEvents(typeof(AppContext));
-        System.Environment.Exit(exitCode);
+        environment.Exit(exitCode);
     }
     
     private static void ClearEvents(Type type)

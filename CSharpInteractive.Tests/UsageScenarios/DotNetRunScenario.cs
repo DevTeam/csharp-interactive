@@ -23,12 +23,18 @@ public class DotNetRunScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
-        var result = new DotNetNew("console", "-n", "MyApp", "--force").Build();
+        var result = new DotNetNew("console", "-n", "MyApp", "--force")
+            .Build()
+            .EnsureSuccess();
+        
         result.ExitCode.ShouldBe(0);
 
         // Runs the console project using a command like: "dotnet run" from the directory "MyApp"
         var stdOut = new List<string>();
-        result = new DotNetRun().WithWorkingDirectory("MyApp").Build(message => stdOut.Add(message.Text));
+        result = new DotNetRun().WithWorkingDirectory("MyApp")
+            .Build(message => stdOut.Add(message.Text))
+            .EnsureSuccess();
+        
         result.ExitCode.ShouldBe(0);
 
         // Checks StdOut

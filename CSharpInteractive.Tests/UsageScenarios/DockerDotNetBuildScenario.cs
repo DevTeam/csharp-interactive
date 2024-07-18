@@ -39,12 +39,14 @@ public class DockerDotNetBuildScenario : BaseScenario
         // Creates a new library project in a docker container
         dockerRun
             .WithCommandLine(new DotNetCustom("new", "classlib", "-n", "MyLib", "--force"))
-            .Run().EnsureSuccess();
+            .Run()
+            .EnsureSuccess();
 
         // Builds the library project in a docker container
         var result = dockerRun
             .WithCommandLine(new DotNetBuild().WithProject("MyLib/MyLib.csproj"))
-            .Build();
+            .Build()
+            .EnsureSuccess();
 
         // The "result" variable provides details about a build
         result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
