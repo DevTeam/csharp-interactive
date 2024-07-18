@@ -74,7 +74,7 @@ foreach (var warning in warnings)
         + HttpUtility.UrlEncode(warning));
 }
 
-// Asynchronous wayS
+// Asynchronous way
 var cts = new CancellationTokenSource();
 /*await new DotNetTest()
     .WithConfiguration(configuration)
