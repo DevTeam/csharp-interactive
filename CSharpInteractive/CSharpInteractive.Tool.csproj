@@ -13,6 +13,7 @@
         <ProjectOutputPath>$(configuration)/$(MSBuildThisFileName)</ProjectOutputPath>
         <OutputPath>bin/$(ProjectOutputPath)</OutputPath>
         <IntermediateOutputPath>obj/$(MSBuildThisFileName)/</IntermediateOutputPath>
+        <ApplicationIcon>../docs/icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <PropertyGroup>

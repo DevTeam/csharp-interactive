@@ -1,6 +1,8 @@
-## C# script tool
+#  Build automation system for .NET
 
 [![NuGet csi](https://buildstats.info/nuget/dotnet-csi?includePreReleases=true)](https://www.nuget.org/packages/dotnet-csi) ![GitHub](https://img.shields.io/github/license/devteam/csharp-interactive) [<img src="http://teamcity.jetbrains.com/app/rest/builds/buildType:(id:OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest)/statusIcon.svg"/>](http://teamcity.jetbrains.com/viewType.html?buildTypeId=OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest&guest=1)
+
+![](docs/csharp_cat.png)
 
 This is a repository of dotnet-csi which is an interactive tool for running C# scripts. It can installed as a command-line tool on Windows, Linux, or macOS.
 
