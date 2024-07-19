@@ -15,12 +15,15 @@ public class BaseScenario : IHost, IDisposable
 
     public BaseScenario()
     {
+        Composition.Shared.Root.TestEnvironment.IsTesting = true;
         Composition.Shared.Root.TestEnvironment.ExitCode = default;
         _tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
         Directory.CreateDirectory(_tempDir);
         _prevCurDir = Environment.CurrentDirectory;
         Environment.CurrentDirectory = _tempDir;
     }
+
+    public int ExpectedExitCode { get; set; }
 
     // ReSharper disable once MemberCanBeProtected.Global
     public IHost Host => this;
@@ -82,6 +85,9 @@ public class BaseScenario : IHost, IDisposable
         }
         
         Environment.CurrentDirectory = _prevCurDir;
-        Composition.Shared.Root.TestEnvironment.ExitCode.ShouldBe(0);
+        if (Composition.Shared.Root.TestEnvironment.ExitCode is { } exitCode)
+        {
+            exitCode.ShouldBe(ExpectedExitCode);
+        }
     }
 }

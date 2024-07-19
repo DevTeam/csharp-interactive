@@ -14,6 +14,7 @@ public class CommandLineWithTimeoutScenario : BaseScenario
     {
         Skip.IfNot(Environment.OSVersion.Platform == PlatformID.Win32NT);
         Skip.IfNot(string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_VERSION")));
+        ExpectedExitCode = 1;
 
         // $visible=true
         // $tag=10 Command Line API
