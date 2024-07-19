@@ -7,6 +7,15 @@ using Internal.DotNet;
 
 /// <summary>
 /// The dotnet build command builds the project and its dependencies into a set of binaries. The binaries include the project's code in Intermediate Language (IL) files with a .dll extension. Depending on the project type and settings, other files may be included.
+/// <example>
+/// <code>
+/// var configuration = Props.Get("configuration", "Release");
+///
+/// 
+/// new DotNetBuild().WithConfiguration(configuration)
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
 [Target]
 public partial record DotNetBuild(
@@ -24,7 +33,7 @@ public partial record DotNetBuild(
     string WorkingDirectory = "",
     // The project or solution file to build. If a project or solution file isn't specified, MSBuild searches the current working directory for a file that has a file extension that ends in either proj or sln and uses that file.
     string Project = "",
-    // Directory in which to place the built binaries. If not specified, the default path is ./bin/<configuration>/<framework>/. For projects with multiple target frameworks (via the TargetFrameworks property), you also need to define --framework when you specify this option.
+    // Directory in which to place the built binaries. If not specified, the default path is ./bin/&lt;configuration&gt;/&lt;framework&gt;/. For projects with multiple target frameworks (via the TargetFrameworks property), you also need to define --framework when you specify this option.
     string Output = "",
     // Compiles for a specific framework. The framework must be defined in the project file.
     string Framework = "",
@@ -48,19 +57,24 @@ public partial record DotNetBuild(
     bool? SelfContained = default,
     // Publishes the application as a framework dependent application. A compatible .NET runtime must be installed on the target machine to run the application. Available since .NET 6 SDK.
     bool? NoSelfContained = default,
-    // Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don't use the -r|--runtime option. Available since .NET 6 Preview 7.
+    // Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don&amp;apos;t use the -r|--runtime option. Available since .NET 6 Preview 7.
     string Arch = "",
-    // Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don't use the -r|--runtime option. Available since .NET 6.
+    // Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6.
     string OS = "",
     // Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.
     DotNetVerbosity? Verbosity = default,
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetBuild(params string[] args)
         : this([], args, [], [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -95,5 +109,6 @@ public partial record DotNetBuild(
             .AddArgs(Args.ToArray());
     }
 
+    /// <inheritdoc/>
     public override string ToString() => "dotnet build".GetShortName(ShortName, Project);
 }

@@ -7,10 +7,12 @@
         <IsPackable>false</IsPackable>
         <RootNamespace>HostApi</RootNamespace>
         <ImmutypeAPI>True</ImmutypeAPI>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>CS1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Immutype" Version="1.0.14">
+        <PackageReference Include="Immutype" Version="1.0.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

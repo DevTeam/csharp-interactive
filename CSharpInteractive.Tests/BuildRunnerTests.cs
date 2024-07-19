@@ -61,7 +61,7 @@ public class BuildRunnerTests
             .Callback<ProcessInfo, Output, IReadOnlyCollection<BuildMessage>, Action<BuildMessage>>((_, o, _, _) => { o.Handled = handled; });
 
         // When
-        var result = buildService.Run(_process.Object, customHandler, TimeSpan.FromSeconds(1));
+        var result = buildService.Build(_process.Object, customHandler, TimeSpan.FromSeconds(1));
 
         // Then
         output.Handled.ShouldBeTrue();
@@ -92,7 +92,7 @@ public class BuildRunnerTests
             .Returns(_processResult);
 
         // When
-        var result = buildService.Run(_process.Object, default, TimeSpan.FromSeconds(1));
+        var result = buildService.Build(_process.Object, default, TimeSpan.FromSeconds(1));
 
         // Then
         output.Handled.ShouldBeTrue();
@@ -114,7 +114,7 @@ public class BuildRunnerTests
         var handler = Mock.Of<Action<BuildMessage>>();
 
         // When
-        var result = await buildService.RunAsync(_process.Object, handler, token);
+        var result = await buildService.BuildAsync(_process.Object, handler, token);
 
         // Then
         _teamCityContext.VerifySet(i => i.TeamCityIntegration = true);

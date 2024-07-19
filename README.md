@@ -895,7 +895,7 @@ var dotCoverReport = Path.Combine("MyTests", "dotCover.html");
 // Modifies the test command by putting "dotCover" in front of all arguments
 // to have something like "dotnet dotcover test ..."
 // and adding few specific arguments to the end
-var testUnderDotCover = test.Customize(cmd =>
+var testUnderDotCover = test.Customise(cmd =>
     cmd.ClearArgs()
     + "dotcover"
     + cmd.Args

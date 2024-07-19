@@ -7,6 +7,12 @@ using Internal.DotNet;
 
 /// <summary>
 /// The dotnet publish command compiles the application, reads through its dependencies specified in the project file, and publishes the resulting set of files to a directory.
+/// <example>
+/// <code>
+/// new DotNetPublish().AddProps(("PublishDir", ".publish"))
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
 [Target]
 public partial record DotNetPublish(
@@ -51,19 +57,24 @@ public partial record DotNetPublish(
     string VersionSuffix = "",
     // Doesn't execute an implicit restore when running the command.
     bool? NoRestore = default,
-    // Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don't use the -r|--runtime option. Available since .NET 6 Preview 7.
+    // Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don&amp;apos;t use the -r|--runtime option. Available since .NET 6 Preview 7.
     string Arch = "",
-    // Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don't use the -r|--runtime option. Available since .NET 6.
+    // Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6.
     string OS = "",
     // Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.
     DotNetVerbosity? Verbosity = default,
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetPublish(params string[] args)
         : this([], args, [], [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -99,5 +110,6 @@ public partial record DotNetPublish(
             .AddArgs(Args.ToArray());
     }
 
+    /// <inheritdoc/>
     public override string ToString() => "dotnet publish".GetShortName(ShortName, Project);
 }

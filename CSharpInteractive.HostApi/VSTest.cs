@@ -9,7 +9,21 @@ using Internal.DotNet;
 
 /// <summary>
 /// The dotnet vstest command runs the VSTest.Console command-line application to run automated unit tests.
+/// <example>
+/// <code>
+/// new DotNetPublish()
+///     .WithFramework("net8.0").AddProps(("PublishDir", ".bin"))
+///     .Build().EnsureSuccess();
+///
+/// 
+/// new VSTest()
+///     .WithWorkingDirectory(".bin")
+///     .WithTestFileNames("*.Tests.dll");
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
+/// <seealso cref="DotNetPublish"/>
 [Target]
 public partial record VSTest(
     IEnumerable<string> TestFileNames,
@@ -27,7 +41,7 @@ public partial record VSTest(
     string WorkingDirectory = "",
     // Run tests with names that match the provided values. Separate multiple values with commas.
     string Tests = "",
-    // Run tests that match the given expression. <EXPRESSION> is of the format <property>Operator<value>[|&<EXPRESSION>], where Operator is one of =, !=, or ~. Operator ~ has 'contains' semantics and is applicable for string properties like DisplayName. Parentheses () are used to group subexpressions.
+    // Run tests that match the given expression. &lt;EXPRESSION&gt; is of the format &lt;property&gt;Operator&lt;value&gt;[|&amp;&lt;EXPRESSION&gt;], where Operator is one of =, !=, or ~. Operator ~ has &apos;contains&apos; semantics and is applicable for string properties like DisplayName. Parentheses () are used to group subexpressions.
     string TestCaseFilter = "",
     // Target .NET Framework version used for test execution. Examples of valid values are .NETFramework,Version=v4.6 or .NETCoreApp,Version=v1.0. Other supported values are Framework40, Framework45, FrameworkCore10, and FrameworkUap10.
     string Framework = "",
@@ -59,10 +73,15 @@ public partial record VSTest(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public VSTest(params string[] args)
         : this([], args, [], [], [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -113,5 +132,7 @@ public partial record VSTest(
         return cmd;
     }
     
-    public override string ToString() => (string.IsNullOrWhiteSpace(ShortName) ? "dotnet vstest" : ShortName).GetShortName(ShortName, string.Empty);
+    /// <inheritdoc/>
+    public override string ToString() => 
+        (string.IsNullOrWhiteSpace(ShortName) ? "dotnet vstest" : ShortName).GetShortName(ShortName, string.Empty);
 }

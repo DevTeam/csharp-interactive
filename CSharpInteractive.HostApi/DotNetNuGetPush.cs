@@ -4,6 +4,17 @@ namespace HostApi;
 
 using Internal.DotNet;
 
+/// <summary>
+/// The dotnet push command pushes a package to the server and publishes it.
+/// <example>
+/// <code>
+/// var apiKey = Props.Get("apiKey", "");
+/// 
+/// 
+/// new DotNetNuGetPush().WithApiKey(apiKey);
+/// </code>
+/// </example> 
+/// </summary>
 [Target]
 public partial record DotNetNuGetPush(
     // Specifies the set of command line arguments to use when starting the tool.
@@ -39,10 +50,15 @@ public partial record DotNetNuGetPush(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetNuGetPush(params string[] args)
         : this(args, [], [], [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -69,5 +85,6 @@ public partial record DotNetNuGetPush(
             .AddArgs(Args.ToArray());
     }
 
+    /// <inheritdoc/>
     public override string ToString() => "dotnet nuget push".GetShortName(ShortName, Package);
 }

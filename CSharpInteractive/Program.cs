@@ -2,9 +2,16 @@
 
 using Core;
 
+/// <summary>
+/// Class entry point to the application.
+/// </summary>
 public class Program
 {
     // ReSharper disable once UnusedMember.Global
+    /// <summary>
+    /// Method entry point to the application.
+    /// </summary>
+    /// <returns></returns>
     public static int Main()
     {
         using (Composition.Shared)

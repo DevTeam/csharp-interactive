@@ -6,9 +6,16 @@ namespace HostApi;
 using Internal.DotNet;
 
 /// <summary>
-/// The dotnet custom command is used to execute any dotnet commands with any arguments. 
+/// The dotnet custom command is used to execute any dotnet commands with any arguments.
+/// <example>
+/// <code>
+/// NuGetVersion? version = default;
+/// new DotNetCustom("--version")
+///     .Run(message => NuGetVersion.TryParse(message.Line, out version))
+///     .EnsureSuccess();
+/// </code>
+/// </example> 
 /// </summary>
-
 [Target]
 public partial record DotNetCustom(
     // Specifies the set of command line arguments to use when starting the tool.
@@ -22,10 +29,15 @@ public partial record DotNetCustom(
     // Specifies whether the ability to use build loggers is supported. The default is set to true.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetCustom(params string[] args)
         : this(args, [])
     { }
     
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -36,5 +48,9 @@ public partial record DotNetCustom(
             .WithArgs(Args.ToArray());
     }
 
-    public override string ToString() => (ExecutablePath == string.Empty ? "dotnet" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Args.FirstOrDefault() ?? string.Empty);
+    /// <inheritdoc/>
+    public override string ToString() => 
+        (ExecutablePath == string.Empty
+            ? "dotnet"
+            : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Args.FirstOrDefault()?? string.Empty);
 }

@@ -6,6 +6,12 @@ using Internal.DotNet;
 
 /// <summary>
 /// The dotnet restore command uses NuGet to restore dependencies as well as project-specific tools that are specified in the project file. In most cases, you don't need to explicitly use the dotnet restore command.
+/// <example>
+/// <code>
+/// new DotNetRestore()
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
 [Target]
 public partial record DotNetRestore(
@@ -37,7 +43,7 @@ public partial record DotNetRestore(
     bool? IgnoreFailedSources = default,
     // Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.
     bool? Force = default,
-    // Specifies a runtime for the package restore. This is used to restore packages for runtimes not explicitly listed in the <RuntimeIdentifiers> tag in the .csproj file. For a list of Runtime Identifiers (RIDs), see the RID catalog. Provide multiple RIDs by specifying this option multiple times.
+    // Specifies a runtime for the package restore. This is used to restore packages for runtimes not explicitly listed in the &lt;RuntimeIdentifiers&gt; tag in the .csproj file. For a list of Runtime Identifiers (RIDs), see the RID catalog. Provide multiple RIDs by specifying this option multiple times.
     string Runtime = "",
     // When restoring a project with project-to-project (P2P) references, restores the root project and not the references.
     bool? NoDependencies = default,
@@ -54,10 +60,15 @@ public partial record DotNetRestore(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetRestore(params string[] args)
         : this([], args, [], [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -90,5 +101,6 @@ public partial record DotNetRestore(
             .AddArgs(Args.ToArray());
     }
 
+    /// <inheritdoc/>
     public override string ToString() => "dotnet restore".GetShortName(ShortName, Project);
 }

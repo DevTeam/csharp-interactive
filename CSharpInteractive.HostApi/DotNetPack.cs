@@ -6,7 +6,15 @@ using Internal.DotNet;
 
 /// <summary>
 /// The dotnet pack command builds the project and creates NuGet packages. The result of this command is a NuGet package (that is, a .nupkg file).
+/// <example>
+/// <code>
+/// new DotNetPack()
+///     .Build()
+/// .EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
+/// <seealso cref="DotNetBuild"/>
 [Target]
 public partial record DotNetPack(
     // MSBuild options for setting properties.
@@ -50,10 +58,15 @@ public partial record DotNetPack(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetPack(params string[] args)
         : this([], args, [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -85,5 +98,6 @@ public partial record DotNetPack(
             .AddArgs(Args.ToArray());
     }
 
+    /// <inheritdoc/>
     public override string ToString() => "dotnet pack".GetShortName(ShortName, Project);
 }

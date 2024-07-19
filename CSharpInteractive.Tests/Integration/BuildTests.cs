@@ -17,11 +17,11 @@ public class BuildTests
             "var buildRunner = GetService<IBuildRunner>();",
             "var exitCode = cmdRunner.Run(new DotNetCustom(\"new\", \"mstest\")).ExitCode;",
             "WriteLine(\"Custom=\" + exitCode);",
-            "var result = buildRunner.Run(new DotNetRestore());",
+            "var result = buildRunner.Build(new DotNetRestore());",
             "WriteLine(\"Restore=\" + result.Tests.Count());",
             "result = new DotNetBuild().Build();",
             "WriteLine(\"Build=\" + result.Tests.Count());",
-            "result = buildRunner.Run(new DotNetTest());",
+            "result = buildRunner.Build(new DotNetTest());",
             "WriteLine(\"Tests=\" + result.Tests.Count());"
         );
 

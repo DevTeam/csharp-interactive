@@ -13,6 +13,17 @@ using Internal.Docker;
 
 /// <summary>
 /// Docker runs a command in isolated containers. A container is a process which runs on a host. The host may be local or remote. When an operator executes docker run, the container process that runs is isolated in that it has its own file system, its own networking, and its own isolated process tree separate from the host.
+/// <example>
+/// <code>
+/// var cmd = new CommandLine("whoami");
+///
+/// await new DockerRun("ubuntu")
+///     .WithCommandLine(cmd)
+///     .WithPull(DockerPullType.Always)
+///     .WithAutoRemove(true)
+///     .RunAsync().EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
 [Target]
 public partial record DockerRun(
@@ -56,13 +67,13 @@ public partial record DockerRun(
     string Platform = "",
     // Give extended privileges to this container
     bool? Privileged = default,
-    // Pull image before running ("always"|"missing"|"never")
+    // Pull image before running (&quot;always&quot;|&quot;missing&quot;|&quot;never&quot;)
     DockerPullType? Pull = default,
     // Mount the container's root filesystem as read only
     bool? ReadOnly = default,
     // Automatically remove the container when it exits
     bool? AutoRemove = default,
-    // Username or UID (format: <name|uid>[:<group|gid>])
+    // Username or UID (format: &lt;name|uid&gt;[:&lt;group|gid&gt;])
     string User = "",
     // Working directory inside the container
     string ContainerWorkingDirectory = "",
@@ -76,9 +87,18 @@ public partial record DockerRun(
     bool Tty = false
     )
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="image">Docker image.</param>
     public DockerRun(string image = "") : this(new CommandLine(string.Empty), image)
     { }
 
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="commandLine">Command to run in container.</param>
+    /// <param name="image">Docker image.</param>
     public DockerRun(ICommandLine commandLine, string image)
         : this(
             commandLine,
@@ -92,6 +112,7 @@ public partial record DockerRun(
             [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -140,6 +161,7 @@ public partial record DockerRun(
             .WithVars(Vars.ToArray());
     }
     
+    /// <inheritdoc/>
     public override string ToString() => 
         string.IsNullOrWhiteSpace(ShortName)
             ? $"{CommandLine} in the docker container {Image}"

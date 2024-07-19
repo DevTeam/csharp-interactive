@@ -2,6 +2,10 @@
 // ReSharper disable InconsistentNaming
 namespace HostApi;
 
+/// <summary>
+/// Type of .NET service.
+/// </summary>
+/// <seealso cref="DotNetBuildServerShutdown"/>
 public enum DotNetBuildServer
 {
     /// <summary>

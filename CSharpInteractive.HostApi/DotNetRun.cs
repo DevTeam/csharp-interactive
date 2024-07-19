@@ -7,7 +7,18 @@ using Internal.DotNet;
 
 /// <summary>
 /// The dotnet run command provides a convenient option to run your application from the source code with one command. It's useful for fast iterative development from the command line. The command depends on the dotnet build command to build the code. Any requirements for the build, such as that the project must be restored first, apply to dotnet run as well.
+/// <example>
+/// <code>
+/// var result = new DotNetNew("console", "-n", "MyApp", "--force")
+///     .Build().EnsureSuccess();
+///
+/// 
+/// new DotNetRun().WithWorkingDirectory("MyApp")
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
+/// <seealso cref="DotNetNew"/>
 [Target]
 public partial record DotNetRun(
     // MSBuild options for setting properties.
@@ -40,19 +51,24 @@ public partial record DotNetRun(
     bool? NoDependencies = default,
     // Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.
     bool? Force = default,
-    // Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don't use the -r|--runtime option. Available since .NET 6 Preview 7.
+    // Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6 Preview 7.
     string Arch = "",
-    // Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don't use the -r|--runtime option. Available since .NET 6.
+    // Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6.
     string OS = "",
     // Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.
     DotNetVerbosity? Verbosity = default,
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetRun(params string[] args)
         : this([], args, [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -82,5 +98,6 @@ public partial record DotNetRun(
             .AddArgs(Args.ToArray());
     }
 
+    /// <inheritdoc/>
     public override string ToString() => "dotnet run".GetShortName(ShortName, Project);
 }

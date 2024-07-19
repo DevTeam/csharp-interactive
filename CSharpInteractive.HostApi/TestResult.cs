@@ -6,26 +6,66 @@ namespace HostApi;
 using System.Diagnostics;
 using System.Text;
 
+/// <summary>
+/// Represents a test result. 
+/// </summary>
+/// <param name="State">State of the test.</param>
+/// <param name="Name">User-friendly name for the test.</param>
+/// <param name="FlowId">Identifier of the flow in which the test was running.</param>
+/// <param name="SuiteName">Suite name that includes the test.</param>
+/// <param name="FullyQualifiedName">Fully qualified name of the test.</param>
+/// <param name="DisplayName">Displayed test name.</param>
+/// <param name="ResultDisplayName">Displayed test name with some details, such as test parameters.</param>
+/// <param name="Message">Message displayed while the test is running.</param>
+/// <param name="Details">Details of errors during test running.</param>
+/// <param name="Duration">Duration of the test.</param>
+/// <param name="Output">Messages displayed on the console during test running.</param>
+/// <param name="Source">Container source from which the test is discovered.</param>
+/// <param name="CodeFilePath">Source code file path of the test.</param>
+/// <param name="Id">Test identifier.</param>
+/// <param name="ExecutorUri">Uri of the Executor to use for running this test.</param>
+/// <param name="LineNumber">Line number of the test in the source code file.</param>
 [Target]
 [DebuggerTypeProxy(typeof(TestResultDebugView))]
 public readonly record struct TestResult(
+    // State of the test.
     TestState State,
+    // User-friendly name for the test.
     string Name,
+    // Identifier of the flow in which the test was running.
     string FlowId,
+    // Suite name that includes the test.
     string SuiteName,
+    // Fully qualified name of the test.
     string FullyQualifiedName,
+    // Displayed test name.
     string DisplayName,
+    // Displayed test name with some details, such as test parameters.
     string ResultDisplayName,
+    // Message displayed while the test is running.
     string Message,
+    // Details of errors during test running.
     string Details,
+    // Duration of the test.
     TimeSpan Duration,
+    // Messages displayed on the console during test running.
     IReadOnlyList<Output> Output,
+    // Container source from which the test is discovered.
     string Source,
+    // Source code file path of the test.
     string CodeFilePath,
+    // Test identifier.
     Guid Id,
+    // Uri of the Executor to use for running this test.
     Uri? ExecutorUri,
+    // Line number of the test in the source code file.
     int? LineNumber)
 {
+    /// <summary>
+    /// Creates a new instance of the test result.
+    /// </summary>
+    /// <param name="state">State of the test.</param>
+    /// <param name="name">User-friendly name for the test.</param>
     public TestResult(TestState state, string name)
         : this(
             state,
@@ -46,6 +86,7 @@ public readonly record struct TestResult(
             default)
     { }
 
+    /// <inheritdoc/>
     public override string ToString()
     {
         var sb = new StringBuilder();

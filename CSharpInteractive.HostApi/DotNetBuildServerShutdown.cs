@@ -7,7 +7,13 @@ namespace HostApi;
 using Internal.DotNet;
 
 /// <summary>
-/// The dotnet build server command is used to shut down build servers that are started from dotnet. 
+/// The dotnet build server command is used to shut down build servers that are started from dotnet.
+/// <example>
+/// <code>
+/// new DotNetBuildServerShutdown()
+///     .Run().EnsureSuccess();
+/// </code>
+/// </example> 
 /// </summary>
 [Target]
 public partial record DotNetBuildServerShutdown(
@@ -24,10 +30,15 @@ public partial record DotNetBuildServerShutdown(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetBuildServerShutdown(params string[] args)
         : this(args, [], [])
     { }
     
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -40,6 +51,7 @@ public partial record DotNetBuildServerShutdown(
             .AddArgs(Args.ToArray());
     }
 
+    /// <inheritdoc/>
     public override string ToString() => "dotnet build-server shutdown".GetShortName(ShortName);
     
     private IEnumerable<string> GetServerArg() =>

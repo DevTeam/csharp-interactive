@@ -7,6 +7,18 @@ using Internal;
 
 /// <summary>
 /// The docker custom command is used to execute any docker commands with any arguments.
+/// <example>
+/// <code>
+/// var hasLinuxDocker = false;
+/// new DockerCustom("info").Run(output =>
+///     {
+///         if (output.Line.Contains("OSType: linux"))
+///         {
+///             hasLinuxDocker = true;
+///         }
+///     });
+/// </code>
+/// </example>
 /// </summary>
 [Target]
 public partial record DockerCustom(
@@ -21,10 +33,15 @@ public partial record DockerCustom(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DockerCustom(params string[] args)
         : this(args, [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -35,6 +52,7 @@ public partial record DockerCustom(
             .WithArgs(Args.ToArray());
     }
 
+    /// <inheritdoc/>
     public override string ToString() => 
         string.IsNullOrWhiteSpace(ShortName) 
             ? ((ExecutablePath == string.Empty ? "docker" : Path.GetFileNameWithoutExtension(ExecutablePath)) + " " + Args.FirstOrDefault()).TrimEnd()

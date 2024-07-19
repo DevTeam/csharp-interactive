@@ -6,6 +6,13 @@ using Internal.DotNet;
 
 /// <summary>
 /// The dotnet clean command cleans the output of the previous build. It's implemented as an MSBuild target, so the project is evaluated when the command is run. Only the outputs created during the build are cleaned. Both intermediate (obj) and final output (bin) folders are cleaned.
+/// <example>
+/// <code>
+/// new DotNetClean()
+///     .WithVerbosity(DotNetVerbosity.Quiet)
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
 [Target]
 public partial record DotNetClean(
@@ -27,7 +34,7 @@ public partial record DotNetClean(
     string Runtime = "",
     // Defines the build configuration. The default for most projects is Debug, but you can override the build configuration settings in your project. This option is only required when cleaning if you specified it during build time.
     string Configuration = "",
-    // The directory that contains the build artifacts to clean. Specify the -f|--framework <FRAMEWORK> switch with the output directory switch if you specified the framework when the project was built.
+    // The directory that contains the build artifacts to clean. Specify the -f|--framework &lt;FRAMEWORK&gt; switch with the output directory switch if you specified the framework when the project was built.
     string Output = "",
     // Doesn't display the startup banner or the copyright message. Available since .NET Core 3.0 SDK.
     bool? NoLogo = default,
@@ -36,10 +43,15 @@ public partial record DotNetClean(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetClean(params string[] args)
         : this([], args, [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -64,5 +76,6 @@ public partial record DotNetClean(
             .AddArgs(Args.ToArray());
     }
 
+    /// <inheritdoc/>
     public override string ToString() => "dotnet clean".GetShortName(ShortName, Project);
 }

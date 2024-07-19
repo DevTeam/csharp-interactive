@@ -6,6 +6,19 @@ namespace HostApi;
 
 using Internal.DotNet;
 
+/// <summary>
+/// Builds a project and all of its dependencies. It allows access to a fully functional MSBuild. The command has the exact same capabilities as the existing MSBuild command-line client for SDK-style projects only. The options are all the same.
+/// <example>
+/// <code>
+/// var buildProps = new[] {("version", "1.0.3")};
+/// new MSBuild()
+///     .WithProject("My.sln")
+///     .WithRestore(true).WithTarget("Rebuild;VSTest;Pack")
+///     .WithProps(buildProps)
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example> 
+/// </summary>
 [Target]
 public partial record MSBuild(
     // Specifies the set of command line arguments to use when starting the tool.
@@ -65,6 +78,9 @@ public partial record MSBuild(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
     public MSBuild()
         : this(
             [],
@@ -77,6 +93,7 @@ public partial record MSBuild(
             [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -116,7 +133,9 @@ public partial record MSBuild(
             .AddArgs(Args.ToArray());
     }
 
-    public override string ToString() => (ExecutablePath == string.Empty ? "dotnet msbuild" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Project);
+    /// <inheritdoc/>
+    public override string ToString() => 
+        (ExecutablePath == string.Empty ? "dotnet msbuild" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Project);
 
     private static string JoinWithSemicolons(IEnumerable<string> arg) => 
         string.Join(";", arg.Where(i => !string.IsNullOrWhiteSpace(i)).Select(i => i.Trim()));

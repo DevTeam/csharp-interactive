@@ -6,6 +6,12 @@ using Internal.DotNet;
 
 /// <summary>
 /// The dotnet tool restore command finds the tool manifest file that is in scope for the current directory and installs the tools that are listed in it.
+/// <example>
+/// <code>
+/// new DotNetToolRestore()
+///     .Run().EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
 [Target]
 public partial record DotNetToolRestore(
@@ -34,10 +40,15 @@ public partial record DotNetToolRestore(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetToolRestore(params string[] args)
         : this(args, [], [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -60,5 +71,6 @@ public partial record DotNetToolRestore(
             .AddArgs(Args.ToArray());
     }
 
+    /// <inheritdoc/>
     public override string ToString() => "dotnet tool restore".GetShortName(ShortName, ToolManifest);
 }

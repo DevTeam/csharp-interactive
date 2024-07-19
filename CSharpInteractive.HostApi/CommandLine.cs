@@ -8,7 +8,17 @@ using System.Text;
 
 /// <summary>
 /// Runs an arbitrary executable with arguments and environment variables from the working directory.
+/// <example>
+/// <code>
+/// var cmd = new CommandLine("whoami");
+/// cmd.Run().EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
+/// <seealso cref="ICommandLineRunner.Run"/>
+/// <seealso cref="ICommandLineRunner.RunAsync"/>
+/// <seealso cref="IBuildRunner.Build"/>
+/// <seealso cref="IBuildRunner.BuildAsync"/>
 [Target]
 [DebuggerTypeProxy(typeof(CommandLineDebugView))]
 public partial record CommandLine(
@@ -26,6 +36,11 @@ public partial record CommandLine(
 {
     private readonly string _shortName = ShortName;
 
+    /// <summary>
+    /// Creates a new command line.
+    /// </summary>
+    /// <param name="executablePath">Path to the executable file.</param>
+    /// <param name="args">Command line arguments.</param>
     public CommandLine(string executablePath, params string[] args)
         : this(executablePath, string.Empty, args, Array.Empty<(string name, string value)>())
     { }
@@ -34,14 +49,20 @@ public partial record CommandLine(
         : this(startInfo.ExecutablePath, startInfo.WorkingDirectory, startInfo.Args, startInfo.Vars, startInfo.ShortName)
     { }
 
-    public string ShortName => !string.IsNullOrWhiteSpace(_shortName) ? _shortName : Path.GetFileNameWithoutExtension(ExecutablePath);
+    /// <inheritdoc/>
+    public string ShortName => 
+        !string.IsNullOrWhiteSpace(_shortName)
+            ? _shortName
+            : Path.GetFileNameWithoutExtension(ExecutablePath);
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
         return this;
     }
 
+    /// <inheritdoc/>
     public override string ToString()
     {
         var sb = new StringBuilder();
@@ -68,7 +89,6 @@ public partial record CommandLine(
 
     internal class CommandLineDebugView(IStartInfo startInfo)
     {
-
         public string ShortName => startInfo.ShortName;
 
         public string ExecutablePath => startInfo.ExecutablePath;

@@ -6,7 +6,13 @@ namespace HostApi;
 using Internal.DotNet;
 
 /// <summary>
-/// The 'dotnet new' command creates a .NET project based on a template. 
+/// The dotnet new command creates a .NET project based on a template.
+/// <example>
+/// <code>
+/// var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example> 
 /// </summary>
 [Target]
 public partial record DotNetNew(
@@ -23,10 +29,16 @@ public partial record DotNetNew(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="templateName">Specifies a short template name, for example 'console'.</param>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetNew(string templateName, params string[] args)
         : this(args, [], templateName)
     { }
     
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -38,5 +50,7 @@ public partial record DotNetNew(
             .AddArgs(Args.ToArray());
     }
 
-    public override string ToString() => (ExecutablePath == string.Empty ? "dotnet new" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, TemplateName);
+    /// <inheritdoc/>
+    public override string ToString() => 
+        (ExecutablePath == string.Empty ? "dotnet new" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, TemplateName);
 }

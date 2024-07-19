@@ -9,6 +9,16 @@ using Internal.DotNet;
 
 /// <summary>
 /// The dotnet test command is used to execute unit tests in a given solution. The dotnet test command builds the solution and runs a test host application for each test project in the solution. The test host executes tests in the given project using a test framework, for example: MSTest, NUnit, or xUnit, and reports the success or failure of each test. If all tests are successful, the test runner returns 0 as an exit code; otherwise if any test fails, it returns 1.
+/// <example>
+/// <code>
+/// new DotNetNew("mstest", "-n", "MyTests", "--force")
+///     .Build().EnsureSuccess();
+///
+/// 
+/// new DotNetTest().WithWorkingDirectory("MyTests")
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example>
 /// </summary>
 [Target]
 public partial record DotNetTest(
@@ -42,9 +52,9 @@ public partial record DotNetTest(
     string Framework = "",
     // The target runtime to test for.
     string Runtime = "",
-    // Directory in which to find the binaries to run. If not specified, the default path is ./bin/<configuration>/<framework>/. For projects with multiple target frameworks (via the TargetFrameworks property), you also need to define --framework when you specify this option. dotnet test always runs tests from the output directory. You can use AppDomain.BaseDirectory to consume test assets in the output directory.
+    // Directory in which to find the binaries to run. If not specified, the default path is ./bin/&lt;configuration&gt;/&lt;framework&gt;/. For projects with multiple target frameworks (via the TargetFrameworks property), you also need to define --framework when you specify this option. dotnet test always runs tests from the output directory. You can use AppDomain.BaseDirectory to consume test assets in the output directory.
     string Output = "",
-    // Enables diagnostic mode for the test platform and writes diagnostic messages to the specified file and to files next to it. The process that is logging the messages determines which files are created, such as *.host_<date>.txt for test host log, and *.datacollector_<date>.txt for data collector log.
+    // Enables diagnostic mode for the test platform and writes diagnostic messages to the specified file and to files next to it. The process that is logging the messages determines which files are created, such as *.host_&lt;date&gt;.txt for test host log, and *.datacollector_&lt;date&gt;.txt for data collector log.
     string Diag = "",
     // Doesn't build the test project before running it. It also implicitly sets the - --no-restore flag.
     bool? NoBuild = default,
@@ -52,7 +62,7 @@ public partial record DotNetTest(
     string ResultsDirectory = "",
     // Enables data collector for the test run. For more information, see Monitor and analyze test run.
     string Collect = "",
-    // Runs the tests in blame mode. This option is helpful in isolating problematic tests that cause the test host to crash. When a crash is detected, it creates a sequence file in TestResults/<Guid>/<Guid>_Sequence.xml that captures the order of tests that were run before the crash.
+    // Runs the tests in blame mode. This option is helpful in isolating problematic tests that cause the test host to crash. When a crash is detected, it creates a sequence file in TestResults/&lt;Guid&gt;/&lt;Guid&gt;_Sequence.xml that captures the order of tests that were run before the crash.
     bool? Blame = default,
     // Runs the tests in blame mode and collects a crash dump when the test host exits unexpectedly. This option depends on the version of .NET used, the type of error, and the operating system.
     bool? BlameCrash = default,
@@ -79,10 +89,15 @@ public partial record DotNetTest(
     // Specifies a short name for this operation.
     string ShortName = "")
 {
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetTest(params string[] args)
         : this([], args, [], [], [])
     { }
 
+    /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
@@ -143,5 +158,6 @@ public partial record DotNetTest(
         return cmd;
     }
 
+    /// <inheritdoc/>
     public override string ToString() => "dotnet test".GetShortName(ShortName, Project);
 }
