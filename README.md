@@ -1,6 +1,9 @@
 #  Build automation system for .NET
 
-[![NuGet csi](https://buildstats.info/nuget/dotnet-csi?includePreReleases=true)](https://www.nuget.org/packages/dotnet-csi) ![GitHub](https://img.shields.io/github/license/devteam/csharp-interactive) [<img src="http://teamcity.jetbrains.com/app/rest/builds/buildType:(id:OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest)/statusIcon.svg"/>](http://teamcity.jetbrains.com/viewType.html?buildTypeId=OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest&guest=1)
+[![NuGet csi](https://buildstats.info/nuget/dotnet-csi?includePreReleases=true)](https://www.nuget.org/packages/dotnet-csi)
+![GitHub](https://img.shields.io/github/license/devteam/csharp-interactive)
+[<img src="http://teamcity.jetbrains.com/app/rest/builds/buildType:(id:OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest)/statusIcon.svg"/>](http://teamcity.jetbrains.com/viewType.html?buildTypeId=OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest&guest=1)
+![GitHub Build](https://github.com/DevTeam/csharp-interactive/actions/workflows/main.yml/badge.svg)
 
 ![](docs/csharp_cat.png)
 
