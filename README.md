@@ -5,7 +5,7 @@
 [<img src="http://teamcity.jetbrains.com/app/rest/builds/buildType:(id:OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest)/statusIcon.svg"/>](http://teamcity.jetbrains.com/viewType.html?buildTypeId=OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest&guest=1)
 ![GitHub Build](https://github.com/DevTeam/csharp-interactive/actions/workflows/main.yml/badge.svg)
 
-![](docs/csharp_cat.png)
+![](docs/icon.png)
 
 Key features by example:
 
@@ -895,7 +895,7 @@ var dotCoverReport = Path.Combine("MyTests", "dotCover.html");
 // Modifies the test command by putting "dotCover" in front of all arguments
 // to have something like "dotnet dotcover test ..."
 // and adding few specific arguments to the end
-var testUnderDotCover = test.Customise(cmd =>
+var testUnderDotCover = test.Customize(cmd =>
     cmd.ClearArgs()
     + "dotcover"
     + cmd.Args
