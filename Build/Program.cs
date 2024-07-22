@@ -22,7 +22,7 @@ Environment.SetEnvironmentVariable("DOTNET_NUGET_SIGNATURE_VERIFICATION", "false
 var configuration = GetProperty("configuration", "Release");
 var apiKey = GetProperty("apiKey", "");
 var integrationTests = bool.Parse(GetProperty("integrationTests", CI.ToString()));
-var defaultVersion = NuGetVersion.Parse(GetProperty("version", "1.0.0-dev", CI));
+var defaultVersion = NuGetVersion.Parse(GetProperty("version", "1.1.0-dev", CI));
 var outputDir = Path.Combine(currentDir, "CSharpInteractive", "bin", configuration);
 var templateOutputDir = Path.Combine(currentDir, "CSharpInteractive.Templates", "bin", configuration);
 var dockerLinuxTests = HasLinuxDocker();
@@ -33,9 +33,12 @@ if (!dockerLinuxTests)
 
 var packageVersion = new[]
 {
+    defaultVersion,
     GetNextNuGetVersion(new NuGetRestoreSettings(toolPackageId).WithPackageType(NuGetPackageType.Tool), defaultVersion),
     GetNextNuGetVersion(new NuGetRestoreSettings(packageId), defaultVersion)
 }.Max()!;
+
+Info(packageVersion.ToString());
 
 var packages = new[]
 {
