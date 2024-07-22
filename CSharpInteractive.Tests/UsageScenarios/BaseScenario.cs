@@ -54,8 +54,7 @@ public class BaseScenario : IHost, IDisposable
     {
         private readonly Dictionary<string, string> _dict = new()
         {
-            {"TEAMCITY_VERSION", "2021.2"},
-            {"TEAMCITY_PROJECT_NAME", "Samples"}
+            {"version", "1.1.5"}
         };
 
         public int Count => _dict.Count;

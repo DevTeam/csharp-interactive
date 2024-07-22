@@ -250,7 +250,7 @@ dotnet run --project Build
 
 - Global state
   - [Using Args](#using-args)
-  - [Using Props dictionary](#using-props-dictionary)
+  - [Using Props](#using-props)
   - [Using the Host property](#using-the-host-property)
   - [Get services](#get-services)
   - [Service collection](#service-collection)
@@ -312,17 +312,17 @@ if (Args.Count > 1)
 
 
 
-### Using Props dictionary
+### Using Props
 
-Properties _Props_ have got from TeamCity system properties automatically.
+
 
 ``` CSharp
-WriteLine(Props["TEAMCITY_VERSION"]);
-WriteLine(Props["TEAMCITY_PROJECT_NAME"]);
+WriteLine(Props["version"]);
+WriteLine(Props.Get("configuration", "Release"));
 
-// This property will be available at the next TeamCity steps as system parameter _system.Version_
-// and some runners, for instance, the .NET runner, pass it as a build property.
-Props["Version"] = "1.1.6";
+// Some CI/CDs have integration of these properties.
+// For example in TeamCity this property with all changes will be available in the next TeamCity steps.
+Props["version"] = "1.1.6";
 ```
 
 
