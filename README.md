@@ -7,10 +7,58 @@
 
 ![](docs/icon.png)
 
-Key features by example:
+## Advantages
+
+- [X] 3 compatible [operating modes](#operating-modes)
+- [X] .NET console application [project](#net-build-project)
+- [X] Part of .NET solution
+- [X] C#
+- [X] Cross-platform
+- [X] Debugging capability
+- [X] No model binding (Task, Target, DependsOn, etc.)
+  - no restrictions
+  - no learning curve
+  - can use common .NET development practices
+- [X] Simple and powerful API for building .NET projects
+- [X] Passing named parameters as in MSBuild
+- [X] Summarised statistics as in MSBuild
+  - Child processes 
+  - Warnings and errors
+  - Tests
+  - Execution time
+- [X] CI/CD integration
+  - GitLab/GitHub Actions/JetBrains Space etc.
+  - TeamCity 
+    - [Special runner](https://jetbrains.com/help/teamcity/c-script.html#C%23+Script+Settings) 
+    - Report on warnings and errors
+    - Test statistics
+    - Execution progress
+    - Real-time integration
+    - Parameters passing between build configuration steps
+
+## Operating modes
+
+- [REPL](#script-runner-and-repl-tool)
+- [C# scripts running](#script-runner-and-repl-tool)
+- [.NET build project](#net-build-project)
+
+These modes are practically compatible, i.e., for example, a script can be run as a .NET project, and vice versa, with minimal or no changes.
+
+## API
+- Output, logging and tracing
+- Arguments and parameters
+- Command line
+- Docker
+- Microsoft DI API to resolve dependencies
+- NuGet
+- .NET CLI
 
 ```c#
-// Output API
+// This directive in a script allows you to use host API types
+// without specifying the fully qualified namespace of these types
+using HostApi;
+
+// Output, logging and tracing API
 WriteLine("Hello");
 WriteLine("Hello !!!", Color.Highlighted);
 Error("Error details", "ErrorId");
@@ -125,48 +173,28 @@ finally { tempDir.Delete(); }
 class MyTool(INuGet nuGet);
 ```
 
-## Script runner tool
+> [!IMPORTANT]
+> `using HostApi;` directive in a script allows you to use host API types without specifying the fully qualified namespace of these types.
 
-It can be installed as a command-line tool on Windows, Linux, or macOS. The dotnet tool requires [.NET 6+ runtime](https://dotnet.microsoft.com/en-us/download).
+## Script runner and REPL tool
 
-After installing tool you can use this tool to run C# scripts from the command line. dotnet-csi is available as a [NuGet package](https://www.nuget.org/packages/dotnet-csi/).
-
-Before installing dotnet-csi as a local tool dot not forget to create .NET local tool manifest file if it is not exist:
-
-```Shell
-dotnet new tool-manifest
-```
-
-Install the tool and add to the local tool manifest:
-
-```Shell
-dotnet tool install dotnet-csi
-```
-
-Or install the tool for the current user:
-
-```Shell
-dotnet tool install dotnet-csi -g
-```
+Please see [this page](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template) for installation details.
 
 Launch the tool in the interactive mode:
 
 ```Shell
 dotnet csi
 ```
-
 Run a specified script with a given argument:
 
 ```Shell
 dotnet csi Samples/Scripts/hello.csx World 
 ```
-
 Run a single script located in the _MyDirectory_ directory:
 
 ```Shell
 dotnet csi Samples/Build
 ```
-
 Usage:
 
 ```Shell
@@ -193,16 +221,9 @@ Supported options:
 | --property <key=value>  | Define a key-value pair(s) for the script properties called _Props_, which is accessible in scripts.                                                            | `-p`, `/property`, `/p`                                                                       |
 | --property:<key=value>  | Define a key-value pair(s) in MSBuild style for the script properties called _Props_, which is accessible in scripts.                                           | `-p:<key=value>`, `/property:<key=value>`, `/p:<key=value>`, `--property:key1=val1;key2=val2` |
 
-> [!IMPORTANT]
-> `using HostApi;` directive in a script allows you to use host API types without specifying the fully qualified namespace of these types.
+## .NET build project
 
-## .NET project
-
-Install the C# script template [CSharpInteractive.Templates](https://www.nuget.org/packages/CSharpInteractive.Templates)
-
-```shell
-dotnet new install CSharpInteractive.Templates
-```
+Please see [this page](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template) for details on how to install the [project template](https://www.nuget.org/packages/CSharpInteractive.Templates).
 
 Create a console project *__Build__* containing a script from the template *__build__*
 
@@ -210,7 +231,11 @@ Create a console project *__Build__* containing a script from the template *__bu
 dotnet new build -o ./Build
 ```
 
-This projects contains the script *__./Build/Program.csx__*. To run this script from the command line from the directory *__Build__*:
+The created project contains 2 entry points:
+- _Program.csx_ to run as a script
+- _Program.cs_ to run as .NET application
+
+To run the script from the command line from the directory *__Build__*:
 
 ```shell
 dotnet csi Build
@@ -221,8 +246,6 @@ To run as a .NET console application:
 ```shell
 dotnet run --project Build
 ```
-
-
 ## Usage Scenarios
 
 - Global state

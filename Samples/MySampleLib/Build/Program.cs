@@ -3,7 +3,7 @@ using HostApi;
 using Microsoft.Extensions.DependencyInjection;
 using NuGet.Versioning;
 
-// Output API
+// Output, logging and tracing API
 WriteLine("Hello");
 WriteLine("Hello !!!", Color.Highlighted);
 Error("Error details", "ErrorId");
