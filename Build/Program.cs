@@ -91,12 +91,25 @@ new MSBuild()
     .Build()
     .EnsureSuccess();
 
-new DotNetPack()
-    .WithProject(solutionFile)
-    .WithConfiguration(configuration)
-    .WithProps(buildProps)
-    .Build()
-    .EnsureSuccess();
+const string templateJson = "CSharpInteractive.Templates/content/ConsoleApplication-CSharp/.template.config/template.json";
+var content = File.ReadAllText(templateJson);
+var newContent = content.Replace("$(version)", packageVersion.ToString());
+File.WriteAllText(templateJson, newContent);
+IBuildResult result;
+try
+{
+    result = new DotNetPack()
+        .WithProject(solutionFile)
+        .WithConfiguration(configuration)
+        .WithProps(buildProps)
+        .Build();
+}
+finally
+{
+    File.WriteAllText(templateJson, content);
+}
+
+result.EnsureSuccess();
 
 foreach (var package in packages)
 {
@@ -184,7 +197,7 @@ installTool.Run(output =>
 {
     output.Handled = true;
     WriteLine(output.Line);
-}).EnsureSuccess(r => default);
+}).EnsureSuccess(_ => true);
 
 new DotNetCustom("csi", "/?").WithShortName("Checking tool").Run().EnsureSuccess();
 
@@ -195,7 +208,7 @@ uninstallTemplates.Run(output =>
 {
     output.Handled = true;
     WriteLine(output.Line);
-}).EnsureSuccess(r => default);;
+}).EnsureSuccess(_ => true);
 
 var installTemplates = new DotNetCustom("new", "install", $"{templatesPackageId}::{packageVersion.ToString()}", "--nuget-source", templateOutputDir)
     .WithShortName("Installing template");
@@ -210,7 +223,7 @@ foreach (var framework in frameworks)
     try
     {
         var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
-        new DotNetNew("build", $"--package-version={packageVersion}", "-T", framework, "--no-restore")
+        new DotNetNew("build", $"--version={packageVersion}", "-T", framework, "--no-restore")
             .WithWorkingDirectory(buildProjectDir)
             .WithShortName($"Creating a new {sampleProjectName}")
             .Run().EnsureSuccess();

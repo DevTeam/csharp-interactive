@@ -7,7 +7,7 @@
   ],
   "name": "Build App",
   "generatorVersions": "[1.0.0.0-*)",
-  "description": "A build project for creating a command-line application to run TeamCity C# script on Windows, Linux, macOS and under TeamCity build server.",
+  "description": "A build project for creating a command-line application to run C# script on Windows, Linux, macOS.",
   "groupIdentity": "Build.Projects",
   "precedence": "8000",
   "identity": "Build.Console",
@@ -31,13 +31,12 @@
       "type": "bind",
       "binding": "HostIdentifier"
     },
-    "packageVersion": {
+    "version": {
       "type": "parameter",
-      "datatype": "text",
-      "description": "Sets the referencing package version in the created project file.",
-      "replaces": "$(PackageVersion)",
-      "defaultValue": "1.1.*",
-      "displayName": "Referencing package version"
+      "datatype": "string",
+      "description": "Version of CSharpInteractive that will be referenced.",
+      "defaultValue": "$(version)",
+      "replaces": "$(CSharpInteractiveVersion)"
     },
     "skipRestore": {
       "type": "parameter",

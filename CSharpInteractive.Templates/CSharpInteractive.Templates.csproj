@@ -2,7 +2,7 @@
     
     <PropertyGroup>
         <TargetFramework/>
-        <TargetFrameworks>netstandard1.0</TargetFrameworks>
+        <TargetFramework>netstandard1.0</TargetFramework>
         <IsPackable>true</IsPackable>
         <IncludeBuildOutput>False</IncludeBuildOutput>
         <IncludeSource>False</IncludeSource>
@@ -17,6 +17,7 @@
         <PackageType>Template</PackageType>
         <PackageReadmeFile>content/ConsoleApplication-CSharp/README.md</PackageReadmeFile>
         <SuppressDependenciesWhenPacking>True</SuppressDependenciesWhenPacking>
+        <PackageIcon>_common\icon.png</PackageIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,6 +25,12 @@
         <Content Include="content\**">
             <PackagePath>content</PackagePath>
         </Content>
-    </ItemGroup>
 
+        <Content Include="$(MSBuildProjectDirectory)\..\icon.png">
+            <PackagePath>_common</PackagePath>
+            <Pack>true</Pack>
+            <Visible>false</Visible>
+        </Content>
+    </ItemGroup>
+    
 </Project>
