@@ -6,7 +6,6 @@ namespace CSharpInteractive;
 using System.Buffers;
 using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.Versioning;
 using Core;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Read;
@@ -67,23 +66,11 @@ internal partial class Composition
                 .Bind("TeamCity").To<TeamCityInOut>()
                 .Bind("Ansi").To<AnsiInOut>()
                 .Bind().To<Console>()
-                .Bind().To(ctx =>
-                {
-                    ctx.Inject<ICISpecific<IStdOut>>(out var stdOut);
-                    return stdOut.Instance;
-                })
-                .Bind().To(ctx =>
-                {
-                    ctx.Inject<ICISpecific<IStdErr>>(out var stdErr);
-                    return stdErr.Instance;
-                })
+                .Bind().To((ICISpecific<IStdOut> stdOut) => stdOut.Instance)
+                .Bind().To((ICISpecific<IStdErr> stdErr) => stdErr.Instance)
                 .Bind("Default", "Ansi").To<Log<TT>>()
                 .Bind("TeamCity").To<TeamCityLog<TT>>()
-                .Bind().To(ctx =>
-                {
-                    ctx.Inject<ICISpecific<ILog<TT>>>(out var log);
-                    return log.Instance;
-                })
+                .Bind().To((ICISpecific<ILog<TT>> log) => log.Instance)
                 .Bind().To<CISettings>()
                 .Bind().To<ExitTracker>()
                 .Bind().Bind<ITraceSource>(Tag.Type).To<Environment>()
@@ -159,23 +146,10 @@ internal partial class Composition
                 .Bind().To(_ => typeof(Composition).Assembly)
                 .Bind().To(_ => new CSharpParseOptions().LanguageVersion)
                 .Bind("RuntimePath").To(_ => Path.GetDirectoryName(typeof(object).Assembly.Location) ?? string.Empty)
-                .Bind().To(ctx =>
-                {
-                    ctx.Inject<CancellationTokenSource>(out var cancellationTokenSource);
-                    return cancellationTokenSource.Token;
-                })
-                .Bind("TargetFrameworkMoniker").To(ctx =>
-                {
-                    ctx.Inject<Assembly>(out var assembly);
-                    return assembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName ?? string.Empty;
-                })
+                .Bind().To((CancellationTokenSource cancellationTokenSource) => cancellationTokenSource.Token)
+                .Bind("TargetFrameworkMoniker").To((Assembly assembly) => assembly.GetCustomAttribute<System.Runtime.Versioning.TargetFrameworkAttribute>()?.FrameworkName ?? string.Empty)
                 .Bind().To(_ => Process.GetCurrentProcess())
-                .Bind("ModuleFile").To(ctx =>
-                {
-                    ctx.Inject<Process>(out var process);
-                    return process.MainModule?.FileName ?? string.Empty;
-                })
-                
+                .Bind("ModuleFile").To((Process process) => process.MainModule?.FileName ?? string.Empty)
                 .Bind().To<ScriptCommandFactory>()
                 .Bind().To<ReliableBuildContext>()
                 .Bind().To<ProcessMonitor>()
@@ -235,11 +209,7 @@ internal partial class Composition
 
                 // Public
                 .Bind().To<HostService>()
-                .Bind().To(ctx =>
-                {
-                    ctx.Inject<ICISpecific<IProperties>>(out var properties);
-                    return properties.Instance;
-                })
+                .Bind().To((ICISpecific<IProperties> properties) => properties.Instance)
                 .Bind().To<NuGetService>()
                 .Bind().To<CommandLineRunner>()
                 .Bind().To<BuildRunner>()
@@ -250,17 +220,9 @@ internal partial class Composition
                 .Bind().To<FlowIdGenerator>()
                 .Bind().As(Lifetime.Transient).To(_ => DateTime.Now)
                 .Bind().To<TimestampUpdater>()
-                .Bind().To(
-                    ctx =>
-                    {
-                        ctx.Inject<ITeamCityServiceMessages>(out var teamCityServiceMessages);
-                        return teamCityServiceMessages.CreateWriter(
-                            str =>
-                            {
-                                ctx.Inject<IConsole>(out var console);
-                                console.WriteToOut((default, str + "\n"));
-                            });
-                    })
+                .Bind().To((ITeamCityServiceMessages teamCityServiceMessages, IConsole console) =>
+                    teamCityServiceMessages.CreateWriter(str =>
+                        console.WriteToOut((default, str + "\n"))))
                 .Bind().To<ServiceMessageParser>();
     }
 }
