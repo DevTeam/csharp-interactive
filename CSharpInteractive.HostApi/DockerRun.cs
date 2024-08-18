@@ -118,9 +118,13 @@ public partial record DockerRun(
         if (host == null) throw new ArgumentNullException(nameof(host));
         var directoryMap = new Dictionary<string, string>();
         var pathResolver = new PathResolver(Platform, directoryMap);
-        using var pathResolverToken = host.GetService<HostComponents>().PathResolverContext.Register(pathResolver);
+        IStartInfo startInfo;
+        using (host.GetService<HostComponents>().PathResolverContext.Register(pathResolver))
+        {
+            startInfo = CommandLine.GetStartInfo(host);
+        }
+        
         var settings = host.GetService<HostComponents>().DockerSettings;
-        var startInfo = CommandLine.GetStartInfo(host);
         var cmd = new CommandLine(string.IsNullOrWhiteSpace(ExecutablePath) ? settings.DockerExecutablePath : ExecutablePath)
             .WithShortName(!string.IsNullOrWhiteSpace(ShortName) ? ShortName : $"{startInfo.ShortName} in the docker container {Image}")
             .WithWorkingDirectory(WorkingDirectory)

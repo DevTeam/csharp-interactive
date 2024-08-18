@@ -6,13 +6,14 @@ using HostApi.Internal.Cmd;
 
 internal class PathResolverContext(IHost host) : IPathResolverContext, IVirtualContext
 {
+    private readonly object _lockObject = new();
     private IPathResolver _currentResolver = EmptyResolver.Shared;
     private IPathResolver _prevResolver = EmptyResolver.Shared;
-
     public bool IsActive => _currentResolver != EmptyResolver.Shared;
 
     public IDisposable Register(IPathResolver resolver)
     {
+        Monitor.Enter(_lockObject);
         var prevResolver = _prevResolver;
         _prevResolver = _currentResolver;
         _currentResolver = resolver;
@@ -20,6 +21,7 @@ internal class PathResolverContext(IHost host) : IPathResolverContext, IVirtualC
         {
             _currentResolver = _prevResolver;
             _prevResolver = prevResolver;
+            Monitor.Exit(_lockObject);
         });
     }
 
