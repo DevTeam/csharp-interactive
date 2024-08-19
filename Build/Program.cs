@@ -102,7 +102,8 @@ try
         .WithProject(solutionFile)
         .WithConfiguration(configuration)
         .WithProps(buildProps)
-        .Build();
+        .Build()
+        .EnsureSuccess();
 }
 finally
 {
@@ -147,7 +148,7 @@ else
                     "--dcFilters=+:module=CSharpInteractive.HostApi;+:module=dotnet-csi",
                     "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"))
         .Build()
-        .EnsureSuccess();
+        .EnsureSuccess(buildResult => buildResult is {ExitCode: 0, Summary.FailedTests: 0});
 
     var dotCoverReportXml = Path.Combine(reportDir, "dotCover.xml");
     new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportXml}", "--reportType=TeamCityXml").WithShortName("Generating the code coverage reports")
@@ -273,7 +274,7 @@ if (integrationTests || dockerLinuxTests)
     var filter = $"Integration={integrationTests}{logicOp}Docker={dockerLinuxTests}";
     test
         .WithFilter(filter)
-        .Build().EnsureSuccess();
+        .Build().EnsureSuccess(buildResult => buildResult is {ExitCode: 0, Summary.FailedTests: 0});
 }
 
 WriteLine("To use the csi tool:", Color.Highlighted);
