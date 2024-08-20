@@ -35,57 +35,60 @@ public partial record DockerRun(
     IEnumerable<string> Args,
     // Specifies the set of environment variables that apply to this process and its child processes.
     IEnumerable<(string name, string value)> Vars,
-    // Additional docker options
+    // Additional docker options.
     IEnumerable<string> Options,
-    // Expose a port or a range of ports
+    // Expose a port or a range of ports.
     IEnumerable<string> ExposedPorts,
-    // Publish a container's port(s) to the host
+    // Publish a container's port(s) to the host.
     IEnumerable<string> PublishedPorts,
-    // Adds bind mounts or volumes using the --mount flag
+    // Adds bind mounts or volumes using the --mount flag.
     IEnumerable<string> Mounts,
-    // Bind mount a volume
+    // Bind mount a volume.
     IEnumerable<(string from, string to)> Volumes,
+    // Adds entries to container hosts file.
+    IEnumerable<(string host, string ip)> Hosts,
     // Overrides the tool executable path.
     string ExecutablePath = "",
     // Specifies the working directory for the tool to be started.
     string WorkingDirectory = "",
-    // Number of CPUs
+    // Number of CPUs.
     int? CPUs = default,
-    // Overwrite the default ENTRYPOINT of the image
+    // Overwrite the default ENTRYPOINT of the image.
     string EntryPoint = "",
-    // Container host name
+    // Container host name.
     string HostName = "",
-    // Kernel memory limit
+    // Kernel memory limit.
     int? KernelMemory = default,
-    // Memory limit
+    // Memory limit.
     int? Memory = default,
-    // Assign a name to the container
+    // Assign a name to the container.
     string? Name = default,
-    // Connect a container to a network
+    // Connect a container to a network.
     string Network = "",
-    // Set platform if server is multi-platform capable
+    // Set platform if server is multi-platform capable.
     string Platform = "",
-    // Give extended privileges to this container
+    // Give extended privileges to this container.
     bool? Privileged = default,
-    // Pull image before running (&quot;always&quot;|&quot;missing&quot;|&quot;never&quot;)
+    // Pull image before running (&quot;always&quot;|&quot;missing&quot;|&quot;never&quot;).
     DockerPullType? Pull = default,
-    // Mount the container's root filesystem as read only
+    // Suppress the pull output.
+    bool Quiet = false, 
+    // Mount the container's root filesystem as read only.
     bool? ReadOnly = default,
-    // Automatically remove the container when it exits
+    // Automatically remove the container when it exits.
     bool? AutoRemove = default,
-    // Username or UID (format: &lt;name|uid&gt;[:&lt;group|gid&gt;])
+    // Username or UID (format: &lt;name|uid&gt;[:&lt;group|gid&gt;]).
     string User = "",
-    // Working directory inside the container
+    // Working directory inside the container.
     string ContainerWorkingDirectory = "",
-    // A file with environment variables inside the container
+    // A file with environment variables inside the container.
     string EnvFile = "",
-    // Specifies a short name for this operation.
-    string ShortName = "",
-    // Keep STDIN open even if not attached
+    // Keep STDIN open even if not attached.
     bool Interactive = false,
-    // Allocate a pseudo-TTY
-    bool Tty = false
-    )
+    // Allocate a pseudo-TTY.
+    bool Tty = false,
+    // Specifies a short name for this operation.
+    string ShortName = "")
 {
     /// <summary>
     /// Create a new instance of the command.
@@ -103,6 +106,7 @@ public partial record DockerRun(
         : this(
             commandLine,
             image,
+            [],
             [],
             [],
             [],
@@ -134,7 +138,8 @@ public partial record DockerRun(
                 ("--tty", Tty),
                 ("--privileged", Privileged),
                 ("--read-only", ReadOnly),
-                ("--rm", AutoRemove))
+                ("--rm", AutoRemove),
+                ("--quiet", Quiet))
             .AddArgs("--expose", ExposedPorts)
             .AddArgs("--publish", PublishedPorts)
             .AddArgs("--mount", Mounts)
@@ -151,6 +156,7 @@ public partial record DockerRun(
                 ("--user", User),
                 ("--workdir", ContainerWorkingDirectory),
                 ("--env-file", EnvFile))
+            .AddArgs(Hosts.Select(i => $"--add-host={i.host}={i.ip}"))
             .AddArgs(Args.ToArray())
             .AddValues("-e", "=", startInfo.Vars.ToArray());
 

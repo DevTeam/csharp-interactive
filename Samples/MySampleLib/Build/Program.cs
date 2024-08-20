@@ -88,24 +88,26 @@ void CancellationOnFirstFailedTest(BuildMessage message)
 }
 
 // Parallel tests
-var tempDir = Directory.CreateTempSubdirectory();
-try
+var results = await Task.WhenAll(
+    RunTestsAsync("7.0", "bookworm-slim", "alpine"),
+    RunTestsAsync("8.0", "bookworm-slim", "alpine", "noble"));
+results.SelectMany(i => i).EnsureSuccess();
+
+async Task<IEnumerable<IBuildResult>> RunTestsAsync(string framework, params string[] platforms)
 {
-    new DotNetPublish()
-        .WithConfiguration(configuration).WithNoLogo(true).WithNoBuild(true)
-        .WithFramework("net8.0").AddProps(("PublishDir", tempDir.FullName)).Build().EnsureSuccess();
+    var publish = new DotNetPublish().WithWorkingDirectory("MySampleLib.Tests")
+        .WithFramework($"net{framework}").WithConfiguration(configuration).WithNoBuild(true);
+    await publish.BuildAsync(cancellationToken: cts.Token).EnsureSuccess();
+    var publishPath = Path.Combine(publish.WorkingDirectory, "bin", configuration, $"net{framework}", "publish");
 
     var test = new VSTest().WithTestFileNames("*.Tests.dll");
-
-    var tasks = from tagSuffix in new[] {"bookworm-slim", "alpine", "noble"}
-        let image = $"mcr.microsoft.com/dotnet/sdk:8.0-{tagSuffix}"
-        let dockerRun = new DockerRun(image).WithCommandLine(test).WithAutoRemove(true)
-            .WithVolumes((tempDir.FullName, "/app")).WithContainerWorkingDirectory("/app")
-        select dockerRun.BuildAsync(CancellationOnFirstFailedTest, cts.Token);
-
-    await Task.WhenAll(tasks).EnsureSuccess();
+    var testInDocker = new DockerRun().WithCommandLine(test).WithAutoRemove(true).WithQuiet(true)
+        .WithVolumes((Path.GetFullPath(publishPath), "/app")).WithContainerWorkingDirectory("/app");
+    var tasks = from platform in platforms
+        let image = $"mcr.microsoft.com/dotnet/sdk:{framework}-{platform}"
+        select testInDocker.WithImage(image).BuildAsync(CancellationOnFirstFailedTest, cts.Token);
+    return await Task.WhenAll(tasks);
 }
-finally { tempDir.Delete(); }
 
 #pragma warning disable CS9113 // Parameter is unread.
 class MyTool(INuGet nuGet);
