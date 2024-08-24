@@ -46,6 +46,11 @@ internal partial class Composition
                         return scriptRunner;
                     }
                 })
+                // Default settings
+                .Bind().To(_ => OptimizationLevel.Release)
+                .Bind().To(_ => (WarningLevel)ScriptOptions.Default.WarningLevel)
+                .Bind().To(_ => ScriptOptions.Default.CheckOverflow ? CheckOverflow.On : CheckOverflow.Off)
+                .Bind().To(_ => ScriptOptions.Default.AllowUnsafe ? AllowUnsafe.On : AllowUnsafe.Off)
             
             .DefaultLifetime(Lifetime.Singleton)
                 .Bind(Tag.Type).To<ExitManager>()
@@ -53,6 +58,7 @@ internal partial class Composition
                 .Bind(InteractionMode.Interactive).To<InteractiveRunner>()
                 .Bind(InteractionMode.NonInteractive).To<ScriptRunner>()
                 .Bind().To<CommandSource>()
+                .Bind().To<Setting<TTE>>()
 #endif
 #if APPLICATION
             .Bind().As(Lifetime.Transient).To(_ => RunningMode.Application)
@@ -165,11 +171,6 @@ internal partial class Composition
                 .Bind().To<ProcessInFlowRunner>()
                 .Bind().To<NuGetReferenceResolver>()
                 .Bind().To<ScriptContentReplacer>()
-                .Bind().To(_ => new Setting<LanguageVersion>(LanguageVersion.Default))
-                .Bind().To(_ => new Setting<OptimizationLevel>(OptimizationLevel.Release))
-                .Bind().To(_ => new Setting<WarningLevel>((WarningLevel)ScriptOptions.Default.WarningLevel))
-                .Bind().To(_ => new Setting<CheckOverflow>(ScriptOptions.Default.CheckOverflow ? CheckOverflow.On : CheckOverflow.Off))
-                .Bind().To(_ => new Setting<AllowUnsafe>(ScriptOptions.Default.AllowUnsafe ? AllowUnsafe.On : AllowUnsafe.Off))
                 .Bind(Tag.Type).To<AssembliesScriptOptionsProvider>()
                 .Bind(Tag.Type).Bind<IReferenceRegistry>().To<ReferencesScriptOptionsFactory>()
                 .Bind(Tag.Type).To<SourceFileScriptOptionsFactory>()
