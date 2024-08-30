@@ -12,7 +12,7 @@ internal class BuildOutputProcessor(IServiceMessageParser serviceMessageParser) 
         foreach (var message in serviceMessageParser.ParseServiceMessages(output.Line).Where(message => message != default))
         {
             var buildMessage = new BuildMessage(output, BuildMessageState.ServiceMessage, message);
-            if (buildMessage.TestResult is not null)
+            if (buildMessage.TestResult.HasValue)
             {
                 buildMessage = buildMessage.WithState(BuildMessageState.TestResult);
             }

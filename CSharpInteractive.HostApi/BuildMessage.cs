@@ -42,15 +42,13 @@ public record BuildMessage(
     int? EndLineNumber = default,
     DotNetMessageImportance? Importance = default)
 {
-    private readonly Lazy<TestResult?> _testResult = new(() =>
-        ServiceMessage != null && TryGetTestState(ServiceMessage.Name, out var testState)
-            ? CreateResult(CreateKey(ServiceMessage), ServiceMessage, testState)
-            : default(TestResult?));  
-    
     /// <summary>
     /// Contains the result of test execution when <see cref="State"/> is set to <see cref="BuildMessageState.TestResult"/>.
     /// </summary>
-    public TestResult? TestResult => _testResult.Value;
+    public TestResult? TestResult => 
+        ServiceMessage != null && TryGetTestState(ServiceMessage.Name, out var testState)
+            ? CreateResult(CreateKey(ServiceMessage), ServiceMessage, testState)
+            : default(TestResult?);
 
     /// <inheritdoc />
     public override string ToString() => Text;

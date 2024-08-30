@@ -215,43 +215,8 @@ var installTemplates = new DotNetCustom("new", "install", $"{templatesPackageId}
     .WithShortName("Installing template");
 
 installTemplates.WithShortName(installTemplates.ShortName).Run().EnsureSuccess();
-
-foreach (var framework in frameworks)
-{
-    var buildProjectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
-    Directory.CreateDirectory(buildProjectDir);
-    var sampleProjectName = $"sample project for {framework}";
-    try
-    {
-        var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
-        new DotNetNew("build", $"--version={packageVersion}", "-T", framework, "--no-restore")
-            .WithWorkingDirectory(buildProjectDir)
-            .WithShortName($"Creating a new {sampleProjectName}")
-            .Run().EnsureSuccess();
-        
-        new DotNetBuild()
-            .WithProject(buildProjectDir)
-            .WithSources(defaultNuGetSource, Path.Combine(outputDir, "CSharpInteractive"))
-            .WithShortName($"Building the {sampleProjectName}")
-            .Build().EnsureSuccess();
-        
-        new DotNetRun()
-            .WithProject(buildProjectDir)
-            .WithNoBuild(true)
-            .WithWorkingDirectory(sampleProjectDir)
-            .WithShortName($"Running a build for the {sampleProjectName}")
-            .Run().EnsureSuccess();
-        
-        new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx"))
-            .WithWorkingDirectory(sampleProjectDir)
-            .WithShortName($"Running a build as a C# script for the {sampleProjectName}")
-            .Run().EnsureSuccess();
-    }
-    finally
-    {
-        Directory.Delete(buildProjectDir, true);
-    }
-}
+await Task.WhenAll(
+    frameworks.Select(framework => CheckCompatibilityAsync(framework, packageVersion, defaultNuGetSource, outputDir)));
 
 if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && packageVersion.Release != "dev")
 {
@@ -289,5 +254,46 @@ if (skipTests)
 }
 
 return 0;
+
+async Task CheckCompatibilityAsync(
+    string framework,
+    NuGetVersion nuGetVersion,
+    string nuGetSource,
+    string output)
+{
+    var buildProjectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
+    Directory.CreateDirectory(buildProjectDir);
+    var sampleProjectName = $"sample project for {framework}";
+    try
+    {
+        var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
+        await new DotNetNew("build", $"--version={nuGetVersion}", "-T", framework, "--no-restore")
+            .WithWorkingDirectory(buildProjectDir)
+            .WithShortName($"Creating a new {sampleProjectName}")
+            .RunAsync().EnsureSuccess();
+        
+        await new DotNetBuild()
+            .WithProject(buildProjectDir)
+            .WithSources(nuGetSource, Path.Combine(output, "CSharpInteractive"))
+            .WithShortName($"Building the {sampleProjectName}")
+            .BuildAsync().EnsureSuccess();
+        
+        await new DotNetRun()
+            .WithProject(buildProjectDir)
+            .WithNoBuild(true)
+            .WithWorkingDirectory(sampleProjectDir)
+            .WithShortName($"Running a build for the {sampleProjectName}")
+            .RunAsync().EnsureSuccess();
+        
+        await new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx"))
+            .WithWorkingDirectory(sampleProjectDir)
+            .WithShortName($"Running a build as a C# script for the {sampleProjectName}")
+            .RunAsync().EnsureSuccess();
+    }
+    finally
+    {
+        Directory.Delete(buildProjectDir, true);
+    }
+}
 
 internal record PackageInfo(string Id, string Package, bool Publish);
