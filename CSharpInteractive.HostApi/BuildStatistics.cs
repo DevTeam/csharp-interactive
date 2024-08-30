@@ -14,17 +14,11 @@ using System.Text;
 [ExcludeFromCodeCoverage]
 [Target]
 public record BuildStatistics(
-    // Number of build errors.
     int Errors = default,
-    // Number of build warnings.
     int Warnings = default,
-    // Number of tests.
     int Tests = default,
-    // Number of failed tests.
     int FailedTests = default,
-    // Number of ignored tests.
     int IgnoredTests = default,
-    // Number of successful tests.
     int PassedTests = default)
 {
     /// <summary>

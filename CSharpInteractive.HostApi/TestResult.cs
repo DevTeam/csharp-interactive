@@ -28,37 +28,21 @@ using System.Text;
 [Target]
 [DebuggerTypeProxy(typeof(TestResultDebugView))]
 public readonly record struct TestResult(
-    // State of the test.
     TestState State,
-    // User-friendly name for the test.
     string Name,
-    // Identifier of the flow in which the test was running.
     string FlowId,
-    // Suite name that includes the test.
     string SuiteName,
-    // Fully qualified name of the test.
     string FullyQualifiedName,
-    // Displayed test name.
     string DisplayName,
-    // Displayed test name with some details, such as test parameters.
     string ResultDisplayName,
-    // Message displayed while the test is running.
     string Message,
-    // Details of errors during test running.
     string Details,
-    // Duration of the test.
     TimeSpan Duration,
-    // Messages displayed on the console during test running.
     IReadOnlyList<Output> Output,
-    // Container source from which the test is discovered.
     string Source,
-    // Source code file path of the test.
     string CodeFilePath,
-    // Test identifier.
     Guid Id,
-    // Uri of the Executor to use for running this test.
     Uri? ExecutorUri,
-    // Line number of the test in the source code file.
     int? LineNumber)
 {
     /// <summary>

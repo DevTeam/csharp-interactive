@@ -8,13 +8,9 @@ namespace HostApi;
 /// <param name="Line">Output line from a running command line.</param>
 /// <param name="ProcessId">Unique identifier of the managed .NET process.</param>
 public record Output(
-    // Process startup information.
     IStartInfo StartInfo,
-    // <c>False</c> if a line from stdOut and <c>True</c> when from stdErr.
     bool IsError,
-    // Output line from a running command line.
     string Line,
-    // Unique identifier of the managed .NET process.
     int ProcessId)
 {
     /// <summary>

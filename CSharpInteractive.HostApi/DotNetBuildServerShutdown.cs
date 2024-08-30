@@ -15,19 +15,19 @@ using Internal.DotNet;
 /// </code>
 /// </example> 
 /// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Servers">Build servers to shut down. By default, all servers are shut down.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetBuildServerShutdown(
-    // Specifies the set of command line arguments to use when starting the tool.
     IEnumerable<string> Args,
-    // Specifies the set of environment variables that apply to this process and its child processes.
     IEnumerable<(string name, string value)> Vars,
-    // Build servers to shut down. By default, all servers are shut down. 
     IEnumerable<DotNetBuildServer> Servers,
-    // Overrides the tool executable path.
     string ExecutablePath = "",
-    // Specifies the working directory for the tool to be started.
     string WorkingDirectory = "",
-    // Specifies a short name for this operation.
     string ShortName = "")
 {
     /// <summary>

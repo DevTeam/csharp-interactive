@@ -27,27 +27,16 @@ using NuGet.Versioning;
 /// <seealso cref="INuGet.Restore"/>
 [Target]
 public record NuGetRestoreSettings(
-    // Identifier of the NuGet package to restore.
     string PackageId,
-    // Enumeration of package sources (as URLs) to use for the restore.
     IEnumerable<string> Sources,
-    // Enumeration of package sources to use as fallbacks in case the package isn't found in the primary or default source.
     IEnumerable<string> FallbackFolders,
-    // NuGet package version range that will be used to restore a package.
     VersionRange? VersionRange = default,
-    // Specifies a target framework moniker (TFM) - standardized token format for specifying the target framework of a .NET app or library.
     string? TargetFrameworkMoniker = default,
-    // Specifies a path in which packages are installed. If no folder is specified, the current folder is used.
     string? PackagesPath = default,
-    // NuGet package type.
     NuGetPackageType? PackageType = default,
-    // Disable parallel project restores and downloads.
     bool? DisableParallel = default,
-    // Ignore errors from package sources.
     bool? IgnoreFailedSources = default,
-    // Do not display Errors and Warnings to the user.
     bool? HideWarningsAndErrors = default,
-    // Prevents NuGet from using cached packages.
     bool? NoCache = default)
 {
     /// <summary>

@@ -5,12 +5,18 @@ namespace HostApi;
 /// </summary>
 public enum TestState
 {
-    // The test was finished, but that doesn't mean it was successful.
+    /// <summary>
+    /// The test was finished, but that doesn't mean it was successful. 
+    /// </summary>
     Finished,
     
-    // The test was ignored.
+    /// <summary>
+    /// The test was ignored.
+    /// </summary>
     Ignored,
     
-    // The test was failed.
+    /// <summary>
+    /// The test was failed. 
+    /// </summary>
     Failed
 }

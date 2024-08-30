@@ -19,21 +19,12 @@ using NuGet.Versioning;
 /// <param name="IsServiceable">Indicates that the package is serviceable.</param>
 [Target]
 public readonly record struct NuGetPackage(
-    // Package name.
     string Name,
-    // Package version without metadata or release labels.
     Version Version,
-    // NuGet package version.
     NuGetVersion NuGetVersion,
-    // Package type.
     string Type,
-    // Full path to the directory where the package was restored.
     string Path,
-    // SHA 512 hash of the packet.
     string Sha512,
-    // List of files related to the package.
     IReadOnlyList<string> Files,
-    // Indicates that the package contains a tool.
     bool HasTools,
-    // Indicates that the package is serviceable.
     bool IsServiceable);

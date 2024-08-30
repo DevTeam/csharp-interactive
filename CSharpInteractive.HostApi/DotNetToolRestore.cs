@@ -13,31 +13,31 @@ using Internal.DotNet;
 /// </code>
 /// </example>
 /// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="AdditionalSources">Adds an additional NuGet package source to use during installation. Feeds are accessed in parallel, not sequentially in some order of precedence. If the same package and version is in multiple feeds, the fastest feed wins.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="DisableParallel">Prevent restoring multiple projects in parallel.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="ToolManifest">Path to the manifest file.</param>
+/// <param name="NoCache">Do not cache packages and http requests.</param>
+/// <param name="IgnoreFailedSources">Treat package source failures as warnings.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetToolRestore(
-    // Specifies the set of command line arguments to use when starting the tool.
     IEnumerable<string> Args,
-    // Specifies the set of environment variables that apply to this process and its child processes.
     IEnumerable<(string name, string value)> Vars,
-    // Adds an additional NuGet package source to use during installation. Feeds are accessed in parallel, not sequentially in some order of precedence. If the same package and version is in multiple feeds, the fastest feed wins.
     IEnumerable<string> AdditionalSources,
-    // Overrides the tool executable path.
     string ExecutablePath = "",
-    // Specifies the working directory for the tool to be started.
     string WorkingDirectory = "",
-    // Prevent restoring multiple projects in parallel.
     bool? DisableParallel = default,
-    // The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.
     string ConfigFile = "",
-    // Path to the manifest file.
     string ToolManifest = "",
-    // Do not cache packages and http requests.
     bool? NoCache = default,
-    // Treat package source failures as warnings.
     bool? IgnoreFailedSources = default,
-    // Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.
     DotNetVerbosity? Verbosity = default,
-    // Specifies a short name for this operation.
     string ShortName = "")
 {
     /// <summary>

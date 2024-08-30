@@ -15,39 +15,39 @@ using Internal.DotNet;
 /// </code>
 /// </example> 
 /// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Sources">Specifies the server URL. NuGet identifies a UNC or local folder source and simply copies the file there instead of pushing it using HTTP.</param>
+/// <param name="SymbolSources">Specifies the symbol server URL.</param>
+/// <param name="Package">Specifies the file path to the package to be pushed.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="ForceEnglishOutput">Forces the application to run using an invariant, English-based culture.</param>
+/// <param name="Timeout">Specifies the timeout for pushing to a server in seconds. Defaults to 300 seconds (5 minutes). Specifying 0 applies the default value.</param>
+/// <param name="ApiKey">The API key for the server.</param>
+/// <param name="SymbolApiKey">The API key for the symbol server.</param>
+/// <param name="DisableBuffering">Disables buffering when pushing to an HTTP(S) server to reduce memory usage.</param>
+/// <param name="NoSymbols">Doesn't push symbols (even if present).</param>
+/// <param name="NoServiceEndpoint">Doesn't append "api/v2/package" to the source URL.</param>
+/// <param name="SkipDuplicate">When pushing multiple packages to an HTTP(S) server, treats any 409 Conflict response as a warning so that the push can continue.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetNuGetPush(
-    // Specifies the set of command line arguments to use when starting the tool.
     IEnumerable<string> Args,
-    // Specifies the set of environment variables that apply to this process and its child processes.
     IEnumerable<(string name, string value)> Vars,
-    // Specifies the server URL. NuGet identifies a UNC or local folder source and simply copies the file there instead of pushing it using HTTP.
     IEnumerable<string> Sources,
-    // Specifies the symbol server URL.
     IEnumerable<string> SymbolSources,
-    // Specifies the file path to the package to be pushed.
     string Package = "",
-    // Overrides the tool executable path.
     string ExecutablePath = "",
-    // Specifies the working directory for the tool to be started.
     string WorkingDirectory = "",
-    // Forces the application to run using an invariant, English-based culture.
     bool? ForceEnglishOutput = default,
-    // Specifies the timeout for pushing to a server in seconds. Defaults to 300 seconds (5 minutes). Specifying 0 applies the default value.
     int? Timeout = default,
-    // The API key for the server.
     string ApiKey = "",
-    // The API key for the symbol server.
     string SymbolApiKey = "",
-    // Disables buffering when pushing to an HTTP(S) server to reduce memory usage.
     bool? DisableBuffering = default,
-    // Doesn't push symbols (even if present).
     bool? NoSymbols = default,
-    // Doesn't append "api/v2/package" to the source URL.
     bool? NoServiceEndpoint = default,
-    // When pushing multiple packages to an HTTP(S) server, treats any 409 Conflict response as a warning so that the push can continue.
     bool? SkipDuplicate = default,
-    // Specifies a short name for this operation.
     string ShortName = "")
 {
     /// <summary>

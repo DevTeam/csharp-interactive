@@ -26,44 +26,31 @@ using JetBrains.TeamCity.ServiceMessages;
 [ExcludeFromCodeCoverage]
 [Target]
 public record BuildMessage(
-    // Event from the running command line.
     Output Output,
-    // State of the build message. Defines the specifics of the build message, what information it contains.
     BuildMessageState State,
-    // Associated service message.
     IServiceMessage? ServiceMessage = default,
-    // Text of the build message.
     string Text = "",
-    // Details of the build message error.
     string ErrorDetails = "",
-    // Message code of the build message.
     string Code = "",
-    // A file that is relevant to the build event.
     string File = "",
-    // Message subcategory of the build message.
     string Subcategory = "",
-    // A project that is relevant to the build event.
     string ProjectFile = "",
-    // The task that initiated the build message.
     string SenderName = "",
-    // Start position in a line of the file relevant to the build event.
     int? ColumnNumber = default,
-    // End position in a line of the file relevant to the build event.
     int? EndColumnNumber = default,
-    // First line of the file relating to the build event.
     int? LineNumber = default,
-    // Last line of the file relating to the build event.
     int? EndLineNumber = default,
-    // Importance of the build event.
     DotNetMessageImportance? Importance = default)
 {
+    private readonly Lazy<TestResult?> _testResult = new(() =>
+        ServiceMessage != null && TryGetTestState(ServiceMessage.Name, out var testState)
+            ? CreateResult(CreateKey(ServiceMessage), ServiceMessage, testState)
+            : default(TestResult?));  
+    
     /// <summary>
     /// Contains the result of test execution when <see cref="State"/> is set to <see cref="BuildMessageState.TestResult"/>.
     /// </summary>
-    public TestResult? TestResult => 
-        ServiceMessage != null && TryGetTestState(ServiceMessage.Name, out var testState)
-            ? CreateResult(CreateKey(ServiceMessage), ServiceMessage, testState)
-            : default(TestResult?);
+    public TestResult? TestResult => _testResult.Value;
 
     /// <inheritdoc />
     public override string ToString() => Text;

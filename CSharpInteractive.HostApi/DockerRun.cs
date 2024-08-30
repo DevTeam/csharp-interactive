@@ -25,69 +25,69 @@ using Internal.Docker;
 /// </code>
 /// </example>
 /// </summary>
+/// <param name="CommandLine">Command to run in container.</param>
+/// <param name="Image">Docker image.</param>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Options">Additional docker options.</param>
+/// <param name="ExposedPorts">Expose a port or a range of ports.</param>
+/// <param name="PublishedPorts">Publish a container's port(s) to the host.</param>
+/// <param name="Mounts">Adds bind mounts or volumes using the --mount flag.</param>
+/// <param name="Volumes">Bind mount a volume.</param>
+/// <param name="Hosts">Adds entries to container hosts file.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="CPUs">Number of CPUs.</param>
+/// <param name="EntryPoint">Overwrite the default ENTRYPOINT of the image.</param>
+/// <param name="HostName">Container host name.</param>
+/// <param name="KernelMemory">Kernel memory limit.</param>
+/// <param name="Memory">Memory limit.</param>
+/// <param name="Name">Assign a name to the container.</param>
+/// <param name="Network">Connect a container to a network.</param>
+/// <param name="Platform">Set platform if server is multi-platform capable.</param>
+/// <param name="Privileged">Give extended privileges to this container.</param>
+/// <param name="Pull">Pull image before running (&quot;always&quot;|&quot;missing&quot;|&quot;never&quot;).</param>
+/// <param name="Quiet">Suppress the pull output.</param>
+/// <param name="ReadOnly">Mount the container's root filesystem as read only.</param>
+/// <param name="AutoRemove">Automatically remove the container when it exits.</param>
+/// <param name="User">Username or UID (format: &lt;name|uid&gt;[:&lt;group|gid&gt;]).</param>
+/// <param name="ContainerWorkingDirectory">Working directory inside the container.</param>
+/// <param name="EnvFile">A file with environment variables inside the container.</param>
+/// <param name="Interactive">Keep STDIN open even if not attached.</param>
+/// <param name="Tty">Allocate a pseudo-TTY.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DockerRun(
-    // Command to run in container.
     ICommandLine CommandLine,
-    // Docker image.
     string Image,
-    // Specifies the set of command line arguments to use when starting the tool.
     IEnumerable<string> Args,
-    // Specifies the set of environment variables that apply to this process and its child processes.
     IEnumerable<(string name, string value)> Vars,
-    // Additional docker options.
     IEnumerable<string> Options,
-    // Expose a port or a range of ports.
     IEnumerable<string> ExposedPorts,
-    // Publish a container's port(s) to the host.
     IEnumerable<string> PublishedPorts,
-    // Adds bind mounts or volumes using the --mount flag.
     IEnumerable<string> Mounts,
-    // Bind mount a volume.
     IEnumerable<(string from, string to)> Volumes,
-    // Adds entries to container hosts file.
     IEnumerable<(string host, string ip)> Hosts,
-    // Overrides the tool executable path.
     string ExecutablePath = "",
-    // Specifies the working directory for the tool to be started.
     string WorkingDirectory = "",
-    // Number of CPUs.
     int? CPUs = default,
-    // Overwrite the default ENTRYPOINT of the image.
     string EntryPoint = "",
-    // Container host name.
     string HostName = "",
-    // Kernel memory limit.
     int? KernelMemory = default,
-    // Memory limit.
     int? Memory = default,
-    // Assign a name to the container.
     string? Name = default,
-    // Connect a container to a network.
     string Network = "",
-    // Set platform if server is multi-platform capable.
     string Platform = "",
-    // Give extended privileges to this container.
     bool? Privileged = default,
-    // Pull image before running (&quot;always&quot;|&quot;missing&quot;|&quot;never&quot;).
     DockerPullType? Pull = default,
-    // Suppress the pull output.
     bool Quiet = false, 
-    // Mount the container's root filesystem as read only.
     bool? ReadOnly = default,
-    // Automatically remove the container when it exits.
     bool? AutoRemove = default,
-    // Username or UID (format: &lt;name|uid&gt;[:&lt;group|gid&gt;]).
     string User = "",
-    // Working directory inside the container.
     string ContainerWorkingDirectory = "",
-    // A file with environment variables inside the container.
     string EnvFile = "",
-    // Keep STDIN open even if not attached.
     bool Interactive = false,
-    // Allocate a pseudo-TTY.
     bool Tty = false,
-    // Specifies a short name for this operation.
     string ShortName = "")
 {
     /// <summary>

@@ -13,51 +13,51 @@ using Internal.DotNet;
 /// </code>
 /// </example>
 /// </summary>
+/// <param name="Props">MSBuild options for setting properties.</param>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Sources">Specifies the URI of the NuGet package source to use during the restore operation. This setting overrides all the sources specified in the nuget.config files.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Project">Optional path to the project file to restore.</param>
+/// <param name="Packages">Specifies the directory for restored packages.</param>
+/// <param name="UseCurrentRuntime">Use current runtime as the target runtime.</param>
+/// <param name="DisableParallel">Disables restoring multiple projects in parallel.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="NoCache">Specifies to not cache HTTP requests.</param>
+/// <param name="IgnoreFailedSources">Only warn about failed sources if there are packages meeting the version requirement.</param>
+/// <param name="Force">Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.</param>
+/// <param name="Runtime">Specifies a runtime for the package restore. This is used to restore packages for runtimes not explicitly listed in the &lt;RuntimeIdentifiers&gt; tag in the .csproj file. For a list of Runtime Identifiers (RIDs), see the RID catalog. Provide multiple RIDs by specifying this option multiple times.</param>
+/// <param name="NoDependencies">When restoring a project with project-to-project (P2P) references, restores the root project and not the references.</param>
+/// <param name="UseLockFile">Enables project lock file to be generated and used with restore.</param>
+/// <param name="LockedMode">Don't allow updating project lock file.</param>
+/// <param name="LockFilePath">Output location where project lock file is written. By default, this is PROJECT_ROOT\packages.lock.json.</param>
+/// <param name="ForceEvaluate">Forces restore to reevaluate all dependencies even if a lock file already exists.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetRestore(
-    // MSBuild options for setting properties.
     IEnumerable<(string name, string value)> Props,
-    // Specifies the set of command line arguments to use when starting the tool.
     IEnumerable<string> Args,
-    // Specifies the set of environment variables that apply to this process and its child processes.
     IEnumerable<(string name, string value)> Vars,
-    // Specifies the URI of the NuGet package source to use during the restore operation. This setting overrides all of the sources specified in the nuget.config files.
     IEnumerable<string> Sources,
-    // Overrides the tool executable path.
     string ExecutablePath = "",
-    // Specifies the working directory for the tool to be started.
     string WorkingDirectory = "",
-    // Optional path to the project file to restore.
     string Project = "",
-    // Specifies the directory for restored packages.
     string Packages = "",
-    // Use current runtime as the target runtime.
     bool? UseCurrentRuntime = default,
-    // Disables restoring multiple projects in parallel.
     bool? DisableParallel = default,
-    // The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.
     string ConfigFile = "",
-    // Specifies to not cache HTTP requests.
     bool? NoCache = default,
-    // Only warn about failed sources if there are packages meeting the version requirement.
     bool? IgnoreFailedSources = default,
-    // Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.
     bool? Force = default,
-    // Specifies a runtime for the package restore. This is used to restore packages for runtimes not explicitly listed in the &lt;RuntimeIdentifiers&gt; tag in the .csproj file. For a list of Runtime Identifiers (RIDs), see the RID catalog. Provide multiple RIDs by specifying this option multiple times.
     string Runtime = "",
-    // When restoring a project with project-to-project (P2P) references, restores the root project and not the references.
     bool? NoDependencies = default,
-    // Enables project lock file to be generated and used with restore.
     bool? UseLockFile = default,
-    // Don't allow updating project lock file.
     bool? LockedMode = default,
-    // Output location where project lock file is written. By default, this is PROJECT_ROOT\packages.lock.json.
     string LockFilePath = "",
-    // Forces restore to reevaluate all dependencies even if a lock file already exists.
     bool? ForceEvaluate = default,
-    // Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.
     DotNetVerbosity? Verbosity = default,
-    // Specifies a short name for this operation.
     string ShortName = "")
 {
     /// <summary>

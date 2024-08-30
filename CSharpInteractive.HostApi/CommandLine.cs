@@ -15,6 +15,11 @@ using System.Text;
 /// </code>
 /// </example>
 /// </summary>
+/// <param name="ExecutablePath">Specifies the application executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the application to be started.</param>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the application.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ShortName">Specifies a short name for this command line.</param>
 /// <seealso cref="ICommandLineRunner.Run"/>
 /// <seealso cref="ICommandLineRunner.RunAsync"/>
 /// <seealso cref="IBuildRunner.Build"/>
@@ -22,15 +27,10 @@ using System.Text;
 [Target]
 [DebuggerTypeProxy(typeof(CommandLineDebugView))]
 public partial record CommandLine(
-    // Specifies the application executable path.
     string ExecutablePath,
-    // Specifies the working directory for the application to be started.
     string WorkingDirectory,
-    // Specifies the set of command line arguments to use when starting the application.
     IEnumerable<string> Args,
-    // Specifies the set of environment variables that apply to this process and its child processes.
     IEnumerable<(string name, string value)> Vars,
-    // Specifies a short name for this command line.
     string ShortName = "")
     : IStartInfo
 {
