@@ -12,7 +12,7 @@ public class LogWarningScenario : BaseScenario
         Skip.IfNot(string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_VERSION")));
 
         // $visible=true
-        // $tag=09 Logging
+        // $tag=01 Output, logging and tracing
         // $priority=03
         // $description=Log a warning to a build log
         // {

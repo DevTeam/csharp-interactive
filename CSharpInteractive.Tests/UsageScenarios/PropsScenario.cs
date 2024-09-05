@@ -8,7 +8,7 @@ public class PropsScenario : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=08 Global state
+        // $tag=02 Arguments and parameters
         // $priority=01
         // $description=Using Props
         // {

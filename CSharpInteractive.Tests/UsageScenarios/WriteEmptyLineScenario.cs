@@ -8,7 +8,7 @@ public class WriteEmptyLineScenario : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=09 Logging
+        // $tag=01 Output, logging and tracing
         // $priority=01
         // $description=Write an empty line to a build log
         // {

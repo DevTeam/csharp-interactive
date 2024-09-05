@@ -14,7 +14,7 @@ public class DotNetBuildScenario : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=11 .NET build API
+        // $tag=07 .NET CLI
         // $priority=01
         // $description=Build a project
         // {

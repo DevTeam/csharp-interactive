@@ -16,7 +16,7 @@ public class CommandLineAsyncCancellation : BaseScenario
         Skip.IfNot(string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_VERSION")));
 
         // $visible=true
-        // $tag=10 Command Line API
+        // $tag=05 Command Line
         // $priority=06
         // $description=Cancellation of asynchronous run
         // $header=Cancellation will destroy the process and its child processes.

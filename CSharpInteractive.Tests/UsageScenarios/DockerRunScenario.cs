@@ -14,7 +14,7 @@ public class DockerRunScenario : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=12 Docker API
+        // $tag=06 Docker CLI
         // $priority=01
         // $description=Running in docker
         // {

@@ -17,7 +17,7 @@ public class CommandLineInParallelScenario : BaseScenario
         Skip.IfNot(string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_VERSION")));
 
         // $visible=true
-        // $tag=10 Command Line API
+        // $tag=05 Command Line
         // $priority=05
         // $description=Run asynchronously in parallel
         // {

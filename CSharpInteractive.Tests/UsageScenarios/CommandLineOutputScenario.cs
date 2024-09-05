@@ -16,7 +16,7 @@ public class CommandLineOutputScenario : BaseScenario
         Skip.IfNot(string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_VERSION")));
 
         // $visible=true
-        // $tag=10 Command Line API
+        // $tag=05 Command Line
         // $priority=04
         // $description=Run and process output
         // {

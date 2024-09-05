@@ -8,7 +8,7 @@ public class WriteLineScenario : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=09 Logging
+        // $tag=01 Output, logging and tracing
         // $priority=00
         // $description=Write a line to a build log
         // {

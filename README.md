@@ -12,173 +12,23 @@ C# interactive build automation system makes it easy to build .NET projects. It 
 ## Advantages
 
 - [X] 3 compatible [operating modes](#operating-modes)
-- [X] .NET console application [project](#net-build-project)
-- [X] Part of .NET solution
-- [X] C#
 - [X] Cross-platform
 - [X] Debugging capability
-- [X] No model binding (Task, Target, DependsOn, etc.)
-  - no restrictions
-  - no learning curve
-  - can use common .NET development practices
-- [X] Simple and powerful API for building .NET projects
-- [X] Passing named parameters as in MSBuild
-- [X] Summarised statistics as in MSBuild
-  - Child processes 
-  - Warnings and errors
-  - Tests
-  - Execution time
-- [X] CI/CD integration
-  - GitLab/GitHub Actions/JetBrains Space etc.
-  - TeamCity 
-    - [Special runner](https://jetbrains.com/help/teamcity/c-script.html#C%23+Script+Settings) 
-    - Report on warnings and errors
-    - Test statistics
-    - Execution progress
-    - Real-time integration
-    - Parameters passing between build configuration steps
+- [X] No model limitations (Task, Target, DependsOn, etc.)
+  - Regular .NET code
+  - Best programming practices
+- [X] Powerful API for building .NET projects
+- [X] Summarised statistics
 
 ## Operating modes
 
-- [REPL](#script-runner-and-repl-tool)
-- [C# scripts running](#script-runner-and-repl-tool)
-- [.NET build project](#net-build-project)
+- [Interactive](#interactive-repl)
+- [Running C# script](#running-c-script)
+- [Regular .NET build project](#net-build-project)
 
 These modes are practically compatible, i.e., for example, a script can be run as a .NET project, and vice versa, with minimal or no changes.
 
-## API
-- Output, logging and tracing
-- Arguments and parameters
-- Command line
-- Docker
-- Microsoft DI API to resolve dependencies
-- NuGet
-- .NET CLI
-
-```c#
-// This directive in a script allows you to use host API types
-// without specifying the fully qualified namespace of these types
-using HostApi;
-
-// Output, logging and tracing API
-WriteLine("Hello");
-WriteLine("Hello !!!", Color.Highlighted);
-Error("Error details", "ErrorId");
-Warning("Warning");
-Info("Some info");
-Trace("Trace message");
-
-// API for arguments and parameters
-Info("First argument: " + (Args.Count > 0 ? Args[0] : "empty"));
-Info("Version: " + Props.Get("version", "1.0.0"));
-Props["version"] = "1.0.1";
-
-var configuration = Props.Get("configuration", "Release");
-Info($"Configuration: {configuration}");
-
-// Command line API
-var cmd = new CommandLine("whoami");
-
-cmd.Run().EnsureSuccess();
-
-// Asynchronous way
-await cmd.RunAsync().EnsureSuccess();
-
-// API for Docker CLI
-await new DockerRun("ubuntu")
-    .WithCommandLine(cmd)
-    .WithPull(DockerPullType.Always)
-    .WithAutoRemove(true)
-    .RunAsync()
-    .EnsureSuccess();
-
-// Microsoft DI API to resolve dependencies
-var nuget = GetService<INuGet>();
-
-// Creating a custom service provider
-var serviceCollection = GetService<IServiceCollection>();
-serviceCollection.AddSingleton<MyTool>();
-
-var myServiceProvider = serviceCollection.BuildServiceProvider();
-var tool = myServiceProvider.GetRequiredService<MyTool>();
-
-// API for NuGet
-var settings = new NuGetRestoreSettings("MySampleLib")
-    .WithVersionRange(VersionRange.Parse("[1.0.14, 1.1)"))
-    .WithTargetFrameworkMoniker("net6.0")
-    .WithPackagesPath(".packages");
-
-var packages = nuget.Restore(settings);
-foreach (var package in packages)
-{
-    Info(package.Path);
-}
-
-// API for .NET CLI
-var buildResult = new DotNetBuild().WithConfiguration(configuration).WithNoLogo(true)
-    .Build().EnsureSuccess();
-
-var warnings = buildResult.Warnings
-    .Where(warn => Path.GetFileName(warn.File) == "Calculator.cs")
-    .Select(warn => $"{warn.Code}({warn.LineNumber}:{warn.ColumnNumber})")
-    .Distinct();
-
-foreach (var warning in warnings)
-{
-    await new HttpClient().GetAsync(
-        "https://api.telegram.org/bot7102686717:AAEHw7HZinme_5kfIRV7TwXK4Xql9WPPpM3/" +
-        "sendMessage?chat_id=878745093&text="
-        + HttpUtility.UrlEncode(warning));
-}
-
-// Asynchronous way
-var cts = new CancellationTokenSource();
-await new DotNetTest()
-    .WithConfiguration(configuration)
-    .WithNoLogo(true)
-    .WithNoBuild(true)
-    .BuildAsync(CancellationOnFirstFailedTest, cts.Token)
-    .EnsureSuccess();
-
-void CancellationOnFirstFailedTest(BuildMessage message)
-{
-    if (message.TestResult is { State: TestState.Failed }) cts.Cancel();
-}
-
-// Parallel tests
-var tempDir = Directory.CreateTempSubdirectory();
-try
-{
-    new DotNetPublish()
-        .WithConfiguration(configuration)
-        .WithNoLogo(true)
-        .WithNoBuild(true)
-        .WithFramework("net8.0")
-        .AddProps(("PublishDir", tempDir.FullName))
-        .Build().EnsureSuccess();
-
-    var test = new VSTest().WithTestFileNames("*.Tests.dll");
-
-    var tasks = from tagSuffix in new[] {"bookworm-slim", "alpine", "noble"}
-        let image = $"mcr.microsoft.com/dotnet/sdk:8.0-{tagSuffix}"
-        let dockerRun = new DockerRun(image)
-            .WithCommandLine(test)
-            .WithAutoRemove(true)
-            .WithVolumes((tempDir.FullName, "/app"))
-            .WithContainerWorkingDirectory("/app")
-        select dockerRun.BuildAsync(CancellationOnFirstFailedTest, cts.Token);
-
-    await Task.WhenAll(tasks).EnsureSuccess();
-}
-finally { tempDir.Delete(); }
-
-class MyTool(INuGet nuGet);
-```
-
-> [!IMPORTANT]
-> `using HostApi;` directive in a script allows you to use host API types without specifying the fully qualified namespace of these types.
-
-## Script runner and REPL tool
+## Interactive (REPL)
 
 Please see [this page](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template) for installation details.
 
@@ -187,17 +37,24 @@ Launch the tool in the interactive mode:
 ```Shell
 dotnet csi
 ```
+Simply enter C# commands sequentially one line after another and get the result in console output.
+
+## Running C# script
+
 Run a specified script with a given argument:
 
 ```Shell
-dotnet csi Samples/Scripts/hello.csx World 
+dotnet csi ./MyDirectory/hello.csx World 
 ```
+
 Run a single script located in the _MyDirectory_ directory:
 
 ```Shell
-dotnet csi Samples/Build
+dotnet csi ./MyDirectory World
 ```
-Usage:
+
+<details>
+<summary>Usage details</summary>
 
 ```Shell
 dotnet csi [options] [--] [script] [script arguments]
@@ -223,6 +80,8 @@ Supported options:
 | --property <key=value>  | Define a key-value pair(s) for the script properties called _Props_, which is accessible in scripts.                                                            | `-p`, `/property`, `/p`                                                                       |
 | --property:<key=value>  | Define a key-value pair(s) in MSBuild style for the script properties called _Props_, which is accessible in scripts.                                           | `-p:<key=value>`, `/property:<key=value>`, `/p:<key=value>`, `--property:key1=val1;key2=val2` |
 
+</details>
+
 ## .NET build project
 
 Please see [this page](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template) for details on how to install the [project template](https://www.nuget.org/packages/CSharpInteractive.Templates).
@@ -235,28 +94,17 @@ dotnet new build -o ./Build
 
 The created project contains 2 entry points:
 - _Program.csx_ to run as a script
+  ```shell
+  dotnet csi ./Build
+  ```
 - _Program.cs_ to run as .NET application
+  ```shell
+  dotnet run --project ./Build
+  ```
 
-To run the script from the command line from the directory *__Build__*:
+## API
 
-```shell
-dotnet csi Build
-```
-
-To run as a .NET console application:
-
-```shell
-dotnet run --project Build
-```
-## Usage Scenarios
-
-- Global state
-  - [Using Args](#using-args)
-  - [Using Props](#using-props)
-  - [Using the Host property](#using-the-host-property)
-  - [Get services](#get-services)
-  - [Service collection](#service-collection)
-- Logging
+- Output, logging and tracing
   - [Write a line to a build log](#write-a-line-to-a-build-log)
   - [Write a line highlighted with "Header" color to a build log](#write-a-line-highlighted-with-"header"-color-to-a-build-log)
   - [Write an empty line to a build log](#write-an-empty-line-to-a-build-log)
@@ -264,7 +112,17 @@ dotnet run --project Build
   - [Log a warning to a build log](#log-a-warning-to-a-build-log)
   - [Log information to a build log](#log-information-to-a-build-log)
   - [Log trace information to a build log](#log-trace-information-to-a-build-log)
-- Command Line API
+- Arguments and parameters
+  - [Using Args](#using-args)
+  - [Using Props](#using-props)
+- Microsoft DI
+  - [Using the Host property](#using-the-host-property)
+  - [Get services](#get-services)
+  - [Service collection](#service-collection)
+- NuGet
+  - [Restore NuGet a package of newest version](#restore-nuget-a-package-of-newest-version)
+  - [Restore a NuGet package by a version range for the specified .NET and path](#restore-a-nuget-package-by-a-version-range-for-the-specified-.net-and-path)
+- Command Line
   - [Build command lines](#build-command-lines)
   - [Run a command line](#run-a-command-line)
   - [Run a command line asynchronously](#run-a-command-line-asynchronously)
@@ -272,10 +130,10 @@ dotnet run --project Build
   - [Run asynchronously in parallel](#run-asynchronously-in-parallel)
   - [Cancellation of asynchronous run](#cancellation-of-asynchronous-run)
   - [Run timeout](#run-timeout)
-- Docker API
+- Docker CLI
   - [Build a project in a docker container](#build-a-project-in-a-docker-container)
   - [Running in docker](#running-in-docker)
-- .NET build API
+- .NET CLI
   - [Build a project](#build-a-project)
   - [Build a project using MSBuild](#build-a-project-using-msbuild)
   - [Clean a project](#clean-a-project)
@@ -290,11 +148,78 @@ dotnet run --project Build
   - [Test a project using the MSBuild VSTest target](#test-a-project-using-the-msbuild-vstest-target)
   - [Test an assembly](#test-an-assembly)
   - [Shuts down build servers](#shuts-down-build-servers)
-- NuGet API
-  - [Restore NuGet a package of newest version](#restore-nuget-a-package-of-newest-version)
-  - [Restore a NuGet package by a version range for the specified .NET and path](#restore-a-nuget-package-by-a-version-range-for-the-specified-.net-and-path)
-- TeamCity Service Messages API
+- TeamCity API
   - [TeamCity integration via service messages](#teamcity-integration-via-service-messages)
+
+### Write a line to a build log
+
+
+
+``` CSharp
+WriteLine("Hello");
+```
+
+
+
+### Write an empty line to a build log
+
+
+
+``` CSharp
+WriteLine();
+```
+
+
+
+### Write a line highlighted with "Header" color to a build log
+
+
+
+``` CSharp
+WriteLine("Hello", Header);
+```
+
+
+
+### Log an error to a build log
+
+
+
+``` CSharp
+Error("Error info", "Error identifier");
+```
+
+
+
+### Log a warning to a build log
+
+
+
+``` CSharp
+Warning("Warning info");
+```
+
+
+
+### Log information to a build log
+
+
+
+``` CSharp
+Info("Some info");
+```
+
+
+
+### Log trace information to a build log
+
+
+
+``` CSharp
+Trace("Some trace info");
+```
+
+
 
 ### Using Args
 
@@ -382,72 +307,38 @@ private class MyTask(ICommandLineRunner runner)
 
 
 
-### Write a line to a build log
+### Restore NuGet a package of newest version
 
 
 
 ``` CSharp
-WriteLine("Hello");
+// Adds the namespace "HostApi" to use INuGet
+using HostApi;
+
+IEnumerable<NuGetPackage> packages = GetService<INuGet>()
+    .Restore(new NuGetRestoreSettings("IoC.Container").WithVersionRange(VersionRange.All));
 ```
 
 
 
-### Write an empty line to a build log
+### Restore a NuGet package by a version range for the specified .NET and path
 
 
 
 ``` CSharp
-WriteLine();
-```
+// Adds the namespace "HostApi" to use INuGet
+using HostApi;
 
+var packagesPath = Path.Combine(
+    Path.GetTempPath(),
+    Guid.NewGuid().ToString()[..4]);
 
+var settings = new NuGetRestoreSettings("IoC.Container")
+    .WithVersionRange(VersionRange.Parse("[1.3, 1.3.8)"))
+    .WithTargetFrameworkMoniker("net5.0")
+    .WithPackagesPath(packagesPath);
 
-### Write a line highlighted with "Header" color to a build log
-
-
-
-``` CSharp
-WriteLine("Hello", Header);
-```
-
-
-
-### Log an error to a build log
-
-
-
-``` CSharp
-Error("Error info", "Error identifier");
-```
-
-
-
-### Log a warning to a build log
-
-
-
-``` CSharp
-Warning("Warning info");
-```
-
-
-
-### Log information to a build log
-
-
-
-``` CSharp
-Info("Some info");
-```
-
-
-
-### Log trace information to a build log
-
-
-
-``` CSharp
-Trace("Some trace info");
+IEnumerable<NuGetPackage> packages = GetService<INuGet>().Restore(settings);
 ```
 
 
@@ -625,6 +516,66 @@ int? exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
     .ExitCode;
 
 exitCode.HasValue.ShouldBeFalse();
+```
+
+
+
+### Build a project in a docker container
+
+
+
+``` CSharp
+// Adds the namespace "HostApi" to use .NET build API and Docker API
+using HostApi;
+
+// Creates a base docker command line
+var dockerRun = new DockerRun()
+    .WithAutoRemove(true)
+    .WithInteractive(true)
+    .WithImage("mcr.microsoft.com/dotnet/sdk")
+    .WithPlatform("linux")
+    .WithContainerWorkingDirectory("/MyProjects")
+    .AddVolumes((ToAbsoluteLinuxPath(Environment.CurrentDirectory), "/MyProjects"));
+
+
+// Creates a new library project in a docker container
+dockerRun
+    .WithCommandLine(new DotNetCustom("new", "classlib", "-n", "MyLib", "--force"))
+    .Run()
+    .EnsureSuccess();
+
+// Builds the library project in a docker container
+var result = dockerRun
+    .WithCommandLine(new DotNetBuild().WithProject("MyLib/MyLib.csproj"))
+    .Build()
+    .EnsureSuccess();
+
+// The "result" variable provides details about a build
+result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
+result.ExitCode.ShouldBe(0);
+
+string ToAbsoluteLinuxPath(string path) => 
+    "/" + path.Replace(":", "").Replace('\\', '/');
+```
+
+
+
+### Running in docker
+
+
+
+``` CSharp
+// Adds the namespace "HostApi" to use Command Line API and Docker API
+using HostApi;
+
+// Creates some command line to run in a docker container
+var cmd = new CommandLine("whoami");
+
+// Runs the command line in a docker container
+var result = new DockerRun(cmd, "mcr.microsoft.com/dotnet/sdk")
+    .WithAutoRemove(true)
+    .Run()
+    .EnsureSuccess();
 ```
 
 
@@ -1055,102 +1006,6 @@ using HostApi;
 
 // Shuts down all build servers that are started from dotnet.
 new DotNetBuildServerShutdown()
-    .Run()
-    .EnsureSuccess();
-```
-
-
-
-### Restore NuGet a package of newest version
-
-
-
-``` CSharp
-// Adds the namespace "HostApi" to use INuGet
-using HostApi;
-
-IEnumerable<NuGetPackage> packages = GetService<INuGet>()
-    .Restore(new NuGetRestoreSettings("IoC.Container").WithVersionRange(VersionRange.All));
-```
-
-
-
-### Restore a NuGet package by a version range for the specified .NET and path
-
-
-
-``` CSharp
-// Adds the namespace "HostApi" to use INuGet
-using HostApi;
-
-var packagesPath = Path.Combine(
-    Path.GetTempPath(),
-    Guid.NewGuid().ToString()[..4]);
-
-var settings = new NuGetRestoreSettings("IoC.Container")
-    .WithVersionRange(VersionRange.Parse("[1.3, 1.3.8)"))
-    .WithTargetFrameworkMoniker("net5.0")
-    .WithPackagesPath(packagesPath);
-
-IEnumerable<NuGetPackage> packages = GetService<INuGet>().Restore(settings);
-```
-
-
-
-### Build a project in a docker container
-
-
-
-``` CSharp
-// Adds the namespace "HostApi" to use .NET build API and Docker API
-using HostApi;
-
-// Creates a base docker command line
-var dockerRun = new DockerRun()
-    .WithAutoRemove(true)
-    .WithInteractive(true)
-    .WithImage("mcr.microsoft.com/dotnet/sdk")
-    .WithPlatform("linux")
-    .WithContainerWorkingDirectory("/MyProjects")
-    .AddVolumes((ToAbsoluteLinuxPath(Environment.CurrentDirectory), "/MyProjects"));
-
-
-// Creates a new library project in a docker container
-dockerRun
-    .WithCommandLine(new DotNetCustom("new", "classlib", "-n", "MyLib", "--force"))
-    .Run()
-    .EnsureSuccess();
-
-// Builds the library project in a docker container
-var result = dockerRun
-    .WithCommandLine(new DotNetBuild().WithProject("MyLib/MyLib.csproj"))
-    .Build()
-    .EnsureSuccess();
-
-// The "result" variable provides details about a build
-result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
-result.ExitCode.ShouldBe(0);
-
-string ToAbsoluteLinuxPath(string path) => 
-    "/" + path.Replace(":", "").Replace('\\', '/');
-```
-
-
-
-### Running in docker
-
-
-
-``` CSharp
-// Adds the namespace "HostApi" to use Command Line API and Docker API
-using HostApi;
-
-// Creates some command line to run in a docker container
-var cmd = new CommandLine("whoami");
-
-// Runs the command line in a docker container
-var result = new DockerRun(cmd, "mcr.microsoft.com/dotnet/sdk")
-    .WithAutoRemove(true)
     .Run()
     .EnsureSuccess();
 ```

@@ -13,7 +13,7 @@ public class NuGetRestoreAdvanced : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=11 NuGet API
+        // $tag=04 NuGet
         // $priority=01
         // $description=Restore a NuGet package by a version range for the specified .NET and path
         // {

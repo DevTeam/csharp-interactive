@@ -18,7 +18,7 @@ public class CommandLinesScenario : BaseScenario
         Skip.IfNot(Environment.OSVersion.Platform == PlatformID.Win32NT);
 
         // $visible=true
-        // $tag=10 Command Line API
+        // $tag=05 Command Line
         // $priority=00
         // $description=Build command lines
         // {

@@ -12,7 +12,7 @@ public class LogErrorScenario : BaseScenario
         Skip.IfNot(string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_VERSION")));
 
         // $visible=true
-        // $tag=09 Logging
+        // $tag=01 Output, logging and tracing
         // $priority=02
         // $description=Log an error to a build log
         // {

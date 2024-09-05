@@ -17,7 +17,7 @@ public class CommandLineWithTimeoutScenario : BaseScenario
         ExpectedExitCode = 1;
 
         // $visible=true
-        // $tag=10 Command Line API
+        // $tag=05 Command Line
         // $priority=06
         // $description=Run timeout
         // $header=If timeout expired a process will be killed.

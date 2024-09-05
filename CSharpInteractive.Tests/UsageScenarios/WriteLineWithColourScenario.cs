@@ -10,7 +10,7 @@ public class WriteLineWithColourScenario : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=09 Logging
+        // $tag=01 Output, logging and tracing
         // $priority=01
         // $description=Write a line highlighted with "Header" color to a build log
         // {

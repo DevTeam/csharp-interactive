@@ -100,10 +100,10 @@
         vars["body"] = string.Join(Environment.NewLine, content) + Environment.NewLine;
     }
 #>
-## Usage Scenarios
+## API
 
 <#
-    foreach (var group in infos.Where(info => info["visible"] == "true").GroupBy(i => i["tag"]).OrderBy(i => i.Key[0]))
+    foreach (var group in infos.Where(info => info["visible"] == "true").GroupBy(i => i["tag"]).OrderBy(i => i.Key))
     {
         var groupNameIndex = group.Key.IndexOf(' ');
         var groupName = group.Key.Substring(groupNameIndex + 1, group.Key.Length - groupNameIndex - 1);

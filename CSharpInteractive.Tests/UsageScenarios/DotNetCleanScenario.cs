@@ -14,7 +14,7 @@ public class DotNetCleanScenario : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=11 .NET build API
+        // $tag=07 .NET CLI
         // $priority=01
         // $description=Clean a project
         // {

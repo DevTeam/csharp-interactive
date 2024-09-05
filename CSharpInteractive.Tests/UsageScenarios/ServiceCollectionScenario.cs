@@ -9,7 +9,7 @@ public class ServiceCollectionScenario : BaseScenario
 {
     [Fact]
     // $visible=true
-    // $tag=08 Global state
+    // $tag=03 Microsoft DI
     // $priority=03
     // $description=Service collection
     // {

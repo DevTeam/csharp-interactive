@@ -19,7 +19,7 @@ public class DockerDotNetBuildScenario : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=12 Docker API
+        // $tag=06 Docker CLI
         // $priority=01
         // $description=Build a project in a docker container
         // {

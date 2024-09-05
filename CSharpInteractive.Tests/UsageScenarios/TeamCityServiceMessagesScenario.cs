@@ -13,7 +13,7 @@ public class TeamCityServiceMessagesScenario : BaseScenario
         Skip.IfNot(string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_VERSION")));
 
         // $visible=true
-        // $tag=3 TeamCity Service Messages API
+        // $tag=3 TeamCity API
         // $priority=00
         // $description=TeamCity integration via service messages
         // $header=For more details how to use TeamCity service message API please see [this](https://github.com/JetBrains/TeamCity.ServiceMessages) page. Instead of creating a root message writer like in the following example:

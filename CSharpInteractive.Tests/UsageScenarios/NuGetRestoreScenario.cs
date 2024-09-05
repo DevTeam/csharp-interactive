@@ -13,7 +13,7 @@ public class NuGetRestoreScenario : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=11 NuGet API
+        // $tag=04 NuGet
         // $priority=00
         // $description=Restore NuGet a package of newest version
         // {

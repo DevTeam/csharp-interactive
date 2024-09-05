@@ -17,7 +17,7 @@ public class CommandLineAsyncScenario : BaseScenario
         Skip.IfNot(string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_VERSION")));
 
         // $visible=true
-        // $tag=10 Command Line API
+        // $tag=05 Command Line
         // $priority=02
         // $description=Run a command line asynchronously
         // {

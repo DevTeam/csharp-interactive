@@ -6,7 +6,7 @@ public class ArgsScenario : BaseScenario
     public void Run()
     {
         // $visible=true
-        // $tag=08 Global state
+        // $tag=02 Arguments and parameters
         // $priority=00
         // $description=Using Args
         // $header=_Args_ have got from the script arguments.
