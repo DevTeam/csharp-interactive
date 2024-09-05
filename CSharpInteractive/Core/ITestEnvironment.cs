@@ -1,4 +1,5 @@
-﻿namespace CSharpInteractive.Core;
+﻿// ReSharper disable UnusedMemberInSuper.Global
+namespace CSharpInteractive.Core;
 
 internal interface ITestEnvironment
 {

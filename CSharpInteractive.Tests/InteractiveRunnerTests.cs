@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 [SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows")]

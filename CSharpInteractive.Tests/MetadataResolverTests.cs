@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Collections.Immutable;
 using Core;
-using CSharpInteractive;
 using Microsoft.CodeAnalysis;
 
 public class MetadataResolverTests
@@ -27,7 +26,7 @@ public class MetadataResolverTests
 
         // Then
         resolver.BaseDirectory.ShouldBe(Path.GetFullPath("ScriptDir"));
-        resolver.SearchPaths.ShouldBe(new []{Path.GetFullPath("ScriptDir"), Path.GetFullPath("WorkingDir")});
+        resolver.SearchPaths.ShouldBe([Path.GetFullPath("ScriptDir"), Path.GetFullPath("WorkingDir")]);
     }
     
     [Theory]

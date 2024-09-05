@@ -1,8 +1,7 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
-using Environment = System.Environment;
+using Environment = Environment;
 
 public class TextReplacerTests
 {

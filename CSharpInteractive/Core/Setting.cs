@@ -1,3 +1,4 @@
+// ReSharper disable UnusedType.Global
 namespace CSharpInteractive.Core;
 
 internal class Setting<T>(T defaultSettingValue) : ISettingGetter<T>, ISettingSetter<T>

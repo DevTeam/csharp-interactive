@@ -2,8 +2,7 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
-using Environment = System.Environment;
+using Environment = Environment;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 [SuppressMessage("ReSharper", "GenericEnumeratorNotDisposed")]
@@ -29,13 +28,13 @@ public class CodeSourceCommandFactoryTests
         _replCommandFactory1.Setup(i => i.Create(It.IsAny<string>())).Returns([]);
         _replCommandFactory1.SetupGet(i => i.Order).Returns(1);
         _replCommandFactory2 = new Mock<ICommandFactory<string>>();
-        _replCommandFactory2.Setup(i => i.Create("#help")).Returns(new[] {HelpCommand.Shared});
+        _replCommandFactory2.Setup(i => i.Create("#help")).Returns([HelpCommand.Shared]);
         _replCommandFactory2.SetupGet(i => i.Order).Returns(2);
         _scriptCommandFactory = new Mock<ICommandFactory<ScriptCommand>>();
-        _scriptCommandFactory.Setup(i => i.Create(new ScriptCommand(SourceName, "code1" + Environment.NewLine, false))).Returns(new[] {ScriptCommand11, ScriptCommand12});
-        _scriptCommandFactory.Setup(i => i.Create(new ScriptCommand(SourceName, "code2" + Environment.NewLine, false))).Returns(new[] {ScriptCommand2});
-        _scriptCommandFactory.Setup(i => i.Create(new ScriptCommand(SourceName, "#code3" + Environment.NewLine, false))).Returns(new[] {ScriptCommand3});
-        _scriptCommandFactory.Setup(i => i.Create(new ScriptCommand(SourceName, "code1" + Environment.NewLine + "code2" + Environment.NewLine, false))).Returns(new[] {ScriptCommand4});
+        _scriptCommandFactory.Setup(i => i.Create(new ScriptCommand(SourceName, "code1" + Environment.NewLine, false))).Returns([ScriptCommand11, ScriptCommand12]);
+        _scriptCommandFactory.Setup(i => i.Create(new ScriptCommand(SourceName, "code2" + Environment.NewLine, false))).Returns([ScriptCommand2]);
+        _scriptCommandFactory.Setup(i => i.Create(new ScriptCommand(SourceName, "#code3" + Environment.NewLine, false))).Returns([ScriptCommand3]);
+        _scriptCommandFactory.Setup(i => i.Create(new ScriptCommand(SourceName, "code1" + Environment.NewLine + "code2" + Environment.NewLine, false))).Returns([ScriptCommand4]);
         _codeSource = new Mock<ICodeSource>();
     }
 
@@ -88,6 +87,6 @@ public class CodeSourceCommandFactoryTests
     private CodeSourceCommandFactory CreateInstance() =>
         new(
             _log.Object,
-            new[] {_replCommandFactory2.Object, _replCommandFactory1.Object},
+            [_replCommandFactory2.Object, _replCommandFactory1.Object],
             _scriptCommandFactory.Object);
 }

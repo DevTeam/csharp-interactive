@@ -5,7 +5,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using CSharpInteractive;
 using HostApi;
-using Environment = System.Environment;
+using Environment = Environment;
 
 [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize")]
 public class BaseScenario : IHost, IDisposable

@@ -85,7 +85,7 @@ public class ScriptRunTests
         // When
         var result = TestTool.Run(
             Array.Empty<string>(),
-            new[] {"Abc", "Xyz"},
+            ["Abc", "Xyz"],
             TestTool.DefaultVars,
             """WriteLine($"Args: {Args.Count}, {Args[0]}, {Args[1]}");"""
         );
@@ -105,15 +105,14 @@ public class ScriptRunTests
 
         // When
         var result = TestTool.Run(
-            new[]
-            {
+            [
                 "--property", "Val1=Abc",
                 "/property", "val2=Xyz",
                 "-p", "val3=ASD",
                 "/p", "4=_"
-            },
+            ],
             Array.Empty<string>(),
-            new[] {("TEAMCITY_VERSION", teamcityVersionEnvVar)},
+            [("TEAMCITY_VERSION", teamcityVersionEnvVar)],
             """WriteLine(Props["Val1"] + Props["val2"] + Props["val3"] + Props["4"] + Props.Count);"""
         );
 
@@ -132,7 +131,7 @@ public class ScriptRunTests
         var result = TestTool.Run(
             Array.Empty<string>(),
             Array.Empty<string>(),
-            new[] {("TEAMCITY_VERSION", "2021")},
+            [("TEAMCITY_VERSION", "2021")],
             """Props["Val1"]="Xyz";"""
         );
 
@@ -217,7 +216,7 @@ public class ScriptRunTests
         var refScriptFile = fileSystem.CreateTempFilePath();
         try
         {
-            fileSystem.AppendAllLines(refScriptFile, new[] {"""Console.WriteLine("Hello");"""});
+            fileSystem.AppendAllLines(refScriptFile, ["""Console.WriteLine("Hello");"""]);
 
             // When
             var result = TestTool.Run($"""
@@ -242,8 +241,8 @@ public class ScriptRunTests
         // Given
         var workingDirectory = DotNetScript.GetWorkingDirectory();
         // ReSharper disable once UnusedVariable
-        var scriptAbc = DotNetScript.Create("abc.csx", workingDirectory, Enumerable.Empty<string>(), "Console.WriteLine(\"Hello\");");
-        var script = DotNetScript.Create("script.csx", workingDirectory, Enumerable.Empty<string>(), "#load \"abc.csx\"").WithVars(TestTool.DefaultVars);
+        var scriptAbc = DotNetScript.Create("abc.csx", workingDirectory, [], "Console.WriteLine(\"Hello\");");
+        var script = DotNetScript.Create("script.csx", workingDirectory, [], "#load \"abc.csx\"").WithVars(TestTool.DefaultVars);
 
         // When
         var result = TestTool.Run(script);
@@ -261,10 +260,10 @@ public class ScriptRunTests
         // Given
         var workingDirectory = DotNetScript.GetWorkingDirectory();
         // ReSharper disable once UnusedVariable
-        var scriptClass1 = DotNetScript.Create("class1.csx", workingDirectory, Enumerable.Empty<string>(), "class Class1 { public Class1(Class2 val) {}};");
+        var scriptClass1 = DotNetScript.Create("class1.csx", workingDirectory, [], "class Class1 { public Class1(Class2 val) {}};");
         // ReSharper disable once UnusedVariable
-        var scriptClass2 = DotNetScript.Create("class2.csx", workingDirectory, Enumerable.Empty<string>(), "class Class2 {};");
-        var script = DotNetScript.Create("script.csx", workingDirectory, Enumerable.Empty<string>(), "#load \"class2.csx\"", "#load \"class1.csx\"").WithVars(TestTool.DefaultVars);
+        var scriptClass2 = DotNetScript.Create("class2.csx", workingDirectory, [], "class Class2 {};");
+        var script = DotNetScript.Create("script.csx", workingDirectory, [], "#load \"class2.csx\"", "#load \"class1.csx\"").WithVars(TestTool.DefaultVars);
 
         // When
         var result = TestTool.Run(script);
@@ -280,10 +279,10 @@ public class ScriptRunTests
         // Given
         var workingDirectory = DotNetScript.GetWorkingDirectory();
         // ReSharper disable once UnusedVariable
-        var scriptClass1 = DotNetScript.Create("class1.csx", workingDirectory, Enumerable.Empty<string>(), "class Class1 { public Class1(Class2 val) {}};");
+        var scriptClass1 = DotNetScript.Create("class1.csx", workingDirectory, [], "class Class1 { public Class1(Class2 val) {}};");
         // ReSharper disable once UnusedVariable
-        var scriptClass2 = DotNetScript.Create("class2.csx", workingDirectory, Enumerable.Empty<string>(), "class Class2 {};");
-        var script = DotNetScript.Create("script.csx", workingDirectory, Enumerable.Empty<string>(), "// #load \"class1.csx\"", "#load \"class2.csx\"").WithVars(TestTool.DefaultVars);
+        var scriptClass2 = DotNetScript.Create("class2.csx", workingDirectory, [], "class Class2 {};");
+        var script = DotNetScript.Create("script.csx", workingDirectory, [], "// #load \"class1.csx\"", "#load \"class2.csx\"").WithVars(TestTool.DefaultVars);
 
         // When
         var result = TestTool.Run(script);
@@ -330,9 +329,9 @@ public class ScriptRunTests
 
         // When
         var result = TestTool.Run(
-            new[] {"-s", Path.Combine(Directory.GetCurrentDirectory(), "Integration", "Resources")},
+            ["-s", Path.Combine(Directory.GetCurrentDirectory(), "Integration", "Resources")],
             Array.Empty<string>(),
-            new[] {("TEAMCITY_VERSION", teamcityVersionEnvVar)},
+            [("TEAMCITY_VERSION", teamcityVersionEnvVar)],
             """
             #r "nuget: csinetstandard11, 1.0.0"
             """,
@@ -448,8 +447,8 @@ public class ScriptRunTests
         // Given
         var workingDirectory = DotNetScript.GetWorkingDirectory();
         // ReSharper disable once UnusedVariable
-        var scriptAbc = DotNetScript.Create("abc.csx", workingDirectory, Enumerable.Empty<string>(), "Console.WriteLine(GetCurrentFileName());", "string GetCurrentFileName([System.Runtime.CompilerServices.CallerFilePath] string fileName = null) => fileName;");
-        var script = DotNetScript.Create("script.csx", workingDirectory, Enumerable.Empty<string>(), "#load \"abc.csx\"", "Console.WriteLine(GetCurrentFileName());").WithVars(TestTool.DefaultVars);
+        var scriptAbc = DotNetScript.Create("abc.csx", workingDirectory, [], "Console.WriteLine(GetCurrentFileName());", "string GetCurrentFileName([System.Runtime.CompilerServices.CallerFilePath] string fileName = null) => fileName;");
+        var script = DotNetScript.Create("script.csx", workingDirectory, [], "#load \"abc.csx\"", "Console.WriteLine(GetCurrentFileName());").WithVars(TestTool.DefaultVars);
 
         // When
         var result = TestTool.Run(script);

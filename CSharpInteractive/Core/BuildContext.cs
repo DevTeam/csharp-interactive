@@ -40,7 +40,7 @@ internal class BuildContext: IBuildContext
             message = new BuildMessage(output, BuildMessageState.StdOut, default, output.Line);
         }
 
-        return new[] { message };
+        return [message];
     }
 
     public IBuildResult Create(ICommandLineResult commandLineResult) =>

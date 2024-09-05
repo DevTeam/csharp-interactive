@@ -33,12 +33,9 @@ internal static class Tools
             return release;
         }
 
-        if (int.TryParse(string.Concat(curVersion.Release.Where(char.IsNumber)), out var num))
-        {
-            return $"{string.Concat(curVersion.Release.Where(i => !char.IsNumber(i)))}{num + 1}";
-        }
-
-        return release;
+        return int.TryParse(string.Concat(curVersion.Release.Where(char.IsNumber)), out var num) 
+            ? $"{string.Concat(curVersion.Release.Where(i => !char.IsNumber(i)))}{num + 1}"
+            : release;
     }
 
     public static string GetProperty(string name, string defaultProp, bool showWarning = false)

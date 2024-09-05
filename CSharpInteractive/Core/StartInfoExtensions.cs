@@ -1,8 +1,5 @@
 namespace CSharpInteractive.Core;
 
-using System.Text;
-using HostApi;
-
 internal static class StartInfoExtensions
 {
     public static string Escape(this string? text)

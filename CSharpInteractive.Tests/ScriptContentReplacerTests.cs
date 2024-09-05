@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 using NuGet.Versioning;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
@@ -40,8 +39,8 @@ public class ScriptContentReplacerTests
         var addNuGetReferenceCommand = new AddNuGetReferenceCommand("PackId", VersionRange.Parse("1.2.3"));
         var refSource = Mock.Of<ICodeSource>();
         _codeSourceFactory.Setup(i => i("ref")).Returns(refSource);
-        _commandFactory.Setup(i => i.Create(refSource)).Returns(new [] {addNuGetReferenceCommand});
-        IReadOnlyCollection<ReferencingAssembly> assemblies = new []{_referencingAssembly1, _referencingAssembly2};
+        _commandFactory.Setup(i => i.Create(refSource)).Returns([addNuGetReferenceCommand]);
+        IReadOnlyCollection<ReferencingAssembly> assemblies = [_referencingAssembly1, _referencingAssembly2];
         _nuGetReferenceResolver.Setup(i => i.TryResolveAssemblies(addNuGetReferenceCommand.PackageId, addNuGetReferenceCommand.VersionRange, out assemblies)).Returns(true);
         var runtimeAssemblyPath = "Abc2Runtime.dll";
         _runtimeExplorer.Setup(i => i.TryFindRuntimeAssembly(_referencingAssembly1.FilePath, out runtimeAssemblyPath)).Returns(false);
@@ -49,10 +48,10 @@ public class ScriptContentReplacerTests
         
         var commandsSource = Mock.Of<ICodeSource>();
         _codeSourceFactory.Setup(i => i("cmd")).Returns(commandsSource);
-        _commandFactory.Setup(i => i.Create(commandsSource)).Returns(new [] {HelpCommand.Shared, HelpCommand.Shared});
+        _commandFactory.Setup(i => i.Create(commandsSource)).Returns([HelpCommand.Shared, HelpCommand.Shared]);
 
         // When
-        var replacedScript = replacer.Replace(new[] {"code1", "ref", "cmd", "ref", "code2", "cmd"}).ToArray();
+        var replacedScript = replacer.Replace(["code1", "ref", "cmd", "ref", "code2", "cmd"]).ToArray();
 
         // Then
         replacedScript.ShouldBe(["code1", $"#load \"{scriptFile}\"", "code2"]);

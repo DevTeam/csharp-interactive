@@ -1,11 +1,10 @@
 namespace CSharpInteractive.Tests.Integration;
 
 using System.Diagnostics.CodeAnalysis;
-using CSharpInteractive;
 using CSharpInteractive.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
-using Environment = System.Environment;
+using Environment = Environment;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "true")]
@@ -145,6 +144,6 @@ public class CSharpScriptRunnerTests
     private CSharpScriptRunner CreateInstance()
     {
         var assembliesScriptOptionsProvider = new AssembliesScriptOptionsProvider(Mock.Of<ILog<AssembliesScriptOptionsProvider>>(), new AssembliesProvider(), CancellationToken.None);
-        return new CSharpScriptRunner(_log.Object, _scriptStatePresenter.Object, _diagnosticsPresenter.Object, new[] {assembliesScriptOptionsProvider}, _exitCodeParser.Object);
+        return new CSharpScriptRunner(_log.Object, _scriptStatePresenter.Object, _diagnosticsPresenter.Object, [assembliesScriptOptionsProvider], _exitCodeParser.Object);
     }
 }

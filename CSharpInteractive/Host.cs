@@ -13,6 +13,7 @@ using CSharpInteractive;
 using CSharpInteractive.Core;
 using HostApi;
 using NuGet.Versioning;
+// ReSharper disable HeapView.PossibleBoxingAllocation
 
 /// <summary>
 /// API host.

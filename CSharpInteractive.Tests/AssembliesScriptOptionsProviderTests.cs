@@ -4,7 +4,6 @@ namespace CSharpInteractive.Tests;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Core;
-using CSharpInteractive;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +19,7 @@ public class AssembliesScriptOptionsProviderTests
         var assembly1 = new Mock<Assembly>();
         var assembly2 = new Mock<Assembly>();
         assembly2.SetupGet(i => i.Location).Returns(Assembly.GetCallingAssembly().Location);
-        _assembliesProvider.Setup(i => i.GetAssemblies(It.IsAny<IEnumerable<Type>>())).Returns(new[] {assembly1.Object, assembly2.Object});
+        _assembliesProvider.Setup(i => i.GetAssemblies(It.IsAny<IEnumerable<Type>>())).Returns([assembly1.Object, assembly2.Object]);
         var provider = CreateInstance();
 
         // When

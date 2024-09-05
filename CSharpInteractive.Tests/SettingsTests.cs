@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class SettingsTests
@@ -21,17 +20,16 @@ public class SettingsTests
         _fileCodeSourceFactory.Setup(i => i("myScript")).Returns(codeSource);
 
         // When
-        _environment.Setup(i => i.GetCommandLineArgs()).Returns(new[] {"arg0", "arg1", "arg2"});
+        _environment.Setup(i => i.GetCommandLineArgs()).Returns(["arg0", "arg1", "arg2"]);
         _commandLineParser.Setup(i => i.Parse(new[] {"arg1", "arg2"}, CommandLineArgumentType.ScriptFile)).Returns(
-            new[]
-            {
-                new CommandLineArgument(CommandLineArgumentType.Version),
+        [
+            new CommandLineArgument(CommandLineArgumentType.Version),
                 new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src1"),
                 new CommandLineArgument(CommandLineArgumentType.ScriptFile, "myScript"),
                 new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg1"),
                 new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src2"),
                 new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg2")
-            });
+        ]);
 
         // Then
         settings.VerbosityLevel.ShouldBe(VerbosityLevel.Normal);
@@ -51,16 +49,15 @@ public class SettingsTests
         _fileCodeSourceFactory.Setup(i => i("myScript")).Returns(codeSource);
 
         // When
-        _environment.Setup(i => i.GetCommandLineArgs()).Returns(new[] {"arg0", "arg1", "arg2"});
+        _environment.Setup(i => i.GetCommandLineArgs()).Returns(["arg0", "arg1", "arg2"]);
         _commandLineParser.Setup(i => i.Parse(new[] {"arg1", "arg2"}, CommandLineArgumentType.ScriptArgument)).Returns(
-            new[]
-            {
-                new CommandLineArgument(CommandLineArgumentType.Version),
+        [
+            new CommandLineArgument(CommandLineArgumentType.Version),
                 new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src1"),
                 new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg1"),
                 new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src2"),
                 new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg2")
-            });
+        ]);
 
         // Then
         settings.VerbosityLevel.ShouldBe(VerbosityLevel.Normal);
@@ -78,7 +75,7 @@ public class SettingsTests
         var settings = CreateInstance(RunningMode.Tool);
 
         // When
-        _environment.Setup(i => i.GetCommandLineArgs()).Returns(new[] {"arg0"});
+        _environment.Setup(i => i.GetCommandLineArgs()).Returns(["arg0"]);
 
         // Then
         settings.VerbosityLevel.ShouldBe(VerbosityLevel.Quiet);

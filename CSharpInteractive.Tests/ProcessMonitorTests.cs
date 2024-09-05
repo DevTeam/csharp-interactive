@@ -20,8 +20,8 @@ public class ProcessMonitorTests
         _startInfoDescription.Setup(i => i.GetDescriptionText(_startInfo.Object, It.IsAny<int?>())).Returns([Description]);
         _startInfo.SetupGet(i => i.ExecutablePath).Returns("Cm d");
         _startInfo.SetupGet(i => i.WorkingDirectory).Returns("W d");
-        _startInfo.SetupGet(i => i.Args).Returns(new[] {"Arg1", "Arg 2"});
-        _startInfo.SetupGet(i => i.Vars).Returns(new[] {("Var1", "Val 1"), ("Var2", "Val 2")});
+        _startInfo.SetupGet(i => i.Args).Returns(["Arg1", "Arg 2"]);
+        _startInfo.SetupGet(i => i.Vars).Returns([("Var1", "Val 1"), ("Var2", "Val 2")]);
     }
 
     [Fact]

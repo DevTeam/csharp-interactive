@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Scripting;
 internal class ScriptStatePresenter(ILog<ScriptStatePresenter> log, IProperties properties) : IPresenter<ScriptState<object>>
 {
     private const string Tab = " ";
-    private static readonly IEnumerable<Text> EmptyLine = new[] {Text.NewLine};
+    private static readonly IEnumerable<Text> EmptyLine = [Text.NewLine];
 
     public void Show(ScriptState<object> data)
     {

@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Buffers;
 using Core;
-using CSharpInteractive;
 
 public class StreamReaderTests
 {

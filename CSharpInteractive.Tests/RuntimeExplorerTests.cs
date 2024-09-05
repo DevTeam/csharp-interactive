@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class RuntimeExplorerTests
@@ -14,7 +13,7 @@ public class RuntimeExplorerTests
     {
         // Given
         var explorer = CreateInstance();
-        _fileSystem.Setup(i => i.EnumerateFileSystemEntries("Runtime", "Abc.dll", SearchOption.TopDirectoryOnly)).Returns(new[] {"Xyz.dll", "Hjk"});
+        _fileSystem.Setup(i => i.EnumerateFileSystemEntries("Runtime", "Abc.dll", SearchOption.TopDirectoryOnly)).Returns(["Xyz.dll", "Hjk"]);
 
         // When
         explorer.TryFindRuntimeAssembly(Path.Combine("Bin", "Abc.dll"), out var runtimePath).ShouldBeTrue();

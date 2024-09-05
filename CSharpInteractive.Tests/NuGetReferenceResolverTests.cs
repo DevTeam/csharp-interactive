@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using HostApi;
 using NuGet.Versioning;
 
@@ -44,7 +43,7 @@ public class NuGetReferenceResolverTests
         _nugetRestoreService.Setup(i => i.TryRestore(settings, out projectAssetsJson)).Returns(true);
 
         _nugetAssetsReader = new Mock<INuGetAssetsReader>();
-        _nugetAssetsReader.Setup(i => i.ReadReferencingAssemblies(projectAssetsJson)).Returns(new[] {_referencingAssembly1, _referencingAssembly2});
+        _nugetAssetsReader.Setup(i => i.ReadReferencingAssemblies(projectAssetsJson)).Returns([_referencingAssembly1, _referencingAssembly2]);
 
         _trackToken = new Mock<IDisposable>();
         _cleaner = new Mock<ICleaner>();
@@ -62,7 +61,7 @@ public class NuGetReferenceResolverTests
 
         // Then
         result.ShouldBeTrue();
-        assemblies.ShouldBe(new []{_referencingAssembly1, _referencingAssembly2});
+        assemblies.ShouldBe([_referencingAssembly1, _referencingAssembly2]);
         _trackToken.Verify(i => i.Dispose());
     }
 

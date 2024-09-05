@@ -22,7 +22,7 @@ public class BuildContextTests
         var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
-        messages.ShouldBe(new[] {msg});
+        messages.ShouldBe([msg]);
         buildResult.Errors.ShouldNotContain(msg);
     }
 
@@ -39,7 +39,7 @@ public class BuildContextTests
         var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
-        messages.ShouldBe(new[] { msg });
+        messages.ShouldBe([msg]);
         buildResult.Errors.ShouldContain(msg);
     }
 
@@ -96,7 +96,7 @@ public class BuildContextTests
         test.State.ShouldBe(TestState.Finished);
         test.Message.ShouldBeEmpty();
         test.Details.ShouldBeEmpty();
-        test.Output.ShouldBe(new[] {stdOutput, errOutput});
+        test.Output.ShouldBe([stdOutput, errOutput]);
         test.ExecutorUri.ShouldBe(new Uri("executor://mstestadapter/v2", UriKind.RelativeOrAbsolute));
         test.LineNumber.ShouldBe(23);
     }
@@ -144,7 +144,7 @@ public class BuildContextTests
         test.State.ShouldBe(TestState.Failed);
         test.Message.ShouldBe("Some message");
         test.Details.ShouldBe("Error details");
-        test.Output.ShouldBe(new[] {new Output(_startInfo.Object, false, "Some output", 11)});
+        test.Output.ShouldBe([new Output(_startInfo.Object, false, "Some output", 11)]);
     }
 
     [Fact]
@@ -187,7 +187,7 @@ public class BuildContextTests
         test.State.ShouldBe(TestState.Ignored);
         test.Message.ShouldBe("Some message");
         test.Details.ShouldBeEmpty();
-        test.Output.ShouldBe(new[] {new Output(_startInfo.Object, false, "Some output", 11)});
+        test.Output.ShouldBe([new Output(_startInfo.Object, false, "Some output", 11)]);
     }
 
     [Theory]
@@ -243,7 +243,7 @@ public class BuildContextTests
             DotNetMessageImportance.High);
 
         // When
-        result.ProcessMessage(output, message).ShouldBe(new[] {buildMessage});
+        result.ProcessMessage(output, message).ShouldBe([buildMessage]);
         var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
@@ -258,13 +258,13 @@ public class BuildContextTests
                 break;
 
             case BuildMessageState.Warning:
-                buildResult.Warnings.ShouldBe(new[] {buildMessage});
+                buildResult.Warnings.ShouldBe([buildMessage]);
                 break;
 
             case BuildMessageState.Failure:
             case BuildMessageState.StdError:
             case BuildMessageState.BuildProblem:
-                buildResult.Errors.ShouldBe(new[] {buildMessage});
+                buildResult.Errors.ShouldBe([buildMessage]);
                 break;
         }
     }
@@ -309,12 +309,12 @@ public class BuildContextTests
             DotNetMessageImportance.High);
 
         // When
-        result.ProcessMessage(output, buildProblem).ShouldBe(new[] {buildMessage});
+        result.ProcessMessage(output, buildProblem).ShouldBe([buildMessage]);
         var buildResult = result.Create(_commandLineResult.Object);
 
         // Then
         buildResult.Tests.Count.ShouldBe(0);
-        buildResult.Errors.ShouldBe(new[] {buildMessage});
+        buildResult.Errors.ShouldBe([buildMessage]);
     }
 
     private static BuildContext CreateInstance() => new();

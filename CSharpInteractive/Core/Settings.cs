@@ -140,7 +140,7 @@ internal class Settings(
             {
                 _interactionMode = InteractionMode.Interactive;
                 _verbosityLevel = VerbosityLevel.Quiet;
-                _codeSources = new[] {consoleCodeSource};
+                _codeSources = [consoleCodeSource];
             }
         }
     }

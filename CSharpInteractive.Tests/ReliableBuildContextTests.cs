@@ -47,13 +47,13 @@ public class ReliableBuildContextTests
         _fileSystem.Setup(i => i.IsFileExist(Path.Combine("Messages", "Abc.msg"))).Returns(true);
         var msg1 = new ServiceMessage("1");
         var msg11 = new ServiceMessage("11");
-        _messagesReader.Setup(i => i.Read(Path.Combine("Messages", "Abc"), Path.Combine("Messages", "Abc.msg"))).Returns(new[] {msg1, msg11});
+        _messagesReader.Setup(i => i.Read(Path.Combine("Messages", "Abc"), Path.Combine("Messages", "Abc.msg"))).Returns([msg1, msg11]);
 
         var message2 = new ServiceMessage("some message") {{"source", "Xyz"}};
         _fileSystem.Setup(i => i.IsFileExist(Path.Combine("Messages", "Xyz"))).Returns(true);
         _fileSystem.Setup(i => i.IsFileExist(Path.Combine("Messages", "Xyz.msg"))).Returns(true);
         var msg2 = new ServiceMessage("2");
-        _messagesReader.Setup(i => i.Read(Path.Combine("Messages", "Xyz"), Path.Combine("Messages", "Xyz.msg"))).Returns(new[] {msg2});
+        _messagesReader.Setup(i => i.Read(Path.Combine("Messages", "Xyz"), Path.Combine("Messages", "Xyz.msg"))).Returns([msg2]);
 
         var message3 = new ServiceMessage("some message") {{"source", "Fff"}};
         _fileSystem.Setup(i => i.IsFileExist(Path.Combine("Messages", "Fff"))).Returns(false);

@@ -3,7 +3,6 @@ namespace CSharpInteractive.Tests;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 using JetBrains.TeamCity.ServiceMessages.Read;
 using JetBrains.TeamCity.ServiceMessages.Write;
 
@@ -34,7 +33,7 @@ public class MessagesReaderTests
         buffer2.Span[0] = 2;
 
         _fileSystem.Setup(i => i.OpenReader("data.msg")).Returns(streamReader.Object);
-        _indicesReader.Setup(i => i.Read("data")).Returns(new[] {4UL, 20UL});
+        _indicesReader.Setup(i => i.Read("data")).Returns([4UL, 20UL]);
 
         streamReader.Setup(i => i.Read(It.Is<Memory<byte>>(buffer => buffer.Length == 4), 0))
             .Callback<Memory<byte>, long>((buffer, _) => { buffer1.CopyTo(buffer); }).Returns(4);
@@ -44,8 +43,8 @@ public class MessagesReaderTests
 
         _encoding.Setup(i => i.GetString(It.Is<Memory<byte>>(buffer => buffer.ToArray()[0] == 1))).Returns("msg1");
         _encoding.Setup(i => i.GetString(It.Is<Memory<byte>>(buffer => buffer.ToArray()[0] == 2))).Returns("msg2");
-        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg1")).Returns(new[] {msg11, msg12});
-        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg2")).Returns(new[] {msg12});
+        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg1")).Returns([msg11, msg12]);
+        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg2")).Returns([msg12]);
 
         var reader = CreateInstance();
 
@@ -94,7 +93,7 @@ public class MessagesReaderTests
         buffer2.Span[0] = 2;
 
         _fileSystem.Setup(i => i.OpenReader("data.msg")).Returns(streamReader.Object);
-        _indicesReader.Setup(i => i.Read("data")).Returns(new[] {4UL, 20UL});
+        _indicesReader.Setup(i => i.Read("data")).Returns([4UL, 20UL]);
 
         streamReader.Setup(i => i.Read(It.Is<Memory<byte>>(buffer => buffer.Length == 4), 0))
             .Callback<Memory<byte>, long>((buffer, _) => { buffer1.CopyTo(buffer); }).Returns(4);
@@ -104,8 +103,8 @@ public class MessagesReaderTests
 
         _encoding.Setup(i => i.GetString(It.Is<Memory<byte>>(buffer => buffer.ToArray()[0] == 1))).Returns(line);
         _encoding.Setup(i => i.GetString(It.Is<Memory<byte>>(buffer => buffer.ToArray()[0] == 2))).Returns("msg2");
-        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg1")).Returns(new[] {msg11, msg12});
-        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg2")).Returns(new[] {msg12});
+        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg1")).Returns([msg11, msg12]);
+        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg2")).Returns([msg12]);
 
         var reader = CreateInstance();
 
@@ -133,7 +132,7 @@ public class MessagesReaderTests
         buffer2.Span[0] = 2;
 
         _fileSystem.Setup(i => i.OpenReader("data.msg")).Returns(streamReader.Object);
-        _indicesReader.Setup(i => i.Read("data")).Returns(new[] {4UL, 20UL});
+        _indicesReader.Setup(i => i.Read("data")).Returns([4UL, 20UL]);
 
         streamReader.Setup(i => i.Read(It.Is<Memory<byte>>(buffer => buffer.Length == 4), 0))
             .Callback<Memory<byte>, long>((buffer, _) => { buffer1.CopyTo(buffer); }).Returns(4);
@@ -142,7 +141,7 @@ public class MessagesReaderTests
             .Callback<Memory<byte>, long>((buffer, _) => { buffer2.CopyTo(buffer); }).Returns(20 - 8);
 
         _encoding.Setup(i => i.GetString(It.Is<Memory<byte>>(buffer => buffer.ToArray()[0] == 1))).Returns("msg1");
-        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg1")).Returns(new[] {msg11, msg12});
+        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg1")).Returns([msg11, msg12]);
 
         var reader = CreateInstance();
 
@@ -167,13 +166,13 @@ public class MessagesReaderTests
         var msg12 = new ServiceMessage("12");
 
         _fileSystem.Setup(i => i.OpenReader("data.msg")).Returns(streamReader.Object);
-        _indicesReader.Setup(i => i.Read("data")).Returns(new[] {4UL, 2UL});
+        _indicesReader.Setup(i => i.Read("data")).Returns([4UL, 2UL]);
 
         streamReader.Setup(i => i.Read(It.Is<Memory<byte>>(buffer => buffer.Length == 4), 0))
             .Callback<Memory<byte>, long>((buffer, _) => { buffer1.CopyTo(buffer); }).Returns(4);
 
         _encoding.Setup(i => i.GetString(It.Is<Memory<byte>>(buffer => buffer.ToArray()[0] == 1))).Returns("msg1");
-        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg1")).Returns(new[] {msg11, msg12});
+        _serviceMessageParser.Setup(i => i.ParseServiceMessages("msg1")).Returns([msg11, msg12]);
 
         var reader = CreateInstance();
 

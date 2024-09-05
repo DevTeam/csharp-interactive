@@ -21,9 +21,9 @@ public class BuildOutputProcessorTests
         BuildMessage buildMsg1 = new(output, BuildMessageState.StdOut);
         BuildMessage buildMsg2 = new(output, BuildMessageState.StdOut);
         BuildMessage buildMsg3 = new(output, BuildMessageState.StdOut);
-        _serviceMessageParser.Setup(i => i.ParseServiceMessages("Messages")).Returns(new[] {msg1.Object, msg2.Object});
-        _buildResult.Setup(i => i.ProcessMessage(output, msg1.Object)).Returns(new[] {buildMsg1, buildMsg2});
-        _buildResult.Setup(i => i.ProcessMessage(output, msg2.Object)).Returns(new[] {buildMsg3});
+        _serviceMessageParser.Setup(i => i.ParseServiceMessages("Messages")).Returns([msg1.Object, msg2.Object]);
+        _buildResult.Setup(i => i.ProcessMessage(output, msg1.Object)).Returns([buildMsg1, buildMsg2]);
+        _buildResult.Setup(i => i.ProcessMessage(output, msg2.Object)).Returns([buildMsg3]);
         var processor = CreateInstance();
 
         // When
@@ -50,7 +50,7 @@ public class BuildOutputProcessorTests
         _serviceMessageParser.Setup(i => i.ParseServiceMessages("some output")).Returns([]);
         _buildResult.Setup(i => i.ProcessMessage(output, It.IsAny<IServiceMessage>())).Returns(Array.Empty<BuildMessage>());
         BuildMessage buildMsg = new(output, BuildMessageState.StdOut);
-        _buildResult.Setup(i => i.ProcessOutput(output)).Returns(new[] {buildMsg});
+        _buildResult.Setup(i => i.ProcessOutput(output)).Returns([buildMsg]);
         var processor = CreateInstance();
 
         // When

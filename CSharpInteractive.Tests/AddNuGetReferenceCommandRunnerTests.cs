@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using NuGet.Versioning;
 
 public class AddNuGetReferenceCommandRunnerTests
@@ -56,7 +55,7 @@ public class AddNuGetReferenceCommandRunnerTests
     {
         // Given
         var runner = CreateInstance();
-        IReadOnlyCollection<ReferencingAssembly> assemblies = new []{_referencingAssembly1, _referencingAssembly2};
+        IReadOnlyCollection<ReferencingAssembly> assemblies = [_referencingAssembly1, _referencingAssembly2];
         _nuGetReferenceResolver.Setup(i => i.TryResolveAssemblies(_command.PackageId, _command.VersionRange, out assemblies)).Returns(true);
         var description = string.Empty;
         _referenceRegistry.Setup(i => i.TryRegisterAssembly(_referencingAssembly1.FilePath, out description)).Returns(true);
@@ -74,7 +73,7 @@ public class AddNuGetReferenceCommandRunnerTests
     {
         // Given
         var runner = CreateInstance();
-        IReadOnlyCollection<ReferencingAssembly> assemblies = new []{_referencingAssembly1, _referencingAssembly2};
+        IReadOnlyCollection<ReferencingAssembly> assemblies = [_referencingAssembly1, _referencingAssembly2];
         _nuGetReferenceResolver.Setup(i => i.TryResolveAssemblies(_command.PackageId, _command.VersionRange, out assemblies)).Returns(true);
         var description = string.Empty;
         _referenceRegistry.Setup(i => i.TryRegisterAssembly(_referencingAssembly1.FilePath, out description)).Returns(true);

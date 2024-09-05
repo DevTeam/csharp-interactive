@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+// ReSharper disable UnusedType.Global
 namespace CSharpInteractive.Core;
 
 internal class InteractiveRunner(

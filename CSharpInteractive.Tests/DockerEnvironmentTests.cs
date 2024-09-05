@@ -3,7 +3,6 @@ namespace CSharpInteractive.Tests;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Core;
-using CSharpInteractive;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class DockerEnvironmentTests
@@ -20,7 +19,7 @@ public class DockerEnvironmentTests
     {
         // Given
         _environment.SetupGet(i => i.OperatingSystemPlatform).Returns(OSPlatform.Create(platform));
-        _fileExplorer.Setup(i => i.FindFiles(defaultPath, "DOCKER_HOME")).Returns(new[] {"Abc", "Xyz"});
+        _fileExplorer.Setup(i => i.FindFiles(defaultPath, "DOCKER_HOME")).Returns(["Abc", "Xyz"]);
 
         // When
         var instance = CreateInstance();

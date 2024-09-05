@@ -2,7 +2,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 
 public class CISettingsTests
 {

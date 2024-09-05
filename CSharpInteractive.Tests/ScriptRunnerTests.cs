@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 [SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows")]
@@ -121,10 +120,10 @@ public class ScriptRunnerTests
         // Given
         var runner = CreateInstance();
         //_log.Setup(i => i.Error(ErrorId.UncompletedScript, It.IsAny<string>()));
-        _commandSource.Setup(i => i.GetCommands()).Returns(new ICommand[] {new ScriptCommand(string.Empty, string.Empty), new CodeCommand()});
+        _commandSource.Setup(i => i.GetCommands()).Returns([new ScriptCommand(string.Empty, string.Empty), new CodeCommand()]);
         _statistics.Setup(i => i.Errors).Returns(new List<Text[]>());
         // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-        _commandsRunner.Setup(i => i.Run(It.IsAny<IEnumerable<ICommand>>())).Callback<IEnumerable<ICommand>>(i => i.Count()).Returns(new CommandResult[] {new(new ScriptCommand(string.Empty, string.Empty), true)});
+        _commandsRunner.Setup(i => i.Run(It.IsAny<IEnumerable<ICommand>>())).Callback<IEnumerable<ICommand>>(i => i.Count()).Returns([new CommandResult(new ScriptCommand(string.Empty, string.Empty), true)]);
 
         // When
         runner.Run();

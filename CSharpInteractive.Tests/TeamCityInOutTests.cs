@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
 public class TeamCityInOutTests
@@ -20,7 +19,7 @@ public class TeamCityInOutTests
     public void ShouldWriteError()
     {
         // Given
-        var output = (IStdErr)CreateInstance();
+        IStdErr output = CreateInstance();
 
         // When
         output.WriteLine([new Text("err")]);
@@ -33,7 +32,7 @@ public class TeamCityInOutTests
     public void ShouldWriteMessage()
     {
         // Given
-        var output = (IStdOut)CreateInstance();
+        IStdOut output = CreateInstance();
 
         // When
         output.WriteLine([new Text("message")]);

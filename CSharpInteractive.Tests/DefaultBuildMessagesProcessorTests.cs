@@ -56,7 +56,7 @@ public class DefaultBuildMessagesProcessorTests
         var processor = CreateInstance();
 
         // When
-        processor.ProcessMessages(ProcessInfo, output, new[] {msg1, msg2}, nextHandler.Object);
+        processor.ProcessMessages(ProcessInfo, output, [msg1, msg2], nextHandler.Object);
 
         // Then
         _buildMessageLogWriter.Verify(i => i.Write(ProcessInfo, msg1));
@@ -78,7 +78,7 @@ public class DefaultBuildMessagesProcessorTests
         var processor = CreateInstance();
 
         // When
-        processor.ProcessMessages(ProcessInfo, output, new[] {msg1, msg2}, nextHandler.Object);
+        processor.ProcessMessages(ProcessInfo, output, [msg1, msg2], nextHandler.Object);
 
         // Then
         _buildMessageLogWriter.Verify(i => i.Write(ProcessInfo, msg1));

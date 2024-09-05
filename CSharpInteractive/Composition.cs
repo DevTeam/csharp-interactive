@@ -1,6 +1,7 @@
 // ReSharper disable PartialTypeWithSinglePart
 // ReSharper disable RedundantCast
 // ReSharper disable UnusedMember.Local
+// ReSharper disable RedundantUsingDirective
 namespace CSharpInteractive;
 
 using System.Buffers;

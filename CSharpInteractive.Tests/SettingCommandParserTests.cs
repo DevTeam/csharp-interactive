@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 
 [SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows")]
 public class SettingCommandParserTests
@@ -14,7 +13,7 @@ public class SettingCommandParserTests
         // Given
         var stringService = new Mock<IStringService>();
         stringService.Setup(i => i.TrimAndUnquote(It.IsAny<string>())).Returns<string>(i => i);
-        var parser = new SettingCommandFactory<VerbosityLevel>(Mock.Of<ILog<SettingCommandFactory<VerbosityLevel>>>(), stringService.Object, new[] {new VerbosityLevelSettingDescription()});
+        var parser = new SettingCommandFactory<VerbosityLevel>(Mock.Of<ILog<SettingCommandFactory<VerbosityLevel>>>(), stringService.Object, [new VerbosityLevelSettingDescription()]);
 
         // When
         var actualResult = parser.Create(replCommand);

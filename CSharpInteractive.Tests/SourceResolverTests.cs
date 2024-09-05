@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.IO;
 using Core;
-using CSharpInteractive;
 
 public class SourceResolverTests
 {
@@ -27,7 +26,7 @@ public class SourceResolverTests
 
         // Then
         resolver.BaseDirectory.ShouldBe(Path.GetFullPath("ScriptDir"));
-        resolver.SearchPaths.ShouldBe(new []{Path.GetFullPath("ScriptDir"), Path.GetFullPath("WorkingDir")});
+        resolver.SearchPaths.ShouldBe([Path.GetFullPath("ScriptDir"), Path.GetFullPath("WorkingDir")]);
     }
     
     [Fact]

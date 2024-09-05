@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using HostApi;
 using HostApi.Internal.Cmd;
 

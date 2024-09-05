@@ -1,4 +1,5 @@
-﻿namespace CSharpInteractive.Core;
+﻿// ReSharper disable ClassNeverInstantiated.Global
+namespace CSharpInteractive.Core;
 
 using System.Text;
 using HostApi;

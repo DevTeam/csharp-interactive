@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 
 public class FilePathResolverTests
 {
@@ -60,10 +59,9 @@ public class FilePathResolverTests
         _fileSystem.Setup(i => i.IsFileExist(It.Is<string>(j => j == "sc/Existing".Replace('/', Path.DirectorySeparatorChar)))).Returns(false);
         _fileSystem.Setup(i => i.IsDirectoryExist(It.Is<string>(j => j == "sc/Existing".Replace('/', Path.DirectorySeparatorChar)))).Returns(true);
         _fileSystem.Setup(i => i.EnumerateFileSystemEntries("sc/Existing".Replace('/', Path.DirectorySeparatorChar), "*.csx", SearchOption.TopDirectoryOnly))
-            .Returns(new[]
-            {
+            .Returns([
                 "sc/Existing/MyScript.csx".Replace('/', Path.DirectorySeparatorChar)
-            });
+            ]);
 
         // When
         var actualResult = resolver.TryResolve("Existing", out var actualPath);
@@ -83,10 +81,9 @@ public class FilePathResolverTests
         _fileSystem.Setup(i => i.IsFileExist(It.Is<string>(j => j == "Existing".Replace('/', Path.DirectorySeparatorChar)))).Returns(false);
         _fileSystem.Setup(i => i.IsDirectoryExist(It.Is<string>(j => j == "Existing".Replace('/', Path.DirectorySeparatorChar)))).Returns(true);
         _fileSystem.Setup(i => i.EnumerateFileSystemEntries("Existing".Replace('/', Path.DirectorySeparatorChar), "*.csx", SearchOption.TopDirectoryOnly))
-            .Returns(new[]
-            {
+            .Returns([
                 "Existing/MyScript.csx".Replace('/', Path.DirectorySeparatorChar)
-            });
+            ]);
 
         // When
         var actualResult = resolver.TryResolve("Existing", out var actualPath);
@@ -108,11 +105,10 @@ public class FilePathResolverTests
         _fileSystem.Setup(i => i.IsFileExist(It.Is<string>(j => j == "sc/Existing".Replace('/', Path.DirectorySeparatorChar)))).Returns(false);
         _fileSystem.Setup(i => i.IsDirectoryExist(It.Is<string>(j => j == "sc/Existing".Replace('/', Path.DirectorySeparatorChar)))).Returns(true);
         _fileSystem.Setup(i => i.EnumerateFileSystemEntries("sc/Existing".Replace('/', Path.DirectorySeparatorChar), "*.csx", SearchOption.TopDirectoryOnly))
-            .Returns(new[]
-            {
+            .Returns([
                 "sc/Existing/MyScript1.csx".Replace('/', Path.DirectorySeparatorChar),
                 "sc/Existing/MyScript2.csx".Replace('/', Path.DirectorySeparatorChar)
-            });
+            ]);
 
         // When
         var actualResult = resolver.TryResolve("Existing", out _);

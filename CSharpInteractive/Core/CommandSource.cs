@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedType.Global
 namespace CSharpInteractive.Core;
 
 internal class CommandSource(

@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 [SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows")]
@@ -413,7 +412,7 @@ public class CommandLineParserTests
     {
         // Given
         var parser = CreateInstance();
-        _fileSystem.Setup(i => i.ReadAllLines("rspFile")).Returns(new[] {"-S", "Src2", "/Source", "Src3"});
+        _fileSystem.Setup(i => i.ReadAllLines("rspFile")).Returns(["-S", "Src2", "/Source", "Src3"]);
 
         // When
         var actualArguments = parser.Parse(arguments, defaultArgType).ToList();

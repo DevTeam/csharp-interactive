@@ -19,7 +19,7 @@ public class BuildResultTests
     public void ShouldSupportToString(int errors, int warnings, int failedTests, int ignoredTests, int passedTests, string expected)
     {
         // Given
-        var result = new BuildResult(_commandLineResult.Object) with
+        var result = new BuildResult(_commandLineResult.Object)
         {
             Errors = Enumerable.Repeat(new BuildMessage(Output, BuildMessageState.StdError), errors).ToArray(),
             Warnings = Enumerable.Repeat(new BuildMessage(Output, BuildMessageState.Warning), warnings).ToArray(),

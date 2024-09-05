@@ -3,7 +3,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using CSharpInteractive;
 
 [SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows")]
 public class TextToColorStringsTests
@@ -28,7 +27,7 @@ public class TextToColorStringsTests
         new object[] {"\x001B[36mAbc", new (ConsoleColor?, string)[] {(ConsoleColor.DarkCyan, "Abc")}},
         new object[] {"[36mAbc", new (ConsoleColor?, string)[] {(ConsoleColor.Blue, "[36mAbc")}},
         new object[] {"Abc", new (ConsoleColor?, string)[] {(ConsoleColor.Blue, "Abc")}},
-        new object[] {"\x001BAbcmXyz", new (ConsoleColor?, string)[] {(ConsoleColor.Blue, "\x001BAbcmXyz")}},
+        new object[] {"\x001B" + "AbcmXyz", new (ConsoleColor?, string)[] {(ConsoleColor.Blue, "\x001B" + "AbcmXyz")}},
         new object[] {"\x001B[AbcmXyz", new (ConsoleColor?, string)[] {(ConsoleColor.Blue, "\x001B[AbcmXyz")}},
         new object[] {"", new (ConsoleColor?, string)[] {(ConsoleColor.Blue, "")}},
         new object[] {"Xyz\x001B[36mAbc", new (ConsoleColor?, string)[] {(ConsoleColor.Blue, "Xyz"), (ConsoleColor.DarkCyan, "Abc")}},

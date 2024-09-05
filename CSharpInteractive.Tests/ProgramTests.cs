@@ -118,7 +118,7 @@ public class ProgramTests
     private Program CreateInstance() =>
         new(
             _log.Object,
-            new[] {_active.Object},
+            [_active.Object],
             _info.Object,
             _settings.Object,
             _exitTracker.Object,

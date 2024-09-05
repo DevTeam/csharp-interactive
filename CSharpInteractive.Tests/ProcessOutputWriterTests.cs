@@ -2,9 +2,8 @@ namespace CSharpInteractive.Tests;
 
 using System;
 using Core;
-using CSharpInteractive;
 using HostApi;
-using Environment = System.Environment;
+using Environment = Environment;
 
 public class ProcessOutputWriterTests
 {

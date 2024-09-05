@@ -59,12 +59,11 @@ internal class Info(
 
         lines.AddRange(settingLines.SelectMany(i => i));
 
-        lines.AddRange(new[]
-        {
+        lines.AddRange([
             new Text("Script directives:", Color.Header), Text.NewLine,
             Text.Tab, new Text("#r           ", Color.Header), new Text("Add a reference to a NuGet package or specified assembly and all its dependencies, e.g., "), new Text("#r \"nuget:MyPackage, 1.2.3\"", Color.Highlighted), new Text(" or "), new Text("#r \"nuget:MyPackage\"", Color.Highlighted), new Text(" or "), new Text("#r \"MyLib.dll\"", Color.Highlighted), new Text("."), Text.NewLine,
             Text.Tab, new Text("#load        ", Color.Header), new Text("Load specified script file and execute it, e.g. "), new Text("#load \"script-file.csx\"", Color.Highlighted), new Text(".")
-        });
+        ]);
 
         stdOut.WriteLine(lines.ToArray());
     }

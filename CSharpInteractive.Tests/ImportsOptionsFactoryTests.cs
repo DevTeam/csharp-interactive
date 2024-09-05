@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 using Microsoft.CodeAnalysis.Scripting;
 
 public class ImportsOptionsFactoryTests

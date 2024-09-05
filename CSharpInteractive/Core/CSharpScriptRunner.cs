@@ -2,7 +2,6 @@
 namespace CSharpInteractive.Core;
 
 using System.Diagnostics;
-using HostApi;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 

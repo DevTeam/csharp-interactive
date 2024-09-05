@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using Core;
-using CSharpInteractive;
 
 public class PropertiesTests
 {
@@ -111,11 +110,10 @@ public class PropertiesTests
         // When
 
         // Then
-        props.ShouldBe(new[]
-        {
+        props.ShouldBe([
             new KeyValuePair<string, string>("Abc", "Xyz"),
             new KeyValuePair<string, string>("1", "2")
-        });
+        ]);
     }
 
     [Fact]

@@ -108,14 +108,13 @@ internal class TextToColorStrings : ITextToColorStrings
                     {
                         color = sb.ToString()[1..];
                         sb.Clear();
-                        isColor = false;
                     }
                     else
                     {
                         sb.Append(ch);
-                        isColor = false;
                     }
 
+                    isColor = false;
                     break;
 
                 default:
