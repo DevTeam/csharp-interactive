@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
         <PackageReference Include="Moq" Version="4.20.71" />
         <PackageReference Include="Pure.DI" Version="2.1.35">
             <PrivateAssets>all</PrivateAssets>
