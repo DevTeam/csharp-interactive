@@ -1,4 +1,5 @@
 ﻿// ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using HostApi;
@@ -9,13 +10,13 @@ internal class AnsiInOut(IColorTheme colorTheme) : IStdOut, IStdErr
     private const char EscapeSymbol = '\x001B';
     private readonly object _lockObject = new();
 
-    public void Write(params Text[] text) => 
+    public void Write(params Text[] text) =>
         Write(System.Console.Out, text, Color.Default);
 
-    void IStdOut.WriteLine(params Text[] line) => 
+    void IStdOut.WriteLine(params Text[] line) =>
         Write(System.Console.Out, line + Text.NewLine, Color.Default);
 
-    public void WriteLine(params Text[] errorLine) => 
+    public void WriteLine(params Text[] errorLine) =>
         Write(System.Console.Error, errorLine + Text.NewLine, Color.Error);
 
     private void Write(TextWriter writer, IEnumerable<Text> text, Color defaultColor)

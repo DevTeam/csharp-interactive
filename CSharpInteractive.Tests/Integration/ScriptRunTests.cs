@@ -1,5 +1,6 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable RedundantUsingDirective
+
 namespace CSharpInteractive.Tests.Integration;
 
 using System.Diagnostics.CodeAnalysis;
@@ -440,7 +441,7 @@ public class ScriptRunTests
         result.ExitCode.ShouldBe(1, result.ToString());
         result.StdErr.Any(i => i.Contains("error CS0103")).ShouldBeTrue(result.ToString());
     }
-    
+
     [Fact]
     public void ShouldSupportCallerFilePathWhenLoad()
     {

@@ -51,7 +51,7 @@ public record BuildStatistics(
             {
                 sb.Append(" and ");
             }
-            
+
             sb.Append(Tests);
             sb.Append(" finished ");
             sb.Append(GetName("test", Tests));
@@ -76,7 +76,7 @@ public record BuildStatistics(
         {
             sb.Append(", ");
         }
-            
+
         sb.Append(value);
         sb.Append(' ');
         sb.Append(name);

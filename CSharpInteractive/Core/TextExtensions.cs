@@ -1,4 +1,5 @@
 // ReSharper disable UnusedMember.Global
+
 namespace CSharpInteractive.Core;
 
 using HostApi;
@@ -7,7 +8,7 @@ using HostApi;
 internal static class TextExtensions
 {
     private static readonly Text[] SingleTab = [Text.Tab];
-    
+
     public static Text[] WithDefaultColor(this Text[] text, Color defaultColor)
     {
         var newText = new Text[text.Length];
@@ -19,7 +20,7 @@ internal static class TextExtensions
 
         return newText;
     }
-    
+
     public static Text[] Join(this Text[] text1, Text[] text2)
     {
         var newText = new Text[text1.Length + text2.Length];
@@ -33,7 +34,7 @@ internal static class TextExtensions
 
     public static bool IsEmpty(this Text[] text) =>
         text.Length == 0 || text.Sum(i => i.Value.Length) == 0;
-    
+
     public static bool IsEmptyOrWhiteSpace(this Text[] text) =>
         text.Length == 0 || text.All(i => string.IsNullOrWhiteSpace(i.Value));
 
@@ -49,14 +50,14 @@ internal static class TextExtensions
             {
                 continue;
             }
-            
+
             newText.AddRange(prefixSelector(index));
             index++;
         }
 
         return newText.ToArray();
     }
-    
+
     public static Text[] ToText(this Exception error)
     {
         var text = new List<Text>();
@@ -68,7 +69,7 @@ internal static class TextExtensions
             {
                 text.Add(Text.NewLine);
             }
-            
+
             text.AddRange(exception.SingleErrorToText().AddPrefix(_ => prefix.ToArray()));
             exception = exception.InnerException;
             prefix.Add(Text.Tab);
@@ -82,11 +83,11 @@ internal static class TextExtensions
         var text = new List<Text>();
         text.AddRange($"{error.GetType()}: {error.Message.Trim()}".SplitLines(Color.Error));
         text.Add(Text.NewLine);
-        if (error.StackTrace is {} stackTrace)
+        if (error.StackTrace is { } stackTrace)
         {
-            text.AddRange(stackTrace.Trim().SplitLines(Color.Details).AddPrefix(_ => SingleTab));   
+            text.AddRange(stackTrace.Trim().SplitLines(Color.Details).AddPrefix(_ => SingleTab));
         }
-        
+
         return text.ToArray();
     }
 
@@ -105,12 +106,12 @@ internal static class TextExtensions
                 text.Add(new Text($"... +{lines.Length - counter} line{(dif > 1 ? "s" : "")}", Color.Trace));
                 break;
             }
-            
+
             if (text.Count > 0)
             {
-                text.Add(Text.NewLine);  
+                text.Add(Text.NewLine);
             }
-            
+
             text.Add(new Text(line.TrimEnd(), color));
             counter++;
         }
@@ -118,10 +119,10 @@ internal static class TextExtensions
         return text.ToArray();
     }
 
-    public static Text[] Trim(this Text[] text) => 
+    public static Text[] Trim(this Text[] text) =>
         TrimStart(
-            TrimStart(text, i => i.TrimStart()).Reverse(),
-            i => i.TrimEnd())
+                TrimStart(text, i => i.TrimStart()).Reverse(),
+                i => i.TrimEnd())
             .Reverse()
             .ToArray();
 
@@ -141,7 +142,7 @@ internal static class TextExtensions
                 yield return item with {Value = trim(item.Value)};
                 continue;
             }
-            
+
             yield return item;
         }
     }

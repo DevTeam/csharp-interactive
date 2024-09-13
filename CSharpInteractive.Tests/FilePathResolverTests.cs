@@ -47,7 +47,7 @@ public class FilePathResolverTests
         actualPath.ShouldBe(expectedPath.Replace('/', Path.DirectorySeparatorChar));
         (_errors.Count != 0).ShouldBe(hasErrors);
     }
-    
+
     [Fact]
     public void ShouldResolvePathWhenSingleScriptFileInDirectory()
     {
@@ -71,7 +71,7 @@ public class FilePathResolverTests
         actualPath.ShouldBe("sc/Existing/MyScript.csx".Replace('/', Path.DirectorySeparatorChar));
         (_errors.Count != 0).ShouldBeFalse();
     }
-    
+
     [Fact]
     public void ShouldResolvePathWhenSingleScriptFileInDirectoryWhenRooted()
     {
@@ -93,7 +93,7 @@ public class FilePathResolverTests
         actualPath.ShouldBe("Existing/MyScript.csx".Replace('/', Path.DirectorySeparatorChar));
         (_errors.Count != 0).ShouldBeFalse();
     }
-    
+
     [Fact]
     public void ShouldRaiseErrorWhenMultipleScriptFilesInDirectory()
     {
@@ -117,7 +117,7 @@ public class FilePathResolverTests
         actualResult.ShouldBeFalse();
         (_errors.Count != 0).ShouldBeTrue();
     }
-    
+
     [Fact]
     public void ShouldRaiseErrorWhenNoScriptFilesInDirectory()
     {

@@ -11,7 +11,7 @@ internal record ProcessInfo(
     Action<Output>? Handler = default)
 {
     private static int _lastRunId;
-    
+
     public static int CreateRunId() =>
         Interlocked.Increment(ref _lastRunId);
 }

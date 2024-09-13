@@ -1,4 +1,5 @@
 // ReSharper disable InconsistentNaming
+
 namespace CSharpInteractive.Tests;
 
 using Core;
@@ -32,9 +33,9 @@ public class CISettingsTests
         var actualIsUnderTeamCity = settings.CIType;
 
         // Then
-        actualIsUnderTeamCity.ShouldBe(expectedIsUnderTeamCity ? CIType.TeamCity: CIType.Unknown);
+        actualIsUnderTeamCity.ShouldBe(expectedIsUnderTeamCity ? CIType.TeamCity : CIType.Unknown);
     }
-    
+
     [Theory]
     [InlineData("Abc", true)]
     [InlineData("", false)]
@@ -50,9 +51,9 @@ public class CISettingsTests
         var actualIsUnderGitLab = settings.CIType;
 
         // Then
-        actualIsUnderGitLab.ShouldBe(expectedIsUnderGitLab ? CIType.GitLab: CIType.Unknown);
+        actualIsUnderGitLab.ShouldBe(expectedIsUnderGitLab ? CIType.GitLab : CIType.Unknown);
     }
-    
+
     [Theory]
     [InlineData("Abc", true)]
     [InlineData("", false)]
@@ -68,7 +69,7 @@ public class CISettingsTests
         var actualIsUnderAzureDevOps = settings.CIType;
 
         // Then
-        actualIsUnderAzureDevOps.ShouldBe(expectedIsUnderAzureDevOps ? CIType.AzureDevOps: CIType.Unknown);
+        actualIsUnderAzureDevOps.ShouldBe(expectedIsUnderAzureDevOps ? CIType.AzureDevOps : CIType.Unknown);
     }
 
     [Theory]

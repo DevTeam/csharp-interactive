@@ -28,7 +28,7 @@ public static class Components
 {
     private static readonly Root Root = Composition.Shared.Root;
     private static readonly IHost CurHost = Root.Host;
-    
+
 #if APPLICATION
     private static readonly IDisposable FinishToken;
 
@@ -45,8 +45,8 @@ public static class Components
         AppDomain.CurrentDomain.ProcessExit += OnCurrentDomainOnProcessExit;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
     }
-    
-    private static void OnCurrentDomainOnProcessExit(object? o, EventArgs eventArgs) => 
+
+    private static void OnCurrentDomainOnProcessExit(object? o, EventArgs eventArgs) =>
         Finish();
 
     internal static void Finish()
@@ -68,7 +68,7 @@ public static class Components
             }
         }
     }
-    
+
     private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         try
@@ -81,7 +81,7 @@ public static class Components
             {
                 Root.Log.Error(ErrorId.Exception, [new Text(e.ExceptionObject.ToString() ?? "Unhandled exception.", Color.Error)]);
             }
-            
+
             Root.ExitTracker.Exit(1);
         }
         catch
@@ -210,7 +210,7 @@ public static class Components
     [Pure]
     // ReSharper disable once UnusedMethodReturnValue.Global
     public static T GetService<T>() => CurHost.GetService<T>();
-    
+
     /// <summary>
     /// Runs a command line.
     /// <example>
@@ -328,7 +328,7 @@ public static class Components
         ArgumentNullException.ThrowIfNull(result);
         return EnsureSuccess<IEnumerable<TResult>, TResult>(result, isSuccess, failureExitCode);
     }
-    
+
     /// <summary>
     /// Ensures that the command line or build was completed successfully in asynchronous way.
     /// </summary>
@@ -351,7 +351,7 @@ public static class Components
         ArgumentNullException.ThrowIfNull(result);
         return EnsureSuccess<IEnumerable<TResult>, TResult>(await result, isSuccess, failureExitCode);
     }
-    
+
     /// <summary>
     /// Ensures that the command line or build was completed successfully.
     /// </summary>
@@ -373,7 +373,7 @@ public static class Components
         ArgumentNullException.ThrowIfNull(result);
         return EnsureSuccess<TResult[], TResult>(result, isSuccess, failureExitCode);
     }
-    
+
     /// <summary>
     /// Ensures that the command line or build was completed successfully.
     /// </summary>
@@ -420,12 +420,12 @@ public static class Components
         this TResult result,
         Func<TResult, bool?>? isSuccess = default,
         int? failureExitCode = 1)
-        where TResult : ICommandLineResult
+        where TResult: ICommandLineResult
     {
         ArgumentNullException.ThrowIfNull(result);
         return EnsureSuccess([result], isSuccess, failureExitCode).First();
     }
-    
+
     /// <summary>
     /// Ensures that the command line or build was completed successfully.
     /// <example>
@@ -450,12 +450,12 @@ public static class Components
         this Task<TResult> result,
         Func<TResult, bool?>? isSuccess = default,
         int? failureExitCode = 1)
-        where TResult : ICommandLineResult
+        where TResult: ICommandLineResult
     {
         ArgumentNullException.ThrowIfNull(result);
         return EnsureSuccess(await result, isSuccess, failureExitCode);
     }
-    
+
     /// <summary>
     /// Tries to get a property by its key.
     /// <example>
@@ -489,7 +489,7 @@ public static class Components
                 value = (T)(object)valStr;
                 return true;
             }
-            
+
             var converter = TypeDescriptor.GetConverter(typeof(T));
             if (converter.CanConvertFrom(typeof(string)))
             {
@@ -502,8 +502,7 @@ public static class Components
                         return true;
                     }
                     catch (InvalidCastException)
-                    {
-                    }
+                    { }
                 }
             }
         }
@@ -539,12 +538,12 @@ public static class Components
             ? value
             : defaultValue;
     }
-    
+
     private static T EnsureSuccess<T, TResult>(
         T result,
         Func<TResult, bool?>? isSuccess = default,
         int? failureExitCode = 1)
-        where T : IEnumerable<TResult>
+        where T: IEnumerable<TResult>
         where TResult: ICommandLineResult
     {
         ArgumentNullException.ThrowIfNull(result);
@@ -556,11 +555,11 @@ public static class Components
             {
                 case true:
                     break;
-            
+
                 case null:
                     Root.Log.Warning($"{nextResult}.");
                     break;
-            
+
                 case false:
                     hasError = true;
                     Root.Log.Error(ErrorId.Build, $"{nextResult}.");
@@ -568,11 +567,11 @@ public static class Components
             }
         }
 
-        if (hasError && failureExitCode is {} exitCode)
+        if (hasError && failureExitCode is { } exitCode)
         {
             Root.ExitTracker.Exit(exitCode);
         }
-        
+
         return result;
     }
 }

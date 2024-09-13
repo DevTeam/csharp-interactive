@@ -1,6 +1,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedType.Global
+
 namespace HostApi;
 
 using Internal.DotNet;
@@ -36,7 +37,7 @@ public partial record DotNetCustom(
     public DotNetCustom(params string[] args)
         : this(args, [])
     { }
-    
+
     /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
@@ -49,8 +50,8 @@ public partial record DotNetCustom(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => 
+    public override string ToString() =>
         (ExecutablePath == string.Empty
             ? "dotnet"
-            : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Args.FirstOrDefault()?? string.Empty);
+            : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Args.FirstOrDefault() ?? string.Empty);
 }

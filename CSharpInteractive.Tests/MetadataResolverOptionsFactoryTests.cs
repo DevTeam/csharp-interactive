@@ -15,7 +15,7 @@ public class MetadataResolverOptionsFactoryTests
         var factory = CreateInstance();
         var resolver = Mock.Of<MetadataReferenceResolver>();
         _metadataResolverFactory.Setup(i => i()).Returns(resolver);
-        
+
         // When
         var options = factory.Create(ScriptOptions.Default);
         var actualResolver = options.MetadataResolver;

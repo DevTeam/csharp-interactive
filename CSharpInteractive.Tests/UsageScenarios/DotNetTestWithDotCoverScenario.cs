@@ -1,6 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -35,11 +36,11 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
         new DotNetCustom("tool", "install", "--local", "JetBrains.dotCover.GlobalTool")
             .Run()
             .EnsureSuccess();
-        
+
         // Creates a test command
         var test = new DotNetTest()
             .WithProject("MyTests");
-        
+
         var dotCoverSnapshot = Path.Combine("MyTests", "dotCover.dcvr");
         var dotCoverReport = Path.Combine("MyTests", "dotCover.html");
         // Modifies the test command by putting "dotCover" in front of all arguments
@@ -52,7 +53,7 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
             + $"--dcOutput={dotCoverSnapshot}"
             + "--dcFilters=+:module=TeamCity.CSharpInteractive.HostApi;+:module=dotnet-csi"
             + "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage");
-            
+
         // Runs tests under dotCover via a command like: "dotnet dotcover test ..."
         var result = testUnderDotCover
             .Build()
@@ -61,11 +62,11 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
         // The "result" variable provides details about a build
         result.ExitCode.ShouldBe(0);
         result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1);
-        
+
         // Generates a HTML code coverage report.
         new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReport}", "--reportType=HTML")
             .Run().EnsureSuccess();
-        
+
         // Check for a dotCover report
         File.Exists(dotCoverReport).ShouldBeTrue();
         // }

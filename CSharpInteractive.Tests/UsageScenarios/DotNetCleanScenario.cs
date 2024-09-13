@@ -2,6 +2,7 @@
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable CommentTypo
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -25,7 +26,7 @@ public class DotNetCleanScenario : BaseScenario
         var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
@@ -33,7 +34,7 @@ public class DotNetCleanScenario : BaseScenario
             .WithWorkingDirectory("MyLib")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Clean the project, running a command like: "dotnet clean" from the directory "MyLib"

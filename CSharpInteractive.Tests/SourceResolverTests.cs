@@ -28,7 +28,7 @@ public class SourceResolverTests
         resolver.BaseDirectory.ShouldBe(Path.GetFullPath("ScriptDir"));
         resolver.SearchPaths.ShouldBe([Path.GetFullPath("ScriptDir"), Path.GetFullPath("WorkingDir")]);
     }
-    
+
     [Fact]
     public void ShouldReplaceScript()
     {
@@ -36,17 +36,17 @@ public class SourceResolverTests
         MemoryStream replacedStream = new();
         _textReplacer.Setup(i => i.Replace(_openReadStream, _scriptContentReplacer.Object.Replace)).Returns(replacedStream);
         var resolver = CreateInstance();
-        
+
         // When
         var actualStream = resolver.OpenRead("Script.csx");
-        
+
         // Then
         actualStream.ShouldBe(replacedStream);
     }
 
     private TestSourceResolver CreateInstance() =>
         new(_environment.Object, _scriptContentReplacer.Object, _textReplacer.Object, _openReadStream);
-    
+
     private class TestSourceResolver(IEnvironment environment, IScriptContentReplacer scriptContentReplacer, ITextReplacer textReplacer, Stream openReadStream)
         : SourceResolver(environment, scriptContentReplacer, textReplacer)
     {

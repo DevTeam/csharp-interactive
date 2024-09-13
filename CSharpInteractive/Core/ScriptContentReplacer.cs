@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using NuGet.Packaging;
@@ -51,6 +52,7 @@ internal class ScriptContentReplacer(
                                 }
                             }
                         }
+
                         break;
 
                     case ScriptCommand:

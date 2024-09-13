@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InconsistentNaming
+
 namespace CSharpInteractive.Core;
 
 using Pure.DI;

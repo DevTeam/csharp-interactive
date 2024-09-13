@@ -6,10 +6,10 @@ using NuGet.Versioning;
 
 internal static class Tools
 {
-    public static bool CI => 
+    public static bool CI =>
         Environment.GetEnvironmentVariable("TEAMCITY_VERSION") is not null
         || Environment.GetEnvironmentVariable("CI") == "true";
-    
+
     public static NuGetVersion GetNextNuGetVersion(NuGetRestoreSettings settings, NuGetVersion defaultVersion)
     {
         var floatRange = defaultVersion.Release != string.Empty
@@ -33,7 +33,7 @@ internal static class Tools
             return release;
         }
 
-        return int.TryParse(string.Concat(curVersion.Release.Where(char.IsNumber)), out var num) 
+        return int.TryParse(string.Concat(curVersion.Release.Where(char.IsNumber)), out var num)
             ? $"{string.Concat(curVersion.Release.Where(i => !char.IsNumber(i)))}{num + 1}"
             : release;
     }
@@ -58,7 +58,7 @@ internal static class Tools
 
         return defaultProp;
     }
-    
+
     public static bool TryGetCoverage(string dotCoverReportXml, out int coveragePercentage)
     {
         var dotCoverReportDoc = new XmlDocument();
@@ -79,7 +79,7 @@ internal static class Tools
                     hasLinuxDocker = true;
                 }
             });
-        
+
         return hasLinuxDocker;
     }
 }

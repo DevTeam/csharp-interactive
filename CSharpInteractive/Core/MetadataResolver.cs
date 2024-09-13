@@ -1,6 +1,7 @@
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBeProtected.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Collections.Immutable;

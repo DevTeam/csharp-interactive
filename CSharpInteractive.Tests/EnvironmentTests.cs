@@ -11,7 +11,7 @@ public class EnvironmentTests
         var environment = CreateInstance();
         var source = new Mock<ICodeSource>();
         source.SetupGet(i => i.Name).Returns(Path.Combine("Dir", "Abc.txt"));
-        
+
         var source2 = new Mock<ICodeSource>();
         source2.SetupGet(i => i.Name).Returns(Path.Combine("Dir", "Abc2.txt"));
 
@@ -23,7 +23,7 @@ public class EnvironmentTests
         environment.TryGetSourceName(out var name).ShouldBeTrue();
         name.ShouldBe("Abc2.txt");
     }
-    
+
     [Fact]
     public void ShouldGetSourceName()
     {
@@ -39,7 +39,7 @@ public class EnvironmentTests
         environment.TryGetSourceName(out var name).ShouldBeTrue();
         name.ShouldBe("Abc.txt");
     }
-    
+
     [Fact]
     public void ShouldNotGetSourceNameWhenNoSources()
     {
@@ -51,7 +51,7 @@ public class EnvironmentTests
         // Then
         environment.TryGetSourceName(out _).ShouldBeFalse();
     }
-    
+
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
@@ -61,14 +61,14 @@ public class EnvironmentTests
         var environment = CreateInstance();
         var source = new Mock<ICodeSource>();
         source.SetupGet(i => i.Name).Returns(path);
-        
+
         // When
         using var scope = environment.CreateScope(source.Object);
 
         // Then
         environment.TryGetSourceName(out _).ShouldBeFalse();
     }
-    
+
     [Fact]
     public void ShouldProvideScriptFolder()
     {
@@ -76,7 +76,7 @@ public class EnvironmentTests
         var environment = CreateInstance();
         var source = new Mock<ICodeSource>();
         source.SetupGet(i => i.Name).Returns(Path.Combine("Dir1", "Abc.txt"));
-        
+
         var source2 = new Mock<ICodeSource>();
         source2.SetupGet(i => i.Name).Returns(Path.Combine("Dir2", "Abc2.txt"));
 
@@ -87,7 +87,7 @@ public class EnvironmentTests
         // Then
         environment.GetPath(SpecialFolder.Script).ShouldBe("Dir2");
     }
-    
+
     [Fact]
     public void ShouldProvideScriptFolderWhenHasDir()
     {
@@ -95,14 +95,14 @@ public class EnvironmentTests
         var environment = CreateInstance();
         var source = new Mock<ICodeSource>();
         source.SetupGet(i => i.Name).Returns(Path.Combine("Dir1", "Abc.txt"));
-        
+
         // When
         using var scope = environment.CreateScope(source.Object);
-        
+
         // Then
         environment.GetPath(SpecialFolder.Script).ShouldBe("Dir1");
     }
-    
+
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
@@ -115,11 +115,11 @@ public class EnvironmentTests
 
         // When
         using var scope = environment.CreateScope(source.Object);
-        
+
         // Then
         environment.GetPath(SpecialFolder.Script).ShouldBe(Directory.GetCurrentDirectory());
     }
-    
+
     [Fact]
     public void ShouldProvideScriptAsFolderWhenHasNoDir()
     {
@@ -127,10 +127,10 @@ public class EnvironmentTests
         var environment = CreateInstance();
         var source = new Mock<ICodeSource>();
         source.SetupGet(i => i.Name).Returns("Abc.txt");
-        
+
         // When
         using var scope = environment.CreateScope(source.Object);
-        
+
         // Then
         environment.GetPath(SpecialFolder.Script).ShouldBe("Abc.txt");
     }

@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+
 namespace CSharpInteractive.Core;
 
 using HostApi;
@@ -12,7 +13,7 @@ internal class DiagnosticsPresenter(ILog<DiagnosticsPresenter> log, IErrorContex
     {
         var (sourceCommand, readOnlyCollection) = data;
         var prefix = Text.Empty;
-        if(errorContext.TryGetSourceName(out var name))
+        if (errorContext.TryGetSourceName(out var name))
         {
             prefix = new Text(name + " ");
         }

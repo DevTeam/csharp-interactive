@@ -2,6 +2,7 @@
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable CommentTypo
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -23,7 +24,7 @@ public class DotNetToolRestoreScenario : BaseScenario
 
         var projectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
         Directory.CreateDirectory(projectDir);
-            
+
         // Creates a local tool manifest 
         new DotNetNew("tool-manifest")
             .WithWorkingDirectory(projectDir)
@@ -36,7 +37,7 @@ public class DotNetToolRestoreScenario : BaseScenario
             .Run()
             .EnsureSuccess();
         // }
-        
+
         Directory.Delete(projectDir, true);
     }
 }

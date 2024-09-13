@@ -2,6 +2,7 @@
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedType.Global
 // ReSharper disable StringLiteralTypo
+
 namespace HostApi;
 
 using Internal.DotNet;
@@ -37,7 +38,7 @@ public partial record DotNetBuildServerShutdown(
     public DotNetBuildServerShutdown(params string[] args)
         : this(args, [], [])
     { }
-    
+
     /// <inheritdoc/>
     public IStartInfo GetStartInfo(IHost host)
     {
@@ -53,7 +54,7 @@ public partial record DotNetBuildServerShutdown(
 
     /// <inheritdoc/>
     public override string ToString() => "dotnet build-server shutdown".GetShortName(ShortName);
-    
+
     private IEnumerable<string> GetServerArg() =>
         Servers.Select(server => server switch
         {

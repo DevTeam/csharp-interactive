@@ -1,4 +1,5 @@
 // ReSharper disable UnusedParameter.Global
+
 namespace CSharpInteractive.Core;
 
 using HostApi;

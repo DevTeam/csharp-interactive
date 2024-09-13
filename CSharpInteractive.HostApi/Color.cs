@@ -15,17 +15,17 @@ public enum Color
     /// Standard text output color.
     /// </summary>
     Default,
-    
+
     /// <summary>
     /// The color of the header output. 
     /// </summary>
     Header,
-    
+
     /// <summary>
     /// Color of trace messages. 
     /// </summary>
     Trace,
-    
+
     /// <summary>
     /// Color of the success messages. 
     /// </summary>
@@ -35,12 +35,12 @@ public enum Color
     /// Color of messages containing warnings.
     /// </summary>
     Warning,
-    
+
     /// <summary>
     /// Color of messages containing errors.
     /// </summary>
     Error,
-    
+
     /// <summary>
     /// Colour for details.
     /// </summary>

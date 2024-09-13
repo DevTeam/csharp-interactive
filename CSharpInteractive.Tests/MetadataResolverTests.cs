@@ -28,7 +28,7 @@ public class MetadataResolverTests
         resolver.BaseDirectory.ShouldBe(Path.GetFullPath("ScriptDir"));
         resolver.SearchPaths.ShouldBe([Path.GetFullPath("ScriptDir"), Path.GetFullPath("WorkingDir")]);
     }
-    
+
     [Theory]
     [InlineData("Abc")]
     [InlineData("nuget")]
@@ -43,9 +43,9 @@ public class MetadataResolverTests
         var resolvedReferences = resolver.ResolveReference(reference, "Dir", new MetadataReferenceProperties());
 
         // Then
-        resolvedReferences.ShouldBe(new []{_reference1, _reference2});
+        resolvedReferences.ShouldBe(new[] {_reference1, _reference2});
     }
-    
+
     [Theory]
     [InlineData("nuget: abc")]
     [InlineData("NuGet: abc")]
@@ -68,10 +68,10 @@ public class MetadataResolverTests
     private TestMetadataResolver CreateInstance(params PortableExecutableReference[] references) =>
         // ReSharper disable once UseCollectionExpression
         new(_environment.Object, references.ToImmutableArray());
-    
+
     private class TestMetadataResolver(IEnvironment environment, ImmutableArray<PortableExecutableReference> references) : MetadataResolver(environment)
     {
-        protected override ImmutableArray<PortableExecutableReference> ShouldResolveReferenceInternal(string reference, string? baseFilePath, MetadataReferenceProperties properties) => 
+        protected override ImmutableArray<PortableExecutableReference> ShouldResolveReferenceInternal(string reference, string? baseFilePath, MetadataReferenceProperties properties) =>
             references;
     }
 }

@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 internal class Cleaner(ILog<Cleaner> log, IFileSystem fileSystem) : ICleaner

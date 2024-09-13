@@ -2,6 +2,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedType.Global
+
 namespace HostApi;
 
 using Internal.DotNet;
@@ -55,7 +56,7 @@ public partial record MSBuild(
     IEnumerable<(string name, string value)> RestoreProps,
     IEnumerable<string> InputResultsCaches,
     IEnumerable<string> IgnoreProjectExtensions,
-    IEnumerable<string>  WarnAsError,
+    IEnumerable<string> WarnAsError,
     IEnumerable<string> WarnAsMessage,
     string ExecutablePath = "",
     string WorkingDirectory = "",
@@ -134,9 +135,9 @@ public partial record MSBuild(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => 
+    public override string ToString() =>
         (ExecutablePath == string.Empty ? "dotnet msbuild" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Project);
 
-    private static string JoinWithSemicolons(IEnumerable<string> arg) => 
+    private static string JoinWithSemicolons(IEnumerable<string> arg) =>
         string.Join(";", arg.Where(i => !string.IsNullOrWhiteSpace(i)).Select(i => i.Trim()));
 }

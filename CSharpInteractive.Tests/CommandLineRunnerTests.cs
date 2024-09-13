@@ -57,7 +57,8 @@ public class CommandLineRunnerTests
         _statisticsRegistry.Verify(i => i.Register(new CommandLineInfo(result, _processResult)));
     }
 
-    private static void Handler(Output obj) { }
+    private static void Handler(Output obj)
+    { }
 
     private CommandLineRunner CreateInstance() =>
         new(_host.Object,

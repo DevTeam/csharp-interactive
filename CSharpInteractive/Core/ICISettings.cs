@@ -1,5 +1,6 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
+
 namespace CSharpInteractive.Core;
 
 internal interface ICISettings

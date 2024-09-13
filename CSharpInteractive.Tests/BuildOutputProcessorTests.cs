@@ -33,10 +33,10 @@ public class BuildOutputProcessorTests
         messages.ShouldBe(
         [
             new BuildMessage(output, BuildMessageState.ServiceMessage, msg1.Object),
-                buildMsg1,
-                buildMsg2,
-                new BuildMessage(output, BuildMessageState.ServiceMessage, msg2.Object),
-                buildMsg3
+            buildMsg1,
+            buildMsg2,
+            new BuildMessage(output, BuildMessageState.ServiceMessage, msg2.Object),
+            buildMsg3
         ]);
     }
 

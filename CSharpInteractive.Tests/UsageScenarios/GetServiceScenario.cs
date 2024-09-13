@@ -1,6 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable SuggestVarOrType_BuiltInTypes
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;

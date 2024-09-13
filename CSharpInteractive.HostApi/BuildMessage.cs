@@ -1,6 +1,7 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable NotAccessedPositionalProperty.Global
 // ReSharper disable InconsistentNaming
+
 namespace HostApi;
 
 using JetBrains.TeamCity.ServiceMessages;
@@ -45,18 +46,18 @@ public record BuildMessage(
     /// <summary>
     /// Contains the result of test execution when <see cref="State"/> is set to <see cref="BuildMessageState.TestResult"/>.
     /// </summary>
-    public TestResult? TestResult => 
+    public TestResult? TestResult =>
         ServiceMessage != null && TryGetTestState(ServiceMessage.Name, out var testState)
             ? CreateResult(CreateKey(ServiceMessage), ServiceMessage, testState)
             : default(TestResult?);
 
     /// <inheritdoc />
     public override string ToString() => Text;
-    
+
     internal static TestResult CreateResult(TestKey key, IServiceMessage message, TestState state)
     {
         var testSource = message.GetValue("testSource") ?? string.Empty;
-        var displayName = message.GetValue("displayName") ?? string.Empty; 
+        var displayName = message.GetValue("displayName") ?? string.Empty;
         var resultDisplayName = message.GetValue("resultDisplayName") ?? string.Empty;
         var codeFilePath = message.GetValue("codeFilePath") ?? string.Empty;
         var fullyQualifiedName = message.GetValue("fullyQualifiedName") ?? string.Empty;
@@ -69,7 +70,7 @@ public record BuildMessage(
             .WithResultDisplayName(resultDisplayName)
             .WithCodeFilePath(codeFilePath)
             .WithFullyQualifiedName(fullyQualifiedName);
-        
+
         if (Guid.TryParse(message.GetValue("id"), out var id))
         {
             result = result.WithId(id);
@@ -84,30 +85,30 @@ public record BuildMessage(
         {
             result = result.WithLineNumber(lineNumber);
         }
-        
+
         return result;
     }
 
     internal static TestKey CreateKey(IServiceMessage message)
     {
         var flowId = message.GetValue("flowId") ?? string.Empty;
-        var suiteName = message.GetValue("suiteName") ?? string.Empty; 
+        var suiteName = message.GetValue("suiteName") ?? string.Empty;
         var name = message.GetValue("name") ?? string.Empty;
         return new TestKey(flowId, suiteName, name);
     }
 
     private static bool TryGetTestState(string? name, out TestState state)
     {
-        switch(name?.ToLowerInvariant()) 
+        switch (name?.ToLowerInvariant())
         {
             case "testfinished":
                 state = TestState.Finished;
                 return true;
-                
+
             case "testignored":
                 state = TestState.Ignored;
                 return true;
-            
+
             case "testfailed":
                 state = TestState.Failed;
                 return true;
@@ -116,7 +117,7 @@ public record BuildMessage(
         state = default;
         return false;
     }
-    
+
     // ReSharper disable once NotAccessedPositionalProperty.Local
     internal readonly record struct TestKey(string FlowId, string SuiteName, string TestName);
 }

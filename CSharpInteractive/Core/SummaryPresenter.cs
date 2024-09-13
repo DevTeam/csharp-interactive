@@ -1,6 +1,7 @@
 // ReSharper disable UnusedType.Global
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable MemberCanBePrivate.Global
+
 namespace CSharpInteractive.Core;
 
 using HostApi;
@@ -15,7 +16,7 @@ internal class SummaryPresenter(
     internal const string RunningSucceeded = "Running succeeded.";
     internal const string RunningSucceededWithWarnings = "Running succeeded with warnings.";
     internal const string RunningFailed = "Running FAILED.";
-    
+
     public void Show(Summary summary)
     {
         log.Info();
@@ -26,7 +27,7 @@ internal class SummaryPresenter(
             {
                 log.Info(commandLineInfo.ProcessResult.Description.AddPrefix(_ => Tab));
             }
-            
+
             statisticsPresenter.Show(statistics);
         }
 
@@ -35,13 +36,13 @@ internal class SummaryPresenter(
             log.Info(new Text(RunningFailed, Color.Error));
             return;
         }
-        
+
         if (statistics.Warnings.Count > 0)
         {
             log.Info(new Text(RunningSucceededWithWarnings, Color.Warning));
             return;
         }
-        
+
         log.Info(new Text(RunningSucceeded, Color.Success));
     }
 }

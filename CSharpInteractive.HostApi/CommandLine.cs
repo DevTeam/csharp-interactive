@@ -1,6 +1,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
+
 namespace HostApi;
 
 using System.Diagnostics;
@@ -50,7 +51,7 @@ public partial record CommandLine(
     { }
 
     /// <inheritdoc/>
-    public string ShortName => 
+    public string ShortName =>
         !string.IsNullOrWhiteSpace(_shortName)
             ? _shortName
             : Path.GetFileNameWithoutExtension(ExecutablePath);
@@ -82,7 +83,7 @@ public partial record CommandLine(
         return sb.ToString();
     }
 
-    private static string Escape(string text) => 
+    private static string Escape(string text) =>
         !text.TrimStart().StartsWith("\"") && text.Contains(' ')
             ? $"\"{text}\""
             : text;

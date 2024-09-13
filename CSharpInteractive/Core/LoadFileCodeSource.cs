@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Collections;
@@ -28,7 +29,7 @@ internal class LoadFileCodeSource(
     public IEnumerator<string> GetEnumerator()
     {
         var scope = scriptContext.CreateScope(this);
-        return new LinesEnumerator(new List<string>{$"#load \"{_fileName}\""}, () => scope.Dispose());
+        return new LinesEnumerator(new List<string> {$"#load \"{_fileName}\""}, () => scope.Dispose());
     }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

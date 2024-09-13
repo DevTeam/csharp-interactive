@@ -2,6 +2,7 @@
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBeProtected.Global
+
 namespace CSharpInteractive.Core;
 
 using Microsoft.CodeAnalysis;
@@ -36,6 +37,6 @@ internal class SourceResolver(
     {
         var scriptDirectory = Path.GetFullPath(environment.GetPath(SpecialFolder.Script));
         var workingDirectory = Path.GetFullPath(environment.GetPath(SpecialFolder.Working));
-        return new SourceFileResolver(new []{scriptDirectory, workingDirectory}, scriptDirectory);
+        return new SourceFileResolver(new[] {scriptDirectory, workingDirectory}, scriptDirectory);
     }
 }

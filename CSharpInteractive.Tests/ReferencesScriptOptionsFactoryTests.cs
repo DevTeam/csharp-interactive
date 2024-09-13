@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Scripting;
 public class ReferencesScriptOptionsFactoryTests
 {
     private readonly Mock<IRuntimeExplorer> _runtimeExplorer = new();
-    
+
     [Fact]
     public void ShouldRegisterAssembly()
     {
@@ -23,7 +23,7 @@ public class ReferencesScriptOptionsFactoryTests
         description.ShouldNotBeEmpty();
         options.MetadataReferences.Length.ShouldBe(ScriptOptions.Default.MetadataReferences.Length + 1);
     }
-    
+
     [Fact]
     public void ShouldRegisterBothAssembliesWhenRuntime()
     {

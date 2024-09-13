@@ -2,6 +2,7 @@
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable CommentTypo
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -25,7 +26,7 @@ public class DotNetPublishScenario : BaseScenario
         var result = new DotNetNew("classlib", "-n", "MyLib", "--force", "-f", "net8.0")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Publish the project, running a command like: "dotnet publish --framework net6.0" from the directory "MyLib"
@@ -34,7 +35,7 @@ public class DotNetPublishScenario : BaseScenario
             .WithFramework("net8.0")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
         // }
     }

@@ -1,5 +1,6 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMethodReturnValue.Global
+
 namespace CSharpInteractive.Core;
 
 using HostApi;

@@ -5,7 +5,8 @@ internal class HelpCommand : ICommand
 {
     public static readonly ICommand Shared = new HelpCommand();
 
-    private HelpCommand() { }
+    private HelpCommand()
+    { }
 
     public string Name => "Help";
 

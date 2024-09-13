@@ -1,4 +1,5 @@
 // ReSharper disable UnusedMember.Global
+
 namespace CSharpInteractive.Tests.Integration.Core;
 
 internal interface IFileSystem

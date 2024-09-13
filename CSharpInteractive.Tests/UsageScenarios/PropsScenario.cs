@@ -1,5 +1,6 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable SuggestVarOrType_BuiltInTypes
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 public class PropsScenario : BaseScenario

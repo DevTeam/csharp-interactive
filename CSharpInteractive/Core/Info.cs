@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Reflection;
@@ -70,7 +71,7 @@ internal class Info(
 
     public void ShowHelp() =>
         stdOut.WriteLine(
-            new []
+            new[]
             {
                 [
                     Text.NewLine,
@@ -102,7 +103,7 @@ internal class Info(
                     Text.NewLine, Text.Tab,
                     new Text("for example: "),
                     new Text("--source https://api.nuget.org/v3/index.json", Color.Details)),
-                Option("--property <key=value>[;<keyN=valueN>]", 
+                Option("--property <key=value>[;<keyN=valueN>]",
                     new Text("Define a key-value pair(s) for the script properties "),
                     new Text("(*1)", Color.Highlighted),
                     new Text(" accessible in scripts."),
@@ -169,7 +170,7 @@ internal class Info(
 
     private static Text[] Option(string option, params Text[] description)
     {
-        return new []
+        return new[]
         {
             [
                 new Text(option, Color.Header),

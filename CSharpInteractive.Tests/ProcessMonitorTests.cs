@@ -7,7 +7,7 @@ using HostApi;
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class ProcessMonitorTests
 {
-    private static readonly Text Description = new("My process description", Color.Details); 
+    private static readonly Text Description = new("My process description", Color.Details);
     private readonly Mock<ILog<ProcessMonitor>> _log = new();
     private readonly Mock<IEnvironment> _environment = new();
     private readonly Mock<IStartInfo> _startInfo = new();
@@ -35,7 +35,7 @@ public class ProcessMonitorTests
         monitor.Started(_startInfo.Object, 99);
 
         // Then
-        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new[] { Description, new Text(" started "), new("\"Cm d\""), Text.Space, new("Arg1"), Text.Space, new("\"Arg 2\"")}))));
+        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new[] {Description, new Text(" started "), new("\"Cm d\""), Text.Space, new("Arg1"), Text.Space, new("\"Arg 2\"")}))));
         _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new Text[] {new("in directory: "), new("\"W d\"")}))));
         _log.Verify(i => i.Trace(It.IsAny<Func<Text[]>>(), It.IsAny<string>()), Times.Never);
         _log.Verify(i => i.Warning(It.IsAny<Text[]>()), Times.Never);

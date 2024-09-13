@@ -1,4 +1,5 @@
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
+
 namespace CSharpInteractive.Tests;
 
 using Core;

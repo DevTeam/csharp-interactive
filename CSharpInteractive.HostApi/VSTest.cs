@@ -2,6 +2,7 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 // ReSharper disable CommentTypo
+
 namespace HostApi;
 
 using Internal;
@@ -100,7 +101,7 @@ public partial record VSTest(
             .AddVSTestLoggers(host)
             .AddMSBuildArgs(
                 ("--Logger", $"console;verbosity={(Verbosity.HasValue ? Verbosity.Value >= DotNetVerbosity.Normal ? Verbosity.Value : DotNetVerbosity.Normal : DotNetVerbosity.Normal).ToString().ToLowerInvariant()}"),
-                ("--TestAdapterPath", $"{string.Join(";", new[]{TestAdapterPath, virtualContext.Resolve(settings.DotNetVSTestLoggerDirectory)}.Where(i => !string.IsNullOrWhiteSpace(i)))}"),
+                ("--TestAdapterPath", $"{string.Join(";", new[] {TestAdapterPath, virtualContext.Resolve(settings.DotNetVSTestLoggerDirectory)}.Where(i => !string.IsNullOrWhiteSpace(i)))}"),
                 ("--Tests", Tests),
                 ("--TestCaseFilter", TestCaseFilter),
                 ("--Framework", Framework),
@@ -133,8 +134,8 @@ public partial record VSTest(
 
         return cmd;
     }
-    
+
     /// <inheritdoc/>
-    public override string ToString() => 
+    public override string ToString() =>
         (string.IsNullOrWhiteSpace(ShortName) ? "dotnet vstest" : ShortName).GetShortName(ShortName, string.Empty);
 }

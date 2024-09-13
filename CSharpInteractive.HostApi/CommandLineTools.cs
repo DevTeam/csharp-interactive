@@ -19,7 +19,7 @@ public static class CommandLineTools
     /// <returns>Created command line.</returns>
     public static CommandLine AsCommandLine(this string executable, params string[] args) =>
         new(executable, args);
-    
+
     /// <summary>
     /// Customizes a command line by overriding its parameters as command line arguments and others.
     /// <example>
@@ -41,7 +41,7 @@ public static class CommandLineTools
     /// <param name="baseCommandLine">The base command for customization.</param>
     /// <param name="customizer">Customization function.</param>
     /// <returns>Customized command line.</returns>
-    public static ICommandLine Customize(this ICommandLine baseCommandLine, Func<CommandLine, ICommandLine> customizer) => 
+    public static ICommandLine Customize(this ICommandLine baseCommandLine, Func<CommandLine, ICommandLine> customizer) =>
         new CustomCommandLine(baseCommandLine, customizer);
 
     private class CustomCommandLine(ICommandLine baseCommandLine, Func<CommandLine, ICommandLine> customizer) : ICommandLine

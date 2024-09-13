@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InvertIf
+
 namespace CSharpInteractive.Core;
 
 internal class CSharpScriptCommandRunner(ICSharpScriptRunner scriptRunner) : ICommandRunner

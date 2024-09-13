@@ -1,4 +1,5 @@
 // ReSharper disable UnusedMemberInSuper.Global
+
 namespace CSharpInteractive.Core;
 
 internal interface IDotNetEnvironment

@@ -27,17 +27,17 @@ internal record CommandLineResult(
             case ProcessState.FailedToStart:
                 sb.Append("Failed to start");
                 break;
-            
+
             case ProcessState.Canceled:
                 sb.Append("canceled");
                 break;
-            
+
             default:
             case ProcessState.Finished:
                 sb.Append("finished");
                 break;
         }
-        
+
         // ReSharper disable once InvertIf
         if (ExitCode is { } exitCode)
         {
@@ -48,8 +48,8 @@ internal record CommandLineResult(
         return sb.ToString();
     }
 
-    public bool? IsSuccess => 
-         ExitCode == 0
-         && Error is null
-         && State == ProcessState.Finished;
+    public bool? IsSuccess =>
+        ExitCode == 0
+        && Error is null
+        && State == ProcessState.Finished;
 }

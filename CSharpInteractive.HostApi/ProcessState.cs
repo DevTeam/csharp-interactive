@@ -9,12 +9,12 @@ public enum ProcessState
     /// The process has been completed.
     /// </summary>
     Finished,
-    
+
     /// <summary>
     /// The process failed to start.
     /// </summary>
     FailedToStart,
-    
+
     /// <summary>
     /// The process has been cancelled.
     /// </summary>

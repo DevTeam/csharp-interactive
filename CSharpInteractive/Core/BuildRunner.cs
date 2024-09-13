@@ -4,6 +4,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable InvertIf
 // ReSharper disable UseDeconstructionOnParameter
+
 namespace CSharpInteractive.Core;
 
 using HostApi;
@@ -77,14 +78,15 @@ internal class BuildRunner(
         {
             customBuildMessagesProcessor.ProcessMessages(processInfo, output, messages, handler);
         }
-        
+
         if (!output.Handled)
         {
             defaultBuildMessagesProcessor.ProcessMessages(processInfo, output, messages, EmptyHandler);
         }
-        
+
         output.Handled = true;
     }
 
-    private static void EmptyHandler(BuildMessage obj) { }
+    private static void EmptyHandler(BuildMessage obj)
+    { }
 }

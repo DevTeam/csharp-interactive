@@ -1,5 +1,6 @@
 // ReSharper disable NotAccessedPositionalProperty.Global
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive;
 
 using Core;
@@ -27,7 +28,7 @@ internal record Root(
     IDotNetEnvironment DotNetEnvironment,
     INuGet NuGet,
     IServiceMessageParser ServiceMessageParser,
-    ITeamCityWriter TeamCityWriter): IServiceProvider
+    ITeamCityWriter TeamCityWriter) : IServiceProvider
 {
     private readonly Lazy<IServiceProvider> _serviceProvider = new(() =>
     {
@@ -43,7 +44,7 @@ internal record Root(
         serviceCollection.AddTransient(_ => TeamCityWriter);
         return serviceCollection.BuildServiceProvider();
     });
-    
-    public object? GetService(Type serviceType) => 
+
+    public object? GetService(Type serviceType) =>
         _serviceProvider.Value.GetService(serviceType);
 }

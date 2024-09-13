@@ -20,7 +20,7 @@ public class CalculatorTests
         // Then
         Assert.Equal(expected, actual);
     }
-    
+
     [Theory]
     [InlineData(0, 0, 0)]
     [InlineData(3, 2, 1)]
@@ -36,12 +36,11 @@ public class CalculatorTests
         // Then
         Assert.Equal(expected, actual);
     }
-    
+
     [Fact(Skip = "")]
     public void ShouldDiv()
-    {
-    }
-    
+    { }
+
     [Fact]
     public void ShouldMul()
     {

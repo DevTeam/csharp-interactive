@@ -1,6 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System.Diagnostics.CodeAnalysis;
@@ -26,7 +27,7 @@ public class DotNetRunScenario : BaseScenario
         var result = new DotNetNew("console", "-n", "MyApp", "--force")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Runs the console project using a command like: "dotnet run" from the directory "MyApp"
@@ -34,7 +35,7 @@ public class DotNetRunScenario : BaseScenario
         result = new DotNetRun().WithWorkingDirectory("MyApp")
             .Build(message => stdOut.Add(message.Text))
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Checks StdOut

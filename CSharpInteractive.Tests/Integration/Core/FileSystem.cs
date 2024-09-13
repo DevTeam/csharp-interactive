@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Tests.Integration.Core;
 
 internal class FileSystem : IFileSystem

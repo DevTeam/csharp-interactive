@@ -7,7 +7,7 @@ using Core;
 public class RuntimeExplorerTests
 {
     private readonly Mock<IFileSystem> _fileSystem = new();
-    
+
     [Fact]
     public void ShouldFindRuntime()
     {
@@ -21,7 +21,7 @@ public class RuntimeExplorerTests
         // Then
         runtimePath.ShouldBe("Xyz.dll");
     }
-    
+
     [Fact]
     public void ShouldReturnFalseWhenCannotFindRuntime()
     {
@@ -34,7 +34,7 @@ public class RuntimeExplorerTests
 
         // Then
     }
-    
+
     [Theory]
     [InlineData("")]
     [InlineData("   ")]

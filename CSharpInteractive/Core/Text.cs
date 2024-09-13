@@ -33,7 +33,7 @@ internal readonly record struct Text(string Value, Color Color)
 
         return sb.ToString();
     }
-    
+
     public static Text[] operator +(Text text1, Text text2)
     {
         var newText = new Text[2];

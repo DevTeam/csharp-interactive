@@ -2,6 +2,7 @@
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable InconsistentNaming
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -25,7 +26,7 @@ public class DotNetVSTestScenario : BaseScenario
         var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Builds the test project, running a command like: "dotnet build -c Release" from the directory "MyTests"
@@ -35,7 +36,7 @@ public class DotNetVSTestScenario : BaseScenario
             .WithOutput("MyOutput")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Runs tests via a command like: "dotnet vstest" from the directory "MyTests"
@@ -51,7 +52,7 @@ public class DotNetVSTestScenario : BaseScenario
         result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
         // }
     }
-    
+
     [Fact]
     public void RunAsCommandLine()
     {
@@ -59,7 +60,7 @@ public class DotNetVSTestScenario : BaseScenario
         var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Builds the test project, running a command like: "dotnet build -c Release" from the directory "MyTests"
@@ -69,7 +70,7 @@ public class DotNetVSTestScenario : BaseScenario
             .WithOutput("MyOutput")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Runs tests via a command like: "dotnet vstest" from the directory "MyTests"

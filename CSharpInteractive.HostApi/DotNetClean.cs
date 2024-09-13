@@ -1,5 +1,6 @@
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
+
 namespace HostApi;
 
 using Internal.DotNet;

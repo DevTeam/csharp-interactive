@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable ForCanBeConvertedToForeach
+
 namespace CSharpInteractive.Core;
 
 using System.Diagnostics;
@@ -57,7 +58,7 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
         private IProcessMonitor Monitor => processInfo.Monitor;
 
         private Action<Output>? Handler => processInfo.Handler;
-        
+
         public bool TryStart([MaybeNullWhen(true)] out ProcessResult processResult)
         {
             if (Handler != default)
@@ -79,7 +80,7 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
             processResult = default;
             return true;
         }
-    
+
         public ProcessResult Finish(bool finished, Exception? error = default)
         {
             if (finished)

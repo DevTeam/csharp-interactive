@@ -3,6 +3,7 @@
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
+
 namespace HostApi.Internal.DotNet;
 
 using System.Diagnostics.Contracts;
@@ -28,7 +29,7 @@ internal static class DotNetCommandLineExtensions
             ? Path.GetFileNameWithoutExtension(executablePath)
             : executablePath;
     }
-    
+
     [Pure]
     public static string GetShortName(this string baseName, string shortName, string path = "")
     {
@@ -64,7 +65,7 @@ internal static class DotNetCommandLineExtensions
                 .AddVars(("TEAMCITY_SERVICE_MESSAGES_PATH", virtualContext.Resolve(settings.TeamCityMessagesPath)))
             : cmd;
     }
-    
+
     [Pure]
     public static CommandLine AddTestLoggers(this CommandLine cmd, IHost host, IEnumerable<string> loggers)
     {
@@ -74,12 +75,12 @@ internal static class DotNetCommandLineExtensions
         {
             loggers = loggers.Concat([TeamcityLoggerName]);
         }
-        
+
         return cmd.AddArgs(loggers.Select(i => ("--logger", (string?)i)).ToArray());
     }
-    
+
     [Pure]
-    public static CommandLine AddVSTestLoggers(this CommandLine cmd, IHost host) => 
+    public static CommandLine AddVSTestLoggers(this CommandLine cmd, IHost host) =>
         host.GetService<HostComponents>().DotNetSettings.LoggersAreRequired
             ? cmd.AddMSBuildArgs(("--Logger", TeamcityLoggerName))
             : cmd;

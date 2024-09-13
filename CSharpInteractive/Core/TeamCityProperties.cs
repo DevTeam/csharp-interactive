@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable NotDisposedResourceIsReturned
+
 namespace CSharpInteractive.Core;
 
 using System.Collections;

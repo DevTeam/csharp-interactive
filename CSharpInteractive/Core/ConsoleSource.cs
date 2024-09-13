@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Collections;
@@ -32,7 +33,9 @@ internal class ConsoleSource(CancellationToken cancellationToken) : ICodeSource,
         return true;
     }
 
-    public void Reset() { }
+    public void Reset()
+    { }
 
-    public void Dispose() { }
+    public void Dispose()
+    { }
 }

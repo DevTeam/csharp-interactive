@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using HostApi;
@@ -65,7 +66,7 @@ internal class ProcessMonitor(
                 stateText = "canceled";
                 stateColor = Color.Warning;
                 break;
-            
+
             default:
                 stateText = "finished";
                 stateColor = Color.Success;
@@ -76,7 +77,7 @@ internal class ProcessMonitor(
         {
             yield return text;
         }
-        
+
         yield return Text.Space;
         yield return new Text(stateText, stateColor);
         yield return new Text($" (in {elapsedMilliseconds} ms)");

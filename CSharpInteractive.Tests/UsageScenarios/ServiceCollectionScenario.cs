@@ -1,5 +1,6 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable SuggestVarOrType_BuiltInTypes
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -15,10 +16,10 @@ public class ServiceCollectionScenario : BaseScenario
     // {
     public void Run()
     {
-        var serviceProvider = 
+        var serviceProvider =
             GetService<IServiceCollection>()
-            .AddTransient<MyTask>()
-            .BuildServiceProvider();
+                .AddTransient<MyTask>()
+                .BuildServiceProvider();
 
         var myTask = serviceProvider.GetRequiredService<MyTask>();
         var exitCode = myTask.Run();
@@ -32,6 +33,6 @@ public class ServiceCollectionScenario : BaseScenario
             .EnsureSuccess()
             .ExitCode;
     }
-    
+
     // }
 }

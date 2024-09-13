@@ -1,5 +1,6 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
+
 namespace HostApi;
 
 /// <summary>
@@ -12,12 +13,12 @@ public enum DotNetBuildServer
     /// MSBuild build server
     /// </summary>
     MSBuild,
-    
+
     /// <summary>
     /// VB/C# compiler build server
     /// </summary>
     VbCsCompiler,
-    
+
     /// <summary>
     /// Razor build server
     /// </summary>

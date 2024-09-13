@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Text;

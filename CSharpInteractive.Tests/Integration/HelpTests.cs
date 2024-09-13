@@ -1,4 +1,5 @@
 // ReSharper disable RedundantUsingDirective
+
 namespace CSharpInteractive.Tests.Integration;
 
 using Core;

@@ -3,6 +3,7 @@
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable NotAccessedVariable
 // ReSharper disable RedundantAssignment
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
@@ -24,7 +25,7 @@ public class CommandLinesScenario : BaseScenario
         // {
         // Adds the namespace "Script.Cmd" to use Command Line API
         // ## using HostApi;
-        
+
         // Creates and run a simple command line 
         "whoami".AsCommandLine().Run().EnsureSuccess();
 
@@ -39,23 +40,23 @@ public class CommandLinesScenario : BaseScenario
             .AddArgs("echo", "Hello")
             .Run()
             .EnsureSuccess();
-        
+
         (new CommandLine("cmd") + "/c" + "echo" + "Hello")
             .Run()
             .EnsureSuccess();
-        
+
         "cmd".AsCommandLine("/c", "echo", "Hello")
             .Run()
             .EnsureSuccess();
-        
+
         ("cmd".AsCommandLine() + "/c" + "echo" + "Hello")
             .Run()
             .EnsureSuccess();
-        
+
         // Just builds a command line with multiple environment variables
         var cmd = new CommandLine("cmd", "/c", "echo", "Hello")
             .AddVars(("Var1", "val1"), ("var2", "Val2"));
-        
+
         // Same as previous statement
         cmd = new CommandLine("cmd") + "/c" + "echo" + "Hello" + ("Var1", "val1") + ("var2", "Val2");
 

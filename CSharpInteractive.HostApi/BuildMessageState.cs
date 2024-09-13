@@ -1,5 +1,6 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
+
 namespace HostApi;
 
 /// <summary>
@@ -21,17 +22,17 @@ public enum BuildMessageState
     /// Build warning.
     /// </summary>
     Warning,
-    
+
     /// <summary>
     /// The message that the string was sent to stdErr.
     /// </summary>
     StdError,
-    
+
     /// <summary>
     /// Build error.
     /// </summary>
     Failure,
-    
+
     /// <summary>
     /// Build problem.
     /// </summary>

@@ -5,6 +5,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedType.Global
+
 namespace HostApi;
 
 using Internal;
@@ -80,7 +81,7 @@ public partial record DockerRun(
     string Platform = "",
     bool? Privileged = default,
     DockerPullType? Pull = default,
-    bool Quiet = false, 
+    bool Quiet = false,
     bool? ReadOnly = default,
     bool? AutoRemove = default,
     string User = "",
@@ -127,7 +128,7 @@ public partial record DockerRun(
         {
             startInfo = CommandLine.GetStartInfo(host);
         }
-        
+
         var settings = host.GetService<HostComponents>().DockerSettings;
         var cmd = new CommandLine(string.IsNullOrWhiteSpace(ExecutablePath) ? settings.DockerExecutablePath : ExecutablePath)
             .WithShortName(!string.IsNullOrWhiteSpace(ShortName) ? ShortName : $"{startInfo.ShortName} in the docker container {Image}")
@@ -170,13 +171,13 @@ public partial record DockerRun(
             .AddArgs(startInfo.Args.ToArray())
             .WithVars(Vars.ToArray());
     }
-    
+
     /// <inheritdoc/>
-    public override string ToString() => 
+    public override string ToString() =>
         string.IsNullOrWhiteSpace(ShortName)
             ? $"{CommandLine} in the docker container {Image}"
             : ShortName;
-    
+
     private class PathResolver(string platform, IDictionary<string, string> directoryMap) : IPathResolver
     {
         public string Resolve(IHost host, string path, IPathResolver nextResolver)
@@ -192,14 +193,14 @@ public partial record DockerRun(
 
             return toPath;
         }
-        
+
         public string ToAbsolutPath(string path)
         {
             if (IsWindows())
             {
                 return path;
             }
-            
+
             path = path.Replace(":", string.Empty).Replace('\\', '/');
             if (path.Length > 0 && path[0] != '/')
             {
@@ -208,7 +209,7 @@ public partial record DockerRun(
 
             return path;
         }
-        
+
         private bool IsWindows() => platform.ToLower().Contains("windows");
     }
 }

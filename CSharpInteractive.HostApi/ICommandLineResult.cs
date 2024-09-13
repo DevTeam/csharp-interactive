@@ -13,22 +13,22 @@ public interface ICommandLineResult
     /// Process startup information.
     /// </summary>
     IStartInfo StartInfo { get; }
-    
+
     /// <summary>
     /// The state of the process completion.
     /// </summary>
     ProcessState State { get; }
-    
+
     /// <summary>
     /// Process execution time in ms.
     /// </summary>
     long ElapsedMilliseconds { get; }
-    
+
     /// <summary>
     /// Process exit code. Empty if the process has been cancelled.
     /// </summary>
     int? ExitCode { get; }
-    
+
     /// <summary>
     /// Exception when the process was executed or empty if it was not.
     /// </summary>

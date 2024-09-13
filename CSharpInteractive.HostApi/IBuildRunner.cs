@@ -2,6 +2,7 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMethodReturnValue.Global
 // ReSharper disable UnusedMemberInSuper.Global
+
 namespace HostApi;
 
 /// <summary>

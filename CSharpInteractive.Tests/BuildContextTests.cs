@@ -8,7 +8,7 @@ public class BuildContextTests
 {
     private readonly Mock<ICommandLineResult> _commandLineResult = new();
     private readonly Mock<IStartInfo> _startInfo = new();
-    
+
     [Fact]
     public void ShouldProcessStdOutput()
     {
@@ -297,7 +297,7 @@ public class BuildContextTests
             default,
             "Problem description",
             "error details",
-            "xUnit1026", 
+            "xUnit1026",
             @"C:\Projects\_temp\xu\TestProject1\TestProject1.cs",
             "Abc",
             @"C:\Projects\_temp\xu\TestProject1\TestProject1.csproj",

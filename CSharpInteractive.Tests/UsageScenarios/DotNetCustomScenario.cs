@@ -1,6 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System.Diagnostics.CodeAnalysis;
@@ -28,7 +29,7 @@ public class DotNetCustomScenario : BaseScenario
         new DotNetCustom("--version")
             .Run(message => NuGetVersion.TryParse(message.Line, out version))
             .EnsureSuccess();
-        
+
         version.ShouldNotBeNull();
         // }
     }

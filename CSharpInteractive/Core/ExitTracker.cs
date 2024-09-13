@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+
 namespace CSharpInteractive.Core;
 
 using System.Reflection;
@@ -29,7 +30,7 @@ internal class ExitTracker(
                 return Disposable.Create(() => AppDomain.CurrentDomain.ProcessExit -= CurrentDomainOnProcessExit);
         }
     }
-    
+
     public void Exit(int exitCode)
     {
         Finish();
@@ -39,7 +40,7 @@ internal class ExitTracker(
         ClearEvents(typeof(AppContext));
         environment.Exit(exitCode);
     }
-    
+
     private static void ClearEvents(Type type)
     {
         var events = type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
@@ -57,11 +58,11 @@ internal class ExitTracker(
             }
         }
     }
-    
+
     private void CurrentDomainOnProcessExit(object? sender, EventArgs e) =>
         Finish();
 
-    private void ConsoleOnCancelKeyPress(object? sender, ConsoleCancelEventArgs e) => 
+    private void ConsoleOnCancelKeyPress(object? sender, ConsoleCancelEventArgs e) =>
         Exit(0);
 
     private void Finish()
@@ -70,7 +71,7 @@ internal class ExitTracker(
         {
             return;
         }
-        
+
         _isTerminating = true;
         summaryPresenter.Show(Summary.Empty);
         try

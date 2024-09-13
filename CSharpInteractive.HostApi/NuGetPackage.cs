@@ -1,6 +1,7 @@
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable SuggestBaseTypeForParameterInConstructor
 // ReSharper disable NotAccessedPositionalProperty.Global
+
 namespace HostApi;
 
 using NuGet.Versioning;

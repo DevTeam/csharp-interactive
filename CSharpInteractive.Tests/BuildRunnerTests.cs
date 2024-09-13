@@ -55,7 +55,7 @@ public class BuildRunnerTests
         _processRunner.Setup(i => i.Run(It.IsAny<ProcessInfo>(), TimeSpan.FromSeconds(1)))
             .Callback<ProcessInfo, TimeSpan>((processRun, _) => processRun.Handler!(output))
             .Returns(_processResult);
-        
+
         var customHandler = Mock.Of<Action<BuildMessage>>();
         _customBuildMessagesProcessor.Setup(i => i.ProcessMessages(It.IsAny<ProcessInfo>(), output, buildMessages, customHandler))
             .Callback<ProcessInfo, Output, IReadOnlyCollection<BuildMessage>, Action<BuildMessage>>((_, o, _, _) => { o.Handled = handled; });

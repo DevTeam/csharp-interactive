@@ -1,6 +1,7 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable NotAccessedPositionalProperty.Local
+
 namespace CSharpInteractive.Core;
 
 using HostApi;

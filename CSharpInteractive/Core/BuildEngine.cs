@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Collections;
@@ -30,7 +31,7 @@ internal class BuildEngine(ILog<BuildEngine> log) : IBuildEngine
         {
             return;
         }
-        
+
         // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (e.Importance)
         {

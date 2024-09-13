@@ -9,12 +9,12 @@ public enum TestState
     /// The test was finished, but that doesn't mean it was successful. 
     /// </summary>
     Finished,
-    
+
     /// <summary>
     /// The test was ignored.
     /// </summary>
     Ignored,
-    
+
     /// <summary>
     /// The test was failed. 
     /// </summary>

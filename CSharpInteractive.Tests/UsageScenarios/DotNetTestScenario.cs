@@ -1,6 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -24,7 +25,7 @@ public class DotNetTestScenario : BaseScenario
         var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Runs tests via a command like: "dotnet test" from the directory "MyTests"
@@ -39,7 +40,7 @@ public class DotNetTestScenario : BaseScenario
         result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
         // }
     }
-    
+
     [Fact]
     public void RunAsCommandLine()
     {
@@ -53,7 +54,7 @@ public class DotNetTestScenario : BaseScenario
             .WithWorkingDirectory("MyTests")
             .Run(i => lines.Add(i.Line))
             .EnsureSuccess();
-        
+
         lines.Count(i => i.Contains("##teamcity[")).ShouldBe(0);
     }
 }

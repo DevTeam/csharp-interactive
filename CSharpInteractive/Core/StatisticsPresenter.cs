@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using HostApi;
@@ -7,7 +8,7 @@ using HostApi;
 internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<IStatistics>
 {
     private static readonly Text[] Tab = [Text.Tab];
-    
+
     public void Show(IStatistics statistics)
     {
         var tests = statistics.CommandLines
@@ -21,7 +22,7 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
         {
             log.Info(warning.AddPrefix(_ => Tab));
         }
-        
+
         foreach (var error in statistics.Errors)
         {
             log.Info(error.AddPrefix(_ => Tab));
@@ -39,7 +40,7 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
 
         log.Info(new Text($"Time Elapsed {statistics.TimeElapsed:g}"));
     }
-    
+
     private void Show(IEnumerable<TestResult> tests)
     {
         var testText = tests
@@ -48,13 +49,13 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
             .OrderBy(i => i.Key.State)
             .ThenBy(i => i.Key.Name)
             .Select(i => FormatTests(i.ToList()));
-                
+
         foreach (var text in testText)
         {
             log.Info(text.AddPrefix(_ => Tab));
         }
     }
-    
+
     private static Text[] FormatTests(IReadOnlyCollection<TestResult> tests)
     {
         var test = tests.First();
@@ -70,7 +71,7 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
         {
             new(test.State.ToString(), stateColor)
         };
-        
+
         var name = GetName(test.Name, test.ResultDisplayName, test.FullyQualifiedName, test.DisplayName, $"Test {test.Id}");
         text.Add(Text.Space);
         text.Add(new Text(name));
@@ -78,7 +79,7 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
         {
             return text.ToArray();
         }
-        
+
         var groups = tests.GroupBy(i => i.Message.TrimEnd());
         foreach (var group in groups)
         {
@@ -101,7 +102,7 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
         }
 
         return text.ToArray();
-        
+
         string GetName(params string[] names) => names.FirstOrDefault(i => !string.IsNullOrWhiteSpace(i)) ?? "";
     }
 }

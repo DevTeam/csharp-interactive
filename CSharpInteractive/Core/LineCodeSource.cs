@@ -1,9 +1,10 @@
 // ReSharper disable NotDisposedResourceIsReturned
+
 namespace CSharpInteractive.Core;
 
 using System.Collections;
 
-internal class LineCodeSource: ICodeSource
+internal class LineCodeSource : ICodeSource
 {
     public string Line { get; set; } = string.Empty;
 

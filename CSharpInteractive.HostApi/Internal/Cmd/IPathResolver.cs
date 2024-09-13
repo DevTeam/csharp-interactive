@@ -1,4 +1,5 @@
 // ReSharper disable UnusedParameter.Global
+
 namespace HostApi.Internal.Cmd;
 
 using System.Diagnostics.Contracts;

@@ -31,8 +31,8 @@ public class ScriptRunnerTests
         // Given
         var runner = CreateInstance();
         _commandsRunner.Setup(i => i.Run(It.IsAny<IEnumerable<ICommand>>())).Returns(results);
-        _statistics.SetupGet(i => i.Errors).Returns(errors.Select(i => new Text[] { new(i)}).ToArray);
-        _statistics.SetupGet(i => i.Warnings).Returns(warnings.Select(i => new Text[] { new(i)}).ToArray);
+        _statistics.SetupGet(i => i.Errors).Returns(errors.Select(i => new Text[] {new(i)}).ToArray);
+        _statistics.SetupGet(i => i.Warnings).Returns(warnings.Select(i => new Text[] {new(i)}).ToArray);
 
         // When
         var actualExitCode = runner.Run();

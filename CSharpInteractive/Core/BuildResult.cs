@@ -1,4 +1,5 @@
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
+
 namespace CSharpInteractive.Core;
 
 using System.Diagnostics;
@@ -6,14 +7,15 @@ using System.Text;
 using HostApi;
 
 [DebuggerTypeProxy(typeof(BuildResultDebugView))]
-internal record BuildResult(ICommandLineResult CommandLineResult,
+internal record BuildResult(
+    ICommandLineResult CommandLineResult,
     IReadOnlyList<BuildMessage> Errors,
     IReadOnlyList<BuildMessage> Warnings,
     IReadOnlyList<TestResult> Tests) : IBuildResult, ISuccessDeterminant
 {
     private readonly object _lockObject = new();
     private BuildStatistics? _buildStatistics;
-    
+
     // ReSharper disable once UnusedMember.Global
     public BuildResult(ICommandLineResult commandLineResult)
         : this(commandLineResult, Array.Empty<BuildMessage>(), Array.Empty<BuildMessage>(), Array.Empty<TestResult>())
@@ -24,7 +26,7 @@ internal record BuildResult(ICommandLineResult CommandLineResult,
     public ProcessState State => CommandLineResult.State;
 
     public long ElapsedMilliseconds => CommandLineResult.ElapsedMilliseconds;
-    
+
     public int? ExitCode => CommandLineResult.ExitCode;
 
     public Exception? Error => CommandLineResult.Error;
@@ -50,11 +52,11 @@ internal record BuildResult(ICommandLineResult CommandLineResult,
             sb.Append(" with ");
             sb.Append(Summary);
         }
-        
+
         return sb.ToString();
     }
 
-    public bool? IsSuccess => 
+    public bool? IsSuccess =>
         ExitCode == 0
         && Error is null
         && State == ProcessState.Finished
@@ -106,7 +108,7 @@ internal record BuildResult(ICommandLineResult CommandLineResult,
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
         public ICommandLineResult CommandLineResult => buildResult.CommandLineResult;
-        
+
         public BuildStatistics Summary => buildResult.Summary;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]

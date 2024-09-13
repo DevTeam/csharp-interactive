@@ -46,12 +46,12 @@ var packages = new[]
         packageId,
         Path.Combine(outputDir, "CSharpInteractive", $"{packageId}.{packageVersion.ToString()}.nupkg"),
         true),
-    
+
     new PackageInfo(
         toolPackageId,
         Path.Combine(outputDir, "CSharpInteractive.Tool", $"{toolPackageId}.{packageVersion.ToString()}.nupkg"),
         true),
-    
+
     new PackageInfo(
         templatesPackageId,
         Path.Combine(templateOutputDir, $"{templatesPackageId}.{packageVersion.ToString()}.nupkg"),
@@ -74,7 +74,7 @@ foreach (var package in packages)
     {
         Directory.Delete(nuGetPackagePath, true);
     }
-    
+
     var packageOutput = Path.GetDirectoryName(package.Package);
     if (Directory.Exists(packageOutput))
     {
@@ -153,7 +153,7 @@ else
     var dotCoverReportXml = Path.Combine(reportDir, "dotCover.xml");
     new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportXml}", "--reportType=TeamCityXml").WithShortName("Generating the code coverage reports")
         .Run().EnsureSuccess();
-    
+
     if (TryGetCoverage(dotCoverReportXml, out coveragePercentage))
     {
         switch (coveragePercentage)
@@ -176,7 +176,7 @@ else
 var uninstallTool = new DotNetCustom("tool", "uninstall", toolPackageId, "-g")
     .WithShortName("Uninstalling tool");
 
-if (uninstallTool.Run(_ => { } ).ExitCode != 0)
+if (uninstallTool.Run(_ => { }).ExitCode != 0)
 {
     Warning($"{uninstallTool} failed.");
 }
@@ -271,20 +271,20 @@ async Task CheckCompatibilityAsync(
             .WithWorkingDirectory(buildProjectDir)
             .WithShortName($"Creating a new {sampleProjectName}")
             .RunAsync().EnsureSuccess();
-        
+
         await new DotNetBuild()
             .WithProject(buildProjectDir)
             .WithSources(nuGetSource, Path.Combine(output, "CSharpInteractive"))
             .WithShortName($"Building the {sampleProjectName}")
             .BuildAsync().EnsureSuccess();
-        
+
         await new DotNetRun()
             .WithProject(buildProjectDir)
             .WithNoBuild(true)
             .WithWorkingDirectory(sampleProjectDir)
             .WithShortName($"Running a build for the {sampleProjectName}")
             .RunAsync().EnsureSuccess();
-        
+
         await new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx"))
             .WithWorkingDirectory(sampleProjectDir)
             .WithShortName($"Running a build as a C# script for the {sampleProjectName}")

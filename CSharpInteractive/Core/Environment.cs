@@ -1,11 +1,12 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable ConvertIfStatementToReturnStatement
 // ReSharper disable InconsistentNaming
+
 namespace CSharpInteractive.Core;
 
 using System.Runtime.InteropServices;
 
-internal class Environment:
+internal class Environment :
     IEnvironment,
     ITestEnvironment,
     ITraceSource,
@@ -27,17 +28,17 @@ internal class Environment:
             {
                 return OSPlatform.Windows;
             }
-            
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 return OSPlatform.Linux;
             }
-            
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 return OSPlatform.OSX;
             }
-            
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
             {
                 return OSPlatform.FreeBSD;
@@ -65,7 +66,7 @@ internal class Environment:
                 _ => throw new ArgumentOutOfRangeException(nameof(specialFolder), specialFolder, null)
             };
         }
-        
+
         return specialFolder switch
         {
             SpecialFolder.Bin => GetBinDirectory(),

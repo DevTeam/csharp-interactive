@@ -1,6 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable SuggestVarOrType_BuiltInTypes
 // ReSharper disable SuggestVarOrType_Elsewhere
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
@@ -27,11 +28,11 @@ public class CommandLineInParallelScenario : BaseScenario
         var task = new CommandLine("cmd", "/c", "DIR")
             .RunAsync()
             .EnsureSuccess();
-        
+
         var result = new CommandLine("cmd", "/c", "SET")
             .Run()
             .EnsureSuccess();
-        
+
         await task;
         // }
 

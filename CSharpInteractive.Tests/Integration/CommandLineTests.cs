@@ -1,4 +1,5 @@
 // ReSharper disable StringLiteralTypo
+
 namespace CSharpInteractive.Tests.Integration;
 
 using System.Diagnostics;

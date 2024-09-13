@@ -1,5 +1,6 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable SuggestVarOrType_Elsewhere
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;

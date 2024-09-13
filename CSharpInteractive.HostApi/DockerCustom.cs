@@ -1,6 +1,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedType.Global
+
 namespace HostApi;
 
 using Internal;
@@ -53,8 +54,8 @@ public partial record DockerCustom(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => 
-        string.IsNullOrWhiteSpace(ShortName) 
+    public override string ToString() =>
+        string.IsNullOrWhiteSpace(ShortName)
             ? ((ExecutablePath == string.Empty ? "docker" : Path.GetFileNameWithoutExtension(ExecutablePath)) + " " + Args.FirstOrDefault()).TrimEnd()
             : ShortName;
 }

@@ -3,6 +3,7 @@
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable InconsistentNaming
 // ReSharper disable CommentTypo
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -26,7 +27,7 @@ public class MSBuildScenario : BaseScenario
         var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Builds the library project, running a command like: "dotnet msbuild /t:Build -restore /p:configuration=Release -verbosity=detailed" from the directory "MyLib"

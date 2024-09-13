@@ -11,12 +11,12 @@ public class ProcessResultHandlerTests
     private readonly Text[] _description = [new("Abc")];
     private readonly Action<object> _handler = Mock.Of<Action<object>>();
     private readonly ProcessInfo _processInfo;
-    
+
     public ProcessResultHandlerTests()
     {
         _processInfo = new ProcessInfo(_startInfo.Object, Mock.Of<IProcessMonitor>(), 1);
     }
-    
+
     [Theory]
     [InlineData(ProcessState.Finished)]
     internal void ShouldLogInfoWhenFinishedAndHasHandler(ProcessState state)
@@ -56,7 +56,7 @@ public class ProcessResultHandlerTests
         // Then
         _log.Verify(i => i.Warning(_description));
     }
-    
+
     [Fact]
     public void ShouldNotLogWarningWhenCanceledAndTerminating()
     {
@@ -70,7 +70,7 @@ public class ProcessResultHandlerTests
         // Then
         _log.Verify(i => i.Warning(_description), Times.Never);
     }
-    
+
     [Fact]
     public void ShouldLogErrorWhenFailedAndHasNoHandler()
     {
@@ -83,7 +83,7 @@ public class ProcessResultHandlerTests
         // Then
         _log.Verify(i => i.Error(ErrorId.Process, _description));
     }
-    
+
     [Fact]
     public void ShouldLogErrorWhenFailedAndHasNoHandlerAndHasError()
     {

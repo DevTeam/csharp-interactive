@@ -1,11 +1,12 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InconsistentNaming
+
 namespace CSharpInteractive.Core;
 
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
 
-internal class BuildContext: IBuildContext
+internal class BuildContext : IBuildContext
 {
     private readonly List<BuildMessage> _errors = [];
     private readonly List<BuildMessage> _warnings = [];
@@ -67,7 +68,7 @@ internal class BuildContext: IBuildContext
         _errors.Add(buildMessage);
         yield return buildMessage;
     }
-    
+
     private IEnumerable<BuildMessage> OnTestFinished(IServiceMessage message)
     {
         var testKey = BuildMessage.CreateKey(message);
@@ -83,7 +84,7 @@ internal class BuildContext: IBuildContext
         {
             duration = TimeSpan.FromMilliseconds(durationMs);
         }
-        
+
         _tests.Add(BuildMessage.CreateResult(testKey, message, TestState.Finished).WithDuration(duration).WithOutput(ctx.Output));
     }
 
@@ -104,8 +105,8 @@ internal class BuildContext: IBuildContext
         _tests.Add(BuildMessage.CreateResult(testKey, message, TestState.Failed).WithMessage(message.GetValue("message") ?? string.Empty).WithDetails(message.GetValue("details") ?? string.Empty).WithOutput(ctx.Output));
         yield break;
     }
-    
-    
+
+
     private IEnumerable<BuildMessage> OnMessage(Output srcOutput, IServiceMessage message)
     {
         var text = message.GetValue("text") ?? string.Empty;
@@ -116,7 +117,7 @@ internal class BuildContext: IBuildContext
             "ERROR" => BuildMessageState.StdError,
             _ => BuildMessageState.StdOut
         };
-        
+
         var buildMessage = CreateMessage(srcOutput, message, state, text);
         // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
         if (!string.IsNullOrWhiteSpace(buildMessage.Text))
@@ -160,27 +161,27 @@ internal class BuildContext: IBuildContext
             message.GetValue("subcategory") ?? string.Empty,
             message.GetValue("projectFile") ?? string.Empty,
             message.GetValue("senderName") ?? string.Empty);
-        
+
         if (int.TryParse(message.GetValue("columnNumber"), out var columnNumber))
         {
             buildMessage = buildMessage.WithColumnNumber(columnNumber);
         }
-        
+
         if (int.TryParse(message.GetValue("endColumnNumber"), out var endColumnNumber))
         {
             buildMessage = buildMessage.WithEndColumnNumber(endColumnNumber);
         }
-        
+
         if (int.TryParse(message.GetValue("lineNumber"), out var lineNumber))
         {
             buildMessage = buildMessage.WithLineNumber(lineNumber);
         }
-        
+
         if (int.TryParse(message.GetValue("endLineNumber"), out var endLineNumber))
         {
             buildMessage = buildMessage.WithEndLineNumber(endLineNumber);
         }
-        
+
         if (Enum.TryParse<DotNetMessageImportance>(message.GetValue("importance"), out var importance))
         {
             buildMessage = buildMessage.WithImportance(importance);
@@ -208,7 +209,7 @@ internal class BuildContext: IBuildContext
                     _currentTests.Remove(testKey);
                 }
             }
-            
+
             return testContext;
         }
     }

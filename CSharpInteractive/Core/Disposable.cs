@@ -2,6 +2,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable EmptyGeneralCatchClause
+
 namespace CSharpInteractive.Core;
 
 [ExcludeFromCodeCoverage]
@@ -70,8 +71,10 @@ internal static class Disposable
     {
         public static readonly IDisposable Shared = new EmptyDisposable();
 
-        private EmptyDisposable() { }
+        private EmptyDisposable()
+        { }
 
-        public void Dispose() { }
+        public void Dispose()
+        { }
     }
 }

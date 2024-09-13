@@ -1,5 +1,6 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
+
 namespace HostApi;
 
 /// <summary>
@@ -12,12 +13,12 @@ public enum VSTestPlatform
     /// 
     /// </summary>
     x86,
-    
+
     /// <summary>
     /// 
     /// </summary>
     x64,
-    
+
     /// <summary>
     /// 
     /// </summary>

@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedMember.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Runtime.InteropServices;

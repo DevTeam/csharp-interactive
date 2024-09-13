@@ -3,7 +3,7 @@ namespace CSharpInteractive.Tests;
 using Core;
 using HostApi;
 
-public sealed class ProcessRunnerTests: IDisposable
+public sealed class ProcessRunnerTests : IDisposable
 {
     private readonly Mock<IProcessManager> _processManager = new();
     private readonly Mock<IStartInfo> _startInfo = new();
@@ -38,7 +38,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
         _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Canceled, default, default));
     }
-    
+
     [Fact]
     public void ShouldRunWhenTimeoutIsSpecified()
     {
@@ -113,7 +113,7 @@ public sealed class ProcessRunnerTests: IDisposable
     {
         // Given
         var timeout = TimeSpan.Zero;
-        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object,  1, Handler);
+        var processRun = new ProcessInfo(_startInfo.Object, _monitor.Object, 1, Handler);
         Exception? exception;
         _processManager.Setup(i => i.Start(_startInfo.Object, out exception)).Returns(true);
         _processManager.SetupGet(i => i.ExitCode).Returns(1);
@@ -194,7 +194,7 @@ public sealed class ProcessRunnerTests: IDisposable
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
         _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Finished, 2, default));
     }
-    
+
     [Fact]
     public async Task ShouldKillWhenCanceled()
     {
@@ -212,13 +212,13 @@ public sealed class ProcessRunnerTests: IDisposable
         // When
         _processManager.Setup(i => i.WaitForExitAsync(cancellationTokenSource.Token)).Throws<OperationCanceledException>();
         await Should.NotThrowAsync(() => instance.RunAsync(processRun, cancellationTokenSource.Token));
-        
+
         // Then
         _processManager.Verify(i => i.Kill(), Times.Once);
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));
         _monitor.Verify(i => i.Finished(It.Is<ProcessInfo>(j => j.StartInfo == _startInfo.Object), It.IsAny<long>(), ProcessState.Canceled, default, default));
     }
-    
+
     [Fact]
     public async Task ShouldThrowException()
     {
@@ -236,7 +236,7 @@ public sealed class ProcessRunnerTests: IDisposable
         // When
         _processManager.Setup(i => i.WaitForExitAsync(cancellationTokenSource.Token)).Throws<Exception>();
         await Should.ThrowAsync<Exception>(() => instance.RunAsync(processRun, cancellationTokenSource.Token));
-        
+
         // Then
         _processManager.Verify(i => i.Kill(), Times.Once);
         _monitor.Verify(i => i.Started(_startInfo.Object, 99));

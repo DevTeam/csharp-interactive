@@ -1,4 +1,5 @@
 // ReSharper disable UnusedMemberInSuper.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Runtime.InteropServices;
@@ -12,6 +13,6 @@ internal interface IEnvironment
     IEnumerable<string> GetCommandLineArgs();
 
     string GetPath(SpecialFolder specialFolder);
-    
+
     void Exit(int exitCode);
 }

@@ -24,11 +24,11 @@ public class SettingsTests
         _commandLineParser.Setup(i => i.Parse(new[] {"arg1", "arg2"}, CommandLineArgumentType.ScriptFile)).Returns(
         [
             new CommandLineArgument(CommandLineArgumentType.Version),
-                new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src1"),
-                new CommandLineArgument(CommandLineArgumentType.ScriptFile, "myScript"),
-                new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg1"),
-                new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src2"),
-                new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg2")
+            new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src1"),
+            new CommandLineArgument(CommandLineArgumentType.ScriptFile, "myScript"),
+            new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg1"),
+            new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src2"),
+            new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg2")
         ]);
 
         // Then
@@ -53,10 +53,10 @@ public class SettingsTests
         _commandLineParser.Setup(i => i.Parse(new[] {"arg1", "arg2"}, CommandLineArgumentType.ScriptArgument)).Returns(
         [
             new CommandLineArgument(CommandLineArgumentType.Version),
-                new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src1"),
-                new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg1"),
-                new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src2"),
-                new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg2")
+            new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src1"),
+            new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg1"),
+            new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src2"),
+            new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Arg2")
         ]);
 
         // Then

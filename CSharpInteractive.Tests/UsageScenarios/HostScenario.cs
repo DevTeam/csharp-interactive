@@ -1,6 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable SuggestVarOrType_BuiltInTypes
 // ReSharper disable UnusedVariable
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;

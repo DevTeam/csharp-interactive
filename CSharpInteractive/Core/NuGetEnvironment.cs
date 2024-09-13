@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 [ExcludeFromCodeCoverage]
@@ -7,7 +8,7 @@ internal class NuGetEnvironment(
     ISettings settings) : INuGetEnvironment, ITraceSource
 {
 
-    public IEnumerable<string> Sources => 
+    public IEnumerable<string> Sources =>
         settings.NuGetSources
             .Concat(NuGet.Configuration.SettingsUtility.GetEnabledSources(GetNuGetSettings()).Select(i => i.Source))
             .Distinct();
@@ -17,7 +18,7 @@ internal class NuGetEnvironment(
 
     public string PackagesPath =>
         NuGet.Configuration.SettingsUtility.GetGlobalPackagesFolder(GetNuGetSettings());
-    
+
     public IEnumerable<Text> Trace
     {
         get

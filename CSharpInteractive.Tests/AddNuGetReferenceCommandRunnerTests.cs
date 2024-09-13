@@ -34,7 +34,7 @@ public class AddNuGetReferenceCommandRunnerTests
         // Then
         result.ShouldBe(new CommandResult(command, default));
     }
-    
+
     [Fact]
     public void ShouldReturnFailWhenCannotResolveAssemblies()
     {
@@ -49,7 +49,7 @@ public class AddNuGetReferenceCommandRunnerTests
         // Then
         result.ShouldBe(new CommandResult(_command, false));
     }
-    
+
     [Fact]
     public void ShouldRegisterAssemblies()
     {
@@ -67,7 +67,7 @@ public class AddNuGetReferenceCommandRunnerTests
         // Then
         result.ShouldBe(new CommandResult(_command, true));
     }
-    
+
     [Fact]
     public void ShouldReturnFailWhenSomeAssemblyWasNotRegistered()
     {

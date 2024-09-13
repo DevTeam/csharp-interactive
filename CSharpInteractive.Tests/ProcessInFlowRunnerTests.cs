@@ -100,7 +100,8 @@ public class ProcessInFlowRunnerTests
         result.ShouldBe(_processResult);
     }
 
-    private static void Handler(Output obj) { }
+    private static void Handler(Output obj)
+    { }
 
     private ProcessInFlowRunner CreateInstance() =>
         new(_baseProcessRunner.Object, _teamCitySettings.Object, _teamCityWriter.Object, _flowContext.Object);

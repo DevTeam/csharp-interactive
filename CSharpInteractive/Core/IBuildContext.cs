@@ -1,4 +1,5 @@
 // ReSharper disable InconsistentNaming
+
 namespace CSharpInteractive.Core;
 
 using HostApi;

@@ -2,6 +2,7 @@
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable CommentTypo
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -25,7 +26,7 @@ public class DotNetRestoreScenario : BaseScenario
         var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Restore the project, running a command like: "dotnet restore" from the directory "MyLib"
@@ -33,7 +34,7 @@ public class DotNetRestoreScenario : BaseScenario
             .WithWorkingDirectory("MyLib")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
         // }
     }

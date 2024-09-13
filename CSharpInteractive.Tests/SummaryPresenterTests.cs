@@ -33,7 +33,7 @@ public class SummaryPresenterTests
         {
             _statistics.SetupGet(i => i.Errors).Returns([]);
         }
-        
+
         if (hasWarning)
         {
             _statistics.SetupGet(i => i.Warnings).Returns([new Text("Warn")]);

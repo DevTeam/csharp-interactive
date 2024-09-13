@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 internal class TracePresenter(ILog<TracePresenter> log) : IPresenter<IEnumerable<ITraceSource>>

@@ -1,4 +1,5 @@
 // ReSharper disable InconsistentNaming
+
 namespace CSharpInteractive.Tests;
 
 using Core;

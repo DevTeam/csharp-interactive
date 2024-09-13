@@ -2,6 +2,7 @@
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
+
 namespace HostApi.Internal.Docker;
 
 using System.Diagnostics.Contracts;

@@ -1,4 +1,5 @@
 // ReSharper disable UnusedMember.Global
+
 namespace CSharpInteractive.Core;
 
 // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/errors-warnings

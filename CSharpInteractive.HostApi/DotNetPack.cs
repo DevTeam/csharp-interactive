@@ -1,5 +1,6 @@
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
+
 namespace HostApi;
 
 using Internal.DotNet;
@@ -44,7 +45,7 @@ public partial record DotNetPack(
     string ExecutablePath = "",
     string WorkingDirectory = "",
     string Project = "",
-    string Output = "", 
+    string Output = "",
     string Runtime = "",
     bool? NoBuild = default,
     bool? NoDependencies = default,

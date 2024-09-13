@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Text.RegularExpressions;
@@ -52,7 +53,7 @@ internal class CommandLineParser(
                             {
                                 yield return propertyArgument;
                             }
-                            
+
                             argumentType = null;
                             continue;
                     }
@@ -109,7 +110,7 @@ internal class CommandLineParser(
                                     {
                                         yield return propertyArgument;
                                     }
-                                    
+
                                     argumentType = null;
                                     continue;
                                 }
@@ -129,9 +130,9 @@ internal class CommandLineParser(
     }
 
     private static IEnumerable<CommandLineArgument> CreatePropertyArguments(string argument) =>
-        from arg in argument.Split(PropertiesSeparators, StringSplitOptions.RemoveEmptyEntries) 
+        from arg in argument.Split(PropertiesSeparators, StringSplitOptions.RemoveEmptyEntries)
         select arg.Split('=', 2)
         into parts
-        where parts.Length > 0 
+        where parts.Length > 0
         select new CommandLineArgument(CommandLineArgumentType.ScriptProperty, parts.Length > 1 ? parts[1] : string.Empty, parts[0]);
 }

@@ -13,7 +13,7 @@ internal interface IFileSystem
     IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
 
     IEnumerable<string> ReadAllLines(string file);
-    
+
     void WriteAllLines(string file, IEnumerable<string> lines);
 
     IStreamReader OpenReader(string file);

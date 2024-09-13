@@ -2,6 +2,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 // ReSharper disable CommentTypo
+
 namespace HostApi;
 
 using Internal;
@@ -116,7 +117,7 @@ public partial record DotNetTest(
             .AddArgs(
                 ("--settings", Settings),
                 ("--filter", Filter),
-                ("--test-adapter-path", $"{string.Join(";", new[]{TestAdapterPath, virtualContext.Resolve(settings.DotNetVSTestLoggerDirectory)}.Where(i => !string.IsNullOrWhiteSpace(i)))}"),
+                ("--test-adapter-path", $"{string.Join(";", new[] {TestAdapterPath, virtualContext.Resolve(settings.DotNetVSTestLoggerDirectory)}.Where(i => !string.IsNullOrWhiteSpace(i)))}"),
                 ("--configuration", Configuration),
                 ("--framework", Framework),
                 ("--runtime", Runtime),
@@ -148,7 +149,7 @@ public partial record DotNetTest(
         {
             cmd = cmd.AddMSBuildLoggers(host, Verbosity);
         }
-        
+
         var runSettings = RunSettings.Select(i => $"{i.name}={i.value}").ToArray();
         if (runSettings.Any())
         {

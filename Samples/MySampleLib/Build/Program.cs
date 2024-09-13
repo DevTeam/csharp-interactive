@@ -84,7 +84,7 @@ var cts = new CancellationTokenSource();
 
 void CancellationOnFirstFailedTest(BuildMessage message)
 {
-    if (message.TestResult is { State: TestState.Failed }) cts.Cancel();
+    if (message.TestResult is {State: TestState.Failed}) cts.Cancel();
 }
 
 // Parallel tests
@@ -109,6 +109,6 @@ async Task<IEnumerable<IBuildResult>> RunTestsAsync(string framework, params str
     return await Task.WhenAll(tasks);
 }
 
-#pragma warning disable CS9113 // Parameter is unread.
+#pragma warning disable CS9113// Parameter is unread.
 class MyTool(INuGet nuGet);
-#pragma warning restore CS9113 // Parameter is unread.
+#pragma warning restore CS9113// Parameter is unread.

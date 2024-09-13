@@ -2,6 +2,7 @@
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable CommentTypo
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -25,15 +26,15 @@ public class DotNetPackScenario : BaseScenario
         var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Creates a NuGet package of version 1.2.3 for the project, running a command like: "dotnet pack /p:version=1.2.3" from the directory "MyLib"
         result = new DotNetPack()
-                .WithWorkingDirectory("MyLib")
-                .AddProps(("version", "1.2.3"))
-                .Build()
-                .EnsureSuccess();
+            .WithWorkingDirectory("MyLib")
+            .AddProps(("version", "1.2.3"))
+            .Build()
+            .EnsureSuccess();
 
         result.ExitCode.ShouldBe(0);
         // }

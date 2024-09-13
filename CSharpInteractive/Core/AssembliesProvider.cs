@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Reflection;
@@ -6,9 +7,9 @@ using System.Reflection;
 [ExcludeFromCodeCoverage]
 internal class AssembliesProvider : IAssembliesProvider
 {
-    public IEnumerable<Assembly> GetAssemblies(IEnumerable<Type> types) => 
+    public IEnumerable<Assembly> GetAssemblies(IEnumerable<Type> types) =>
         GetAssemblies(AppDomain.CurrentDomain.GetAssemblies()).Concat(types.Select(i => i.Assembly)).Where(i => !i.IsDynamic).Distinct();
-    
+
     private static IEnumerable<Assembly> GetAssemblies(IEnumerable<Assembly> assemblies)
     {
         var processed = new HashSet<Assembly>(assemblies);

@@ -1,5 +1,6 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Text;
@@ -7,7 +8,7 @@ using System.Text;
 internal class MSBuildArgumentsTool : IMSBuildArgumentsTool
 {
     private const char Marker = '%';
-    
+
     public string Unescape(string escaped)
     {
         if (string.IsNullOrEmpty(escaped))
@@ -20,7 +21,7 @@ internal class MSBuildArgumentsTool : IMSBuildArgumentsTool
         {
             return escaped;
         }
-        
+
         var unescaped = new StringBuilder(escaped.Length);
         var length = escaped.Length;
         var position = 0;
@@ -42,7 +43,7 @@ internal class MSBuildArgumentsTool : IMSBuildArgumentsTool
         unescaped.Append(escaped, position, length - position);
         return unescaped.ToString();
     }
-    
+
     private static bool TryDecode(char ch, out int value)
     {
         switch (ch)
@@ -50,15 +51,15 @@ internal class MSBuildArgumentsTool : IMSBuildArgumentsTool
             case >= '0' and <= '9':
                 value = ch - '0';
                 return true;
-            
+
             case >= 'A' and <= 'F':
                 value = ch - 'A' + 10;
                 return true;
-            
+
             case >= 'a' and <= 'f':
                 value = ch - 'a' + 10;
                 return true;
-            
+
             default:
                 value = default;
                 return false;

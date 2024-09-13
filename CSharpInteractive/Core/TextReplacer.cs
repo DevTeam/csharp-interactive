@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 internal class TextReplacer : ITextReplacer
@@ -17,7 +18,7 @@ internal class TextReplacer : ITextReplacer
         ms.Position = 0;
         return ms;
     }
-    
+
     private static IEnumerable<string> ReadLines(TextReader reader)
     {
         string? line;
@@ -28,7 +29,6 @@ internal class TextReplacer : ITextReplacer
             {
                 yield return line;
             }
-        }
-        while(line != default);
+        } while (line != default);
     }
 }

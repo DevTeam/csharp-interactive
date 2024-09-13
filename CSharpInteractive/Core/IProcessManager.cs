@@ -1,5 +1,6 @@
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedMethodReturnValue.Global
+
 namespace CSharpInteractive.Core;
 
 using HostApi;

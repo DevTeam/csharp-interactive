@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Diagnostics;
@@ -81,7 +82,7 @@ internal class ProcessManager : IProcessManager
 
     public Task WaitForExitAsync(CancellationToken cancellationToken) =>
         _process.WaitForExitAsync(cancellationToken);
-    
+
     public bool WaitForExit(TimeSpan timeout)
     {
         if (timeout != TimeSpan.Zero)

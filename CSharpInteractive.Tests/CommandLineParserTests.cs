@@ -24,7 +24,7 @@ public class CommandLineParserTests
             CommandLineArgumentType.ScriptFile,
             new[] {new CommandLineArgument(CommandLineArgumentType.Help)}
         },
-        
+
         // Unescape
         new object[]
         {
@@ -32,7 +32,7 @@ public class CommandLineParserTests
             CommandLineArgumentType.ScriptFile,
             new[] {new CommandLineArgument(CommandLineArgumentType.Help)}
         },
-        
+
         new object[]
         {
             new[] {"--help "},
@@ -138,7 +138,7 @@ public class CommandLineParserTests
                 new CommandLineArgument(CommandLineArgumentType.NuGetSource, "Src4")
             }
         },
-        
+
         // not @file when starting from @@
         new object[]
         {
@@ -233,7 +233,7 @@ public class CommandLineParserTests
                 new CommandLineArgument(CommandLineArgumentType.ScriptArgument, "Src2")
             }
         },
-        
+
         new object[]
         {
             new[] {"--source", "Src1", "--", "ScriptFile", "Src2", "-p:Abc=Xyz"},
@@ -272,7 +272,7 @@ public class CommandLineParserTests
                 new CommandLineArgument(CommandLineArgumentType.ScriptProperty, "Val3", "Key3")
             }
         },
-        
+
         new object[]
         {
             new[] {"-p", "Key1=Val1"},
@@ -292,7 +292,7 @@ public class CommandLineParserTests
                 new CommandLineArgument(CommandLineArgumentType.ScriptProperty, "Val1", "Key1")
             }
         },
-        
+
         new object[]
         {
             new[] {"--Property:Key1=Val1,Key2=Val2,Key3=Val3"},
@@ -334,7 +334,7 @@ public class CommandLineParserTests
                 new CommandLineArgument(CommandLineArgumentType.ScriptProperty, "", "Key1")
             }
         },
-        
+
         new object[]
         {
             new[] {"--Property:Key1=Val1"},
@@ -344,27 +344,27 @@ public class CommandLineParserTests
                 new CommandLineArgument(CommandLineArgumentType.ScriptProperty, "Val1", "Key1")
             }
         },
-        
+
         new object[]
         {
             new[] {"--Property:Key12ab.+-~#=Val12ab.+-~#"},
             CommandLineArgumentType.ScriptFile,
             new[]
             {
-                new CommandLineArgument(CommandLineArgumentType.ScriptProperty,"Val12ab.+-~#", "Key12ab.+-~#")
+                new CommandLineArgument(CommandLineArgumentType.ScriptProperty, "Val12ab.+-~#", "Key12ab.+-~#")
             }
         },
-        
+
         new object[]
         {
             new[] {"--Property:Key12ab.+-~#=Val12a=b.+-~#"},
             CommandLineArgumentType.ScriptFile,
             new[]
             {
-                new CommandLineArgument(CommandLineArgumentType.ScriptProperty,"Val12a=b.+-~#", "Key12ab.+-~#")
+                new CommandLineArgument(CommandLineArgumentType.ScriptProperty, "Val12a=b.+-~#", "Key12ab.+-~#")
             }
         },
-        
+
         new object[]
         {
             new[] {"--Property: Key1  = Val1  "},
@@ -374,7 +374,7 @@ public class CommandLineParserTests
                 new CommandLineArgument(CommandLineArgumentType.ScriptProperty, " Val1  ", " Key1  ")
             }
         },
-        
+
         new object[]
         {
             new[] {"/Property:Key1=Val1"},
@@ -384,7 +384,7 @@ public class CommandLineParserTests
                 new CommandLineArgument(CommandLineArgumentType.ScriptProperty, "Val1", "Key1")
             }
         },
-        
+
         new object[]
         {
             new[] {"-p:Key1=Val1"},
@@ -394,7 +394,7 @@ public class CommandLineParserTests
                 new CommandLineArgument(CommandLineArgumentType.ScriptProperty, "Val1", "Key1")
             }
         },
-        
+
         new object[]
         {
             new[] {"/P:Key1=Val1"},
@@ -405,7 +405,7 @@ public class CommandLineParserTests
             }
         }
     };
-    
+
     [Theory]
     [MemberData(nameof(Data))]
     internal void ShouldParseArguments(string[] arguments, CommandLineArgumentType defaultArgType, CommandLineArgument[] expectedArguments)

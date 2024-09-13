@@ -1,6 +1,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable HeapView.PossibleBoxingAllocation
+
 namespace CSharpInteractive.Core;
 
 using HostApi;

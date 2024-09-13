@@ -1,5 +1,6 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable RedundantUsingDirective
+
 namespace CSharpInteractive.Tests.Integration;
 
 using CSharpInteractive;

@@ -2,6 +2,7 @@
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable InconsistentNaming
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -25,7 +26,7 @@ public class DotNetMSBuildVSTestScenario : BaseScenario
         var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
 
         // Runs tests via a command like: "dotnet msbuild /t:VSTest" from the directory "MyTests"

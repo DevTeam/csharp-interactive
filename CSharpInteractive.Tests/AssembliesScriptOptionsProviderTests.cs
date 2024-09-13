@@ -1,4 +1,5 @@
 // ReSharper disable RedundantNameQualifier
+
 namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;

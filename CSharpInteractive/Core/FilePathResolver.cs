@@ -1,4 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using HostApi;
@@ -40,7 +41,7 @@ internal class FilePathResolver(
         {
             log.Error(ErrorId.CannotFind, $"Cannot find \"{fileOrDirectoryPath}\".");
         }
-        
+
         return state == State.Found;
     }
 
@@ -54,7 +55,7 @@ internal class FilePathResolver(
             fullScriptPath = fullPath;
             return State.Found;
         }
-                
+
         var isDirectoryExist = fileSystem.IsDirectoryExist(fullPath);
         log.Trace(() => [new Text($"Try to find directory \"{fullPath}\" in \"{basePath}\": {isDirectoryExist}.")]);
         if (!isDirectoryExist)
@@ -75,7 +76,7 @@ internal class FilePathResolver(
                 return State.Unknown;
         }
     }
-    
+
     private enum State
     {
         Unknown,

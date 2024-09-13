@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InconsistentNaming
+
 namespace CSharpInteractive.Core;
 
 internal class CISettings : ICISettings
@@ -26,7 +27,7 @@ internal class CISettings : ICISettings
         _isUnderTeamCity = new Lazy<bool>(() =>
             !string.IsNullOrWhiteSpace(_hostEnvironment.GetEnvironmentVariable(TeamCityProjectNameVariableName))
             || !string.IsNullOrWhiteSpace(_hostEnvironment.GetEnvironmentVariable(TeamCityVersionVariableName)));
-        
+
         _isUnderGitLab = new Lazy<bool>(() => !string.IsNullOrWhiteSpace(_hostEnvironment.GetEnvironmentVariable(GitLabPipelineIdVariableName)));
         _isUnderAzureDevOps = new Lazy<bool>(() => !string.IsNullOrWhiteSpace(_hostEnvironment.GetEnvironmentVariable(AzureDevOpsBuildVariableName)));
 
@@ -57,7 +58,7 @@ internal class CISettings : ICISettings
             {
                 return CIType.GitLab;
             }
-            
+
             if (_isUnderAzureDevOps.Value)
             {
                 return CIType.AzureDevOps;

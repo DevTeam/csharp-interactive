@@ -1,4 +1,5 @@
 ﻿// ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using System.Text;
@@ -25,7 +26,7 @@ internal class StartInfoDescription : IStartInfoDescription
 
             sb.Append(shortName.Escape());
         }
-        
+
         if (sb.Length == 0)
         {
             sb.Append("The process");
@@ -33,7 +34,7 @@ internal class StartInfoDescription : IStartInfoDescription
 
         return sb.ToString();
     }
-    
+
     public IEnumerable<Text> GetDescriptionText(IStartInfo? startInfo, int? processId = default)
     {
         if (processId.HasValue)

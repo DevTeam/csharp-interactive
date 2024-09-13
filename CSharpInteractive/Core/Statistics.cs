@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InvertIf
+
 namespace CSharpInteractive.Core;
 
 using System.Collections.ObjectModel;
@@ -12,7 +13,7 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
     private readonly List<Text[]> _errors = [];
     private readonly List<Text[]> _warnings = [];
     private readonly List<CommandLineInfo> _info = [];
-    
+
     public bool IsEmpty => Errors.Count == 0 && Warnings.Count == 0 && CommandLines.Count == 0;
 
     public IReadOnlyCollection<Text[]> Errors
@@ -21,7 +22,7 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
         {
             lock (_lockObject)
             {
-                return new ReadOnlyCollection<Text[]>(_errors);   
+                return new ReadOnlyCollection<Text[]>(_errors);
             }
         }
     }
@@ -32,11 +33,11 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
         {
             lock (_lockObject)
             {
-                return new ReadOnlyCollection<Text[]>(_warnings);   
+                return new ReadOnlyCollection<Text[]>(_warnings);
             }
         }
     }
-    
+
     public TimeSpan TimeElapsed => _stopwatch.Elapsed;
 
     public IDisposable Start()
@@ -68,7 +69,7 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
             }
         }
     }
-    
+
     public IReadOnlyCollection<CommandLineInfo> CommandLines
     {
         get
@@ -79,7 +80,7 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
             }
         }
     }
-    
+
     public void Register(CommandLineInfo info)
     {
         lock (_info)

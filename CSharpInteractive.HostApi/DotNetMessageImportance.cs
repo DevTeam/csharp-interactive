@@ -1,4 +1,5 @@
 // ReSharper disable UnusedMember.Global
+
 namespace HostApi;
 
 /// <summary>
@@ -8,10 +9,10 @@ public enum DotNetMessageImportance
 {
     /// <summary>High importance, appears in less verbose logs</summary>
     High,
-    
+
     /// <summary>Normal importance</summary>
     Normal,
-    
+
     /// <summary>Low importance, appears in more verbose logs</summary>
     Low
 }

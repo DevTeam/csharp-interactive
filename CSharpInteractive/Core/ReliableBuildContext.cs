@@ -1,5 +1,6 @@
 // ReSharper disable PublicConstructorInAbstractClass
 // ReSharper disable ClassNeverInstantiated.Global
+
 namespace CSharpInteractive.Core;
 
 using HostApi;
@@ -23,7 +24,7 @@ internal class ReliableBuildContext(
             return baseBuildContext.ProcessMessage(output, message);
         }
 
-        _sources.TryAdd(source, output with { Line = string.Empty });
+        _sources.TryAdd(source, output with {Line = string.Empty});
         return Array.Empty<BuildMessage>();
     }
 

@@ -1,6 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -20,7 +21,7 @@ public class DockerRunScenario : BaseScenario
         // {
         // Adds the namespace "HostApi" to use Command Line API and Docker API
         // ## using HostApi;
-        
+
         // Creates some command line to run in a docker container
         var cmd = new CommandLine("whoami");
 
@@ -30,7 +31,7 @@ public class DockerRunScenario : BaseScenario
             .Run()
             .EnsureSuccess();
         // }
-        
+
         result.ExitCode.ShouldBe(0);
     }
 }

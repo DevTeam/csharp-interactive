@@ -1,5 +1,6 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable ConvertToUsingDeclaration
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;

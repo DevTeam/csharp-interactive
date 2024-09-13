@@ -1,4 +1,5 @@
 // ReSharper disable MemberCanBeProtected.Global
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System.Collections;
@@ -82,7 +83,7 @@ public class BaseScenario : IHost, IDisposable
         {
             // ignored
         }
-        
+
         Environment.CurrentDirectory = _prevCurDir;
         if (Composition.Shared.Root.TestEnvironment.ExitCode is { } exitCode)
         {

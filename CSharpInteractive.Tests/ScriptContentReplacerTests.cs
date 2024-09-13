@@ -27,15 +27,15 @@ public class ScriptContentReplacerTests
         _environment.Setup(i => i.GetPath(SpecialFolder.Temp)).Returns("Tmp");
         _uniqueNameGenerator.Setup(i => i.Generate()).Returns("TempName");
         var scriptFile = Path.Combine("Tmp", "TempName");
-        
+
         var code1Source = Mock.Of<ICodeSource>();
         _codeSourceFactory.Setup(i => i("code1")).Returns(code1Source);
         _commandFactory.Setup(i => i.Create(code1Source)).Returns([]);
-        
+
         var code2Source = Mock.Of<ICodeSource>();
         _codeSourceFactory.Setup(i => i("code2")).Returns(code2Source);
         _commandFactory.Setup(i => i.Create(code2Source)).Returns([]);
-        
+
         var addNuGetReferenceCommand = new AddNuGetReferenceCommand("PackId", VersionRange.Parse("1.2.3"));
         var refSource = Mock.Of<ICodeSource>();
         _codeSourceFactory.Setup(i => i("ref")).Returns(refSource);
@@ -45,7 +45,7 @@ public class ScriptContentReplacerTests
         var runtimeAssemblyPath = "Abc2Runtime.dll";
         _runtimeExplorer.Setup(i => i.TryFindRuntimeAssembly(_referencingAssembly1.FilePath, out runtimeAssemblyPath)).Returns(false);
         _runtimeExplorer.Setup(i => i.TryFindRuntimeAssembly(_referencingAssembly2.FilePath, out runtimeAssemblyPath)).Returns(true);
-        
+
         var commandsSource = Mock.Of<ICodeSource>();
         _codeSourceFactory.Setup(i => i("cmd")).Returns(commandsSource);
         _commandFactory.Setup(i => i.Create(commandsSource)).Returns([HelpCommand.Shared, HelpCommand.Shared]);
@@ -55,8 +55,8 @@ public class ScriptContentReplacerTests
 
         // Then
         replacedScript.ShouldBe(["code1", $"#load \"{scriptFile}\"", "code2"]);
-        _fileSystem.Verify(i => i.WriteAllLines(scriptFile, It.Is<IEnumerable<string>>(lines => lines.SequenceEqual(new []{"#r \"Abc1.dll\"", "#r \"Abc2Runtime.dll\""}))));
-        _commandsRunner.Verify(i => i.Run(It.Is<IEnumerable<ICommand>>(commands => commands.SequenceEqual(new []{HelpCommand.Shared, HelpCommand.Shared, HelpCommand.Shared, HelpCommand.Shared}))));
+        _fileSystem.Verify(i => i.WriteAllLines(scriptFile, It.Is<IEnumerable<string>>(lines => lines.SequenceEqual(new[] {"#r \"Abc1.dll\"", "#r \"Abc2Runtime.dll\""}))));
+        _commandsRunner.Verify(i => i.Run(It.Is<IEnumerable<ICommand>>(commands => commands.SequenceEqual(new[] {HelpCommand.Shared, HelpCommand.Shared, HelpCommand.Shared, HelpCommand.Shared}))));
     }
 
     private ScriptContentReplacer CreateInstance() =>

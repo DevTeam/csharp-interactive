@@ -2,6 +2,7 @@
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable SeparateLocalFunctionsWithJumpStatement
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
@@ -25,7 +26,7 @@ public class DockerDotNetBuildScenario : BaseScenario
         // {
         // Adds the namespace "HostApi" to use .NET build API and Docker API
         // ## using HostApi;
-        
+
         // Creates a base docker command line
         var dockerRun = new DockerRun()
             .WithAutoRemove(true)
@@ -52,7 +53,7 @@ public class DockerDotNetBuildScenario : BaseScenario
         result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
         result.ExitCode.ShouldBe(0);
 
-        string ToAbsoluteLinuxPath(string path) => 
+        string ToAbsoluteLinuxPath(string path) =>
             "/" + path.Replace(":", "").Replace('\\', '/');
         // }
     }

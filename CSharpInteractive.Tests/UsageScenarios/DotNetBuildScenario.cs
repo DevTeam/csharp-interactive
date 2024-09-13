@@ -2,6 +2,7 @@
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable CommentTypo
+
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using HostApi;
@@ -35,13 +36,13 @@ public class DotNetBuildScenario : BaseScenario
         // The "result" variable provides details about a build
         result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
         result.ExitCode.ShouldBe(0);
-        
+
         // Runs tests in docker
         result = new DotNetTest()
             .WithWorkingDirectory("MyLib")
             .Build()
             .EnsureSuccess();
-        
+
         result.ExitCode.ShouldBe(0);
         result.Summary.Tests.ShouldBe(1);
         result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);

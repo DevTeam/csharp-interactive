@@ -1,4 +1,5 @@
 // ReSharper disable UnusedMemberInSuper.Global
+
 namespace HostApi;
 
 /// <summary>
@@ -6,7 +7,7 @@ namespace HostApi;
 /// </summary>
 /// <seealso cref="IBuildRunner.Build"/>
 /// <seealso cref="IBuildRunner.BuildAsync"/>
-public interface IBuildResult: ICommandLineResult
+public interface IBuildResult : ICommandLineResult
 {
     /// <summary>
     /// List of build errors.
