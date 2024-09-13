@@ -215,8 +215,10 @@ var installTemplates = new DotNetCustom("new", "install", $"{templatesPackageId}
     .WithShortName("Installing template");
 
 installTemplates.WithShortName(installTemplates.ShortName).Run().EnsureSuccess();
-await Task.WhenAll(
-    frameworks.Select(framework => CheckCompatibilityAsync(framework, packageVersion, defaultNuGetSource, outputDir)));
+foreach (var framework in frameworks)
+{
+    await CheckCompatibilityAsync(framework, packageVersion, defaultNuGetSource, outputDir);
+}
 
 if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && packageVersion.Release != "dev")
 {
