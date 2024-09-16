@@ -109,3 +109,11 @@ The created project contains 2 entry points:
 | dotnet-csi                  | [![NuGet](https://img.shields.io/nuget/v/dotnet-csi)](https://www.nuget.org/packages/dotnet-csi)                                     | Interactive .NET tool for REPL and running scripts | dotnet tool install --global dotnet-csi        |
 | CSharpInteractive.Templates | [![NuGet](https://img.shields.io/nuget/v/CSharpInteractive.Templates )](https://www.nuget.org/packages/CSharpInteractive.Templates ) | .NET build project template                        | dotnet new install CSharpInteractive.Templates |
 | CSharpInteractive           | [![NuGet](https://img.shields.io/nuget/v/CSharpInteractive)](https://www.nuget.org/packages/CSharpInteractive)                       | A library for use in .NET build projects           | dotnet add package CSharpInteractive           |
+
+## Usage examples
+
+- [Build project example](https://github.com/DevTeam/csharp-interactive/tree/master/Samples/MySampleLib)
+- [CSharp Interactive build project](https://github.com/DevTeam/csharp-interactive/tree/master/Build)
+- [Pure.DI build project](https://github.com/DevTeam/Pure.DI/tree/master/build)
+- [Immutype build project](https://github.com/DevTeam/Immutype/tree/master/Build)
+- [Comparison with Cake and Nuke](https://github.com/DevTeam/ci-cd)

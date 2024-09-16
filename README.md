@@ -110,6 +110,14 @@ The created project contains 2 entry points:
 | CSharpInteractive.Templates | [![NuGet](https://img.shields.io/nuget/v/CSharpInteractive.Templates )](https://www.nuget.org/packages/CSharpInteractive.Templates ) | .NET build project template                        | dotnet new install CSharpInteractive.Templates |
 | CSharpInteractive           | [![NuGet](https://img.shields.io/nuget/v/CSharpInteractive)](https://www.nuget.org/packages/CSharpInteractive)                       | A library for use in .NET build projects           | dotnet add package CSharpInteractive           |
 
+## Usage examples
+
+- [Build project example](https://github.com/DevTeam/csharp-interactive/tree/master/Samples/MySampleLib)
+- [CSharp Interactive build project](https://github.com/DevTeam/csharp-interactive/tree/master/Build)
+- [Pure.DI build project](https://github.com/DevTeam/Pure.DI/tree/master/build)
+- [Immutype build project](https://github.com/DevTeam/Immutype/tree/master/Build)
+- [Comparison with Cake and Nuke](https://github.com/DevTeam/ci-cd)
+
 ## API
 
 - Output, logging and tracing
@@ -293,10 +301,10 @@ Besides that, it is possible to get an instance of [System.IServiceProvider](htt
 ``` CSharp
 public void Run()
 {
-    var serviceProvider = 
+    var serviceProvider =
         GetService<IServiceCollection>()
-        .AddTransient<MyTask>()
-        .BuildServiceProvider();
+            .AddTransient<MyTask>()
+            .BuildServiceProvider();
 
     var myTask = serviceProvider.GetRequiredService<MyTask>();
     var exitCode = myTask.Run();
@@ -562,7 +570,7 @@ var result = dockerRun
 result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
 result.ExitCode.ShouldBe(0);
 
-string ToAbsoluteLinuxPath(string path) => 
+string ToAbsoluteLinuxPath(string path) =>
     "/" + path.Replace(":", "").Replace('\\', '/');
 ```
 
@@ -725,10 +733,10 @@ result.ExitCode.ShouldBe(0);
 
 // Creates a NuGet package of version 1.2.3 for the project, running a command like: "dotnet pack /p:version=1.2.3" from the directory "MyLib"
 result = new DotNetPack()
-        .WithWorkingDirectory("MyLib")
-        .AddProps(("version", "1.2.3"))
-        .Build()
-        .EnsureSuccess();
+    .WithWorkingDirectory("MyLib")
+    .AddProps(("version", "1.2.3"))
+    .Build()
+    .EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 ```
@@ -886,7 +894,7 @@ var testUnderDotCover = test.Customize(cmd =>
     + $"--dcOutput={dotCoverSnapshot}"
     + "--dcFilters=+:module=TeamCity.CSharpInteractive.HostApi;+:module=dotnet-csi"
     + "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage");
-    
+
 // Runs tests under dotCover via a command like: "dotnet dotcover test ..."
 var result = testUnderDotCover
     .Build()
@@ -916,7 +924,7 @@ using HostApi;
 
 var projectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
 Directory.CreateDirectory(projectDir);
-    
+
 // Creates a local tool manifest 
 new DotNetNew("tool-manifest")
     .WithWorkingDirectory(projectDir)

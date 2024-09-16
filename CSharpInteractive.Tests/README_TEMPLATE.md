@@ -182,10 +182,10 @@ Besides that, it is possible to get an instance of [System.IServiceProvider](htt
 ``` CSharp
 public void Run()
 {
-    var serviceProvider = 
+    var serviceProvider =
         GetService<IServiceCollection>()
-        .AddTransient<MyTask>()
-        .BuildServiceProvider();
+            .AddTransient<MyTask>()
+            .BuildServiceProvider();
 
     var myTask = serviceProvider.GetRequiredService<MyTask>();
     var exitCode = myTask.Run();
@@ -451,7 +451,7 @@ var result = dockerRun
 result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
 result.ExitCode.ShouldBe(0);
 
-string ToAbsoluteLinuxPath(string path) => 
+string ToAbsoluteLinuxPath(string path) =>
     "/" + path.Replace(":", "").Replace('\\', '/');
 ```
 
@@ -614,10 +614,10 @@ result.ExitCode.ShouldBe(0);
 
 // Creates a NuGet package of version 1.2.3 for the project, running a command like: "dotnet pack /p:version=1.2.3" from the directory "MyLib"
 result = new DotNetPack()
-        .WithWorkingDirectory("MyLib")
-        .AddProps(("version", "1.2.3"))
-        .Build()
-        .EnsureSuccess();
+    .WithWorkingDirectory("MyLib")
+    .AddProps(("version", "1.2.3"))
+    .Build()
+    .EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 ```
@@ -775,7 +775,7 @@ var testUnderDotCover = test.Customize(cmd =>
     + $"--dcOutput={dotCoverSnapshot}"
     + "--dcFilters=+:module=TeamCity.CSharpInteractive.HostApi;+:module=dotnet-csi"
     + "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage");
-    
+
 // Runs tests under dotCover via a command like: "dotnet dotcover test ..."
 var result = testUnderDotCover
     .Build()
@@ -805,7 +805,7 @@ using HostApi;
 
 var projectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
 Directory.CreateDirectory(projectDir);
-    
+
 // Creates a local tool manifest 
 new DotNetNew("tool-manifest")
     .WithWorkingDirectory(projectDir)
