@@ -125,6 +125,8 @@ internal class Settings(
                 props[key] = value;
             }
 
+            _showHelpAndExit = args.Any(i => i.ArgumentType == CommandLineArgumentType.Help);
+            _showVersionAndExit = args.Any(i => i.ArgumentType == CommandLineArgumentType.Version);
             _nuGetSources = args.Where(i => i.ArgumentType == CommandLineArgumentType.NuGetSource).Select(i => i.Value);
             if (runningMode == RunningMode.Application
                 || args.Any(i => i.ArgumentType == CommandLineArgumentType.ScriptFile)
@@ -132,8 +134,6 @@ internal class Settings(
             {
                 _interactionMode = InteractionMode.NonInteractive;
                 _verbosityLevel = VerbosityLevel.Normal;
-                _showHelpAndExit = args.Any(i => i.ArgumentType == CommandLineArgumentType.Help);
-                _showVersionAndExit = args.Any(i => i.ArgumentType == CommandLineArgumentType.Version);
                 _scriptArguments = args.Where(i => i.ArgumentType == CommandLineArgumentType.ScriptArgument).Select(i => i.Value).ToImmutableArray();
                 _codeSources = args.Where(i => i.ArgumentType == CommandLineArgumentType.ScriptFile).Select(i => fileCodeSourceFactory(i.Value));
             }

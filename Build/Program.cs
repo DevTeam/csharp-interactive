@@ -58,7 +58,7 @@ var packages = new[]
         false)
 };
 
-new DotNetToolRestore().WithShortName("Restoring tools").Run().EnsureSuccess();
+new DotNetToolRestore().Run().EnsureSuccess();
 
 new DotNetClean()
     .WithProject(solutionFile)
@@ -173,8 +173,9 @@ else
     }
 }
 
-var uninstallTool = new DotNetCustom("tool", "uninstall", toolPackageId, "-g")
-    .WithShortName("Uninstalling tool");
+var uninstallTool = new DotNetToolUninstall()
+    .WithPackage(toolPackageId)
+    .WithGlobal(true);
 
 if (uninstallTool.Run(_ => { }).ExitCode != 0)
 {
@@ -191,8 +192,15 @@ if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     Environment.SetEnvironmentVariable("PATH", pathEnvVar);
 }
 
-var installTool = new DotNetCustom("tool", "install", toolPackageId, "-g", "--version", packageVersion.ToString(), "--add-source", Path.Combine(outputDir, "CSharpInteractive.Tool"))
-    .WithShortName("Installing tool");
+await new DotNetBuild()
+    .WithProject(Path.Combine("Samples", "MySampleLib"))
+    .BuildAsync().EnsureSuccess();
+
+var installTool = new DotNetToolInstall()
+    .WithPackage(toolPackageId)
+    .WithGlobal(true)
+    .WithVersion(packageVersion.ToString())
+    .AddSources(Path.Combine(outputDir, "CSharpInteractive.Tool"));
 
 installTool.Run(output =>
 {
@@ -200,10 +208,10 @@ installTool.Run(output =>
     WriteLine(output.Line);
 }).EnsureSuccess(_ => true);
 
-new DotNetCustom("csi", "/?").WithShortName("Checking tool").Run().EnsureSuccess();
+new DotNetCsi().WithVersion(true).WithShortName("Checking csi tool").Run().EnsureSuccess();
 
-var uninstallTemplates = new DotNetCustom("new", "uninstall", templatesPackageId)
-    .WithShortName("Uninstalling template");
+var uninstallTemplates = new DotNetNewUninstall()
+    .WithPackage(templatesPackageId);
 
 uninstallTemplates.Run(output =>
 {
@@ -211,10 +219,11 @@ uninstallTemplates.Run(output =>
     WriteLine(output.Line);
 }).EnsureSuccess(_ => true);
 
-var installTemplates = new DotNetCustom("new", "install", $"{templatesPackageId}::{packageVersion.ToString()}", "--nuget-source", templateOutputDir)
-    .WithShortName("Installing template");
+var installTemplates = new DotNetNewInstall()
+    .WithPackage($"{templatesPackageId}::{packageVersion.ToString()}")
+    .AddSources(templateOutputDir);
 
-installTemplates.WithShortName(installTemplates.ShortName).Run().EnsureSuccess();
+installTemplates.Run().EnsureSuccess();
 foreach (var framework in frameworks)
 {
     await CheckCompatibilityAsync(framework, packageVersion, defaultNuGetSource, outputDir);
@@ -222,11 +231,10 @@ foreach (var framework in frameworks)
 
 if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && packageVersion.Release != "dev")
 {
-    var push = new DotNetNuGetPush().WithApiKey(apiKey).WithSources(defaultNuGetSource);
+    var push = new DotNetNuGetPush().WithApiKey(apiKey).WithSource(defaultNuGetSource);
     foreach (var package in packages.Where(i => i.Publish))
     {
         push.WithPackage(package.Package)
-            .WithShortName($"Pushing {Path.GetFileName(package.Package)}")
             .Build().EnsureSuccess();
     }
 }
@@ -269,27 +277,28 @@ async Task CheckCompatibilityAsync(
     try
     {
         var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
-        await new DotNetNew("build", $"--version={nuGetVersion}", "-T", framework, "--no-restore")
+        await new DotNetNew()
+            .WithTemplateName("build")
+            .WithNoRestore(true)
+            .WithArgs($"--version={nuGetVersion}", "-T", framework)
             .WithWorkingDirectory(buildProjectDir)
-            .WithShortName($"Creating a new {sampleProjectName}")
             .RunAsync().EnsureSuccess();
 
         await new DotNetBuild()
             .WithProject(buildProjectDir)
             .WithSources(nuGetSource, Path.Combine(output, "CSharpInteractive"))
-            .WithShortName($"Building the {sampleProjectName}")
             .BuildAsync().EnsureSuccess();
 
         await new DotNetRun()
-            .WithProject(buildProjectDir)
+            .WithWorkingDirectory(buildProjectDir)
+            .WithNoRestore(true)
             .WithNoBuild(true)
-            .WithWorkingDirectory(sampleProjectDir)
-            .WithShortName($"Running a build for the {sampleProjectName}")
+            .WithFramework(framework)
             .RunAsync().EnsureSuccess();
 
-        await new DotNetCustom("csi", Path.Combine(buildProjectDir, "Program.csx"))
+        await new DotNetCsi()
+            .WithScript(Path.Combine(buildProjectDir, "Program.csx"))
             .WithWorkingDirectory(sampleProjectDir)
-            .WithShortName($"Running a build as a C# script for the {sampleProjectName}")
             .RunAsync().EnsureSuccess();
     }
     finally

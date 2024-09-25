@@ -486,15 +486,16 @@ var result = new DockerRun(cmd, "mcr.microsoft.com/dotnet/sdk")
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-new DotNetNew("xunit", "-n", "MyLib", "--force")
-    .Build()
-    .EnsureSuccess();
+new DotNetNew()
+    .WithTemplateName("xunit")
+    .WithName("MyLib")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
 // Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
 var result = new DotNetBuild()
     .WithWorkingDirectory("MyLib")
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
@@ -522,25 +523,25 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-    .Build()
-    .EnsureSuccess();
+var result = new DotNetNew()
+    .WithTemplateName("classlib")
+    .WithName("MyLib")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 
 // Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
 result = new DotNetBuild()
     .WithWorkingDirectory("MyLib")
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 
 // Clean the project, running a command like: "dotnet clean" from the directory "MyLib"
 result = new DotNetClean()
     .WithWorkingDirectory("MyLib")
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
@@ -576,23 +577,24 @@ version.ShouldNotBeNull();
 using HostApi;
 
 // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-    .Build()
-    .EnsureSuccess();
+var result = new DotNetNew()
+    .WithTemplateName("mstest")
+    .WithName("MyTests")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
-result.ExitCode.ShouldBe(0);
+result.ExitCode.ShouldBe(0, result.ToString());
 
 // Runs tests via a command like: "dotnet msbuild /t:VSTest" from the directory "MyTests"
 result = new MSBuild()
     .WithTarget("VSTest")
     .WithWorkingDirectory("MyTests")
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0);
-result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+result.ExitCode.ShouldBe(0, result.ToString());
+result.Summary.Tests.ShouldBe(1, result.ToString());
+result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
 ```
 
 
@@ -606,9 +608,11 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-    .Build()
-    .EnsureSuccess();
+var result = new DotNetNew()
+    .WithTemplateName("classlib")
+    .WithName("MyLib")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 
@@ -616,8 +620,7 @@ result.ExitCode.ShouldBe(0);
 result = new DotNetPack()
     .WithWorkingDirectory("MyLib")
     .AddProps(("version", "1.2.3"))
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 ```
@@ -633,9 +636,12 @@ result.ExitCode.ShouldBe(0);
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force", "-f", "net8.0")
-    .Build()
-    .EnsureSuccess();
+var result = new DotNetNew()
+    .WithTemplateName("classlib")
+    .AddArgs("-f", "net8.0")
+    .WithName("MyLib")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 
@@ -643,8 +649,7 @@ result.ExitCode.ShouldBe(0);
 result = new DotNetPublish()
     .WithWorkingDirectory("MyLib")
     .WithFramework("net8.0")
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 ```
@@ -660,17 +665,18 @@ result.ExitCode.ShouldBe(0);
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-    .Build()
-    .EnsureSuccess();
+var result = new DotNetNew()
+    .WithTemplateName("classlib")
+    .WithName("MyLib")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 
 // Restore the project, running a command like: "dotnet restore" from the directory "MyLib"
 result = new DotNetRestore()
     .WithWorkingDirectory("MyLib")
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 ```
@@ -686,9 +692,11 @@ result.ExitCode.ShouldBe(0);
 using HostApi;
 
 // Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
-var result = new DotNetNew("console", "-n", "MyApp", "--force")
-    .Build()
-    .EnsureSuccess();
+var result = new DotNetNew()
+    .WithTemplateName("console")
+    .WithName("MyApp")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 
@@ -715,9 +723,11 @@ stdOut.ShouldBe(new[] {"Hello, World!"});
 using HostApi;
 
 // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-    .Build()
-    .EnsureSuccess();
+var result = new DotNetNew()
+    .WithTemplateName("mstest")
+    .WithName("MyTests")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 
@@ -744,20 +754,21 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 using HostApi;
 
 // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-new DotNetNew("mstest", "-n", "MyTests", "--force")
-    .Run()
-    .EnsureSuccess();
+new DotNetNew()
+    .WithTemplateName("mstest")
+    .WithName("MyTests")
+    .WithForce(true)
+    .Run().EnsureSuccess();
 
 // Creates the tool manifest and installs the dotCover tool locally
 // It is better to run the following 2 commands manually
 // and commit these changes to a source control
-new DotNetNew("tool-manifest")
-    .Run()
-    .EnsureSuccess();
+new DotNetNew()
+    .WithTemplateName("tool-manifest")
+    .Run().EnsureSuccess();
 
 new DotNetCustom("tool", "install", "--local", "JetBrains.dotCover.GlobalTool")
-    .Run()
-    .EnsureSuccess();
+    .Run().EnsureSuccess();
 
 // Creates a test command
 var test = new DotNetTest()
@@ -778,8 +789,7 @@ var testUnderDotCover = test.Customize(cmd =>
 
 // Runs tests under dotCover via a command like: "dotnet dotcover test ..."
 var result = testUnderDotCover
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
@@ -807,7 +817,8 @@ var projectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]
 Directory.CreateDirectory(projectDir);
 
 // Creates a local tool manifest 
-new DotNetNew("tool-manifest")
+new DotNetNew()
+    .WithTemplateName("tool-manifest")
     .WithWorkingDirectory(projectDir)
     .Run()
     .EnsureSuccess();
@@ -830,9 +841,11 @@ new DotNetToolRestore()
 using HostApi;
 
 // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-    .Build()
-    .EnsureSuccess();
+var result = new DotNetNew()
+    .WithTemplateName("mstest")
+    .WithName("MyTests")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 
@@ -841,8 +854,7 @@ result = new DotNetBuild()
     .WithWorkingDirectory("MyTests")
     .WithConfiguration("Release")
     .WithOutput("MyOutput")
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 
@@ -850,8 +862,7 @@ result.ExitCode.ShouldBe(0);
 result = new VSTest()
     .AddTestFileNames(Path.Combine("MyOutput", "MyTests.dll"))
     .WithWorkingDirectory("MyTests")
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.ExitCode.ShouldBe(0);
@@ -870,9 +881,11 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-    .Build()
-    .EnsureSuccess();
+var result = new DotNetNew()
+    .WithTemplateName("classlib")
+    .WithName("MyLib")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
 result.ExitCode.ShouldBe(0);
 
@@ -883,8 +896,7 @@ result = new MSBuild()
     .WithRestore(true)
     .AddProps(("configuration", "Release"))
     .WithVerbosity(DotNetVerbosity.Detailed)
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
 result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();

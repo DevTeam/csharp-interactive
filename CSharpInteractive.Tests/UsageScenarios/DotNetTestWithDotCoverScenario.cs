@@ -7,7 +7,7 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class DotNetTestWithDotCoverScenario : BaseScenario
 {
     [Fact]
@@ -22,20 +22,21 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        new DotNetNew("mstest", "-n", "MyTests", "--force")
-            .Run()
-            .EnsureSuccess();
+        new DotNetNew()
+            .WithTemplateName("mstest")
+            .WithName("MyTests")
+            .WithForce(true)
+            .Run().EnsureSuccess();
 
         // Creates the tool manifest and installs the dotCover tool locally
         // It is better to run the following 2 commands manually
         // and commit these changes to a source control
-        new DotNetNew("tool-manifest")
-            .Run()
-            .EnsureSuccess();
+        new DotNetNew()
+            .WithTemplateName("tool-manifest")
+            .Run().EnsureSuccess();
 
         new DotNetCustom("tool", "install", "--local", "JetBrains.dotCover.GlobalTool")
-            .Run()
-            .EnsureSuccess();
+            .Run().EnsureSuccess();
 
         // Creates a test command
         var test = new DotNetTest()
@@ -56,8 +57,7 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
 
         // Runs tests under dotCover via a command like: "dotnet dotcover test ..."
         var result = testUnderDotCover
-            .Build()
-            .EnsureSuccess();
+            .Build().EnsureSuccess();
 
         // The "result" variable provides details about a build
         result.ExitCode.ShouldBe(0);

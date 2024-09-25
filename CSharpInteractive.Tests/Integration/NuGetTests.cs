@@ -8,7 +8,7 @@ using HostApi;
 using NuGet.Versioning;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class NuGetTests
 {
     [Fact]

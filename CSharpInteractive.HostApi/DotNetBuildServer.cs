@@ -24,3 +24,16 @@ public enum DotNetBuildServer
     /// </summary>
     Razor
 }
+
+internal static class DotNetBuildServerExtensions
+{
+    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+    public static string[] ToArgs(this IEnumerable<DotNetBuildServer> servers, string name, string collectionSeparator) =>
+        servers.Select(server => server switch
+        {
+            DotNetBuildServer.MSBuild => "--msbuild",
+            DotNetBuildServer.VbCsCompiler => "--vbcscompiler",
+            DotNetBuildServer.Razor => "--razor",
+            _ => throw new ArgumentOutOfRangeException()
+        }).ToArray();
+}

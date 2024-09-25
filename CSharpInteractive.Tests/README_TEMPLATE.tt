@@ -48,7 +48,7 @@
             {
                 var parts = str.Substring(4, str.Length - 4).Split([
                     '='
-                    ], 2, StringSplitOptions.RemoveEmptyEntries);
+                ], 2, StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length == 2)
                 {
                     var key = parts[0];

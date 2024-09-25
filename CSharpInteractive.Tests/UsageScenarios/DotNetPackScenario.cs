@@ -8,7 +8,7 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class DotNetPackScenario : BaseScenario
 {
     [Fact]
@@ -23,9 +23,11 @@ public class DotNetPackScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-        var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-            .Build()
-            .EnsureSuccess();
+        var result = new DotNetNew()
+            .WithTemplateName("classlib")
+            .WithName("MyLib")
+            .WithForce(true)
+            .Build().EnsureSuccess();
 
         result.ExitCode.ShouldBe(0);
 
@@ -33,8 +35,7 @@ public class DotNetPackScenario : BaseScenario
         result = new DotNetPack()
             .WithWorkingDirectory("MyLib")
             .AddProps(("version", "1.2.3"))
-            .Build()
-            .EnsureSuccess();
+            .Build().EnsureSuccess();
 
         result.ExitCode.ShouldBe(0);
         // }

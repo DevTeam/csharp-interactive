@@ -7,8 +7,8 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-[Trait("Docker", "true")]
+[Trait("Integration", "True")]
+[Trait("Docker", "True")]
 public class DockerRunScenario : BaseScenario
 {
     [Fact]
@@ -32,6 +32,6 @@ public class DockerRunScenario : BaseScenario
             .EnsureSuccess();
         // }
 
-        result.ExitCode.ShouldBe(0);
+        result.ExitCode.ShouldBe(0, result.ToString());
     }
 }

@@ -10,17 +10,17 @@ namespace HostApi;
 public enum VSTestPlatform
 {
     /// <summary>
-    /// 
+    /// x86
     /// </summary>
     x86,
 
     /// <summary>
-    /// 
+    /// x64
     /// </summary>
     x64,
 
     /// <summary>
-    /// 
+    /// ARM
     /// </summary>
     ARM
 }

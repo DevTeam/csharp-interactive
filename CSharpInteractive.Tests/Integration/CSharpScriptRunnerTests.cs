@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using Environment = Environment;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 [SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows")]
 public class CSharpScriptRunnerTests
 {
