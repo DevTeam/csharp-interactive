@@ -1,8 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-using HostApi;
-
 public class CommandLineRunnerTests
 {
     private readonly Mock<IHost> _host = new();

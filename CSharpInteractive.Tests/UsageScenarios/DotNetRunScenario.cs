@@ -5,40 +5,35 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System.Diagnostics.CodeAnalysis;
-using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
-public class DotNetRunScenario : BaseScenario
+public class DotNetRunScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()
     {
+        new DotNetNew()
+            .WithTemplateName("console")
+            .WithName("MyApp")
+            .WithForce(true)
+            .Run().EnsureSuccess();
+
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Run a project
+        // $description=Running source code without any explicit compile or launch commands
         // {
-        // Adds the namespace "HostApi" to use .NET build API
         // ## using HostApi;
 
-        // Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
-        var result = new DotNetNew("console", "-n", "MyApp", "--force")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
-
-        // Runs the console project using a command like: "dotnet run" from the directory "MyApp"
         var stdOut = new List<string>();
-        result = new DotNetRun().WithWorkingDirectory("MyApp")
+        new DotNetRun()
+            .WithProject(Path.Combine("MyApp", "MyApp.csproj"))
             .Build(message => stdOut.Add(message.Text))
             .EnsureSuccess();
 
-        result.ExitCode.ShouldBe(0);
-
-        // Checks StdOut
+        // Checks stdOut
         stdOut.ShouldBe(new[] {"Hello, World!"});
         // }
     }

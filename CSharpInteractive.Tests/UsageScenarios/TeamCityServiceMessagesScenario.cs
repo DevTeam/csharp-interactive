@@ -6,7 +6,7 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 using System;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
-public class TeamCityServiceMessagesScenario : BaseScenario
+public class TeamCityServiceMessagesScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [SkippableFact]
     public void Run()

@@ -12,6 +12,19 @@
     var solutionPath = Path.Combine(currentPath, "..");
 
     var infos = new List<Dictionary<string, string>>();
+    var commentsDir = Path.Combine(scenariosPath, "Comments");
+    if (Directory.Exists(commentsDir))
+    {
+        foreach (var file in Directory.GetFiles(commentsDir, "*.txt"))
+        {
+            File.Delete(file);
+        }
+    }
+    else
+    {
+        Directory.CreateDirectory(commentsDir);
+    }
+
     foreach (var file in Directory.GetFiles(scenariosPath, "*.cs"))
     {
         var isBody = false;
@@ -48,7 +61,7 @@
             {
                 var parts = str.Substring(4, str.Length - 4).Split([
                     '='
-                    ], 2, StringSplitOptions.RemoveEmptyEntries);
+                ], 2, StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length == 2)
                 {
                     var key = parts[0];
@@ -127,12 +140,15 @@
 <#
     foreach (var info in infos.OrderBy(i => i["tag"] + i["priority"]).Where(info => info["visible"] == "true"))
     {
+        var file = info["file"];
+        var body = info["body"];
+        File.WriteAllText(Path.Combine(commentsDir, Path.GetFileNameWithoutExtension(file) + ".txt"), body);
 #>### <#= info["description"] #>
 
 <#= info["header"] #>
 
 ``` CSharp
-<#= info["body"] #>```
+<#= body #>```
 
 <#= info["footer"] #>
 

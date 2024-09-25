@@ -1,0 +1,5 @@
+using HostApi;
+
+new DotNetNuGetConfigUnset()
+    .WithConfigKey("repositoryPath")
+    .Run().EnsureSuccess();

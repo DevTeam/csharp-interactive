@@ -1,0 +1,8 @@
+using HostApi;
+
+var lines = new List<string>();
+var result = new CommandLine("cmd", "/c", "SET")
+    .AddVars(("MyEnv", "MyVal"))
+    .Run(output => lines.Add(output.Line)).EnsureSuccess();
+
+lines.ShouldContain("MyEnv=MyVal");

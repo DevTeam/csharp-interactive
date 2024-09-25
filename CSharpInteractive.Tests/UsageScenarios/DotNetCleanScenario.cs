@@ -5,46 +5,34 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-using HostApi;
-
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class DotNetCleanScenario : BaseScenario
+[Trait("Integration", "True")]
+public class DotNetCleanScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()
     {
+        new DotNetNew()
+            .WithTemplateName("classlib")
+            .WithName("MyLib")
+            .WithForce(true)
+            .Run().EnsureSuccess();
+        
+        new DotNetBuild()
+            .WithWorkingDirectory("MyLib")
+            .Build().EnsureSuccess();
+
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
         // $description=Clean a project
         // {
-        // Adds the namespace "HostApi" to use .NET build API
         // ## using HostApi;
-
-        // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-        var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
-
-        // Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
-        result = new DotNetBuild()
-            .WithWorkingDirectory("MyLib")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
-
+        
         // Clean the project, running a command like: "dotnet clean" from the directory "MyLib"
-        result = new DotNetClean()
+        new DotNetClean()
             .WithWorkingDirectory("MyLib")
-            .Build()
-            .EnsureSuccess();
-
-        // The "result" variable provides details about a build
-        result.ExitCode.ShouldBe(0);
+            .Build().EnsureSuccess();
         // }
     }
 }

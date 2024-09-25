@@ -30,15 +30,20 @@
         </None>
 
         <Compile Update="CommandLines.cs">
-            <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
             <DependentUpon>CommandLines.tt</DependentUpon>
         </Compile>
 
-        <Compile Update="CommandLines.cs">
+        <None Update="DotNetCommands.tt">
+            <LastGenOutput>DotNetCommands.cs</LastGenOutput>
+            <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+
+        <Compile Update="DotNetCommands.cs">
             <AutoGen>True</AutoGen>
             <DesignTime>True</DesignTime>
-            <DependentUpon>CommandLines.tt</DependentUpon>
+            <DependentUpon>DotNetCommands.tt</DependentUpon>
         </Compile>
     </ItemGroup>
 

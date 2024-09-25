@@ -1,0 +1,8 @@
+using HostApi;
+
+new DotNetFormatAnalyzers()
+    .WithWorkingDirectory("MyLib")
+    .WithProject("MyLib.csproj")
+    .AddDiagnostics("CA1831", "CA1832")
+    .WithSeverity(DotNetFormatSeverity.Warning)
+    .Run().EnsureSuccess();

@@ -1,0 +1,6 @@
+// Adds the namespace "HostApi" to use .NET build API
+using HostApi;
+
+new DotNet()
+    .WithPathToApplication(Path.Combine(path, "MyApp.dll"))
+    .Run().EnsureSuccess();

@@ -1,8 +1,6 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
 using CSharpInteractive;
-using HostApi;
 
 public class HostServiceTests
 {

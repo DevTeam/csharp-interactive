@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{12
 		LICENSE = LICENSE
 		README_BODY.md = README_BODY.md
 		README.md = README.md
+		.github\workflows\main.yml = .github\workflows\main.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{CE315710-ACE8-4CAC-B030-4778257652DB}"

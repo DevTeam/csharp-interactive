@@ -1,0 +1,4 @@
+using HostApi;
+new DotNetExec()
+    .WithPathToApplication(Path.Combine(path, "MyApp.dll"))
+    .Run().EnsureSuccess();

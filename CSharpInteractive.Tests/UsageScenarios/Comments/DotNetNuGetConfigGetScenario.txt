@@ -1,0 +1,6 @@
+using HostApi;
+
+string? repositoryPath = default;
+new DotNetNuGetConfigGet()
+    .WithConfigKey("repositoryPath")
+    .Run(output => repositoryPath = output.Line).EnsureSuccess();

@@ -3,10 +3,9 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-using HostApi;
 using Microsoft.Extensions.DependencyInjection;
 
-public class ServiceCollectionScenario : BaseScenario
+public class ServiceCollectionScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     // $visible=true

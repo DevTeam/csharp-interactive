@@ -1,30 +1,56 @@
 // ReSharper disable MemberCanBeProtected.Global
 
+// ReSharper disable MemberCanBeMadeStatic.Global
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using CSharpInteractive;
-using HostApi;
-using Environment = Environment;
+using NuGet.Versioning;
+using Environment = System.Environment;
 
 [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize")]
 public class BaseScenario : IHost, IDisposable
 {
+    private readonly ITestOutputHelper _output;
     private readonly string _tempDir;
     private readonly string _prevCurDir;
+    private readonly StringBuilder _outputText = new();
 
-    public BaseScenario()
+    public BaseScenario(ITestOutputHelper output)
     {
+        _output = output;
         Composition.Shared.Root.TestEnvironment.IsTesting = true;
         Composition.Shared.Root.TestEnvironment.ExitCode = default;
         _tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
         Directory.CreateDirectory(_tempDir);
         _prevCurDir = Environment.CurrentDirectory;
         Environment.CurrentDirectory = _tempDir;
+        Composition.Shared.Root.ConsoleHandler.OutputHandler += ConsoleHandlerOnOutputHandler;
+        Composition.Shared.Root.ConsoleHandler.ErrorHandler += ConsoleHandlerOnErrorHandler;
     }
+    
+    public int? ExpectedExitCode { get; set; } = 0;
 
-    public int ExpectedExitCode { get; set; }
+    [SuppressMessage("Performance", "CA1822:Пометьте члены как статические")]
+    public bool HasSdk(string sdkVersion)
+    {
+        var versions = new List<NuGetVersion>();
+        new DotNetSdkCheck()
+            .Run(output =>
+            {
+                if (output.Line.Split(' ', StringSplitOptions.RemoveEmptyEntries) is ["Microsoft.NETCore.App", var versionStr, ..]
+                    && NuGetVersion.TryParse(versionStr, out var version))
+                {
+                    versions.Add(version);
+                }
+            })
+            .EnsureSuccess();
+
+        var sdkVersionValue = NuGetVersion.Parse(sdkVersion);
+        return versions.Any(i => i >= sdkVersionValue);
+    }
 
     // ReSharper disable once MemberCanBeProtected.Global
     public IHost Host => this;
@@ -75,6 +101,13 @@ public class BaseScenario : IHost, IDisposable
 
     void IDisposable.Dispose()
     {
+        Composition.Shared.Root.ConsoleHandler.OutputHandler -= ConsoleHandlerOnOutputHandler;
+        Composition.Shared.Root.ConsoleHandler.ErrorHandler -= ConsoleHandlerOnErrorHandler;
+        if (_outputText.Length > 0)
+        {
+            _output.WriteLine(_outputText.ToString());
+        }
+
         try
         {
             Directory.Delete(_tempDir, true);
@@ -85,9 +118,36 @@ public class BaseScenario : IHost, IDisposable
         }
 
         Environment.CurrentDirectory = _prevCurDir;
-        if (Composition.Shared.Root.TestEnvironment.ExitCode is { } exitCode)
+        if (ExpectedExitCode is {} expectedExitCode && Composition.Shared.Root.TestEnvironment.ExitCode is { } exitCode)
         {
-            exitCode.ShouldBe(ExpectedExitCode);
+            exitCode.ShouldBe(expectedExitCode);
         }
+    }
+    
+    private void ConsoleHandlerOnOutputHandler(object? sender, string text) => 
+        AddOutput(text, false);
+    
+    private void ConsoleHandlerOnErrorHandler(object? sender, string text) => 
+        AddOutput(text, true);
+
+    private void AddOutput(string text, bool isError)
+    {
+        _outputText.Append(text.Replace("\x001B", ""));
+        text = _outputText.ToString();
+        do
+        {
+            var endOfLine = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+            if (endOfLine == -1)
+            {
+                break;
+            }
+
+            var line = text[..endOfLine];
+            _output.WriteLine((isError ? "ERR: " : "STD: ") + line);
+            text = text[(endOfLine + Environment.NewLine.Length)..];
+        } while (text.Length > 0);
+
+        _outputText.Clear();
+        _outputText.Append(text);
     }
 }

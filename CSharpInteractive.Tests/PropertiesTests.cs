@@ -1,7 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-
 public class PropertiesTests
 {
     private readonly Mock<ILog<Properties>> _log;
@@ -110,7 +108,7 @@ public class PropertiesTests
         // When
 
         // Then
-        props.ShouldBe([
+        props.ToArray().ShouldBe([
             new KeyValuePair<string, string>("Abc", "Xyz"),
             new KeyValuePair<string, string>("1", "2")
         ]);

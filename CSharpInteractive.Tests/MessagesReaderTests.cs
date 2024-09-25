@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
-using Core;
 using JetBrains.TeamCity.ServiceMessages.Read;
 using JetBrains.TeamCity.ServiceMessages.Write;
 

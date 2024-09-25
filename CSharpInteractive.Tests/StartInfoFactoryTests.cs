@@ -1,8 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-using HostApi;
-
 public class StartInfoFactoryTests
 {
     private readonly Mock<IEnvironment> _environment = new();

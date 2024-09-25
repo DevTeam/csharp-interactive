@@ -1,0 +1,6 @@
+using HostApi;
+
+new DotNetToolUpdate()
+    .WithLocal(true)
+    .WithPackage("dotnet-csi")
+    .Run().EnsureSuccess();

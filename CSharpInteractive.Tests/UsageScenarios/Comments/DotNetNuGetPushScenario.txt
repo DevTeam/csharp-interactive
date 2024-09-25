@@ -1,0 +1,7 @@
+using HostApi;
+
+new DotNetNuGetPush()
+    .WithWorkingDirectory("MyLib")
+    .WithPackage(Path.Combine("packages", "MyLib.1.0.0.nupkg"))
+    .WithSource(repoUrl)
+    .Run().EnsureSuccess();

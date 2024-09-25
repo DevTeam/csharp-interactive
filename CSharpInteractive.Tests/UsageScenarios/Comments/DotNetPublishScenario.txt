@@ -1,0 +1,7 @@
+using HostApi;
+
+new DotNetPublish()
+    .WithWorkingDirectory("MyLib")
+    .WithFramework("net8.0")
+    .WithOutput("bin")
+    .Build().EnsureSuccess();

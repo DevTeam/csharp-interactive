@@ -28,13 +28,13 @@ internal record Root(
     IDotNetEnvironment DotNetEnvironment,
     INuGet NuGet,
     IServiceMessageParser ServiceMessageParser,
-    ITeamCityWriter TeamCityWriter) : IServiceProvider
+    ITeamCityWriter TeamCityWriter,
+    IConsoleHandler ConsoleHandler) : IServiceProvider
 {
     private readonly Lazy<IServiceProvider> _serviceProvider = new(() =>
     {
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddTransient<IServiceCollection>(_ => serviceCollection);
-        serviceCollection.AddTransient(_ => Host);
         serviceCollection.AddTransient(_ => Host);
         serviceCollection.AddTransient(_ => HostComponents);
         serviceCollection.AddTransient(_ => NuGet);

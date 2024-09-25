@@ -1,0 +1,8 @@
+using HostApi;
+
+new DotNetStore()
+    .AddManifests(Path.Combine("MyLib", "MyLib.csproj"))
+    .WithFramework("net8.0")
+    .WithRuntime("win-x64")
+    .Build();
+

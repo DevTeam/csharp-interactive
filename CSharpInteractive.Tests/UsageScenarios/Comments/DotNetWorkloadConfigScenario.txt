@@ -1,0 +1,5 @@
+using HostApi;
+
+new DotNetWorkloadConfig()
+    .WithUpdateMode(DotNetWorkloadUpdateMode.WorkloadSet)
+    .Run().EnsureSuccess();

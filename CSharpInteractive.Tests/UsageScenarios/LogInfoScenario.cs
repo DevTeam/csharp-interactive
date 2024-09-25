@@ -5,7 +5,7 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
 
-public class LogInfoScenario : BaseScenario
+public class LogInfoScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [SkippableFact]
     public void Run()

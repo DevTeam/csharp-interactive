@@ -5,13 +5,12 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System.Diagnostics.CodeAnalysis;
-using HostApi;
 using NuGet.Versioning;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 [SuppressMessage("Performance", "CA1806:Do not ignore method results")]
-public class DotNetCustomScenario : BaseScenario
+public class DotNetCustomScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()
@@ -21,7 +20,6 @@ public class DotNetCustomScenario : BaseScenario
         // $priority=01
         // $description=Run a custom .NET command
         // {
-        // Adds the namespace "HostApi" to use .NET build API
         // ## using HostApi;
 
         // Gets the dotnet version, running a command like: "dotnet --version"

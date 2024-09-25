@@ -5,38 +5,31 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-using HostApi;
-
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class DotNetPublishScenario : BaseScenario
+[Trait("Integration", "True")]
+public class DotNetPublishScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()
     {
+        new DotNetNew()
+            .WithTemplateName("classlib")
+            .WithName("MyLib")
+            .WithForce(true)
+            .Run().EnsureSuccess();
+
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Publish a project
+        // $description=Publishing the application and its dependencies to a folder for deployment to a hosting system
         // {
-        // Adds the namespace "HostApi" to use .NET build API
         // ## using HostApi;
 
-        // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-        var result = new DotNetNew("classlib", "-n", "MyLib", "--force", "-f", "net8.0")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
-
-        // Publish the project, running a command like: "dotnet publish --framework net6.0" from the directory "MyLib"
-        result = new DotNetPublish()
+        new DotNetPublish()
             .WithWorkingDirectory("MyLib")
             .WithFramework("net8.0")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
+            .WithOutput("bin")
+            .Build().EnsureSuccess();
         // }
     }
 }

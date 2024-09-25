@@ -2,7 +2,7 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using Core;
-using Environment = Environment;
+using Environment = System.Environment;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 [SuppressMessage("ReSharper", "GenericEnumeratorNotDisposed")]

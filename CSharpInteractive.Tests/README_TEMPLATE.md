@@ -31,19 +31,75 @@
   - [Build a project in a docker container](#build-a-project-in-a-docker-container)
   - [Running in docker](#running-in-docker)
 - .NET CLI
+  - [Adding a NuGet package](#adding-a-nuget-package)
+  - [Adding a NuGet package](#adding-a-nuget-package)
+  - [Adding a NuGet source](#adding-a-nuget-source)
+  - [Adding a project reference](#adding-a-project-reference)
+  - [Adding projects to the solution file](#adding-projects-to-the-solution-file)
+  - [Adding projects to the solution file](#adding-projects-to-the-solution-file)
   - [Build a project](#build-a-project)
   - [Build a project using MSBuild](#build-a-project-using-msbuild)
   - [Clean a project](#clean-a-project)
-  - [Pack a project](#pack-a-project)
-  - [Publish a project](#publish-a-project)
-  - [Restore a project](#restore-a-project)
-  - [Restore local tools](#restore-local-tools)
+  - [Clearing the specified NuGet cache type](#clearing-the-specified-nuget-cache-type)
+  - [Creating a new project from template](#creating-a-new-project-from-template)
+  - [Deleting a NuGet package to the server](#deleting-a-nuget-package-to-the-server)
+  - [Disabling a NuGet source](#disabling-a-nuget-source)
+  - [Display template package metadata](#display-template-package-metadata)
+  - [Enabling a NuGet source](#enabling-a-nuget-source)
+  - [Enabling or disabling workload-set update mode](#enabling-or-disabling-workload-set-update-mode)
+  - [Execute a dotnet application](#execute-a-dotnet-application)
+  - [Fix (non code style) analyzer issues](#fix-(non-code-style)-analyzer-issues)
+  - [Fix code style issues](#fix-code-style-issues)
+  - [Format a code](#format-a-code)
+  - [Gets the value of a specified NuGet configuration setting](#gets-the-value-of-a-specified-nuget-configuration-setting)
+  - [Installing a template package](#installing-a-template-package)
+  - [Installing optional workloads](#installing-optional-workloads)
+  - [Installing the .NET local tools that are in scope for the current directory](#installing-the-.net-local-tools-that-are-in-scope-for-the-current-directory)
+  - [Installing the specified .NET tool](#installing-the-specified-.net-tool)
+  - [Installing the specified .NET tool](#installing-the-specified-.net-tool)
+  - [Installing workloads needed for a project or a solution](#installing-workloads-needed-for-a-project-or-a-solution)
+  - [Invoking a local tool](#invoking-a-local-tool)
+  - [List available templates](#list-available-templates)
+  - [NuGet package listing](#nuget-package-listing)
+  - [Packing the code into a NuGet package](#packing-the-code-into-a-nuget-package)
+  - [Printing all .NET tools of the specified type currently installed](#printing-all-.net-tools-of-the-specified-type-currently-installed)
+  - [Printing all configured NuGet sources](#printing-all-configured-nuget-sources)
+  - [Printing all projects in a solution file](#printing-all-projects-in-a-solution-file)
+  - [Printing installed workloads](#printing-installed-workloads)
+  - [Printing nuget configuration files currently being applied to a directory](#printing-nuget-configuration-files-currently-being-applied-to-a-directory)
+  - [Printing the latest available version of the .NET SDK and .NET Runtime, for each feature band](#printing-the-latest-available-version-of-the-.net-sdk-and-.net-runtime,-for-each-feature-band)
+  - [Printing the location of the specified NuGet cache type](#printing-the-location-of-the-specified-nuget-cache-type)
+  - [Project reference listing](#project-reference-listing)
+  - [Publishing the application and its dependencies to a folder for deployment to a hosting system](#publishing-the-application-and-its-dependencies-to-a-folder-for-deployment-to-a-hosting-system)
+  - [Pushing a NuGet package to the server](#pushing-a-nuget-package-to-the-server)
+  - [Removing a NuGet package](#removing-a-nuget-package)
+  - [Removing a NuGet source.](#removing-a-nuget-source.)
+  - [Repairing workloads installations](#repairing-workloads-installations)
+  - [Restoring the dependencies and tools of a project](#restoring-the-dependencies-and-tools-of-a-project)
   - [Run a custom .NET command](#run-a-custom-.net-command)
-  - [Run a project](#run-a-project)
+  - [Run a dotnet application](#run-a-dotnet-application)
   - [Run tests under dotCover](#run-tests-under-dotcover)
+  - [Running source code without any explicit compile or launch commands](#running-source-code-without-any-explicit-compile-or-launch-commands)
+  - [Running tests from the specified assemblies](#running-tests-from-the-specified-assemblies)
+  - [Searche for the templates](#searche-for-the-templates)
+  - [Searching all .NET tools that are published to NuGet](#searching-all-.net-tools-that-are-published-to-nuget)
+  - [Searching for a NuGet package](#searching-for-a-nuget-package)
+  - [Searching for optional workloads](#searching-for-optional-workloads)
+  - [Sets the value of a specified NuGet configuration setting](#sets-the-value-of-a-specified-nuget-configuration-setting)
+  - [Show the dependency graph for NuGet package](#show-the-dependency-graph-for-nuget-package)
+  - [Signing with certificate](#signing-with-certificate)
+  - [Storing the specified assemblies in the runtime package store.](#storing-the-specified-assemblies-in-the-runtime-package-store.)
   - [Test a project](#test-a-project)
   - [Test a project using the MSBuild VSTest target](#test-a-project-using-the-msbuild-vstest-target)
-  - [Test an assembly](#test-an-assembly)
+  - [Uninstalling a specified workload](#uninstalling-a-specified-workload)
+  - [Uninstalling a template package](#uninstalling-a-template-package)
+  - [Uninstalling the specified .NET tool](#uninstalling-the-specified-.net-tool)
+  - [Unsets the value of a specified NuGet configuration setting](#unsets-the-value-of-a-specified-nuget-configuration-setting)
+  - [Updating a NuGet source](#updating-a-nuget-source)
+  - [Updating installed template packages](#updating-installed-template-packages)
+  - [Updating installed workloads](#updating-installed-workloads)
+  - [Working with development certificates](#working-with-development-certificates)
+  - [Run C# script](#run-c#-script)
   - [Shuts down build servers](#shuts-down-build-servers)
 - TeamCity API
   - [TeamCity integration via service messages](#teamcity-integration-via-service-messages)
@@ -209,7 +265,6 @@ private class MyTask(ICommandLineRunner runner)
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use INuGet
 using HostApi;
 
 IEnumerable<NuGetPackage> packages = GetService<INuGet>()
@@ -223,7 +278,6 @@ IEnumerable<NuGetPackage> packages = GetService<INuGet>()
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use INuGet
 using HostApi;
 
 var packagesPath = Path.Combine(
@@ -245,7 +299,6 @@ IEnumerable<NuGetPackage> packages = GetService<INuGet>().Restore(settings);
 
 
 ``` CSharp
-// Adds the namespace "Script.Cmd" to use Command Line API
 using HostApi;
 
 // Creates and run a simple command line 
@@ -260,20 +313,16 @@ new CommandLine("cmd", "/c", "echo", "Hello").Run();
 // Same as previous statement
 new CommandLine("cmd", "/c")
     .AddArgs("echo", "Hello")
-    .Run()
-    .EnsureSuccess();
+    .Run().EnsureSuccess();
 
 (new CommandLine("cmd") + "/c" + "echo" + "Hello")
-    .Run()
-    .EnsureSuccess();
+    .Run().EnsureSuccess();
 
 "cmd".AsCommandLine("/c", "echo", "Hello")
-    .Run()
-    .EnsureSuccess();
+    .Run().EnsureSuccess();
 
 ("cmd".AsCommandLine() + "/c" + "echo" + "Hello")
-    .Run()
-    .EnsureSuccess();
+    .Run().EnsureSuccess();
 
 // Just builds a command line with multiple environment variables
 var cmd = new CommandLine("cmd", "/c", "echo", "Hello")
@@ -298,17 +347,14 @@ cmd = new CommandLine("cmd", "/c", "echo", "Hello")
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
 GetService<ICommandLineRunner>()
-    .Run(new CommandLine("cmd", "/c", "DIR"))
-    .EnsureSuccess();
+    .Run(new CommandLine("cmd", "/c", "DIR")).EnsureSuccess();
 
 // or the same thing using the extension method
 new CommandLine("cmd", "/c", "DIR")
-    .Run()
-    .EnsureSuccess();
+    .Run().EnsureSuccess();
 
 // using operator '+'
 var cmd = new CommandLine("cmd") + "/c" + "DIR";
@@ -326,17 +372,14 @@ cmd.Run().EnsureSuccess();
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
 await GetService<ICommandLineRunner>()
-    .RunAsync(new CommandLine("cmd", "/C", "DIR"))
-    .EnsureSuccess();
+    .RunAsync(new CommandLine("cmd", "/C", "DIR")).EnsureSuccess();
 
 // or the same thing using the extension method
 var result = await new CommandLine("cmd", "/c", "DIR")
-    .RunAsync()
-    .EnsureSuccess();
+    .RunAsync().EnsureSuccess();
 ```
 
 
@@ -346,14 +389,12 @@ var result = await new CommandLine("cmd", "/c", "DIR")
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
 var lines = new List<string>();
 var result = new CommandLine("cmd", "/c", "SET")
     .AddVars(("MyEnv", "MyVal"))
-    .Run(output => lines.Add(output.Line))
-    .EnsureSuccess();
+    .Run(output => lines.Add(output.Line)).EnsureSuccess();
 
 lines.ShouldContain("MyEnv=MyVal");
 ```
@@ -365,16 +406,13 @@ lines.ShouldContain("MyEnv=MyVal");
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
 var task = new CommandLine("cmd", "/c", "DIR")
-    .RunAsync()
-    .EnsureSuccess();
+    .RunAsync().EnsureSuccess();
 
 var result = new CommandLine("cmd", "/c", "SET")
-    .Run()
-    .EnsureSuccess();
+    .Run().EnsureSuccess();
 
 await task;
 ```
@@ -386,7 +424,6 @@ await task;
 Cancellation will destroy the process and its child processes.
 
 ``` CSharp
-// Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
 var cancellationTokenSource = new CancellationTokenSource();
@@ -404,15 +441,11 @@ task.IsCompleted.ShouldBeFalse();
 If timeout expired a process will be killed.
 
 ``` CSharp
-// Adds the namespace "HostApi" to use Command Line API
 using HostApi;
 
-int? exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
+var exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
     .Run(default, TimeSpan.FromMilliseconds(1))
-    .EnsureSuccess()
     .ExitCode;
-
-exitCode.HasValue.ShouldBeFalse();
 ```
 
 
@@ -422,7 +455,6 @@ exitCode.HasValue.ShouldBeFalse();
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API and Docker API
 using HostApi;
 
 // Creates a base docker command line
@@ -434,22 +466,15 @@ var dockerRun = new DockerRun()
     .WithContainerWorkingDirectory("/MyProjects")
     .AddVolumes((ToAbsoluteLinuxPath(Environment.CurrentDirectory), "/MyProjects"));
 
-
 // Creates a new library project in a docker container
 dockerRun
     .WithCommandLine(new DotNetCustom("new", "classlib", "-n", "MyLib", "--force"))
-    .Run()
-    .EnsureSuccess();
+    .Run().EnsureSuccess();
 
 // Builds the library project in a docker container
 var result = dockerRun
     .WithCommandLine(new DotNetBuild().WithProject("MyLib/MyLib.csproj"))
-    .Build()
-    .EnsureSuccess();
-
-// The "result" variable provides details about a build
-result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
-result.ExitCode.ShouldBe(0);
+    .Build().EnsureSuccess();
 
 string ToAbsoluteLinuxPath(string path) =>
     "/" + path.Replace(":", "").Replace('\\', '/');
@@ -462,7 +487,6 @@ string ToAbsoluteLinuxPath(string path) =>
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use Command Line API and Docker API
 using HostApi;
 
 // Creates some command line to run in a docker container
@@ -471,8 +495,38 @@ var cmd = new CommandLine("whoami");
 // Runs the command line in a docker container
 var result = new DockerRun(cmd, "mcr.microsoft.com/dotnet/sdk")
     .WithAutoRemove(true)
-    .Run()
-    .EnsureSuccess();
+    .Run().EnsureSuccess();
+```
+
+
+
+### Adding a NuGet package
+
+
+
+``` CSharp
+using HostApi;
+
+var result = new DotNetAddPackage()
+    .WithWorkingDirectory("MyLib")
+    .WithPackage("Pure.DI")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Adding a NuGet package
+
+
+
+``` CSharp
+using HostApi;
+
+var result = new DotNetAddReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .WithReferences(Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();
+
 ```
 
 
@@ -482,33 +536,15 @@ var result = new DockerRun(cmd, "mcr.microsoft.com/dotnet/sdk")
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-// Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-new DotNetNew("xunit", "-n", "MyLib", "--force")
-    .Build()
-    .EnsureSuccess();
-
-// Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
+var messages = new List<BuildMessage>();
 var result = new DotNetBuild()
-    .WithWorkingDirectory("MyLib")
-    .Build()
-    .EnsureSuccess();
+    .WithWorkingDirectory("MyTests")
+    .Build(message => messages.Add(message)).EnsureSuccess();
 
-// The "result" variable provides details about a build
-result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
-result.ExitCode.ShouldBe(0);
-
-// Runs tests in docker
-result = new DotNetTest()
-    .WithWorkingDirectory("MyLib")
-    .Build()
-    .EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
-result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse(result.ToString());
+result.ExitCode.ShouldBe(0, result.ToString());
 ```
 
 
@@ -518,32 +554,12 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-// Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-    .Build()
-    .EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
-
-// Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
-result = new DotNetBuild()
-    .WithWorkingDirectory("MyLib")
-    .Build()
-    .EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
-
 // Clean the project, running a command like: "dotnet clean" from the directory "MyLib"
-result = new DotNetClean()
+new DotNetClean()
     .WithWorkingDirectory("MyLib")
-    .Build()
-    .EnsureSuccess();
-
-// The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0);
+    .Build().EnsureSuccess();
 ```
 
 
@@ -553,7 +569,6 @@ result.ExitCode.ShouldBe(0);
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
 // Gets the dotnet version, running a command like: "dotnet --version"
@@ -567,141 +582,751 @@ version.ShouldNotBeNull();
 
 
 
+### Working with development certificates
+
+
+
+``` CSharp
+using HostApi;
+
+// Create a certificate, trust it, and export it to a PEM file.
+new DotNetDevCertsHttps()
+    .WithExportPath("certificate.pem")
+    .WithTrust(true)
+    .WithFormat(DotNetCertificateFormat.Pem)
+    .WithPassword("Abc")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Execute a dotnet application
+
+
+
+``` CSharp
+using HostApi;
+new DotNetExec()
+    .WithPathToApplication(Path.Combine(path, "MyApp.dll"))
+    .Run().EnsureSuccess();
+```
+
+
+
+### Fix (non code style) analyzer issues
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetFormatAnalyzers()
+    .WithWorkingDirectory("MyLib")
+    .WithProject("MyLib.csproj")
+    .AddDiagnostics("CA1831", "CA1832")
+    .WithSeverity(DotNetFormatSeverity.Warning)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Format a code
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetFormat()
+    .WithWorkingDirectory("MyLib")
+    .WithProject("MyLib.csproj")
+    .AddDiagnostics("IDE0005", "IDE0006")
+    .AddIncludes(".", "./tests")
+    .AddExcludes("./obj")
+    .WithSeverity(DotNetFormatSeverity.Information)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Fix code style issues
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetFormatStyle()
+    .WithWorkingDirectory("MyLib")
+    .WithProject("MyLib.csproj")
+    .AddDiagnostics("IDE0005", "IDE0006")
+    .WithSeverity(DotNetFormatSeverity.Information)
+    .Run().EnsureSuccess();
+```
+
+
+
+### NuGet package listing
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetAddPackage()
+    .WithWorkingDirectory("MyLib")
+    .WithPackage("Pure.DI")
+    .Run().EnsureSuccess();
+
+var lines = new List<string>();
+new DotNetListPackage()
+    .WithWorkingDirectory("MyLib")
+    .WithVerbosity(DotNetVerbosity.Minimal)
+    .Run(output => lines.Add(output.Line));
+
+lines.Any(i => i.Contains("Pure.DI")).ShouldBeTrue();
+```
+
+
+
+### Project reference listing
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetAddReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .WithReferences(Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();
+
+var lines = new List<string>();
+new DotNetListReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .Run(output => lines.Add(output.Line));
+
+lines.Any(i => i.Contains("MyLib.csproj")).ShouldBeTrue();
+```
+
+
+
 ### Test a project using the MSBuild VSTest target
 
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-// Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-    .Build()
-    .EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
-
-// Runs tests via a command like: "dotnet msbuild /t:VSTest" from the directory "MyTests"
-result = new MSBuild()
+// Runs tests via a command
+var result = new MSBuild()
     .WithTarget("VSTest")
     .WithWorkingDirectory("MyTests")
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0);
-result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+result.ExitCode.ShouldBe(0, result.ToString());
+result.Summary.Tests.ShouldBe(1, result.ToString());
+result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
 ```
 
 
 
-### Pack a project
+### Display template package metadata
 
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-// Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-    .Build()
-    .EnsureSuccess();
+new DotNetNewDetails()
+    .WithTemplateName("CSharpInteractive.Templates")
+    .Run().EnsureSuccess();
+```
 
-result.ExitCode.ShouldBe(0);
 
-// Creates a NuGet package of version 1.2.3 for the project, running a command like: "dotnet pack /p:version=1.2.3" from the directory "MyLib"
-result = new DotNetPack()
+
+### Installing a template package
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNewInstall()
+    .WithPackage("Pure.DI.Templates")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Creating a new project from template
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNewList()
+    .Run().EnsureSuccess();
+```
+
+
+
+### List available templates
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNew()
+    .WithTemplateName("classlib")
+    .WithName("MyLib")
+    .WithForce(true)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Searche for the templates
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNewSearch()
+    .WithTemplateName("build")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Uninstalling a template package
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNewUninstall()
+    .WithPackage("Pure.DI.Templates")
+    .Run();
+```
+
+
+
+### Updating installed template packages
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNewUpdate()
+    .Run().EnsureSuccess();
+```
+
+
+
+### Adding a NuGet source
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetAddSource()
+    .WithName("TestSource")
+    .WithSource(source)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Gets the value of a specified NuGet configuration setting
+
+
+
+``` CSharp
+using HostApi;
+
+string? repositoryPath = default;
+new DotNetNuGetConfigGet()
+    .WithConfigKey("repositoryPath")
+    .Run(output => repositoryPath = output.Line).EnsureSuccess();
+```
+
+
+
+### Printing nuget configuration files currently being applied to a directory
+
+
+
+``` CSharp
+using HostApi;
+
+var configPaths = new List<string>();
+new DotNetNuGetConfigPaths()
+    .Run(output => configPaths.Add(output.Line)).EnsureSuccess();
+```
+
+
+
+### Sets the value of a specified NuGet configuration setting
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetConfigSet()
+    .WithConfigFile(configFile)
+    .WithConfigKey("repositoryPath")
+    .WithConfigValue("MyValue")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Unsets the value of a specified NuGet configuration setting
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetConfigUnset()
+    .WithConfigKey("repositoryPath")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Deleting a NuGet package to the server
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetDelete()
+    .WithPackage("MyLib")
+    .WithPackageVersion("1.0.0")
+    .WithSource(repoUrl)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Disabling a NuGet source
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetDisableSource()
+    .WithName("TestSource")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Enabling a NuGet source
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetEnableSource()
+    .WithName("TestSource")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Printing all configured NuGet sources
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetListSource()
+    .WithFormat(NuGetListFormat.Short)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Clearing the specified NuGet cache type
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetLocalsClear()
+    .WithCacheLocation(NuGetCacheLocation.Temp)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Printing the location of the specified NuGet cache type
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetLocalsList()
+    .WithCacheLocation(NuGetCacheLocation.GlobalPackages)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Pushing a NuGet package to the server
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetPush()
     .WithWorkingDirectory("MyLib")
-    .AddProps(("version", "1.2.3"))
-    .Build()
-    .EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
+    .WithPackage(Path.Combine("packages", "MyLib.1.0.0.nupkg"))
+    .WithSource(repoUrl)
+    .Run().EnsureSuccess();
 ```
 
 
 
-### Publish a project
+### Removing a NuGet source.
 
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-// Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force", "-f", "net8.0")
-    .Build()
-    .EnsureSuccess();
+new DotNetNuGetRemoveSource()
+    .WithName("TestSource")
+    .Run().EnsureSuccess(); 
+```
 
-result.ExitCode.ShouldBe(0);
 
-// Publish the project, running a command like: "dotnet publish --framework net6.0" from the directory "MyLib"
-result = new DotNetPublish()
+
+### Signing with certificate
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetSign()
+    .AddPackages("MyLib.1.2.3.nupkg")
+    .WithCertificatePath("certificate.pfx")
+    .WithCertificatePassword("Abc")
+    .WithTimestampingServer("http://timestamp.digicert.com/")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Updating a NuGet source
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetUpdateSource()
+    .WithName("TestSource")
+    .WithSource(newSource)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Show the dependency graph for NuGet package
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNuGetWhy()
+    .WithProject(Path.Combine("MyLib", "MyLib.csproj"))
+    .WithPackage("MyLib.1.2.3.nupkg")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Searching for a NuGet package
+
+
+
+``` CSharp
+using System.Text;
+using System.Text.Json;
+using HostApi;
+
+var packagesJson = new StringBuilder();
+new DotNetPackageSearch()
+    .WithSearchTerm("Pure.DI")
+    .WithFormat(DotNetPackageSearchResultFormat.Json)
+    .Run(output => packagesJson.AppendLine(output.Line)).EnsureSuccess();
+
+var result = JsonSerializer.Deserialize<Result>(
+    packagesJson.ToString(),
+    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+result.ShouldNotBeNull();
+result.SearchResult.SelectMany(i => i.Packages).Count(i => i.Id == "Pure.DI").ShouldBe(1);
+
+record Result(int Version, IReadOnlyCollection<Source> SearchResult);
+
+record Source(string SourceName, IReadOnlyCollection<Package> Packages);
+
+record Package(
+    string Id,
+    string LatestVersion,
+    int TotalDownloads,
+    string Owners);
+```
+
+
+
+### Packing the code into a NuGet package
+
+
+
+``` CSharp
+using HostApi;
+
+// Creates a NuGet package of version 1.2.3 for the project
+new DotNetPack()
+    .WithWorkingDirectory("MyLib")
+    .WithOutput(path)
+    .AddProps(("version", "1.2.3"))
+    .Build().EnsureSuccess();
+```
+
+
+
+### Publishing the application and its dependencies to a folder for deployment to a hosting system
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetPublish()
     .WithWorkingDirectory("MyLib")
     .WithFramework("net8.0")
-    .Build()
-    .EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
+    .WithOutput("bin")
+    .Build().EnsureSuccess();
 ```
 
 
 
-### Restore a project
+### Removing a NuGet package
 
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-// Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-    .Build()
-    .EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
-
-// Restore the project, running a command like: "dotnet restore" from the directory "MyLib"
-result = new DotNetRestore()
+new DotNetAddPackage()
     .WithWorkingDirectory("MyLib")
-    .Build()
-    .EnsureSuccess();
+    .WithPackage("Pure.DI")
+    .Run().EnsureSuccess();
 
-result.ExitCode.ShouldBe(0);
+new DotNetRemovePackage()
+    .WithWorkingDirectory("MyLib")
+    .WithPackage("Pure.DI")
+    .Run().EnsureSuccess();
 ```
 
 
 
-### Run a project
+### Adding a project reference
 
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-// Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
-var result = new DotNetNew("console", "-n", "MyApp", "--force")
-    .Build()
-    .EnsureSuccess();
+new DotNetAddReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .WithReferences(Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();
 
-result.ExitCode.ShouldBe(0);
+new DotNetRemoveReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .WithReferences(Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();
 
-// Runs the console project using a command like: "dotnet run" from the directory "MyApp"
+var lines = new List<string>();
+new DotNetListReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .Run(output => lines.Add(output.Line));
+
+lines.Any(i => i.Contains("MyLib.csproj")).ShouldBeFalse();
+```
+
+
+
+### Restoring the dependencies and tools of a project
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetRestore()
+    .WithProject(Path.Combine("MyLib", "MyLib.csproj"))
+    .Build().EnsureSuccess();
+```
+
+
+
+### Running source code without any explicit compile or launch commands
+
+
+
+``` CSharp
+using HostApi;
+
 var stdOut = new List<string>();
-result = new DotNetRun().WithWorkingDirectory("MyApp")
+new DotNetRun()
+    .WithProject(Path.Combine("MyApp", "MyApp.csproj"))
     .Build(message => stdOut.Add(message.Text))
     .EnsureSuccess();
 
-result.ExitCode.ShouldBe(0);
-
-// Checks StdOut
+// Checks stdOut
 stdOut.ShouldBe(new[] {"Hello, World!"});
+```
+
+
+
+### Run a dotnet application
+
+
+
+``` CSharp
+// Adds the namespace "HostApi" to use .NET build API
+using HostApi;
+
+new DotNet()
+    .WithPathToApplication(Path.Combine(path, "MyApp.dll"))
+    .Run().EnsureSuccess();
+```
+
+
+
+### Printing the latest available version of the .NET SDK and .NET Runtime, for each feature band
+
+
+
+``` CSharp
+using HostApi;
+
+var sdks = new List<Sdk>();
+new DotNetSdkCheck()
+    .Run(output =>
+    {
+        if (output.Line.StartsWith("Microsoft."))
+        {
+            var data = output.Line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (data.Length >= 2)
+            {
+                sdks.Add(new Sdk(data[0], NuGetVersion.Parse(data[1])));
+            }
+        }
+    })
+    .EnsureSuccess();
+
+sdks.Count.ShouldBeGreaterThan(0);
+
+record Sdk(string Name, NuGetVersion Version);
+```
+
+
+
+### Adding projects to the solution file
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetNew()
+    .WithTemplateName("sln")
+    .WithName("NySolution")
+    .WithForce(true)
+    .Run().EnsureSuccess();
+
+new DotNetSlnAdd()
+    .WithSolution("NySolution.sln")
+    .AddProjects(
+        Path.Combine("MyLib", "MyLib.csproj"),
+        Path.Combine("MyTests", "MyTests.csproj"))
+    .Run().EnsureSuccess();
+```
+
+
+
+### Printing all projects in a solution file
+
+
+
+``` CSharp
+using HostApi;
+
+var lines = new List<string>();
+new DotNetSlnList()
+    .WithSolution("NySolution.sln")
+    .Run(output => lines.Add(output.Line))
+    .EnsureSuccess();
+```
+
+
+
+### Adding projects to the solution file
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetSlnRemove()
+    .WithSolution("NySolution.sln")
+    .AddProjects(
+        Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();
+```
+
+
+
+### Storing the specified assemblies in the runtime package store.
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetStore()
+    .AddManifests(Path.Combine("MyLib", "MyLib.csproj"))
+    .WithFramework("net8.0")
+    .WithRuntime("win-x64")
+    .Build();
+
 ```
 
 
@@ -711,26 +1336,17 @@ stdOut.ShouldBe(new[] {"Hello, World!"});
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-// Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-    .Build()
-    .EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
-
-// Runs tests via a command like: "dotnet test" from the directory "MyTests"
-result = new DotNetTest()
+// Runs tests
+var result = new DotNetTest()
     .WithWorkingDirectory("MyTests")
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
-// The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0);
-result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+// The "result" variable provides details about build and tests
+result.ExitCode.ShouldBe(0, result.ToString());
+result.Summary.Tests.ShouldBe(1, result.ToString());
+result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
 ```
 
 
@@ -740,24 +1356,12 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-// Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-new DotNetNew("mstest", "-n", "MyTests", "--force")
-    .Run()
-    .EnsureSuccess();
-
-// Creates the tool manifest and installs the dotCover tool locally
-// It is better to run the following 2 commands manually
-// and commit these changes to a source control
-new DotNetNew("tool-manifest")
-    .Run()
-    .EnsureSuccess();
-
-new DotNetCustom("tool", "install", "--local", "JetBrains.dotCover.GlobalTool")
-    .Run()
-    .EnsureSuccess();
+new DotNetToolInstall()
+    .WithLocal(true)
+    .WithPackage("JetBrains.dotCover.GlobalTool")
+    .Run().EnsureSuccess();
 
 // Creates a test command
 var test = new DotNetTest()
@@ -776,87 +1380,266 @@ var testUnderDotCover = test.Customize(cmd =>
     + "--dcFilters=+:module=TeamCity.CSharpInteractive.HostApi;+:module=dotnet-csi"
     + "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage");
 
-// Runs tests under dotCover via a command like: "dotnet dotcover test ..."
+// Runs tests under dotCover
 var result = testUnderDotCover
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0);
-result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1);
+result.ExitCode.ShouldBe(0, result.ToString());
+result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1, result.ToString());
 
 // Generates a HTML code coverage report.
 new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReport}", "--reportType=HTML")
     .Run().EnsureSuccess();
-
-// Check for a dotCover report
-File.Exists(dotCoverReport).ShouldBeTrue();
 ```
 
 
 
-### Restore local tools
+### Installing the specified .NET tool
 
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-var projectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
-Directory.CreateDirectory(projectDir);
+new DotNetToolInstall()
+    .WithLocal(true)
+    .WithPackage("dotnet-csi")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Printing all .NET tools of the specified type currently installed
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetToolList()
+    .WithLocal(true)
+    .Run().EnsureSuccess();
+
+new DotNetToolList()
+    .WithGlobal(true)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Installing the .NET local tools that are in scope for the current directory
+
+
+
+``` CSharp
+using HostApi;
 
 // Creates a local tool manifest 
-new DotNetNew("tool-manifest")
-    .WithWorkingDirectory(projectDir)
-    .Run()
-    .EnsureSuccess();
+new DotNetNew()
+    .WithTemplateName("tool-manifest")
+    .Run().EnsureSuccess();
 
-// Restore local tools
 new DotNetToolRestore()
-    .WithWorkingDirectory(projectDir)
-    .Run()
-    .EnsureSuccess();
+    .Run().EnsureSuccess();
 ```
 
 
 
-### Test an assembly
+### Invoking a local tool
 
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
-// Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-    .Build()
+var script = Path.GetTempFileName();
+File.WriteAllText(script, "Console.WriteLine($\"Hello, {Args[0]}!\");");
+
+var stdOut = new List<string>();
+new DotNetToolRun()
+    .WithCommandName("dotnet-csi")
+    .AddArgs(script)
+    .AddArgs("World")
+    .Run(output => stdOut.Add(output.Line))
     .EnsureSuccess();
 
-result.ExitCode.ShouldBe(0);
+// Checks stdOut
+stdOut.Contains("Hello, World!").ShouldBeTrue();
+```
 
-// Builds the test project, running a command like: "dotnet build -c Release" from the directory "MyTests"
-result = new DotNetBuild()
-    .WithWorkingDirectory("MyTests")
-    .WithConfiguration("Release")
-    .WithOutput("MyOutput")
-    .Build()
-    .EnsureSuccess();
 
-result.ExitCode.ShouldBe(0);
 
-// Runs tests via a command like: "dotnet vstest" from the directory "MyTests"
-result = new VSTest()
-    .AddTestFileNames(Path.Combine("MyOutput", "MyTests.dll"))
-    .WithWorkingDirectory("MyTests")
-    .Build()
-    .EnsureSuccess();
+### Searching all .NET tools that are published to NuGet
 
-// The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0);
-result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+
+
+``` CSharp
+using HostApi;
+
+new DotNetToolSearch()
+    .WithPackage("dotnet-csi")
+    .WithDetail(true)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Uninstalling the specified .NET tool
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetToolUninstall()
+    .WithPackage("dotnet-csi")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Installing the specified .NET tool
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetToolUpdate()
+    .WithLocal(true)
+    .WithPackage("dotnet-csi")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Running tests from the specified assemblies
+
+
+
+``` CSharp
+using HostApi;
+
+// Runs tests
+var result = new VSTest()
+    .AddTestFileNames(Path.Combine("bin", "MyTests.dll"))
+    .WithWorkingDirectory(path)
+    .Build().EnsureSuccess();
+
+// The "result" variable provides details about build and tests
+result.ExitCode.ShouldBe(0, result.ToString());
+result.Summary.Tests.ShouldBe(1, result.ToString());
+result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
+```
+
+
+
+### Enabling or disabling workload-set update mode
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetWorkloadConfig()
+    .WithUpdateMode(DotNetWorkloadUpdateMode.WorkloadSet)
+    .Run().EnsureSuccess();
+```
+
+
+
+### Installing optional workloads
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetWorkloadInstall()
+    .AddWorkloads("aspire")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Printing installed workloads
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetWorkloadList()
+    .Run().EnsureSuccess();
+```
+
+
+
+### Repairing workloads installations
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetWorkloadRepair()
+    .Run().EnsureSuccess();
+```
+
+
+
+### Installing workloads needed for a project or a solution
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetWorkloadRestore()
+    .WithProject(Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();
+```
+
+
+
+### Searching for optional workloads
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetWorkloadSearch()
+    .WithSearchString("maui")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Uninstalling a specified workload
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetWorkloadUninstall()
+    .AddWorkloads("aspire")
+    .Run().EnsureSuccess();
+```
+
+
+
+### Updating installed workloads
+
+
+
+``` CSharp
+using HostApi;
+
+new DotNetWorkloadUpdate()
+    .Run().EnsureSuccess();
 ```
 
 
@@ -866,29 +1649,27 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
 // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-    .Build()
-    .EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
+new DotNetNew()
+    .WithTemplateName("classlib")
+    .WithName("MyLib")
+    .WithForce(true)
+    .Build().EnsureSuccess();
 
 // Builds the library project, running a command like: "dotnet msbuild /t:Build -restore /p:configuration=Release -verbosity=detailed" from the directory "MyLib"
-result = new MSBuild()
+var result = new MSBuild()
     .WithWorkingDirectory("MyLib")
     .WithTarget("Build")
     .WithRestore(true)
     .AddProps(("configuration", "Release"))
     .WithVerbosity(DotNetVerbosity.Detailed)
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
-result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
-result.ExitCode.ShouldBe(0);
+result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse(result.ToString());
+result.ExitCode.ShouldBe(0, result.ToString());
 ```
 
 
@@ -898,13 +1679,34 @@ result.ExitCode.ShouldBe(0);
 
 
 ``` CSharp
-// Adds the namespace "HostApi" to use .NET build API
 using HostApi;
 
 // Shuts down all build servers that are started from dotnet.
 new DotNetBuildServerShutdown()
-    .Run()
+    .Run().EnsureSuccess();
+```
+
+
+
+### Run C# script
+
+
+
+``` CSharp
+using HostApi;
+
+var script = Path.GetTempFileName();
+File.WriteAllText(script, "Console.WriteLine($\"Hello, {Args[0]}!\");");
+
+var stdOut = new List<string>();
+new DotNetCsi()
+    .WithScript(script)
+    .AddArgs("World")
+    .Run(output => stdOut.Add(output.Line))
     .EnsureSuccess();
+
+// Checks stdOut
+stdOut.Contains("Hello, World!").ShouldBeTrue();
 ```
 
 

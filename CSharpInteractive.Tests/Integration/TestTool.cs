@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests.Integration;
 
 using System.Text;
 using Core;
-using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
 
 internal static class TestTool

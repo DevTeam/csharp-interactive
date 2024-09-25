@@ -1,7 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-
 public class FilePathResolverTests
 {
     private readonly Mock<ILog<FilePathResolver>> _log;

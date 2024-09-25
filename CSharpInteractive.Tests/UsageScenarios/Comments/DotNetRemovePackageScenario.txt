@@ -1,0 +1,11 @@
+using HostApi;
+
+new DotNetAddPackage()
+    .WithWorkingDirectory("MyLib")
+    .WithPackage("Pure.DI")
+    .Run().EnsureSuccess();
+
+new DotNetRemovePackage()
+    .WithWorkingDirectory("MyLib")
+    .WithPackage("Pure.DI")
+    .Run().EnsureSuccess();

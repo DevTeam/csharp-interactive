@@ -4,11 +4,9 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-using HostApi;
-
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class DotNetBuildServerShutdownScenario : BaseScenario
+[Trait("Integration", "True")]
+public class DotNetBuildServerShutdownScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()
@@ -18,13 +16,11 @@ public class DotNetBuildServerShutdownScenario : BaseScenario
         // $priority=02
         // $description=Shuts down build servers
         // {
-        // Adds the namespace "HostApi" to use .NET build API
         // ## using HostApi;
 
         // Shuts down all build servers that are started from dotnet.
         new DotNetBuildServerShutdown()
-            .Run()
-            .EnsureSuccess();
+            .Run().EnsureSuccess();
         // }
     }
 }

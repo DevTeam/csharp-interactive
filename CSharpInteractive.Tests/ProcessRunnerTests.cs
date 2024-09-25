@@ -1,8 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-using HostApi;
-
 public sealed class ProcessRunnerTests : IDisposable
 {
     private readonly Mock<IProcessManager> _processManager = new();

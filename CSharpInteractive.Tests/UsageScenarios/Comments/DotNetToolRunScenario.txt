@@ -1,0 +1,15 @@
+using HostApi;
+
+var script = Path.GetTempFileName();
+File.WriteAllText(script, "Console.WriteLine($\"Hello, {Args[0]}!\");");
+
+var stdOut = new List<string>();
+new DotNetToolRun()
+    .WithCommandName("dotnet-csi")
+    .AddArgs(script)
+    .AddArgs("World")
+    .Run(output => stdOut.Add(output.Line))
+    .EnsureSuccess();
+
+// Checks stdOut
+stdOut.Contains("Hello, World!").ShouldBeTrue();

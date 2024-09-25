@@ -1,0 +1,6 @@
+using HostApi;
+
+var result = new DotNetAddPackage()
+    .WithWorkingDirectory("MyLib")
+    .WithPackage("Pure.DI")
+    .Run().EnsureSuccess();

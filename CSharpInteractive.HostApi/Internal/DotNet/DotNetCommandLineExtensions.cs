@@ -7,6 +7,8 @@
 namespace HostApi.Internal.DotNet;
 
 using System.Diagnostics.Contracts;
+using System.Globalization;
+using System.Text;
 
 [ExcludeFromCodeCoverage]
 internal static class DotNetCommandLineExtensions
@@ -31,20 +33,40 @@ internal static class DotNetCommandLineExtensions
     }
 
     [Pure]
-    public static string GetShortName(this string baseName, string shortName, string path = "")
+    public static string GetShortName(this string baseName, string description, string shortName, params string[] paths)
     {
         if (!string.IsNullOrWhiteSpace(shortName))
         {
             return shortName;
         }
 
-        // ReSharper disable once ConvertIfStatementToReturnStatement
-        if (string.IsNullOrWhiteSpace(path))
+        var name = new StringBuilder();
+        name.Append(baseName);
+        foreach (var path in paths)
         {
-            return baseName;
-        }
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                continue;
+            }
 
-        return $"{baseName} {Path.GetFileName(path)}";
+            if (name.Length > 0)
+            {
+                name.Append(' ');
+            }
+
+            var fileName = Path.GetFileName(path);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                name.Append(path);
+                continue;
+            }
+            
+            name.Append(fileName);
+        }
+        
+        name.Append(" - ");
+        name.Append(description);
+        return name.ToString();
     }
 
     [Pure]
@@ -118,4 +140,44 @@ internal static class DotNetCommandLineExtensions
     public static CommandLine AddProps(this CommandLine cmd, string propertyName, params (string name, string value)[] props) =>
         cmd.AddArgs(props.Select(i => $"{propertyName}:{i.name}={i.value}")
             .ToArray());
+    
+    // ReSharper disable once UnusedParameter.Global
+    public static string[] ToArgs<T>(this T value, string name, string collectionSeparator)
+    {
+        if (!string.IsNullOrWhiteSpace(collectionSeparator))
+        {
+            return [$"{name}{collectionSeparator}\"{value}\""];
+        }
+        
+        var valueStr = value?.ToString();
+        return string.IsNullOrWhiteSpace(valueStr) ? [] : [name, valueStr!];
+    }
+    
+    public static string[] ToArgs(this IEnumerable<string> values, string name, string collectionSeparator)
+    {
+        if (string.IsNullOrEmpty(collectionSeparator))
+        {
+            return values.SelectMany(value => string.IsNullOrWhiteSpace(value) ? [] : new[] {name, value}).ToArray();
+        }
+        
+        if (string.IsNullOrWhiteSpace(collectionSeparator))
+        {
+            var result = Enumerable.Repeat(name, 1).Concat(values).ToArray();
+            return result.Length > 1 ? result : [];
+        }
+        
+        var str = string.Join(collectionSeparator, values);
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return [];
+        }
+
+        return string.IsNullOrWhiteSpace(str) ? [] : [name, str];
+    }
+    
+    // ReSharper disable once UnusedParameter.Global
+    public static string[] ToArgs(this TimeSpan? value, string name, string collectionSeparator) => 
+        value.HasValue ? [name, value.Value.TotalMilliseconds.ToString(CultureInfo.InvariantCulture)] : [];
+
+    public static string ToArg<T>(this T value) => value?.ToString() ?? "";
 }

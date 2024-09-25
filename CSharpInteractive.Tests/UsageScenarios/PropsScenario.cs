@@ -3,7 +3,7 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-public class PropsScenario : BaseScenario
+public class PropsScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()

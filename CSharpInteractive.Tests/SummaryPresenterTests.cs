@@ -1,8 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
-using Core;
-using HostApi;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class SummaryPresenterTests

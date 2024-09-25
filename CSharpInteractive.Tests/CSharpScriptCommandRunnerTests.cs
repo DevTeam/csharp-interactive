@@ -1,7 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-
 public class CSharpScriptCommandRunnerTests
 {
     private readonly Mock<ICSharpScriptRunner> _csharpScriptRunner = new();

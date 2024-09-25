@@ -3,12 +3,11 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-using HostApi;
 using NuGet.Versioning;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class NuGetRestoreAdvanced : BaseScenario
+[Trait("Integration", "True")]
+public class NuGetRestoreAdvanced(ITestOutputHelper output) : BaseScenario(output)
 {
     [SkippableFact]
     public void Run()
@@ -18,7 +17,6 @@ public class NuGetRestoreAdvanced : BaseScenario
         // $priority=01
         // $description=Restore a NuGet package by a version range for the specified .NET and path
         // {
-        // Adds the namespace "HostApi" to use INuGet
         // ## using HostApi;
 
         var packagesPath = Path.Combine(

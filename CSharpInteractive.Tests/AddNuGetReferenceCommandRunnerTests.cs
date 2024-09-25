@@ -1,6 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
 using NuGet.Versioning;
 
 public class AddNuGetReferenceCommandRunnerTests

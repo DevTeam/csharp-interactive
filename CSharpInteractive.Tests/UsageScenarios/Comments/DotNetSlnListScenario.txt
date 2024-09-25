@@ -1,0 +1,7 @@
+using HostApi;
+
+var lines = new List<string>();
+new DotNetSlnList()
+    .WithSolution("NySolution.sln")
+    .Run(output => lines.Add(output.Line))
+    .EnsureSuccess();

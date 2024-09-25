@@ -1,0 +1,6 @@
+using HostApi;
+
+new DotNetNuGetUpdateSource()
+    .WithName("TestSource")
+    .WithSource(newSource)
+    .Run().EnsureSuccess();

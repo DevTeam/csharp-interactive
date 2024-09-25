@@ -3,7 +3,7 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-public class WriteEmptyLineScenario : BaseScenario
+public class WriteEmptyLineScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()

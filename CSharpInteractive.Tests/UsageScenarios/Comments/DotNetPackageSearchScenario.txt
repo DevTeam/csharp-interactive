@@ -1,0 +1,26 @@
+using System.Text;
+using System.Text.Json;
+using HostApi;
+
+var packagesJson = new StringBuilder();
+new DotNetPackageSearch()
+    .WithSearchTerm("Pure.DI")
+    .WithFormat(DotNetPackageSearchResultFormat.Json)
+    .Run(output => packagesJson.AppendLine(output.Line)).EnsureSuccess();
+
+var result = JsonSerializer.Deserialize<Result>(
+    packagesJson.ToString(),
+    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+result.ShouldNotBeNull();
+result.SearchResult.SelectMany(i => i.Packages).Count(i => i.Id == "Pure.DI").ShouldBe(1);
+
+record Result(int Version, IReadOnlyCollection<Source> SearchResult);
+
+record Source(string SourceName, IReadOnlyCollection<Package> Packages);
+
+record Package(
+    string Id,
+    string LatestVersion,
+    int TotalDownloads,
+    string Owners);

@@ -1,0 +1,6 @@
+using HostApi;
+
+new DotNetToolSearch()
+    .WithPackage("dotnet-csi")
+    .WithDetail(true)
+    .Run().EnsureSuccess();

@@ -5,8 +5,9 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 
 using static HostApi.Color;
 
-public class WriteLineWithColourScenario : BaseScenario
+public class WriteLineWithColourScenario(ITestOutputHelper output) : BaseScenario(output)
 {
+
     [Fact]
     public void Run()
     {

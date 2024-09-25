@@ -4,11 +4,10 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
-using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class CommandLineWithTimeoutScenario : BaseScenario
+[Trait("Integration", "True")]
+public class CommandLineWithTimeoutScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [SkippableFact]
     public void Run()
@@ -23,15 +22,13 @@ public class CommandLineWithTimeoutScenario : BaseScenario
         // $description=Run timeout
         // $header=If timeout expired a process will be killed.
         // {
-        // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
-        int? exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
+        var exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
             .Run(default, TimeSpan.FromMilliseconds(1))
-            .EnsureSuccess()
             .ExitCode;
-
-        exitCode.HasValue.ShouldBeFalse();
         // }
+
+        exitCode.HasValue.ShouldBeFalse(exitCode.ToString());
     }
 }

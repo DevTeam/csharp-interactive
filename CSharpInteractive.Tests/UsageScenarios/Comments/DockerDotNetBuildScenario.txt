@@ -1,0 +1,23 @@
+using HostApi;
+
+// Creates a base docker command line
+var dockerRun = new DockerRun()
+    .WithAutoRemove(true)
+    .WithInteractive(true)
+    .WithImage("mcr.microsoft.com/dotnet/sdk")
+    .WithPlatform("linux")
+    .WithContainerWorkingDirectory("/MyProjects")
+    .AddVolumes((ToAbsoluteLinuxPath(Environment.CurrentDirectory), "/MyProjects"));
+
+// Creates a new library project in a docker container
+dockerRun
+    .WithCommandLine(new DotNetCustom("new", "classlib", "-n", "MyLib", "--force"))
+    .Run().EnsureSuccess();
+
+// Builds the library project in a docker container
+var result = dockerRun
+    .WithCommandLine(new DotNetBuild().WithProject("MyLib/MyLib.csproj"))
+    .Build().EnsureSuccess();
+
+string ToAbsoluteLinuxPath(string path) =>
+    "/" + path.Replace(":", "").Replace('\\', '/');

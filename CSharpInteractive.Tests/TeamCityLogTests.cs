@@ -1,6 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
 public class TeamCityLogTests

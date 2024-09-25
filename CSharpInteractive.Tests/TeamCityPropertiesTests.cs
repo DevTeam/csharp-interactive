@@ -1,7 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
 public class TeamCityPropertiesTests

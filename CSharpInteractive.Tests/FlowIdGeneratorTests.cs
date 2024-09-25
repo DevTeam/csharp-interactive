@@ -1,7 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-
 public class FlowIdGeneratorTests
 {
     private readonly Mock<ICISettings> _teamCitySettings = new();

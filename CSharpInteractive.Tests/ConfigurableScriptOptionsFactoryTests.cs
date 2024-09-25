@@ -1,6 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Scripting;

@@ -3,10 +3,9 @@
 namespace CSharpInteractive.Tests.Integration;
 
 using Core;
-using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class HelpTests
 {
     [Theory]

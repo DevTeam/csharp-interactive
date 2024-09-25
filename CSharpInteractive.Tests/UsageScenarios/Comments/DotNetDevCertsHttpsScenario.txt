@@ -1,0 +1,9 @@
+using HostApi;
+
+// Create a certificate, trust it, and export it to a PEM file.
+new DotNetDevCertsHttps()
+    .WithExportPath("certificate.pem")
+    .WithTrust(true)
+    .WithFormat(DotNetCertificateFormat.Pem)
+    .WithPassword("Abc")
+    .Run().EnsureSuccess();

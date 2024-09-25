@@ -1,0 +1,9 @@
+using HostApi;
+
+// Creates a local tool manifest 
+new DotNetNew()
+    .WithTemplateName("tool-manifest")
+    .Run().EnsureSuccess();
+
+new DotNetToolRestore()
+    .Run().EnsureSuccess();

@@ -1,6 +1,6 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-public class ArgsScenario : BaseScenario
+public class ArgsScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()

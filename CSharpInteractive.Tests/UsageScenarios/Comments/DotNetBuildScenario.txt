@@ -1,0 +1,9 @@
+using HostApi;
+
+var messages = new List<BuildMessage>();
+var result = new DotNetBuild()
+    .WithWorkingDirectory("MyTests")
+    .Build(message => messages.Add(message)).EnsureSuccess();
+
+result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse(result.ToString());
+result.ExitCode.ShouldBe(0, result.ToString());

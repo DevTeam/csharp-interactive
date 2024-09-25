@@ -1,0 +1,8 @@
+using HostApi;
+
+new DotNetNuGetSign()
+    .AddPackages("MyLib.1.2.3.nupkg")
+    .WithCertificatePath("certificate.pfx")
+    .WithCertificatePassword("Abc")
+    .WithTimestampingServer("http://timestamp.digicert.com/")
+    .Run().EnsureSuccess();

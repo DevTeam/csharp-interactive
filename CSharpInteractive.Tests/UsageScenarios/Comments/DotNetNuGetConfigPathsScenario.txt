@@ -1,0 +1,5 @@
+using HostApi;
+
+var configPaths = new List<string>();
+new DotNetNuGetConfigPaths()
+    .Run(output => configPaths.Add(output.Line)).EnsureSuccess();

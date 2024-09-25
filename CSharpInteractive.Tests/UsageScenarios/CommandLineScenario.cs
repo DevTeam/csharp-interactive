@@ -4,11 +4,10 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
-using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class CommandLineScenario : BaseScenario
+[Trait("Integration", "True")]
+public class CommandLineScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [SkippableFact]
     public void Run()
@@ -21,17 +20,14 @@ public class CommandLineScenario : BaseScenario
         // $priority=01
         // $description=Run a command line
         // {
-        // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
         GetService<ICommandLineRunner>()
-            .Run(new CommandLine("cmd", "/c", "DIR"))
-            .EnsureSuccess();
+            .Run(new CommandLine("cmd", "/c", "DIR")).EnsureSuccess();
 
         // or the same thing using the extension method
         new CommandLine("cmd", "/c", "DIR")
-            .Run()
-            .EnsureSuccess();
+            .Run().EnsureSuccess();
 
         // using operator '+'
         var cmd = new CommandLine("cmd") + "/c" + "DIR";

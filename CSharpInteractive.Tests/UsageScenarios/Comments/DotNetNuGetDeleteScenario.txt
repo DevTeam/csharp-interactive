@@ -1,0 +1,7 @@
+using HostApi;
+
+new DotNetNuGetDelete()
+    .WithPackage("MyLib")
+    .WithPackageVersion("1.0.0")
+    .WithSource(repoUrl)
+    .Run().EnsureSuccess();

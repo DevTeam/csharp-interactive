@@ -5,11 +5,9 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-using HostApi;
-
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class DotNetToolRestoreScenario : BaseScenario
+[Trait("Integration", "True")]
+public class DotNetToolRestoreScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()
@@ -17,27 +15,17 @@ public class DotNetToolRestoreScenario : BaseScenario
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Restore local tools
+        // $description=Installing the .NET local tools that are in scope for the current directory
         // {
-        // Adds the namespace "HostApi" to use .NET build API
         // ## using HostApi;
 
-        var projectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
-        Directory.CreateDirectory(projectDir);
-
         // Creates a local tool manifest 
-        new DotNetNew("tool-manifest")
-            .WithWorkingDirectory(projectDir)
-            .Run()
-            .EnsureSuccess();
+        new DotNetNew()
+            .WithTemplateName("tool-manifest")
+            .Run().EnsureSuccess();
 
-        // Restore local tools
         new DotNetToolRestore()
-            .WithWorkingDirectory(projectDir)
-            .Run()
-            .EnsureSuccess();
+            .Run().EnsureSuccess();
         // }
-
-        Directory.Delete(projectDir, true);
     }
 }

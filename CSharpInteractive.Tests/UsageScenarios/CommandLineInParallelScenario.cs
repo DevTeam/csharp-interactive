@@ -5,11 +5,10 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
-using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class CommandLineInParallelScenario : BaseScenario
+[Trait("Integration", "True")]
+public class CommandLineInParallelScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [SkippableFact]
     public async Task Run()
@@ -22,21 +21,18 @@ public class CommandLineInParallelScenario : BaseScenario
         // $priority=05
         // $description=Run asynchronously in parallel
         // {
-        // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
         var task = new CommandLine("cmd", "/c", "DIR")
-            .RunAsync()
-            .EnsureSuccess();
+            .RunAsync().EnsureSuccess();
 
         var result = new CommandLine("cmd", "/c", "SET")
-            .Run()
-            .EnsureSuccess();
+            .Run().EnsureSuccess();
 
         await task;
         // }
 
-        task.Result.ExitCode.HasValue.ShouldBeTrue();
-        result.ExitCode.HasValue.ShouldBeTrue();
+        task.Result.ExitCode.HasValue.ShouldBeTrue(result.ToString());
+        result.ExitCode.HasValue.ShouldBeTrue(result.ToString());
     }
 }

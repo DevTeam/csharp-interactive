@@ -1,0 +1,5 @@
+using HostApi;
+
+new DotNetWorkloadSearch()
+    .WithSearchString("maui")
+    .Run().EnsureSuccess();

@@ -4,11 +4,10 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
-using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class CommandLineAsyncCancellation : BaseScenario
+[Trait("Integration", "True")]
+public class CommandLineAsyncCancellation(ITestOutputHelper output) : BaseScenario(output)
 {
     [SkippableFact]
     public void Run()
@@ -22,7 +21,6 @@ public class CommandLineAsyncCancellation : BaseScenario
         // $description=Cancellation of asynchronous run
         // $header=Cancellation will destroy the process and its child processes.
         // {
-        // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
         var cancellationTokenSource = new CancellationTokenSource();

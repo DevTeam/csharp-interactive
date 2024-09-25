@@ -1,0 +1,8 @@
+using HostApi;
+
+// Creates a NuGet package of version 1.2.3 for the project
+new DotNetPack()
+    .WithWorkingDirectory("MyLib")
+    .WithOutput(path)
+    .AddProps(("version", "1.2.3"))
+    .Build().EnsureSuccess();

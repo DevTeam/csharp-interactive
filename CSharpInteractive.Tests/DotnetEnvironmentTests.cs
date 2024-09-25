@@ -2,7 +2,6 @@ namespace CSharpInteractive.Tests;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using Core;
 
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class DotNetEnvironmentTests

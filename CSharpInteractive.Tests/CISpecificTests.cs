@@ -2,8 +2,6 @@
 
 namespace CSharpInteractive.Tests;
 
-using Core;
-
 public class CISpecificTests
 {
     private readonly Mock<ICISettings> _settings = new();

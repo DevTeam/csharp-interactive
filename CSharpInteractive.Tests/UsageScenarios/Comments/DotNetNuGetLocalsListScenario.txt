@@ -1,0 +1,5 @@
+using HostApi;
+
+new DotNetNuGetLocalsList()
+    .WithCacheLocation(NuGetCacheLocation.GlobalPackages)
+    .Run().EnsureSuccess();

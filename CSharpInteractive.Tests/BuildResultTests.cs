@@ -1,8 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-using HostApi;
-
 public class BuildResultTests
 {
     private static readonly Output Output = new(Mock.Of<IStartInfo>(), false, "", 99);

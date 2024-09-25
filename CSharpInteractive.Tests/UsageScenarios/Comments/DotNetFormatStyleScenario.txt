@@ -1,0 +1,8 @@
+using HostApi;
+
+new DotNetFormatStyle()
+    .WithWorkingDirectory("MyLib")
+    .WithProject("MyLib.csproj")
+    .AddDiagnostics("IDE0005", "IDE0006")
+    .WithSeverity(DotNetFormatSeverity.Information)
+    .Run().EnsureSuccess();

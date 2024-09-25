@@ -4,9 +4,7 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-using HostApi;
-
-public class GetServiceScenario : BaseScenario
+public class GetServiceScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()

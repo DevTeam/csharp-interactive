@@ -1,0 +1,6 @@
+using HostApi;
+
+new DotNetNuGetWhy()
+    .WithProject(Path.Combine("MyLib", "MyLib.csproj"))
+    .WithPackage("MyLib.1.2.3.nupkg")
+    .Run().EnsureSuccess();

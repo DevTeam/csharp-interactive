@@ -1,8 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-using HostApi;
-
 public class ProcessResultHandlerTests
 {
     private readonly Mock<ILog<ProcessResultHandler>> _log = new();

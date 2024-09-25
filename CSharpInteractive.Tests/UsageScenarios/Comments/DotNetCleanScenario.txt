@@ -1,0 +1,6 @@
+using HostApi;
+
+// Clean the project, running a command like: "dotnet clean" from the directory "MyLib"
+new DotNetClean()
+    .WithWorkingDirectory("MyLib")
+    .Build().EnsureSuccess();

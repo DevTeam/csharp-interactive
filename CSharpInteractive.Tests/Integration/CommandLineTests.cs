@@ -4,11 +4,10 @@ namespace CSharpInteractive.Tests.Integration;
 
 using System.Diagnostics;
 using Core;
-using HostApi;
 using Microsoft.Extensions.DependencyInjection;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class CommandLineTests
 {
     [Fact]

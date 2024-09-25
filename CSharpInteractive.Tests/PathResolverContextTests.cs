@@ -1,7 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-using HostApi;
 using HostApi.Internal.Cmd;
 
 public class PathResolverContextTests

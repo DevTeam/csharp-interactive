@@ -1,7 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-
 public class TracePresenterTests
 {
     private readonly Mock<ILog<TracePresenter>> _log = new();

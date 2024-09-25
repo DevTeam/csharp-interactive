@@ -1,7 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-using HostApi;
 using NuGet.Versioning;
 
 public class NuGetReferenceResolverTests

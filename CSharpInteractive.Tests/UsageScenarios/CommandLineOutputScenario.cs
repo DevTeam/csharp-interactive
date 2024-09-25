@@ -4,11 +4,10 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
-using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class CommandLineOutputScenario : BaseScenario
+[Trait("Integration", "True")]
+public class CommandLineOutputScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [SkippableFact]
     public void Run()
@@ -21,18 +20,16 @@ public class CommandLineOutputScenario : BaseScenario
         // $priority=04
         // $description=Run and process output
         // {
-        // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
         var lines = new List<string>();
         var result = new CommandLine("cmd", "/c", "SET")
             .AddVars(("MyEnv", "MyVal"))
-            .Run(output => lines.Add(output.Line))
-            .EnsureSuccess();
+            .Run(output => lines.Add(output.Line)).EnsureSuccess();
 
         lines.ShouldContain("MyEnv=MyVal");
         // }
 
-        result.ExitCode.HasValue.ShouldBeTrue();
+        result.ExitCode.HasValue.ShouldBeTrue(result.ToString());
     }
 }

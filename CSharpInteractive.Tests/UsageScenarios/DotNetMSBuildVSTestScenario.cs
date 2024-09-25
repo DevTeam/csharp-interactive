@@ -5,41 +5,36 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-using HostApi;
-
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class DotNetMSBuildVSTestScenario : BaseScenario
+[Trait("Integration", "True")]
+public class DotNetMSBuildVSTestScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()
     {
+        new DotNetNew()
+            .WithTemplateName("mstest")
+            .WithName("MyTests")
+            .WithForce(true)
+            .Run().EnsureSuccess();
+        
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
         // $description=Test a project using the MSBuild VSTest target
         // {
-        // Adds the namespace "HostApi" to use .NET build API
         // ## using HostApi;
 
-        // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
-
-        // Runs tests via a command like: "dotnet msbuild /t:VSTest" from the directory "MyTests"
-        result = new MSBuild()
+        // Runs tests via a command
+        var result = new MSBuild()
             .WithTarget("VSTest")
             .WithWorkingDirectory("MyTests")
-            .Build()
-            .EnsureSuccess();
+            .Build().EnsureSuccess();
 
         // The "result" variable provides details about a build
-        result.ExitCode.ShouldBe(0);
-        result.Summary.Tests.ShouldBe(1);
-        result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+        result.ExitCode.ShouldBe(0, result.ToString());
+        result.Summary.Tests.ShouldBe(1, result.ToString());
+        result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
         // }
     }
 }

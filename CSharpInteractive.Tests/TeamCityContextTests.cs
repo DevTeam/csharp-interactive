@@ -2,8 +2,6 @@
 
 namespace CSharpInteractive.Tests;
 
-using Core;
-
 public class TeamCityContextTests
 {
     private readonly Mock<IEnvironment> _environment = new();

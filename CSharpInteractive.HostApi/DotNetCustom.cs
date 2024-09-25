@@ -7,7 +7,7 @@ namespace HostApi;
 using Internal.DotNet;
 
 /// <summary>
-/// The dotnet custom command is used to execute any dotnet commands with any arguments.
+/// Executes a custom dotnet command.
 /// <example>
 /// <code>
 /// NuGetVersion? version = default;
@@ -21,11 +21,17 @@ using Internal.DotNet;
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Build">Specifies to use of a build logger.</param>
+/// <param name="Tests">Specifies to use of a tests logger.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
 /// <param name="ShortName">Specifies whether the ability to use build loggers is supported. The default is set to true.</param>
 [Target]
 public partial record DotNetCustom(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
+    bool? Build = default,
+    bool? Tests = default,
+    DotNetVerbosity? Verbosity = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
     string ShortName = "")
@@ -42,7 +48,18 @@ public partial record DotNetCustom(
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
-        return host.CreateCommandLine(ExecutablePath)
+        var cmd = host.CreateCommandLine(ExecutablePath);
+        if (Build == true)
+        {
+            cmd = cmd.AddMSBuildLoggers(host, Verbosity);
+        }
+        
+        if (Tests == true)
+        {
+            cmd = cmd.AddTestLoggers(host, Array.Empty<string>());
+        }
+        
+        return cmd
             .WithShortName(ToString())
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
@@ -51,7 +68,5 @@ public partial record DotNetCustom(
 
     /// <inheritdoc/>
     public override string ToString() =>
-        (ExecutablePath == string.Empty
-            ? "dotnet"
-            : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName(ShortName, Args.FirstOrDefault() ?? string.Empty);
+        (ExecutablePath == string.Empty ? "dotnet" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName("Executes a custom dotnet command.", ShortName, Args.ToArray());
 }

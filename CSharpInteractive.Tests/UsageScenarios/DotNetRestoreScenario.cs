@@ -5,37 +5,29 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-using HostApi;
-
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class DotNetRestoreScenario : BaseScenario
+[Trait("Integration", "True")]
+public class DotNetRestoreScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()
     {
+        new DotNetNew()
+            .WithTemplateName("classlib")
+            .WithName("MyLib")
+            .WithForce(true)
+            .Run().EnsureSuccess();
+
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Restore a project
+        // $description=Restoring the dependencies and tools of a project
         // {
-        // Adds the namespace "HostApi" to use .NET build API
         // ## using HostApi;
 
-        // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-        var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
-
-        // Restore the project, running a command like: "dotnet restore" from the directory "MyLib"
-        result = new DotNetRestore()
-            .WithWorkingDirectory("MyLib")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
+        new DotNetRestore()
+            .WithProject(Path.Combine("MyLib", "MyLib.csproj"))
+            .Build().EnsureSuccess();
         // }
     }
 }

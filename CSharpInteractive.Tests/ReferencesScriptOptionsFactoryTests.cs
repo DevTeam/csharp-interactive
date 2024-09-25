@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using System.Reflection;
-using Core;
 using Microsoft.CodeAnalysis.Scripting;
 
 public class ReferencesScriptOptionsFactoryTests

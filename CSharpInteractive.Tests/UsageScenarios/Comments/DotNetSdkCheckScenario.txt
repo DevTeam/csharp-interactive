@@ -1,0 +1,20 @@
+using HostApi;
+
+var sdks = new List<Sdk>();
+new DotNetSdkCheck()
+    .Run(output =>
+    {
+        if (output.Line.StartsWith("Microsoft."))
+        {
+            var data = output.Line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (data.Length >= 2)
+            {
+                sdks.Add(new Sdk(data[0], NuGetVersion.Parse(data[1])));
+            }
+        }
+    })
+    .EnsureSuccess();
+
+sdks.Count.ShouldBeGreaterThan(0);
+
+record Sdk(string Name, NuGetVersion Version);

@@ -1,0 +1,7 @@
+using HostApi;
+
+new DotNetNew()
+    .WithTemplateName("classlib")
+    .WithName("MyLib")
+    .WithForce(true)
+    .Run().EnsureSuccess();

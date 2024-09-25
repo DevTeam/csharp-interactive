@@ -5,51 +5,44 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
-using HostApi;
-
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class DotNetVSTestScenario : BaseScenario
+[Trait("Integration", "True")]
+public class DotNetVSTestScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact]
     public void Run()
     {
+        var path = "MyTests";
+        
+        new DotNetNew()
+            .WithTemplateName("mstest")
+            .WithName(path)
+            .WithForce(true)
+            .Run().EnsureSuccess();
+        
+        new DotNetBuild()
+            .WithWorkingDirectory(path)
+            .WithConfiguration("Release")
+            .WithOutput("bin")
+            .Build().EnsureSuccess();
+
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Test an assembly
+        // $description=Running tests from the specified assemblies
         // {
-        // Adds the namespace "HostApi" to use .NET build API
         // ## using HostApi;
 
-        // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-            .Build()
-            .EnsureSuccess();
+        // Runs tests
+        var result = new VSTest()
+            .AddTestFileNames(Path.Combine("bin", "MyTests.dll"))
+            .WithWorkingDirectory(path)
+            .Build().EnsureSuccess();
 
-        result.ExitCode.ShouldBe(0);
-
-        // Builds the test project, running a command like: "dotnet build -c Release" from the directory "MyTests"
-        result = new DotNetBuild()
-            .WithWorkingDirectory("MyTests")
-            .WithConfiguration("Release")
-            .WithOutput("MyOutput")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
-
-        // Runs tests via a command like: "dotnet vstest" from the directory "MyTests"
-        result = new VSTest()
-            .AddTestFileNames(Path.Combine("MyOutput", "MyTests.dll"))
-            .WithWorkingDirectory("MyTests")
-            .Build()
-            .EnsureSuccess();
-
-        // The "result" variable provides details about a build
-        result.ExitCode.ShouldBe(0);
-        result.Summary.Tests.ShouldBe(1);
-        result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+        // The "result" variable provides details about build and tests
+        result.ExitCode.ShouldBe(0, result.ToString());
+        result.Summary.Tests.ShouldBe(1, result.ToString());
+        result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
         // }
     }
 
@@ -57,21 +50,18 @@ public class DotNetVSTestScenario : BaseScenario
     public void RunAsCommandLine()
     {
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
+        new DotNetNew()
+            .WithTemplateName("mstest")
+            .WithName("MyTests")
+            .WithForce(true)
+            .Build().EnsureSuccess();
 
         // Builds the test project, running a command like: "dotnet build -c Release" from the directory "MyTests"
-        result = new DotNetBuild()
+        new DotNetBuild()
             .WithWorkingDirectory("MyTests")
             .WithConfiguration("Release")
             .WithOutput("MyOutput")
-            .Build()
-            .EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
+            .Build().EnsureSuccess();
 
         // Runs tests via a command like: "dotnet vstest" from the directory "MyTests"
         var lines = new List<string>();

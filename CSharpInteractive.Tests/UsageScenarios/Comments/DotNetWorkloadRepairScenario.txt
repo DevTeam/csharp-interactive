@@ -1,0 +1,4 @@
+using HostApi;
+
+new DotNetWorkloadRepair()
+    .Run().EnsureSuccess();

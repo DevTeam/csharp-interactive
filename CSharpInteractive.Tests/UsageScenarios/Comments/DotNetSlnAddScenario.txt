@@ -1,0 +1,14 @@
+using HostApi;
+
+new DotNetNew()
+    .WithTemplateName("sln")
+    .WithName("NySolution")
+    .WithForce(true)
+    .Run().EnsureSuccess();
+
+new DotNetSlnAdd()
+    .WithSolution("NySolution.sln")
+    .AddProjects(
+        Path.Combine("MyLib", "MyLib.csproj"),
+        Path.Combine("MyTests", "MyTests.csproj"))
+    .Run().EnsureSuccess();

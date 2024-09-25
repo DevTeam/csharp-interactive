@@ -5,11 +5,10 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
-using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class CommandLineAsyncScenario : BaseScenario
+[Trait("Integration", "True")]
+public class CommandLineAsyncScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [SkippableFact]
     public async Task Run()
@@ -22,19 +21,16 @@ public class CommandLineAsyncScenario : BaseScenario
         // $priority=02
         // $description=Run a command line asynchronously
         // {
-        // Adds the namespace "HostApi" to use Command Line API
         // ## using HostApi;
 
         await GetService<ICommandLineRunner>()
-            .RunAsync(new CommandLine("cmd", "/C", "DIR"))
-            .EnsureSuccess();
+            .RunAsync(new CommandLine("cmd", "/C", "DIR")).EnsureSuccess();
 
         // or the same thing using the extension method
         var result = await new CommandLine("cmd", "/c", "DIR")
-            .RunAsync()
-            .EnsureSuccess();
+            .RunAsync().EnsureSuccess();
         // }
 
-        result.ExitCode.HasValue.ShouldBeTrue();
+        result.ExitCode.HasValue.ShouldBeTrue(result.ToString());
     }
 }

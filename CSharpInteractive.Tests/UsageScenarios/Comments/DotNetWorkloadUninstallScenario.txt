@@ -1,0 +1,5 @@
+using HostApi;
+
+new DotNetWorkloadUninstall()
+    .AddWorkloads("aspire")
+    .Run().EnsureSuccess();

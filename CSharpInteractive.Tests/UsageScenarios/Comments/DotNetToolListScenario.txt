@@ -1,0 +1,9 @@
+using HostApi;
+
+new DotNetToolList()
+    .WithLocal(true)
+    .Run().EnsureSuccess();
+
+new DotNetToolList()
+    .WithGlobal(true)
+    .Run().EnsureSuccess();

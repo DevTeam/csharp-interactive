@@ -1,0 +1,10 @@
+using HostApi;
+
+new DotNetFormat()
+    .WithWorkingDirectory("MyLib")
+    .WithProject("MyLib.csproj")
+    .AddDiagnostics("IDE0005", "IDE0006")
+    .AddIncludes(".", "./tests")
+    .AddExcludes("./obj")
+    .WithSeverity(DotNetFormatSeverity.Information)
+    .Run().EnsureSuccess();

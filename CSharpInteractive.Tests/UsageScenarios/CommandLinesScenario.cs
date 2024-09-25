@@ -7,11 +7,10 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System;
-using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-public class CommandLinesScenario : BaseScenario
+[Trait("Integration", "True")]
+public class CommandLinesScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [SkippableFact]
     public void Run()
@@ -23,7 +22,6 @@ public class CommandLinesScenario : BaseScenario
         // $priority=00
         // $description=Build command lines
         // {
-        // Adds the namespace "Script.Cmd" to use Command Line API
         // ## using HostApi;
 
         // Creates and run a simple command line 
@@ -38,20 +36,16 @@ public class CommandLinesScenario : BaseScenario
         // Same as previous statement
         new CommandLine("cmd", "/c")
             .AddArgs("echo", "Hello")
-            .Run()
-            .EnsureSuccess();
+            .Run().EnsureSuccess();
 
         (new CommandLine("cmd") + "/c" + "echo" + "Hello")
-            .Run()
-            .EnsureSuccess();
+            .Run().EnsureSuccess();
 
         "cmd".AsCommandLine("/c", "echo", "Hello")
-            .Run()
-            .EnsureSuccess();
+            .Run().EnsureSuccess();
 
         ("cmd".AsCommandLine() + "/c" + "echo" + "Hello")
-            .Run()
-            .EnsureSuccess();
+            .Run().EnsureSuccess();
 
         // Just builds a command line with multiple environment variables
         var cmd = new CommandLine("cmd", "/c", "echo", "Hello")

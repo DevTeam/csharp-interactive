@@ -2,8 +2,6 @@
 
 namespace CSharpInteractive.Tests;
 
-using Core;
-
 public class CISettingsTests
 {
     private readonly Mock<IHostEnvironment> _hostEnvironment = new();

@@ -1,7 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-
 public class DockerSettingsTests
 {
     private readonly Mock<IDockerEnvironment> _dockerEnvironment = new();

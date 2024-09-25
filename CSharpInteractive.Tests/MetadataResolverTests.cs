@@ -1,7 +1,6 @@
 namespace CSharpInteractive.Tests;
 
 using System.Collections.Immutable;
-using Core;
 using Microsoft.CodeAnalysis;
 
 public class MetadataResolverTests

@@ -1,0 +1,18 @@
+using HostApi;
+
+new DotNetAddReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .WithReferences(Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();
+
+new DotNetRemoveReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .WithReferences(Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();
+
+var lines = new List<string>();
+new DotNetListReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .Run(output => lines.Add(output.Line));
+
+lines.Any(i => i.Contains("MyLib.csproj")).ShouldBeFalse();

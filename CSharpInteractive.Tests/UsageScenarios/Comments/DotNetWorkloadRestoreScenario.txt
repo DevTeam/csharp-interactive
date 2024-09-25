@@ -1,0 +1,5 @@
+using HostApi;
+
+new DotNetWorkloadRestore()
+    .WithProject(Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();

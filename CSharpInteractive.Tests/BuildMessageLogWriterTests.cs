@@ -1,8 +1,5 @@
 namespace CSharpInteractive.Tests;
 
-using Core;
-using HostApi;
-
 public class BuildMessageLogWriterTests
 {
     private static readonly ProcessInfo ProcessInfo = new(Mock.Of<IStartInfo>(), Mock.Of<IProcessMonitor>(), 1);

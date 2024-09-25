@@ -1,0 +1,5 @@
+using HostApi;
+
+new DotNetNewSearch()
+    .WithTemplateName("build")
+    .Run().EnsureSuccess();
