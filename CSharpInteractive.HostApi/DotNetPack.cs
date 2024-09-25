@@ -35,6 +35,9 @@ using Internal.DotNet;
 /// <param name="UseCurrentRuntime">Sets the RuntimeIdentifier to a platform portable RuntimeIdentifier based on the one of your machine. This happens implicitly with properties that require a RuntimeIdentifier, such as SelfContained, PublishAot, PublishSelfContained, PublishSingleFile, and PublishReadyToRun. If the property is set to false, that implicit resolution will no longer occur.</param>
 /// <param name="Force">Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.</param>
 /// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.</param>
+/// <param name="ArtifactsPath">The artifact's path. All output from the project, including build, publish, and pack output, will go in subfolders under the specified path.</param>
+/// <param name="DisableBuildServers">Force the command to ignore any persistent build servers.</param>
+/// <param name="TerminalLogger">Specifies whether the terminal logger should be used for the build output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 /// <seealso cref="DotNetBuild"/>
 [Target]
@@ -59,6 +62,9 @@ public partial record DotNetPack(
     bool? UseCurrentRuntime = default,
     bool? Force = default,
     DotNetVerbosity? Verbosity = default,
+    string ArtifactsPath = "",
+    bool? DisableBuildServers = default,
+    TerminalLogger? TerminalLogger = default,
     string ShortName = "")
 {
     /// <summary>
@@ -84,7 +90,9 @@ public partial record DotNetPack(
                 ("--output", Output),
                 ("--version-suffix", VersionSuffix),
                 ("--configuration", Configuration),
-                ("--runtime", Runtime)
+                ("--runtime", Runtime),
+                ("--artifacts-path", ArtifactsPath),
+                ("--tl", TerminalLogger?.ToString().ToLowerInvariant())
             )
             .AddBooleanArgs(
                 ("--no-build", NoBuild),
@@ -95,7 +103,8 @@ public partial record DotNetPack(
                 ("--nologo", NoLogo),
                 ("--no-restore", NoRestore),
                 ("--use-current-runtime", UseCurrentRuntime),
-                ("--force", Force)
+                ("--force", Force),
+                ("--disable-build-servers", DisableBuildServers)
             )
             .AddProps("-p", Props.ToArray())
             .AddArgs(Args.ToArray());

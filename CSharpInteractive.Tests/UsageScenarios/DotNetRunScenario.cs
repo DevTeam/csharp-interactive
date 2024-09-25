@@ -24,9 +24,10 @@ public class DotNetRunScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
-        var result = new DotNetNew("console", "-n", "MyApp", "--force")
-            .Build()
-            .EnsureSuccess();
+        var result = new DotNetNew("console")
+            .WithName("MyApp")
+            .WithForce(true)
+            .Build().EnsureSuccess();
 
         result.ExitCode.ShouldBe(0);
 

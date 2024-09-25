@@ -24,9 +24,10 @@ public class MSBuildScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-        var result = new DotNetNew("classlib", "-n", "MyLib", "--force")
-            .Build()
-            .EnsureSuccess();
+        var result = new DotNetNew("classlib")
+            .WithName("MyLib")
+            .WithForce(true)
+            .Build().EnsureSuccess();
 
         result.ExitCode.ShouldBe(0);
 
@@ -37,8 +38,7 @@ public class MSBuildScenario : BaseScenario
             .WithRestore(true)
             .AddProps(("configuration", "Release"))
             .WithVerbosity(DotNetVerbosity.Detailed)
-            .Build()
-            .EnsureSuccess();
+            .Build().EnsureSuccess();
 
         // The "result" variable provides details about a build
         result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();

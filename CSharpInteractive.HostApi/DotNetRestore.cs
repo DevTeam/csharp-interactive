@@ -35,6 +35,8 @@ using Internal.DotNet;
 /// <param name="LockFilePath">Output location where project lock file is written. By default, this is PROJECT_ROOT\packages.lock.json.</param>
 /// <param name="ForceEvaluate">Forces restore to reevaluate all dependencies even if a lock file already exists.</param>
 /// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.</param>
+/// <param name="DisableBuildServers">Force the command to ignore any persistent build servers.</param>
+/// <param name="TerminalLogger">Specifies whether the terminal logger should be used for the build output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetRestore(
@@ -59,6 +61,8 @@ public partial record DotNetRestore(
     string LockFilePath = "",
     bool? ForceEvaluate = default,
     DotNetVerbosity? Verbosity = default,
+    bool? DisableBuildServers = default,
+    TerminalLogger? TerminalLogger = default,
     string ShortName = "")
 {
     /// <summary>
@@ -85,7 +89,8 @@ public partial record DotNetRestore(
                 ("--packages", Packages),
                 ("--configfile", ConfigFile),
                 ("--runtime", Runtime),
-                ("--lock-file-path", LockFilePath)
+                ("--lock-file-path", LockFilePath),
+                ("--tl", TerminalLogger?.ToString().ToLowerInvariant())
             )
             .AddBooleanArgs(
                 ("--use-current-runtime", UseCurrentRuntime),
@@ -96,7 +101,8 @@ public partial record DotNetRestore(
                 ("--no-dependencies", NoDependencies),
                 ("--use-lock-file", UseLockFile),
                 ("--locked-mode", LockedMode),
-                ("--force-evaluate", ForceEvaluate)
+                ("--force-evaluate", ForceEvaluate),
+                ("--disable-build-servers", DisableBuildServers)
             )
             .AddProps("-p", Props.ToArray())
             .AddArgs(Args.ToArray());

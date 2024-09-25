@@ -23,9 +23,10 @@ public class DotNetMSBuildVSTestScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-            .Build()
-            .EnsureSuccess();
+        var result = new DotNetNew("mstest")
+            .WithName("MyTests")
+            .WithForce(true)
+            .Build().EnsureSuccess();
 
         result.ExitCode.ShouldBe(0);
 
@@ -33,8 +34,7 @@ public class DotNetMSBuildVSTestScenario : BaseScenario
         result = new MSBuild()
             .WithTarget("VSTest")
             .WithWorkingDirectory("MyTests")
-            .Build()
-            .EnsureSuccess();
+            .Build().EnsureSuccess();
 
         // The "result" variable provides details about a build
         result.ExitCode.ShouldBe(0);

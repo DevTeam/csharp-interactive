@@ -27,6 +27,8 @@ using Internal.DotNet;
 /// <param name="Output">The directory that contains the build artifacts to clean. Specify the -f|--framework &lt;FRAMEWORK&gt; switch with the output directory switch if you specified the framework when the project was built.</param>
 /// <param name="NoLogo">Doesn't display the startup banner or the copyright message. Available since .NET Core 3.0 SDK.</param>
 /// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.</param>
+/// <param name="ArtifactsPath">The artifact's path. All output from the project, including build, publish, and pack output, will go in subfolders under the specified path.</param>
+/// <param name="DisableBuildServers">Force the command to ignore any persistent build servers.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetClean(
@@ -42,6 +44,8 @@ public partial record DotNetClean(
     string Output = "",
     bool? NoLogo = default,
     DotNetVerbosity? Verbosity = default,
+    string ArtifactsPath = "",
+    bool? DisableBuildServers = default,
     string ShortName = "")
 {
     /// <summary>

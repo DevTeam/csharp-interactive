@@ -23,9 +23,10 @@ public class DotNetVSTestScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-            .Build()
-            .EnsureSuccess();
+        var result = new DotNetNew("mstest")
+            .WithName("MyTests")
+            .WithForce(true)
+            .Build().EnsureSuccess();
 
         result.ExitCode.ShouldBe(0);
 
@@ -34,8 +35,7 @@ public class DotNetVSTestScenario : BaseScenario
             .WithWorkingDirectory("MyTests")
             .WithConfiguration("Release")
             .WithOutput("MyOutput")
-            .Build()
-            .EnsureSuccess();
+            .Build().EnsureSuccess();
 
         result.ExitCode.ShouldBe(0);
 
@@ -43,8 +43,7 @@ public class DotNetVSTestScenario : BaseScenario
         result = new VSTest()
             .AddTestFileNames(Path.Combine("MyOutput", "MyTests.dll"))
             .WithWorkingDirectory("MyTests")
-            .Build()
-            .EnsureSuccess();
+            .Build().EnsureSuccess();
 
         // The "result" variable provides details about a build
         result.ExitCode.ShouldBe(0);
@@ -57,9 +56,10 @@ public class DotNetVSTestScenario : BaseScenario
     public void RunAsCommandLine()
     {
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var result = new DotNetNew("mstest", "-n", "MyTests", "--force")
-            .Build()
-            .EnsureSuccess();
+        var result = new DotNetNew("mstest")
+            .WithName("MyTests")
+            .WithForce(true)
+            .Build().EnsureSuccess();
 
         result.ExitCode.ShouldBe(0);
 
@@ -68,8 +68,7 @@ public class DotNetVSTestScenario : BaseScenario
             .WithWorkingDirectory("MyTests")
             .WithConfiguration("Release")
             .WithOutput("MyOutput")
-            .Build()
-            .EnsureSuccess();
+            .Build().EnsureSuccess();
 
         result.ExitCode.ShouldBe(0);
 
