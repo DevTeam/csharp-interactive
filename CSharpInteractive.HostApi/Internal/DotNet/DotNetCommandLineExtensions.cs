@@ -7,6 +7,7 @@
 namespace HostApi.Internal.DotNet;
 
 using System.Diagnostics.Contracts;
+using System.Text;
 
 [ExcludeFromCodeCoverage]
 internal static class DotNetCommandLineExtensions
@@ -31,20 +32,38 @@ internal static class DotNetCommandLineExtensions
     }
 
     [Pure]
-    public static string GetShortName(this string baseName, string shortName, string path = "")
+    public static string GetShortName(this string baseName, string shortName, params string[] paths)
     {
         if (!string.IsNullOrWhiteSpace(shortName))
         {
             return shortName;
         }
 
-        // ReSharper disable once ConvertIfStatementToReturnStatement
-        if (string.IsNullOrWhiteSpace(path))
+        var name = new StringBuilder();
+        name.Append(baseName);
+        foreach (var path in paths)
         {
-            return baseName;
-        }
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                continue;
+            }
 
-        return $"{baseName} {Path.GetFileName(path)}";
+            if (name.Length > 0)
+            {
+                name.Append(' ');
+            }
+
+            var fileName = Path.GetFileName(path);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                name.Append(path);
+                continue;
+            }
+            
+            name.Append(fileName);
+        }
+        
+        return name.ToString();
     }
 
     [Pure]

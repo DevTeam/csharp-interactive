@@ -23,6 +23,9 @@ namespace HostApi;
         "VSTest",
         "DotNet",
         "DotNetExec",
+        "DotNetAddPackage",
+        "DotNetListPackage",
+        "DotNetRemovePackage",
 
         // Docker
         "DockerCustom",

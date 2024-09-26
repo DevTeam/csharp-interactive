@@ -1,0 +1,327 @@
+﻿<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text" #>
+// ReSharper disable InconsistentNaming
+namespace HostApi;
+
+<#
+    (string PropertyName, string ArgName, string  Type, bool IsProject, string Comments)[] commonArgs =
+    [
+        ("Project", "", "string", true, "The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown."),
+        ("Props", "--property", "IEnumerable<(string name, string value)>", false, "MSBuild options for setting properties."),
+        ("Verbosity", "--verbosity", "DotNetVerbosity?", false, "Sets the verbosity level of the command. Allowed values are <see cref=\"DotNetVerbosity.Quiet\"/>, <see cref=\"DotNetVerbosity.Minimal\"/>, <see cref=\"DotNetVerbosity.Normal\"/>, <see cref=\"DotNetVerbosity.Detailed\"/>, and <see cref=\"DotNetVerbosity.Diagnostic\"/>. The default is <see cref=\"DotNetVerbosity.Minimal\"/>. For more information, see <see cref=\"DotNetVerbosity\"/>."),
+        ("PathToApplication", "", "string", true, "Specifies the path to an application .dll file to run the application. To run the application means to find and execute the entry point, which in the case of console apps is the Main method. For example, dotnet myapp. dll runs the myapp application."),
+        ("RollForward", "--roll-forward", "RollForward?", false, "Controls how roll forward is applied to the app. The SETTING can be one of the following values. If not specified, <see cref=\"HostApi.RollForward.Minor\"/> is the default."),
+        ("AdditionalProbingPaths", "--additionalprobingpath", "IEnumerable<string>", false, "Paths containing probing policy and assemblies to probe."),
+        ("AdditionalDeps", "--additional-deps", "string", false, "Path to an additional .deps.json file. A deps.json file contains a list of dependencies, compilation dependencies, and version information used to address assembly conflicts."),
+        ("FxVersion", "--fx-version", "string", false, "Version of the .NET runtime to use to run the application."),
+        ("Framework", "--framework", "string", false, "Builds and runs the app using the specified framework. The framework must be specified in the project file."),
+        ("Configuration", "--configuration", "string", false, "Defines the build configuration. The default for most projects is Debug, but you can override the build configuration settings in your project."),
+        ("Runtime", "--runtime", "string", false, "Specifies the target runtime to restore packages for. For a list of Runtime Identifiers (RIDs), see the RID catalog. -r short option available since .NET Core 3.0 SDK."),
+        ("NoBuild", "--no-build", "bool?", false, "Doesn't build the project before running. It also implicit sets the --no-restore flag."),
+        ("NoRestore", "--no-restore", "bool?", false, "Adds a package reference without performing a restore preview and compatibility check."),
+        ("NoDependencies", "--no-dependencies", "bool?", false, "When restoring a project with project-to-project (P2P) references, restores the root project and not the references."),
+        ("Force", "--force", "bool?", false, "Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file."),
+        ("Arch", "--arch", "string", false, "Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6 Preview 7."),
+        ("OS", "--os", "string", false, "Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6."),
+        ("TerminalLogger", "--tl", "TerminalLogger?", false, "Specifies whether the terminal logger should be used for the build output.")
+    ];
+    
+    var commands = new (
+        string Name,
+        string[] Comments,
+        string[] CommandArgs,
+        (string PropertyName, string ArgName, string  Type, bool IsProject, string Comments)[] Args)[]
+    {
+        (
+            "DotNetRun",
+            [
+                "Runs source code without any explicit compile or launch commands.",
+                "<example>",
+                "<code>",
+                "var result = new DotNetNew(\"console\", \"-n\", \"MyApp\", \"--force\")",
+                "    .Build().EnsureSuccess();",
+                "",
+                "",
+                "new DotNetRun().WithWorkingDirectory(\"MyApp\")",
+                "    .Build().EnsureSuccess();",
+                "</code>",
+                "</example>"
+            ],
+            ["run", "$Project"],
+            [
+                ("#Props", "", "", false, ""),
+                ("#Project", "", "", false, ""),
+                ("#Arch", "", "", false, ""),
+                ("#Configuration", "", "", false, ""),
+                ("#Framework", "", "", false, ""),
+                ("#Force", "", "", false, ""),
+                ("LaunchProfile", "--launch-profile", "string", false, "The name of the launch profile (if any) to use when launching the application. Launch profiles are defined in the launchSettings.json file and are typically called Development, Staging, and Production."),
+                ("#NoBuild", "", "", false, ""),
+                ("#NoDependencies", "", "", false, ""),
+                ("NoLaunchProfile", "--no-launch-profile", "bool?", false, "Doesn't try to use launchSettings.json to configure the application."),
+                ("#NoRestore", "", "", false, ""),
+                ("#OS", "", "", false, ""),
+                ("#Runtime", "", "", false, ""),
+                ("#TerminalLogger", "", "", false, ""),
+                ("#Verbosity", "", "", false, ""),
+            ]
+        ),
+        (
+            "DotNet",
+            ["Runs a dotnet application."],
+            ["$PathToApplication"],
+            [
+                ("#AdditionalProbingPaths", "", "", false, ""),
+                ("#PathToApplication", "", "", false, ""),
+                ("#AdditionalDeps", "", "", false, ""),
+                ("#FxVersion", "", "", false, ""),
+                ("#RollForward", "", "RollForward", false, ""),
+            ]
+        ),
+        (
+            "DotNetExec",
+            ["Executes a dotnet application."],
+            ["exec", "$PathToApplication"],
+            [
+                ("#AdditionalProbingPaths", "", "", false, ""),
+                ("#PathToApplication", "", "", false, ""),
+                ("DepsFile", "--depsfile", "string", false, "Path to a deps.json file. A deps.json file is a configuration file that contains information about dependencies necessary to run the application. This file is generated by the .NET SDK."),
+                ("#AdditionalDeps", "", "", false, ""),
+                ("#FxVersion", "", "", false, ""),
+                ("#RollForward", "", "RollForward", false, ""),
+                ("RuntimeConfig", "--runtimeconfig", "string", false, "Path to a runtimeconfig.json file. A runtimeconfig.json file contains run-time settings and is typically named &lt;applicationname&gt;.runtimeconfig.json."),
+            ]
+        ),
+        (
+            "DotNetAddPackage",
+            ["Adds or updates a package reference in a project file."],
+            ["add", "$Project", "package", "$PackageName"],
+            [
+                ("Sources", "--source", "IEnumerable<string>", false, "The URI of the NuGet package source to use during the restore operation."),
+                ("#Project", "", "", false, ""),
+                ("PackageName", "", "string", false, "The package reference to add."),
+                ("#Framework", "", "", false, "Adds a package reference only when targeting a specific framework."),
+                ("#NoRestore", "", "", false, ""),
+                ("PackageDirectory", "--package-directory", "string", false, @"The directory where to restore the packages. The default package restore location is %userprofile%\.nuget\packages on Windows and ~/.nuget/packages on macOS and Linux."),
+                ("Prerelease", "--prerelease", "bool?", false, "Allows prerelease packages to be installed. Available since .NET Core 5 SDK."),
+                ("Version", "--version", "string", false, "Version of the package"),
+            ]
+        ),
+        (
+            "DotNetListPackage",
+            ["Lists the package references for a project or solution."],
+            ["list", "$Project", "package"],
+            [
+                ("Frameworks", "--framework", "IEnumerable<string>", false, "Displays only the packages applicable for the specified target framework."),
+                ("Sources", "--source", "IEnumerable<string>", false, "The NuGet sources to use when searching for newer packages. Requires the --outdated or --deprecated option."),
+                ("#Project", "", "", false, ""),
+                ("Config", "--config", "string", false, "The NuGet sources to use when searching for newer packages. Requires the --outdated option."),
+                ("Deprecated", "--deprecated", "bool?", false, "Displays packages that have been deprecated."),
+                ("HighestMinor", "--highest-minor", "bool?", false, "Considers only the packages with a matching major version number when searching for newer packages. Requires the --outdated or --deprecated option."),
+                ("HighestPatch", "--highest-patch", "bool?", false, "Considers only the packages with a matching major and minor version numbers when searching for newer packages. Requires the --outdated or --deprecated option."),
+                ("IncludePrerelease", "--include-prerelease", "bool?", false, "Considers packages with prerelease versions when searching for newer packages. Requires the --outdated or --deprecated option."),
+                ("IncludeTransitive", "--include-transitive", "bool?", false, "Lists transitive packages, in addition to the top-level packages. When specifying this option, you get a list of packages that the top-level packages depend on."),
+                ("Outdated", "--outdated", "bool?", false, "Lists packages that have newer versions available."),
+                ("#Verbosity", "", "", false, ""),
+            ]
+        ),
+        (
+            "DotNetRemovePackage",
+            ["Removes package reference from a project file."],
+            ["remove", "$Project", "package", "$PackageName"],
+            [
+                ("#Project", "", "", false, ""),
+                ("PackageName", "", "string", false, "The package reference to add."),
+            ]
+        )
+    };
+#>
+using Internal.DotNet;
+
+<#
+    var args = commonArgs.ToDictionary(i => i.PropertyName, i => i);
+    foreach (var command in commands)
+    {
+        for (var i = 0; i < command.Args.Length; i++)
+        {
+            var arg = command.Args[i];
+            if (arg.PropertyName.StartsWith("#") && args.TryGetValue(arg.PropertyName.Substring(1), out var newArg))
+            {
+                var comments = arg.Comments;
+                if (!string.IsNullOrWhiteSpace(comments))
+                {
+                    newArg.Comments = comments;
+                }
+
+                command.Args[i] = newArg;
+            }
+        }
+
+        var name = command.Name;
+        var commandArgs = string.Join(", ", command.CommandArgs.Select(i => i.StartsWith("$") ? i.Substring(1) : $"\"{i}\""));
+#>
+/// <summary>
+<#
+    foreach (var comment in command.Comments)
+    {
+#>
+/// <#= comment #>
+<#
+    }
+#>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+<#
+    foreach (var arg in command.Args.Where(i => i.Type.StartsWith("IEnumerable")))
+    {
+#>
+/// <param name="<#= arg.PropertyName #>"><#= arg.Comments #></param>
+<#
+    }
+#>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+<#
+    foreach (var arg in command.Args.Where(i => !i.Type.StartsWith("IEnumerable")))
+    {
+#>
+/// <param name="<#= arg.PropertyName #>"><#= arg.Comments #></param>
+<#
+    }
+#>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record <#= command.Name #>(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+<#
+    var initializer = string.Join(", ", new [] {"args", "[]"}.Concat(Enumerable.Repeat("[]", command.Args.Count(i => i.Type.StartsWith("IEnumerable")))));
+    var fullInitializer = string.Join(", ", new [] {"[]", "[]"}.Concat(Enumerable.Repeat("[]", command.Args.Count(i => i.Type.StartsWith("IEnumerable")))));
+    foreach (var arg in command.Args)
+    {
+        var type = arg.Type;
+        var defaultValue = "";
+        if (type == "string")
+        {
+            defaultValue = " = \"\"";
+        }
+        else
+        {
+            if (!type.StartsWith("IEnumerable"))
+            {
+                defaultValue = " = default";
+            }
+        }
+#>
+    <#= type #> <#= arg.PropertyName #><#= defaultValue #>,
+<#
+    }
+#>
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public <#= name #>(params string[] args)
+        : this(<#= initializer #>)
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public <#= name #>()
+        : this(<#= fullInitializer #>)
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+<#
+    foreach (var arg in command.CommandArgs)
+    {
+        if (arg.StartsWith("$"))
+        {
+#>
+            .AddNotEmptyArgs(<#= arg.Substring(1) #>)
+<#
+        }
+        else
+        {
+#>
+            .AddArgs("<#= arg #>")
+<#
+        }
+    }
+#>
+<#
+    foreach (var arg in command.Args.Where(i => !i.IsProject).Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.Type.StartsWith("IEnumerable") && i.ArgName != "--property"))
+    {
+#>
+            .AddArgs(<#= arg.PropertyName #>.Select(i => ("<#= arg.ArgName #>", (string?)i)).ToArray())
+<#
+    }
+#>
+            .AddArgs(
+<#
+    var strArgs = command.Args.Where(i => !i.IsProject).Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && !i.Type.StartsWith("bool") && !i.Type.StartsWith("IEnumerable")).ToArray();
+    for (var i = 0; i < strArgs.Length; i++)
+    {
+        var arg = strArgs[i];
+        var prop = arg.Type switch
+        {
+            "string" => arg.PropertyName,
+            _ => $"{arg.PropertyName}?.ToString()"
+        };
+
+        var separator = i < strArgs.Length - 1 ? "," : "";
+#>
+                ("<#= arg.ArgName #>", <#= prop #>)<#= separator #>
+<#
+    }
+#>
+            )
+            .AddBooleanArgs(
+<#
+    var boolArgs = command.Args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.Type.StartsWith("bool")).ToArray();
+    for (var i = 0; i < boolArgs.Length; i++)
+    {
+        var arg = boolArgs[i];
+#>
+                ("<#= arg.ArgName #>", <#= arg.PropertyName #>),
+<#
+    }
+#>
+                ("--diagnostics", Diagnostics)
+            )
+<#
+    foreach (var arg in command.Args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.Type.StartsWith("IEnumerable") && i.ArgName == "--property").ToArray())
+    {
+#>
+            .AddProps("--property", <#= arg.PropertyName #>.ToArray())
+<#
+    }
+#>
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, <#= commandArgs #>);
+}
+
+<#
+    }
+#>

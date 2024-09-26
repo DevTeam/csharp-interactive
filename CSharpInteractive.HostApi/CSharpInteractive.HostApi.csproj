@@ -34,11 +34,16 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>CommandLines.tt</DependentUpon>
         </Compile>
-
-        <Compile Update="CommandLines.cs">
-            <AutoGen>True</AutoGen>
-            <DesignTime>True</DesignTime>
-            <DependentUpon>CommandLines.tt</DependentUpon>
+        
+        <None Update="SimpleDotNetCommands.tt">
+          <LastGenOutput>SimpleDotNetCommands.cs</LastGenOutput>
+          <Generator>TextTemplatingFileGenerator</Generator>
+        </None>
+        
+        <Compile Update="SimpleDotNetCommands.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>SimpleDotNetCommands.tt</DependentUpon>
         </Compile>
     </ItemGroup>
 
