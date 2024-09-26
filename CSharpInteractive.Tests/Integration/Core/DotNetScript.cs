@@ -7,7 +7,7 @@ using HostApi;
 internal static class DotNetScript
 {
     public static CommandLine Create(IEnumerable<string> args, params string[] lines) =>
-        Create("script.csx", default, args, lines);
+        CreateForScript("script.csx", default, args, lines);
 
     public static CommandLine Create(params string[] lines) =>
         Create([], lines);
@@ -17,7 +17,7 @@ internal static class DotNetScript
             Composition.Shared.Root.DotNetEnvironment.Path,
             Path.Combine(Path.GetDirectoryName(typeof(DotNetScript).Assembly.Location)!, "dotnet-csi.dll"));
 
-    public static CommandLine Create(string scriptName, string? workingDirectory, IEnumerable<string> args, params string[] lines)
+    public static CommandLine CreateForScript(string scriptName, string? workingDirectory, IEnumerable<string> args, params string[] lines)
     {
         workingDirectory ??= GetWorkingDirectory();
         var scriptFile = Path.Combine(workingDirectory, scriptName);
