@@ -39,12 +39,13 @@ using Internal.DotNet;
 /// <param name="NoSelfContained">Publishes the application as a framework dependent application. A compatible .NET runtime must be installed on the target machine to run the application. Available since .NET 6 SDK.</param>
 /// <param name="Arch">Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don&amp;apos;t use the -r|--runtime option. Available since .NET 6 Preview 7.</param>
 /// <param name="OS">Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6.</param>
-/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
 /// <param name="UseCurrentRuntime">Use current runtime as the target runtime.</param>
 /// <param name="Debug">Debug mode.</param>
 /// <param name="ArtifactsPath">The artifact's path. All output from the project, including build, publish, and pack output, will go in subfolders under the specified path.</param>
 /// <param name="DisableBuildServers">Force the command to ignore any persistent build servers.</param>
 /// <param name="TerminalLogger">Specifies whether the terminal logger should be used for the build output.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetBuild(
@@ -75,6 +76,7 @@ public partial record DotNetBuild(
     string ArtifactsPath = "",
     bool? DisableBuildServers = default,
     TerminalLogger? TerminalLogger = default,
+    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -119,7 +121,8 @@ public partial record DotNetBuild(
                 ("--force", Force),
                 ("--use-current-runtime", UseCurrentRuntime),
                 ("--debug", Debug),
-                ("--disable-build-servers", DisableBuildServers)
+                ("--disable-build-servers", DisableBuildServers),
+                ("--diagnostics", Diagnostics)
             )
             .AddProps("-p", Props.ToArray())
             .AddArgs(Args.ToArray());

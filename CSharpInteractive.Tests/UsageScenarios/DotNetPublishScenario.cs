@@ -24,7 +24,7 @@ public class DotNetPublishScenario : BaseScenario
 
         // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
         var result = new DotNetNew("classlib")
-            .AddTemplateArgs("-f", "net8.0")
+            .AddArgs("-f", "net8.0")
             .WithName("MyLib")
             .WithForce(true)
             .Build().EnsureSuccess();

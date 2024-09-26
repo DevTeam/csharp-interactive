@@ -17,7 +17,6 @@ using Internal.DotNet;
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
-/// <param name="TemplateArgs">Template specific options to use.</param>
 /// <param name="TemplateName">A short name of the template to create, for example 'console'.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
@@ -34,7 +33,6 @@ using Internal.DotNet;
 public partial record DotNetNew(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
-    IEnumerable<string> TemplateArgs,
     string TemplateName,
     string ExecutablePath = "",
     string WorkingDirectory = "",
@@ -54,7 +52,7 @@ public partial record DotNetNew(
     /// <param name="templateName">Specifies a short template name, for example 'console'.</param>
     /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetNew(string templateName, params string[] args)
-        : this(args, [], [], templateName)
+        : this(args, [], templateName)
     { }
 
     /// <inheritdoc/>
@@ -66,7 +64,6 @@ public partial record DotNetNew(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .WithArgs("new", TemplateName)
-            .AddArgs(TemplateArgs.ToArray())
             .AddArgs(
                 ("--output", Output),
                 ("--name", Name),

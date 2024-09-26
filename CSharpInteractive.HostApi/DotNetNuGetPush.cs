@@ -31,6 +31,7 @@ using Internal.DotNet;
 /// <param name="NoSymbols">Doesn't push symbols (even if present).</param>
 /// <param name="NoServiceEndpoint">Doesn't append "api/v2/package" to the source URL.</param>
 /// <param name="SkipDuplicate">When pushing multiple packages to an HTTP(S) server, treats any 409 Conflict response as a warning so that the push can continue.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetNuGetPush(
@@ -49,6 +50,7 @@ public partial record DotNetNuGetPush(
     bool? NoSymbols = default,
     bool? NoServiceEndpoint = default,
     bool? SkipDuplicate = default,
+    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -81,7 +83,8 @@ public partial record DotNetNuGetPush(
                 ("--disable-buffering", DisableBuffering),
                 ("--no-symbols", NoSymbols),
                 ("--no-service-endpoint", NoServiceEndpoint),
-                ("--skip-duplicate", SkipDuplicate)
+                ("--skip-duplicate", SkipDuplicate),
+                ("--diagnostics", Diagnostics)
             )
             .AddArgs(Args.ToArray());
     }

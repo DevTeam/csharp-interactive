@@ -21,6 +21,8 @@ namespace HostApi;
         "DotNetToolRestore",
         "MSBuild",
         "VSTest",
+        "DotNet",
+        "DotNetExec",
 
         // Docker
         "DockerCustom",

@@ -26,9 +26,10 @@ using Internal.DotNet;
 /// <param name="Configuration">Defines the build configuration. The default for most projects is Debug, but you can override the build configuration settings in your project. This option is only required when cleaning if you specified it during build time.</param>
 /// <param name="Output">The directory that contains the build artifacts to clean. Specify the -f|--framework &lt;FRAMEWORK&gt; switch with the output directory switch if you specified the framework when the project was built.</param>
 /// <param name="NoLogo">Doesn't display the startup banner or the copyright message. Available since .NET Core 3.0 SDK.</param>
-/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
 /// <param name="ArtifactsPath">The artifact's path. All output from the project, including build, publish, and pack output, will go in subfolders under the specified path.</param>
 /// <param name="DisableBuildServers">Force the command to ignore any persistent build servers.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetClean(
@@ -46,6 +47,7 @@ public partial record DotNetClean(
     DotNetVerbosity? Verbosity = default,
     string ArtifactsPath = "",
     bool? DisableBuildServers = default,
+    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -75,7 +77,8 @@ public partial record DotNetClean(
                 ("--verbosity", Verbosity?.ToString().ToLowerInvariant())
             )
             .AddBooleanArgs(
-                ("--nologo", NoLogo)
+                ("--nologo", NoLogo),
+                ("--diagnostics", Diagnostics)
             )
             .AddProps("-p", Props.ToArray())
             .AddArgs(Args.ToArray());

@@ -16,7 +16,7 @@ using Internal.DotNet;
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
-/// <param name="AdditionalSources">Adds an additional NuGet package source to use during installation. Feeds are accessed in parallel, not sequentially in some order of precedence. If the same package and version is in multiple feeds, the fastest feed wins.</param>
+/// <param name="Sources">Adds an NuGet package source to use during installation. Feeds are accessed in parallel, not sequentially in some order of precedence. If the same package and version is in multiple feeds, the fastest feed wins.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 /// <param name="DisableParallel">Prevent restoring multiple projects in parallel.</param>
@@ -24,13 +24,14 @@ using Internal.DotNet;
 /// <param name="ToolManifest">Path to the manifest file.</param>
 /// <param name="NoCache">Do not cache packages and http requests.</param>
 /// <param name="IgnoreFailedSources">Treat package source failures as warnings.</param>
-/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetToolRestore(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
-    IEnumerable<string> AdditionalSources,
+    IEnumerable<string> Sources,
     string ExecutablePath = "",
     string WorkingDirectory = "",
     bool? DisableParallel = default,
@@ -39,6 +40,7 @@ public partial record DotNetToolRestore(
     bool? NoCache = default,
     bool? IgnoreFailedSources = default,
     DotNetVerbosity? Verbosity = default,
+    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -59,7 +61,7 @@ public partial record DotNetToolRestore(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddMSBuildLoggers(host, Verbosity)
-            .AddArgs(AdditionalSources.Select(i => ("--add-source", (string?)i)).ToArray())
+            .AddArgs(Sources.Select(i => ("--add-source", (string?)i)).ToArray())
             .AddArgs(
                 ("--configfile", ConfigFile),
                 ("--tool-manifest", ToolManifest)
@@ -67,7 +69,8 @@ public partial record DotNetToolRestore(
             .AddBooleanArgs(
                 ("--disable-parallel", DisableParallel),
                 ("--no-cache", NoCache),
-                ("--ignore-failed-sources", IgnoreFailedSources)
+                ("--ignore-failed-sources", IgnoreFailedSources),
+                ("--diagnostics", Diagnostics)
             )
             .AddArgs(Args.ToArray());
     }

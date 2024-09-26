@@ -46,7 +46,8 @@ using Internal.DotNet;
 /// <param name="NoAutoResponse">Do not auto-include any MSBuild.rsp files.</param>
 /// <param name="NoLogo">Do not display the startup banner and copyright message.</param>
 /// <param name="DisplayVersion">Display version information only.</param>
-/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record MSBuild(
@@ -77,6 +78,7 @@ public partial record MSBuild(
     bool? NoLogo = default,
     bool? DisplayVersion = default,
     DotNetVerbosity? Verbosity = default,
+    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -127,7 +129,8 @@ public partial record MSBuild(
                 ("-detailedSummary", DetailedSummary),
                 ("-noAutoResponse", NoAutoResponse),
                 ("-noLogo", NoLogo),
-                ("-version", DisplayVersion)
+                ("-version", DisplayVersion),
+                ("--diagnostics", Diagnostics)
             )
             .AddProps("-restoreProperty", RestoreProps.ToArray())
             .AddProps("-p", Props.ToArray())

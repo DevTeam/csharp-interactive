@@ -21,6 +21,7 @@ using Internal.DotNet;
 /// <param name="Servers">Build servers to shut down. By default, all servers are shut down.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetBuildServerShutdown(
@@ -29,6 +30,7 @@ public partial record DotNetBuildServerShutdown(
     IEnumerable<DotNetBuildServer> Servers,
     string ExecutablePath = "",
     string WorkingDirectory = "",
+    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -49,6 +51,9 @@ public partial record DotNetBuildServerShutdown(
             .WithVars(Vars.ToArray())
             .WithArgs("build-server", "shutdown")
             .AddArgs(GetServerArg().ToArray())
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+             )
             .AddArgs(Args.ToArray());
     }
 

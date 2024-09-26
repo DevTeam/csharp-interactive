@@ -34,10 +34,11 @@ using Internal.DotNet;
 /// <param name="Configuration">Defines the build configuration. The default for most projects is Debug, but you can override the build configuration settings in your project.</param>
 /// <param name="UseCurrentRuntime">Sets the RuntimeIdentifier to a platform portable RuntimeIdentifier based on the one of your machine. This happens implicitly with properties that require a RuntimeIdentifier, such as SelfContained, PublishAot, PublishSelfContained, PublishSingleFile, and PublishReadyToRun. If the property is set to false, that implicit resolution will no longer occur.</param>
 /// <param name="Force">Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.</param>
-/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are Quiet, Minimal, Normal, Detailed, and Diagnostic. The default is Minimal. For more information, see LoggerVerbosity.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
 /// <param name="ArtifactsPath">The artifact's path. All output from the project, including build, publish, and pack output, will go in subfolders under the specified path.</param>
 /// <param name="DisableBuildServers">Force the command to ignore any persistent build servers.</param>
 /// <param name="TerminalLogger">Specifies whether the terminal logger should be used for the build output.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 /// <seealso cref="DotNetBuild"/>
 [Target]
@@ -65,6 +66,7 @@ public partial record DotNetPack(
     string ArtifactsPath = "",
     bool? DisableBuildServers = default,
     TerminalLogger? TerminalLogger = default,
+    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -104,7 +106,8 @@ public partial record DotNetPack(
                 ("--no-restore", NoRestore),
                 ("--use-current-runtime", UseCurrentRuntime),
                 ("--force", Force),
-                ("--disable-build-servers", DisableBuildServers)
+                ("--disable-build-servers", DisableBuildServers),
+                ("--diagnostics", Diagnostics)
             )
             .AddProps("-p", Props.ToArray())
             .AddArgs(Args.ToArray());
