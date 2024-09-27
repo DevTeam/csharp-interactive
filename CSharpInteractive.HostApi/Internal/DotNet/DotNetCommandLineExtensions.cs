@@ -137,4 +137,13 @@ internal static class DotNetCommandLineExtensions
     public static CommandLine AddProps(this CommandLine cmd, string propertyName, params (string name, string value)[] props) =>
         cmd.AddArgs(props.Select(i => $"{propertyName}:{i.name}={i.value}")
             .ToArray());
+    
+    public static string[] ToArgs<T>(this T value, string name)
+    {
+        var valueStr = value?.ToString();
+        return string.IsNullOrWhiteSpace(valueStr) ? [] : [name, valueStr!];
+    }
+    
+    public static string[] ToArgs(this IEnumerable<string> values, string name) =>
+        values.SelectMany(value => string.IsNullOrWhiteSpace(value) ? [] : new [] {name, value}).ToArray();
 }

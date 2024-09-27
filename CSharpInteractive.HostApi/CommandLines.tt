@@ -1,16 +1,28 @@
-﻿// ReSharper disable InconsistentNaming
+﻿<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text" #>
+// ReSharper disable InconsistentNaming
 namespace HostApi;
-    
+
 <#
     var commandLineTypes = new[]
     {
         "CommandLine",
 
         // Dotnet
+        "DotNetCustom",
+        "DotNet",
+        "DotNetExec",
+        "DotNetAddPackage",
+        "DotNetListPackage",
+        "DotNetRemovePackage",
+        "DotNetAddReference",
+        "DotNetListReference",
+        "DotNetRemoveReference",
         "DotNetBuild",
         "DotNetBuildServerShutdown",
         "DotNetClean",
-        "DotNetCustom",
+        "MSBuild",
         "DotNetNew",
         "DotNetNuGetPush",
         "DotNetPack",
@@ -19,13 +31,7 @@ namespace HostApi;
         "DotNetRun",
         "DotNetTest",
         "DotNetToolRestore",
-        "MSBuild",
         "VSTest",
-        "DotNet",
-        "DotNetExec",
-        "DotNetAddPackage",
-        "DotNetListPackage",
-        "DotNetRemovePackage",
 
         // Docker
         "DockerCustom",

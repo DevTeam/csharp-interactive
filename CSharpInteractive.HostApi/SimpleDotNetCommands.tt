@@ -21,18 +21,200 @@ namespace HostApi;
         ("NoBuild", "--no-build", "bool?", false, "Doesn't build the project before running. It also implicit sets the --no-restore flag."),
         ("NoRestore", "--no-restore", "bool?", false, "Adds a package reference without performing a restore preview and compatibility check."),
         ("NoDependencies", "--no-dependencies", "bool?", false, "When restoring a project with project-to-project (P2P) references, restores the root project and not the references."),
+        ("NoIncremental", "--no-incremental", "bool?", false, "Marks the build as unsafe for incremental build. This flag turns off incremental compilation and forces a clean rebuild of the project's dependency graph."),
+        ("NoLogo", "--nologo", "bool?", false, "Doesn't display the startup banner or the copyright message."),
+        ("NoSelfContained", "--no-self-contained", "bool?", false, "Publishes the application as a framework dependent application. A compatible .NET runtime must be installed on the target machine to run the application. Available since .NET 6 SDK."),
+        ("SelfContained", "--self-contained", "bool?", false, "Publishes the .NET runtime with the application so the runtime doesn't need to be installed on the target machine. The default is true if a runtime identifier is specified. Available since .NET 6."),
         ("Force", "--force", "bool?", false, "Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file."),
         ("Arch", "--arch", "string", false, "Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6 Preview 7."),
         ("OS", "--os", "string", false, "Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6."),
-        ("TerminalLogger", "--tl", "TerminalLogger?", false, "Specifies whether the terminal logger should be used for the build output.")
+        ("TerminalLogger", "--tl", "TerminalLogger?", false, "Specifies whether the terminal logger should be used for the build output."),
+        ("ArtifactsPath", "--artifacts-path", "string", false, "All build output files from the executed command will go in subfolders under the specified path, separated by project."),
+        ("DisableBuildServers", "--disable-build-servers", "bool?", false, "Forces the command to ignore any persistent build servers. This option provides a consistent way to disable all use of build caching, which forces a build from scratch. A build that doesn't rely on caches is useful when the caches might be corrupted or incorrect for some reason. Available since .NET 7 SDK."),
+        ("Output", "--output", "string", false, "Directory in which to place the built binaries. If not specified, the default path is ./bin/&lt;configuration&gt;/&lt;framework&gt;/. For projects with multiple target frameworks (via the TargetFrameworks property), you also need to define --framework when you specify this option."),
+        ("UseCurrentRuntime", "--use-current-runtime", "bool?", false, "Sets the RuntimeIdentifier to a platform portable RuntimeIdentifier based on the one of your machine. This happens implicitly with properties that require a RuntimeIdentifier, such as SelfContained, PublishAot, PublishSelfContained, PublishSingleFile, and PublishReadyToRun. If the property is set to false, that implicit resolution will no longer occur."),
+        ("VersionSuffix", "--version-suffix", "string", false, "Sets the value of the $(VersionSuffix) property to use when building the project. This only works if the $(Version) property isn't set. Then, $(Version) is set to the $(VersionPrefix) combined with the $(VersionSuffix), separated by a dash."),
     ];
     
     var commands = new (
         string Name,
         string[] Comments,
         string[] CommandArgs,
-        (string PropertyName, string ArgName, string  Type, bool IsProject, string Comments)[] Args)[]
-    {
+        (string PropertyName, string ArgName, string  Type, bool IsProject, string Comments)[] Args,
+        bool IsBuild,
+        bool IsTests)
+        [] {
+        (
+            "DotNet",
+            ["Runs a dotnet application."],
+            ["$PathToApplication"],
+            [
+                ("#AdditionalProbingPaths", "", "", false, ""),
+                ("#PathToApplication", "", "", false, ""),
+                ("#AdditionalDeps", "", "", false, ""),
+                ("#FxVersion", "", "", false, ""),
+                ("#RollForward", "", "RollForward", false, "")
+            ],
+            false, false
+        ),
+        (
+            "DotNetExec",
+            ["Executes a dotnet application."],
+            ["exec", "$PathToApplication"],
+            [
+                ("#AdditionalProbingPaths", "", "", false, ""),
+                ("#PathToApplication", "", "", false, ""),
+                ("DepsFile", "--depsfile", "string", false, "Path to a deps.json file. A deps.json file is a configuration file that contains information about dependencies necessary to run the application. This file is generated by the .NET SDK."),
+                ("#AdditionalDeps", "", "", false, ""),
+                ("#FxVersion", "", "", false, ""),
+                ("#RollForward", "", "RollForward", false, ""),
+                ("RuntimeConfig", "--runtimeconfig", "string", false, "Path to a runtimeconfig.json file. A runtimeconfig.json file contains run-time settings and is typically named &lt;applicationname&gt;.runtimeconfig.json."),
+            ],
+            false, false
+        ),
+        (
+            "DotNetAddPackage",
+            ["Adds or updates a package reference in a project file."],
+            ["add", "$Project", "package", "$PackageName"],
+            [
+                ("Sources", "--source", "IEnumerable<string>", false, "The URI of the NuGet package source to use during the restore operation."),
+                ("#Project", "", "", false, ""),
+                ("PackageName", "", "string", false, "The package reference to add."),
+                ("#Framework", "", "", false, "Adds a package reference only when targeting a specific framework."),
+                ("#NoRestore", "", "", false, ""),
+                ("PackageDirectory", "--package-directory", "string", false, @"The directory where to restore the packages. The default package restore location is %userprofile%\.nuget\packages on Windows and ~/.nuget/packages on macOS and Linux."),
+                ("Prerelease", "--prerelease", "bool?", false, "Allows prerelease packages to be installed. Available since .NET Core 5 SDK."),
+                ("Version", "--version", "string", false, "Version of the package"),
+            ],
+            false, false
+        ),
+        (
+            "DotNetListPackage",
+            ["Lists the package references for a project or solution."],
+            ["list", "$Project", "package"],
+            [
+                ("Frameworks", "--framework", "IEnumerable<string>", false, "Displays only the packages applicable for the specified target framework."),
+                ("Sources", "--source", "IEnumerable<string>", false, "The NuGet sources to use when searching for newer packages. Requires the --outdated or --deprecated option."),
+                ("#Project", "", "", false, ""),
+                ("Config", "--config", "string", false, "The NuGet sources to use when searching for newer packages. Requires the --outdated option."),
+                ("Deprecated", "--deprecated", "bool?", false, "Displays packages that have been deprecated."),
+                ("HighestMinor", "--highest-minor", "bool?", false, "Considers only the packages with a matching major version number when searching for newer packages. Requires the --outdated or --deprecated option."),
+                ("HighestPatch", "--highest-patch", "bool?", false, "Considers only the packages with a matching major and minor version numbers when searching for newer packages. Requires the --outdated or --deprecated option."),
+                ("IncludePrerelease", "--include-prerelease", "bool?", false, "Considers packages with prerelease versions when searching for newer packages. Requires the --outdated or --deprecated option."),
+                ("IncludeTransitive", "--include-transitive", "bool?", false, "Lists transitive packages, in addition to the top-level packages. When specifying this option, you get a list of packages that the top-level packages depend on."),
+                ("Outdated", "--outdated", "bool?", false, "Lists packages that have newer versions available."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false
+        ),
+        (
+            "DotNetRemovePackage",
+            ["Removes package reference from a project file."],
+            ["remove", "$Project", "package", "$PackageName"],
+            [
+                ("#Project", "", "", false, ""),
+                ("PackageName", "", "string", false, "The package reference to add."),
+            ],
+            false, false
+        ),
+        (
+            "DotNetAddReference",
+            ["Adds project-to-project (P2P) references."],
+            ["add", "$Project", "reference", "$References"],
+            [
+                ("References", "--source", "IEnumerable<string>", false, "Project-to-project (P2P) references to add. Specify one or more projects. Glob patterns are supported on Unix/Linux-based systems."),
+                ("#Project", "", "", false, ""),
+                ("#Framework", "", "", false, "Adds project references only when targeting a specific framework using the TFM format.")
+            ],
+            false, false
+        ),
+        (
+            "DotNetListReference",
+            ["The dotnet list reference command provides a convenient option to list project references for a given project."],
+            ["list", "$Project"],
+            [
+                ("#Project", "", "", false, ""),
+            ],
+            false, false
+        ),
+        (
+            "DotNetRemoveReference",
+            ["Removes project-to-project (P2P) references."],
+            ["remove", "$Project", "reference", "$References"],
+            [
+                ("References", "--source", "IEnumerable<string>", false, "Project-to-project (P2P) references to remove. You can specify one or multiple projects. Glob patterns are supported on Unix/Linux based terminals."),
+                ("#Project", "", "", false, ""),
+                ("#Framework", "", "", false, "Removes the reference only when targeting a specific framework using the TFM format.")
+            ],
+            false, false
+        ),
+        (
+            "DotNetBuild",
+            [
+                "The dotnet build command builds the project and its dependencies into a set of binaries. The binaries include the project's code in Intermediate Language (IL) files with a .dll extension. Depending on the project type and settings, other files may be included.",
+                "<example>",
+                "<code>",
+                "var configuration = Props.Get(\"configuration\", \"Release\");",
+                "",
+                "",
+                "new DotNetBuild().WithConfiguration(configuration)",
+                "    .Build().EnsureSuccess();",
+                "</code>",
+                "</example>"
+            ],
+            ["build", "$Project"],
+            [
+                ("Sources", "--source", "IEnumerable<string>", false, "The URI of the NuGet package source to use during the restore operation."),
+                ("#Project", "", "", false, ""),
+                ("#Arch", "", "", false, ""),
+                ("#ArtifactsPath", "", "", false, ""),
+                ("#Configuration", "", "", false, ""),
+                ("#DisableBuildServers", "", "", false, ""),
+                ("#Framework", "", "", false, ""),
+                ("#Force", "", "", false, ""),
+                ("#NoDependencies", "", "", false, ""),
+                ("#NoIncremental", "", "", false, ""),
+                ("#NoRestore", "", "", false, ""),
+                ("#NoLogo", "", "", false, ""),
+                ("#NoSelfContained", "", "", false, ""),
+                ("#Output", "", "", false, ""),
+                ("#OS", "", "", false, ""),
+                ("#Runtime", "", "", false, ""),
+                ("#SelfContained", "", "", false, ""),
+                ("#TerminalLogger", "", "", false, ""),
+                ("#Verbosity", "", "", false, ""),
+                ("#UseCurrentRuntime", "", "", false, ""),
+                ("#VersionSuffix", "", "", false, ""),
+            ],
+            true, false
+        ),
+        (
+            "DotNetBuildServerShutdown",
+            ["Shuts down build servers that are started from dotnet. By default, all servers are shut down."],
+            ["build-server", "shutdown"],
+            [
+                ("Servers", "", "IEnumerable<DotNetBuildServer>", false, "Shuts down build servers that are started from dotnet. By default, all servers are shut down."),
+            ],
+            false, false
+        ),
+        (
+            "DotNetClean",
+            ["Cleans the output of the previous build. It's implemented as an MSBuild target, so the project is evaluated when the command is run. Only the outputs created during the build are cleaned. Both intermediate (obj) and final output (bin) folders are cleaned."],
+            ["clean", "$Project"],
+            [
+                ("#Props", "", "", false, ""),
+                ("#Project", "", "", false, ""),
+                ("#ArtifactsPath", "", "", false, ""),
+                ("#Configuration", "", "", false, ""),
+                ("#Framework", "", "", false, ""),
+                ("#NoLogo", "", "", false, ""),
+                ("#Output", "", "", false, ""),
+                ("#Runtime", "", "", false, ""),
+                ("#TerminalLogger", "", "", false, ""),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            true, false
+        ),
         (
             "DotNetRun",
             [
@@ -65,75 +247,8 @@ namespace HostApi;
                 ("#Runtime", "", "", false, ""),
                 ("#TerminalLogger", "", "", false, ""),
                 ("#Verbosity", "", "", false, ""),
-            ]
-        ),
-        (
-            "DotNet",
-            ["Runs a dotnet application."],
-            ["$PathToApplication"],
-            [
-                ("#AdditionalProbingPaths", "", "", false, ""),
-                ("#PathToApplication", "", "", false, ""),
-                ("#AdditionalDeps", "", "", false, ""),
-                ("#FxVersion", "", "", false, ""),
-                ("#RollForward", "", "RollForward", false, ""),
-            ]
-        ),
-        (
-            "DotNetExec",
-            ["Executes a dotnet application."],
-            ["exec", "$PathToApplication"],
-            [
-                ("#AdditionalProbingPaths", "", "", false, ""),
-                ("#PathToApplication", "", "", false, ""),
-                ("DepsFile", "--depsfile", "string", false, "Path to a deps.json file. A deps.json file is a configuration file that contains information about dependencies necessary to run the application. This file is generated by the .NET SDK."),
-                ("#AdditionalDeps", "", "", false, ""),
-                ("#FxVersion", "", "", false, ""),
-                ("#RollForward", "", "RollForward", false, ""),
-                ("RuntimeConfig", "--runtimeconfig", "string", false, "Path to a runtimeconfig.json file. A runtimeconfig.json file contains run-time settings and is typically named &lt;applicationname&gt;.runtimeconfig.json."),
-            ]
-        ),
-        (
-            "DotNetAddPackage",
-            ["Adds or updates a package reference in a project file."],
-            ["add", "$Project", "package", "$PackageName"],
-            [
-                ("Sources", "--source", "IEnumerable<string>", false, "The URI of the NuGet package source to use during the restore operation."),
-                ("#Project", "", "", false, ""),
-                ("PackageName", "", "string", false, "The package reference to add."),
-                ("#Framework", "", "", false, "Adds a package reference only when targeting a specific framework."),
-                ("#NoRestore", "", "", false, ""),
-                ("PackageDirectory", "--package-directory", "string", false, @"The directory where to restore the packages. The default package restore location is %userprofile%\.nuget\packages on Windows and ~/.nuget/packages on macOS and Linux."),
-                ("Prerelease", "--prerelease", "bool?", false, "Allows prerelease packages to be installed. Available since .NET Core 5 SDK."),
-                ("Version", "--version", "string", false, "Version of the package"),
-            ]
-        ),
-        (
-            "DotNetListPackage",
-            ["Lists the package references for a project or solution."],
-            ["list", "$Project", "package"],
-            [
-                ("Frameworks", "--framework", "IEnumerable<string>", false, "Displays only the packages applicable for the specified target framework."),
-                ("Sources", "--source", "IEnumerable<string>", false, "The NuGet sources to use when searching for newer packages. Requires the --outdated or --deprecated option."),
-                ("#Project", "", "", false, ""),
-                ("Config", "--config", "string", false, "The NuGet sources to use when searching for newer packages. Requires the --outdated option."),
-                ("Deprecated", "--deprecated", "bool?", false, "Displays packages that have been deprecated."),
-                ("HighestMinor", "--highest-minor", "bool?", false, "Considers only the packages with a matching major version number when searching for newer packages. Requires the --outdated or --deprecated option."),
-                ("HighestPatch", "--highest-patch", "bool?", false, "Considers only the packages with a matching major and minor version numbers when searching for newer packages. Requires the --outdated or --deprecated option."),
-                ("IncludePrerelease", "--include-prerelease", "bool?", false, "Considers packages with prerelease versions when searching for newer packages. Requires the --outdated or --deprecated option."),
-                ("IncludeTransitive", "--include-transitive", "bool?", false, "Lists transitive packages, in addition to the top-level packages. When specifying this option, you get a list of packages that the top-level packages depend on."),
-                ("Outdated", "--outdated", "bool?", false, "Lists packages that have newer versions available."),
-                ("#Verbosity", "", "", false, ""),
-            ]
-        ),
-        (
-            "DotNetRemovePackage",
-            ["Removes package reference from a project file."],
-            ["remove", "$Project", "package", "$PackageName"],
-            [
-                ("#Project", "", "", false, ""),
-                ("PackageName", "", "string", false, "The package reference to add."),
-            ]
+            ],
+            false, false
         )
     };
 #>
@@ -159,7 +274,29 @@ using Internal.DotNet;
         }
 
         var name = command.Name;
-        var commandArgs = string.Join(", ", command.CommandArgs.Select(i => i.StartsWith("$") ? i.Substring(1) : $"\"{i}\""));
+        var commandArgs = new List<string>();
+        foreach (var arg in command.CommandArgs)
+        {
+            if (arg.StartsWith("$"))
+            {
+                var curArg = arg.Substring(1);
+                var notEmpty = command.Args.FirstOrDefault(i => i.PropertyName == curArg && i.Type.StartsWith("IEnumerable"));
+                if (!string.IsNullOrWhiteSpace(notEmpty.PropertyName))
+                {
+                    var compositeArg = $"new [] {{{string.Join(", ", commandArgs)}}}.Concat({curArg}).ToArray()";
+                    commandArgs.Clear();
+                    commandArgs.Add(compositeArg);
+                }
+                else
+                {
+                    commandArgs.Add(curArg);
+                }
+            }
+            else
+            {
+                commandArgs.Add($"\"{arg}\"");
+            }
+        }
 #>
 /// <summary>
 <#
@@ -255,8 +392,14 @@ public partial record <#= command.Name #>(
     {
         if (arg.StartsWith("$"))
         {
+            var notEmptyArg = arg.Substring(1);
+            var notEmpty = command.Args.FirstOrDefault(i => i.PropertyName == notEmptyArg && i.Type.StartsWith("IEnumerable"));
+            if (!string.IsNullOrWhiteSpace(notEmpty.PropertyName))
+            {
+                notEmptyArg = $"{notEmptyArg}.ToArray()";
+            }
 #>
-            .AddNotEmptyArgs(<#= arg.Substring(1) #>)
+            .AddNotEmptyArgs(<#= notEmptyArg #>)
 <#
         }
         else
@@ -268,32 +411,36 @@ public partial record <#= command.Name #>(
     }
 #>
 <#
-    foreach (var arg in command.Args.Where(i => !i.IsProject).Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.Type.StartsWith("IEnumerable") && i.ArgName != "--property"))
-    {
-#>
-            .AddArgs(<#= arg.PropertyName #>.Select(i => ("<#= arg.ArgName #>", (string?)i)).ToArray())
-<#
-    }
-#>
-            .AddArgs(
-<#
-    var strArgs = command.Args.Where(i => !i.IsProject).Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && !i.Type.StartsWith("bool") && !i.Type.StartsWith("IEnumerable")).ToArray();
-    for (var i = 0; i < strArgs.Length; i++)
-    {
-        var arg = strArgs[i];
-        var prop = arg.Type switch
+        if (command.IsBuild)
         {
-            "string" => arg.PropertyName,
-            _ => $"{arg.PropertyName}?.ToString()"
-        };
-
-        var separator = i < strArgs.Length - 1 ? "," : "";
 #>
-                ("<#= arg.ArgName #>", <#= prop #>)<#= separator #>
+            .AddMSBuildLoggers(host, Verbosity)
+<#
+        }
+
+        if (command.IsTests)
+        {
+#>
+            .AddTestLoggers(host, Loggers)
+<#
+        }
+#>
+<#
+    foreach (var arg in command.Args.Where(i => !i.IsProject).Where(i => i.Type.StartsWith("IEnumerable") && i.ArgName != "--property"))
+    {
+#>
+            .AddArgs(<#= arg.PropertyName #>.ToArgs("<#= arg.ArgName #>"))
 <#
     }
 #>
-            )
+<#
+    foreach(var arg in command.Args.Where(i => !i.IsProject).Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && !i.Type.StartsWith("bool") && !i.Type.StartsWith("IEnumerable")))
+    {
+#>
+            .AddArgs(<#= arg.PropertyName #>.ToArgs("<#= arg.ArgName #>"))
+<#
+    }
+#>
             .AddBooleanArgs(
 <#
     var boolArgs = command.Args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.Type.StartsWith("bool")).ToArray();
@@ -319,7 +466,7 @@ public partial record <#= command.Name #>(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, <#= commandArgs #>);
+    public override string ToString() => "".GetShortName(ShortName, <#= string.Join(", ", commandArgs) #>);
 }
 
 <#

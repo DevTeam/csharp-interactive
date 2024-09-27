@@ -1,6 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 namespace HostApi;
-    
+
 [ExcludeFromCodeCoverage]
 public partial record CommandLine: ICommandLine
 {
@@ -67,6 +67,618 @@ public partial record CommandLine: ICommandLine
     /// <param name="vars">environment variables to remove.</param>
     /// <returns>Returns a new command with the corresponding changes.</returns>
     public static CommandLine operator -(CommandLine command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetCustom: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetCustom operator +(DotNetCustom command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetCustom operator -(DotNetCustom command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetCustom operator +(DotNetCustom command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetCustom operator -(DotNetCustom command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetCustom operator +(DotNetCustom command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetCustom operator -(DotNetCustom command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetCustom operator +(DotNetCustom command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetCustom operator -(DotNetCustom command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNet: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNet operator +(DotNet command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNet operator -(DotNet command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNet operator +(DotNet command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNet operator -(DotNet command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNet operator +(DotNet command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNet operator -(DotNet command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNet operator +(DotNet command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNet operator -(DotNet command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetExec: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetExec operator +(DotNetExec command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetExec operator -(DotNetExec command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetExec operator +(DotNetExec command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetExec operator -(DotNetExec command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetExec operator +(DotNetExec command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetExec operator -(DotNetExec command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetExec operator +(DotNetExec command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetExec operator -(DotNetExec command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetAddPackage: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddPackage operator +(DotNetAddPackage command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddPackage operator -(DotNetAddPackage command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetAddPackage operator +(DotNetAddPackage command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddPackage operator -(DotNetAddPackage command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddPackage operator +(DotNetAddPackage command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddPackage operator -(DotNetAddPackage command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddPackage operator +(DotNetAddPackage command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddPackage operator -(DotNetAddPackage command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetListPackage: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListPackage operator +(DotNetListPackage command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListPackage operator -(DotNetListPackage command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetListPackage operator +(DotNetListPackage command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListPackage operator -(DotNetListPackage command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListPackage operator +(DotNetListPackage command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListPackage operator -(DotNetListPackage command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListPackage operator +(DotNetListPackage command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListPackage operator -(DotNetListPackage command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetRemovePackage: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemovePackage operator +(DotNetRemovePackage command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemovePackage operator -(DotNetRemovePackage command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetRemovePackage operator +(DotNetRemovePackage command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemovePackage operator -(DotNetRemovePackage command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemovePackage operator +(DotNetRemovePackage command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemovePackage operator -(DotNetRemovePackage command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemovePackage operator +(DotNetRemovePackage command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemovePackage operator -(DotNetRemovePackage command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetAddReference: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddReference operator +(DotNetAddReference command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddReference operator -(DotNetAddReference command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetAddReference operator +(DotNetAddReference command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddReference operator -(DotNetAddReference command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddReference operator +(DotNetAddReference command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddReference operator -(DotNetAddReference command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddReference operator +(DotNetAddReference command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetAddReference operator -(DotNetAddReference command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetListReference: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListReference operator +(DotNetListReference command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListReference operator -(DotNetListReference command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetListReference operator +(DotNetListReference command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListReference operator -(DotNetListReference command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListReference operator +(DotNetListReference command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListReference operator -(DotNetListReference command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListReference operator +(DotNetListReference command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetListReference operator -(DotNetListReference command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetRemoveReference: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemoveReference operator +(DotNetRemoveReference command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemoveReference operator -(DotNetRemoveReference command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetRemoveReference operator +(DotNetRemoveReference command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemoveReference operator -(DotNetRemoveReference command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemoveReference operator +(DotNetRemoveReference command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemoveReference operator -(DotNetRemoveReference command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemoveReference operator +(DotNetRemoveReference command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetRemoveReference operator -(DotNetRemoveReference command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
 [ExcludeFromCodeCoverage]
@@ -274,7 +886,7 @@ public partial record DotNetClean: ICommandLine
 }
 
 [ExcludeFromCodeCoverage]
-public partial record DotNetCustom: ICommandLine
+public partial record MSBuild: ICommandLine
 {
     /// <summary>
     /// Appends an argument.
@@ -282,7 +894,7 @@ public partial record DotNetCustom: ICommandLine
     /// <param name="command">The command to which an argument will be added.</param>
     /// <param name="arg">Argument to add.</param>
     /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetCustom operator +(DotNetCustom command, string arg) => command.AddArgs(arg);
+    public static MSBuild operator +(MSBuild command, string arg) => command.AddArgs(arg);
     
     /// <summary>
     /// Removes an argument by its name.
@@ -290,7 +902,7 @@ public partial record DotNetCustom: ICommandLine
     /// <param name="command">The command to which an argument will be removed.</param>
     /// <param name="arg">Argument to remove.</param>
     /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetCustom operator -(DotNetCustom command, string arg) => command.RemoveArgs(arg);
+    public static MSBuild operator -(MSBuild command, string arg) => command.RemoveArgs(arg);
 
     /// <summary>
     /// Appends arguments.
@@ -298,7 +910,7 @@ public partial record DotNetCustom: ICommandLine
     /// <param name="command">The command to which arguments will be added.</param>
     /// <param name="args">Arguments to add.</param>
     /// <returns>Returns a new command with the corresponding changes.</returns>    
-    public static DotNetCustom operator +(DotNetCustom command, IEnumerable<string> args) => command.AddArgs(args);
+    public static MSBuild operator +(MSBuild command, IEnumerable<string> args) => command.AddArgs(args);
 
     /// <summary>
     /// Removes arguments by their name.
@@ -306,7 +918,7 @@ public partial record DotNetCustom: ICommandLine
     /// <param name="command">The command to which arguments will be removed.</param>
     /// <param name="args">Arguments to remove.</param>
     /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetCustom operator -(DotNetCustom command, IEnumerable<string> args) => command.RemoveArgs(args);
+    public static MSBuild operator -(MSBuild command, IEnumerable<string> args) => command.RemoveArgs(args);
     
     /// <summary>
     /// Appends an environment variable.
@@ -314,7 +926,7 @@ public partial record DotNetCustom: ICommandLine
     /// <param name="command">The command to which an environment variable will be added.</param>
     /// <param name="var">Environment variable to add.</param>
     /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetCustom operator +(DotNetCustom command, (string name, string value) var) => command.AddVars(var);
+    public static MSBuild operator +(MSBuild command, (string name, string value) var) => command.AddVars(var);
     
     /// <summary>
     /// Removes environment variable by its name and value.
@@ -322,7 +934,7 @@ public partial record DotNetCustom: ICommandLine
     /// <param name="command">The command to which an environment variable will be removed.</param>
     /// <param name="var">Environment variable to remove.</param>
     /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetCustom operator -(DotNetCustom command, (string name, string value) var) => command.RemoveVars(var);
+    public static MSBuild operator -(MSBuild command, (string name, string value) var) => command.RemoveVars(var);
     
     /// <summary>
     /// Appends environment variables.
@@ -330,7 +942,7 @@ public partial record DotNetCustom: ICommandLine
     /// <param name="command">The command to which environment variables will be added.</param>
     /// <param name="vars">Environment variables to add.</param>
     /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetCustom operator +(DotNetCustom command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    public static MSBuild operator +(MSBuild command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
     
     /// <summary>
     /// Removes environment variables by their name and value.
@@ -338,7 +950,7 @@ public partial record DotNetCustom: ICommandLine
     /// <param name="command">The command to which environment variables will be removed.</param>
     /// <param name="vars">environment variables to remove.</param>
     /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetCustom operator -(DotNetCustom command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+    public static MSBuild operator -(MSBuild command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
 [ExcludeFromCodeCoverage]
@@ -886,74 +1498,6 @@ public partial record DotNetToolRestore: ICommandLine
 }
 
 [ExcludeFromCodeCoverage]
-public partial record MSBuild: ICommandLine
-{
-    /// <summary>
-    /// Appends an argument.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be added.</param>
-    /// <param name="arg">Argument to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static MSBuild operator +(MSBuild command, string arg) => command.AddArgs(arg);
-    
-    /// <summary>
-    /// Removes an argument by its name.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be removed.</param>
-    /// <param name="arg">Argument to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static MSBuild operator -(MSBuild command, string arg) => command.RemoveArgs(arg);
-
-    /// <summary>
-    /// Appends arguments.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be added.</param>
-    /// <param name="args">Arguments to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>    
-    public static MSBuild operator +(MSBuild command, IEnumerable<string> args) => command.AddArgs(args);
-
-    /// <summary>
-    /// Removes arguments by their name.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be removed.</param>
-    /// <param name="args">Arguments to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static MSBuild operator -(MSBuild command, IEnumerable<string> args) => command.RemoveArgs(args);
-    
-    /// <summary>
-    /// Appends an environment variable.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be added.</param>
-    /// <param name="var">Environment variable to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static MSBuild operator +(MSBuild command, (string name, string value) var) => command.AddVars(var);
-    
-    /// <summary>
-    /// Removes environment variable by its name and value.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be removed.</param>
-    /// <param name="var">Environment variable to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static MSBuild operator -(MSBuild command, (string name, string value) var) => command.RemoveVars(var);
-    
-    /// <summary>
-    /// Appends environment variables.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be added.</param>
-    /// <param name="vars">Environment variables to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static MSBuild operator +(MSBuild command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
-    
-    /// <summary>
-    /// Removes environment variables by their name and value.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be removed.</param>
-    /// <param name="vars">environment variables to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static MSBuild operator -(MSBuild command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
-}
-
-[ExcludeFromCodeCoverage]
 public partial record VSTest: ICommandLine
 {
     /// <summary>
@@ -1019,346 +1563,6 @@ public partial record VSTest: ICommandLine
     /// <param name="vars">environment variables to remove.</param>
     /// <returns>Returns a new command with the corresponding changes.</returns>
     public static VSTest operator -(VSTest command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
-}
-
-[ExcludeFromCodeCoverage]
-public partial record DotNet: ICommandLine
-{
-    /// <summary>
-    /// Appends an argument.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be added.</param>
-    /// <param name="arg">Argument to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNet operator +(DotNet command, string arg) => command.AddArgs(arg);
-    
-    /// <summary>
-    /// Removes an argument by its name.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be removed.</param>
-    /// <param name="arg">Argument to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNet operator -(DotNet command, string arg) => command.RemoveArgs(arg);
-
-    /// <summary>
-    /// Appends arguments.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be added.</param>
-    /// <param name="args">Arguments to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>    
-    public static DotNet operator +(DotNet command, IEnumerable<string> args) => command.AddArgs(args);
-
-    /// <summary>
-    /// Removes arguments by their name.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be removed.</param>
-    /// <param name="args">Arguments to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNet operator -(DotNet command, IEnumerable<string> args) => command.RemoveArgs(args);
-    
-    /// <summary>
-    /// Appends an environment variable.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be added.</param>
-    /// <param name="var">Environment variable to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNet operator +(DotNet command, (string name, string value) var) => command.AddVars(var);
-    
-    /// <summary>
-    /// Removes environment variable by its name and value.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be removed.</param>
-    /// <param name="var">Environment variable to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNet operator -(DotNet command, (string name, string value) var) => command.RemoveVars(var);
-    
-    /// <summary>
-    /// Appends environment variables.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be added.</param>
-    /// <param name="vars">Environment variables to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNet operator +(DotNet command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
-    
-    /// <summary>
-    /// Removes environment variables by their name and value.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be removed.</param>
-    /// <param name="vars">environment variables to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNet operator -(DotNet command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
-}
-
-[ExcludeFromCodeCoverage]
-public partial record DotNetExec: ICommandLine
-{
-    /// <summary>
-    /// Appends an argument.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be added.</param>
-    /// <param name="arg">Argument to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetExec operator +(DotNetExec command, string arg) => command.AddArgs(arg);
-    
-    /// <summary>
-    /// Removes an argument by its name.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be removed.</param>
-    /// <param name="arg">Argument to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetExec operator -(DotNetExec command, string arg) => command.RemoveArgs(arg);
-
-    /// <summary>
-    /// Appends arguments.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be added.</param>
-    /// <param name="args">Arguments to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>    
-    public static DotNetExec operator +(DotNetExec command, IEnumerable<string> args) => command.AddArgs(args);
-
-    /// <summary>
-    /// Removes arguments by their name.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be removed.</param>
-    /// <param name="args">Arguments to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetExec operator -(DotNetExec command, IEnumerable<string> args) => command.RemoveArgs(args);
-    
-    /// <summary>
-    /// Appends an environment variable.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be added.</param>
-    /// <param name="var">Environment variable to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetExec operator +(DotNetExec command, (string name, string value) var) => command.AddVars(var);
-    
-    /// <summary>
-    /// Removes environment variable by its name and value.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be removed.</param>
-    /// <param name="var">Environment variable to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetExec operator -(DotNetExec command, (string name, string value) var) => command.RemoveVars(var);
-    
-    /// <summary>
-    /// Appends environment variables.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be added.</param>
-    /// <param name="vars">Environment variables to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetExec operator +(DotNetExec command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
-    
-    /// <summary>
-    /// Removes environment variables by their name and value.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be removed.</param>
-    /// <param name="vars">environment variables to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetExec operator -(DotNetExec command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
-}
-
-[ExcludeFromCodeCoverage]
-public partial record DotNetAddPackage: ICommandLine
-{
-    /// <summary>
-    /// Appends an argument.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be added.</param>
-    /// <param name="arg">Argument to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetAddPackage operator +(DotNetAddPackage command, string arg) => command.AddArgs(arg);
-    
-    /// <summary>
-    /// Removes an argument by its name.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be removed.</param>
-    /// <param name="arg">Argument to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetAddPackage operator -(DotNetAddPackage command, string arg) => command.RemoveArgs(arg);
-
-    /// <summary>
-    /// Appends arguments.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be added.</param>
-    /// <param name="args">Arguments to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>    
-    public static DotNetAddPackage operator +(DotNetAddPackage command, IEnumerable<string> args) => command.AddArgs(args);
-
-    /// <summary>
-    /// Removes arguments by their name.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be removed.</param>
-    /// <param name="args">Arguments to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetAddPackage operator -(DotNetAddPackage command, IEnumerable<string> args) => command.RemoveArgs(args);
-    
-    /// <summary>
-    /// Appends an environment variable.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be added.</param>
-    /// <param name="var">Environment variable to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetAddPackage operator +(DotNetAddPackage command, (string name, string value) var) => command.AddVars(var);
-    
-    /// <summary>
-    /// Removes environment variable by its name and value.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be removed.</param>
-    /// <param name="var">Environment variable to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetAddPackage operator -(DotNetAddPackage command, (string name, string value) var) => command.RemoveVars(var);
-    
-    /// <summary>
-    /// Appends environment variables.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be added.</param>
-    /// <param name="vars">Environment variables to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetAddPackage operator +(DotNetAddPackage command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
-    
-    /// <summary>
-    /// Removes environment variables by their name and value.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be removed.</param>
-    /// <param name="vars">environment variables to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetAddPackage operator -(DotNetAddPackage command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
-}
-
-[ExcludeFromCodeCoverage]
-public partial record DotNetListPackage: ICommandLine
-{
-    /// <summary>
-    /// Appends an argument.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be added.</param>
-    /// <param name="arg">Argument to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetListPackage operator +(DotNetListPackage command, string arg) => command.AddArgs(arg);
-    
-    /// <summary>
-    /// Removes an argument by its name.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be removed.</param>
-    /// <param name="arg">Argument to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetListPackage operator -(DotNetListPackage command, string arg) => command.RemoveArgs(arg);
-
-    /// <summary>
-    /// Appends arguments.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be added.</param>
-    /// <param name="args">Arguments to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>    
-    public static DotNetListPackage operator +(DotNetListPackage command, IEnumerable<string> args) => command.AddArgs(args);
-
-    /// <summary>
-    /// Removes arguments by their name.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be removed.</param>
-    /// <param name="args">Arguments to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetListPackage operator -(DotNetListPackage command, IEnumerable<string> args) => command.RemoveArgs(args);
-    
-    /// <summary>
-    /// Appends an environment variable.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be added.</param>
-    /// <param name="var">Environment variable to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetListPackage operator +(DotNetListPackage command, (string name, string value) var) => command.AddVars(var);
-    
-    /// <summary>
-    /// Removes environment variable by its name and value.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be removed.</param>
-    /// <param name="var">Environment variable to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetListPackage operator -(DotNetListPackage command, (string name, string value) var) => command.RemoveVars(var);
-    
-    /// <summary>
-    /// Appends environment variables.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be added.</param>
-    /// <param name="vars">Environment variables to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetListPackage operator +(DotNetListPackage command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
-    
-    /// <summary>
-    /// Removes environment variables by their name and value.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be removed.</param>
-    /// <param name="vars">environment variables to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetListPackage operator -(DotNetListPackage command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
-}
-
-[ExcludeFromCodeCoverage]
-public partial record DotNetRemovePackage: ICommandLine
-{
-    /// <summary>
-    /// Appends an argument.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be added.</param>
-    /// <param name="arg">Argument to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetRemovePackage operator +(DotNetRemovePackage command, string arg) => command.AddArgs(arg);
-    
-    /// <summary>
-    /// Removes an argument by its name.
-    /// </summary>
-    /// <param name="command">The command to which an argument will be removed.</param>
-    /// <param name="arg">Argument to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetRemovePackage operator -(DotNetRemovePackage command, string arg) => command.RemoveArgs(arg);
-
-    /// <summary>
-    /// Appends arguments.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be added.</param>
-    /// <param name="args">Arguments to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>    
-    public static DotNetRemovePackage operator +(DotNetRemovePackage command, IEnumerable<string> args) => command.AddArgs(args);
-
-    /// <summary>
-    /// Removes arguments by their name.
-    /// </summary>
-    /// <param name="command">The command to which arguments will be removed.</param>
-    /// <param name="args">Arguments to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetRemovePackage operator -(DotNetRemovePackage command, IEnumerable<string> args) => command.RemoveArgs(args);
-    
-    /// <summary>
-    /// Appends an environment variable.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be added.</param>
-    /// <param name="var">Environment variable to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetRemovePackage operator +(DotNetRemovePackage command, (string name, string value) var) => command.AddVars(var);
-    
-    /// <summary>
-    /// Removes environment variable by its name and value.
-    /// </summary>
-    /// <param name="command">The command to which an environment variable will be removed.</param>
-    /// <param name="var">Environment variable to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetRemovePackage operator -(DotNetRemovePackage command, (string name, string value) var) => command.RemoveVars(var);
-    
-    /// <summary>
-    /// Appends environment variables.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be added.</param>
-    /// <param name="vars">Environment variables to add.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetRemovePackage operator +(DotNetRemovePackage command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
-    
-    /// <summary>
-    /// Removes environment variables by their name and value.
-    /// </summary>
-    /// <param name="command">The command to which environment variables will be removed.</param>
-    /// <param name="vars">environment variables to remove.</param>
-    /// <returns>Returns a new command with the corresponding changes.</returns>
-    public static DotNetRemovePackage operator -(DotNetRemovePackage command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
 }
 
 [ExcludeFromCodeCoverage]
