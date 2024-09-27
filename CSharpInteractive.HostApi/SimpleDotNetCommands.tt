@@ -5,7 +5,7 @@
 namespace HostApi;
 
 <#
-    (string PropertyName, string ArgName, string  Type, bool IsProject, string Comments)[] commonArgs =
+    (string PropertyName, string ArgName, string Type, bool IsProject, string Comments)[] commonArgs =
     [
         ("Project", "", "string", true, "The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown."),
         ("Props", "--property", "IEnumerable<(string name, string value)>", false, "MSBuild options for setting properties."),
