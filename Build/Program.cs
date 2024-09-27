@@ -277,6 +277,7 @@ async Task CheckCompatibilityAsync(
         await new DotNetBuild()
             .WithProject(buildProjectDir)
             .WithSources(nuGetSource, Path.Combine(output, "CSharpInteractive"))
+            .WithFramework("net8.0")
             .WithShortName($"Building the {sampleProjectName}")
             .BuildAsync().EnsureSuccess();
 
