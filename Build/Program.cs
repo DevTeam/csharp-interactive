@@ -283,6 +283,7 @@ async Task CheckCompatibilityAsync(
         await new DotNetRun()
             .WithProject(buildProjectDir)
             .WithNoBuild(true)
+            .WithFramework("net8.0")
             .WithWorkingDirectory(sampleProjectDir)
             .WithShortName($"Running a build for the {sampleProjectName}")
             .RunAsync().EnsureSuccess();
