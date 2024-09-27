@@ -9,6 +9,7 @@ namespace HostApi;
     [
         ("Project", "", "string", true, "The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown."),
         ("Props", "--property", "IEnumerable<(string name, string value)>", false, "MSBuild options for setting properties."),
+        ("Diagnostics", "--diagnostics", "bool?", false, "Enables diagnostic output."),
         ("Verbosity", "--verbosity", "DotNetVerbosity?", false, "Sets the verbosity level of the command. Allowed values are <see cref=\"DotNetVerbosity.Quiet\"/>, <see cref=\"DotNetVerbosity.Minimal\"/>, <see cref=\"DotNetVerbosity.Normal\"/>, <see cref=\"DotNetVerbosity.Detailed\"/>, and <see cref=\"DotNetVerbosity.Diagnostic\"/>. The default is <see cref=\"DotNetVerbosity.Minimal\"/>. For more information, see <see cref=\"DotNetVerbosity\"/>."),
         ("PathToApplication", "", "string", true, "Specifies the path to an application .dll file to run the application. To run the application means to find and execute the entry point, which in the case of console apps is the Main method. For example, dotnet myapp. dll runs the myapp application."),
         ("RollForward", "--roll-forward", "RollForward?", false, "Controls how roll forward is applied to the app. The SETTING can be one of the following values. If not specified, <see cref=\"HostApi.RollForward.Minor\"/> is the default."),
@@ -53,7 +54,8 @@ namespace HostApi;
                 ("#PathToApplication", "", "", false, ""),
                 ("#AdditionalDeps", "", "", false, ""),
                 ("#FxVersion", "", "", false, ""),
-                ("#RollForward", "", "RollForward", false, "")
+                ("#RollForward", "", "RollForward", false, ""),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             false, false
         ),
@@ -69,6 +71,7 @@ namespace HostApi;
                 ("#FxVersion", "", "", false, ""),
                 ("#RollForward", "", "RollForward", false, ""),
                 ("RuntimeConfig", "--runtimeconfig", "string", false, "Path to a runtimeconfig.json file. A runtimeconfig.json file contains run-time settings and is typically named &lt;applicationname&gt;.runtimeconfig.json."),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             false, false
         ),
@@ -85,6 +88,7 @@ namespace HostApi;
                 ("PackageDirectory", "--package-directory", "string", false, @"The directory where to restore the packages. The default package restore location is %userprofile%\.nuget\packages on Windows and ~/.nuget/packages on macOS and Linux."),
                 ("Prerelease", "--prerelease", "bool?", false, "Allows prerelease packages to be installed. Available since .NET Core 5 SDK."),
                 ("Version", "--version", "string", false, "Version of the package"),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             false, false
         ),
@@ -104,6 +108,7 @@ namespace HostApi;
                 ("IncludeTransitive", "--include-transitive", "bool?", false, "Lists transitive packages, in addition to the top-level packages. When specifying this option, you get a list of packages that the top-level packages depend on."),
                 ("Outdated", "--outdated", "bool?", false, "Lists packages that have newer versions available."),
                 ("#Verbosity", "", "", false, ""),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             false, false
         ),
@@ -114,6 +119,7 @@ namespace HostApi;
             [
                 ("#Project", "", "", false, ""),
                 ("PackageName", "", "string", false, "The package reference to add."),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             false, false
         ),
@@ -124,7 +130,8 @@ namespace HostApi;
             [
                 ("References", "--source", "IEnumerable<string>", false, "Project-to-project (P2P) references to add. Specify one or more projects. Glob patterns are supported on Unix/Linux-based systems."),
                 ("#Project", "", "", false, ""),
-                ("#Framework", "", "", false, "Adds project references only when targeting a specific framework using the TFM format.")
+                ("#Framework", "", "", false, "Adds project references only when targeting a specific framework using the TFM format."),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             false, false
         ),
@@ -134,6 +141,7 @@ namespace HostApi;
             ["list", "$Project"],
             [
                 ("#Project", "", "", false, ""),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             false, false
         ),
@@ -144,7 +152,8 @@ namespace HostApi;
             [
                 ("References", "--source", "IEnumerable<string>", false, "Project-to-project (P2P) references to remove. You can specify one or multiple projects. Glob patterns are supported on Unix/Linux based terminals."),
                 ("#Project", "", "", false, ""),
-                ("#Framework", "", "", false, "Removes the reference only when targeting a specific framework using the TFM format.")
+                ("#Framework", "", "", false, "Removes the reference only when targeting a specific framework using the TFM format."),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             false, false
         ),
@@ -185,6 +194,7 @@ namespace HostApi;
                 ("#Verbosity", "", "", false, ""),
                 ("#UseCurrentRuntime", "", "", false, ""),
                 ("#VersionSuffix", "", "", false, ""),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             true, false
         ),
@@ -194,6 +204,7 @@ namespace HostApi;
             ["build-server", "shutdown"],
             [
                 ("Servers", "", "IEnumerable<DotNetBuildServer>", false, "Shuts down build servers that are started from dotnet. By default, all servers are shut down."),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             false, false
         ),
@@ -212,6 +223,7 @@ namespace HostApi;
                 ("#Runtime", "", "", false, ""),
                 ("#TerminalLogger", "", "", false, ""),
                 ("#Verbosity", "", "", false, ""),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             true, false
         ),
@@ -230,6 +242,84 @@ namespace HostApi;
                 ("Quiet", "--quiet", "bool?", false, "Display warnings and errors only."),
                 ("Trust", "--trust", "bool?", false, "rusts the certificate on the local machine. If this option isn't specified, the certificate is added to the certificate store but not to a trusted list. When combined with the --check option, validates that the certificate is trusted."),
                 ("Verbose", "--verbose", "bool?", false, "Display debug information."),
+                ("#Diagnostics", "", "RollForward", false, ""),
+            ],
+            false, false
+        ),
+        (
+            "DotNetFormat",
+            ["Formats code to match editorconfig settings."],
+            ["format", "$Project"],
+            [
+                ("#Project", "", "", false, ""),
+                ("Diagnostics", "--diagnostics", "string", false, "A space-separated list of diagnostic IDs to use as a filter when fixing code style or third-party issues. Default value is whichever IDs are listed in the .editorconfig file. For a list of built-in analyzer rule IDs that you can specify, see the list of IDs for code-analysis style rules."),
+                ("Severity", "--severity", "DotnetFormatSeverity?", false, "The minimum severity of diagnostics to fix. Allowed values are info, warn, and error. The default value is warn"),
+                ("#NoRestore", "", "", false, "Doesn't execute an implicit restore before formatting. Default is to do implicit restore."),
+                ("VerifyNoChanges", "--verify-no-changes", "bool?", false, "Verifies that no formatting changes would be performed. Terminates with a non zero exit code if any files would have been formatted."),
+                ("Include", "--include", "string", false, "A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project."),
+                ("Exclude", "--exclude", "string", false, "A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project."),
+                ("IncludeGenerated", "--include-generated", "bool?", false, "Formats files generated by the SDK."),
+                ("#Verbosity", "", "", false, ""),
+                ("BinaryLog", "--binarylog", "string", false, "Logs all project or solution load information to a binary log file."),
+                ("Report", "--report", "string", false, "Logs all project or solution load information to a binary log file."),
+            ],
+            false, false
+        ),
+        (
+            "DotNetFormatWhitespace",
+            ["Formats code to match editorconfig settings for whitespace. The dotnet format whitespace subcommand only runs formatting rules associated with whitespace formatting."],
+            ["format", "$Project", "whitespace"],
+            [
+                ("#Project", "", "", false, ""),
+                ("Diagnostics", "--diagnostics", "string", false, "A space-separated list of diagnostic IDs to use as a filter when fixing code style or third-party issues. Default value is whichever IDs are listed in the .editorconfig file. For a list of built-in analyzer rule IDs that you can specify, see the list of IDs for code-analysis style rules."),
+                ("Severity", "--severity", "DotnetFormatSeverity?", false, "The minimum severity of diagnostics to fix. Allowed values are info, warn, and error. The default value is warn"),
+                ("#NoRestore", "", "", false, "Doesn't execute an implicit restore before formatting. Default is to do implicit restore."),
+                ("VerifyNoChanges", "--verify-no-changes", "bool?", false, "Verifies that no formatting changes would be performed. Terminates with a non zero exit code if any files would have been formatted."),
+                ("Include", "--include", "string", false, "A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project."),
+                ("Exclude", "--exclude", "string", false, "A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project."),
+                ("IncludeGenerated", "--include-generated", "bool?", false, "Formats files generated by the SDK."),
+                ("#Verbosity", "", "", false, ""),
+                ("BinaryLog", "--binarylog", "string", false, "Logs all project or solution load information to a binary log file."),
+                ("Report", "--report", "string", false, "Logs all project or solution load information to a binary log file."),
+                ("Folder", "--folder", "bool?", false, "Treat the project (or solution) argument as a path to a simple folder of code files."),
+            ],
+            false, false
+        ),
+        (
+            "DotNetFormatStyle",
+            ["Formats code to match EditorConfig settings for code style. The dotnet format style subcommand only runs formatting rules associated with code style formatting."],
+            ["format", "$Project", "style"],
+            [
+                ("#Project", "", "", false, ""),
+                ("Diagnostics", "--diagnostics", "string", false, "A space-separated list of diagnostic IDs to use as a filter when fixing code style or third-party issues. Default value is whichever IDs are listed in the .editorconfig file. For a list of built-in analyzer rule IDs that you can specify, see the list of IDs for code-analysis style rules."),
+                ("Severity", "--severity", "DotnetFormatSeverity?", false, "The minimum severity of diagnostics to fix. Allowed values are info, warn, and error. The default value is warn"),
+                ("#NoRestore", "", "", false, "Doesn't execute an implicit restore before formatting. Default is to do implicit restore."),
+                ("VerifyNoChanges", "--verify-no-changes", "bool?", false, "Verifies that no formatting changes would be performed. Terminates with a non zero exit code if any files would have been formatted."),
+                ("Include", "--include", "string", false, "A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project."),
+                ("Exclude", "--exclude", "string", false, "A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project."),
+                ("IncludeGenerated", "--include-generated", "bool?", false, "Formats files generated by the SDK."),
+                ("#Verbosity", "", "", false, ""),
+                ("BinaryLog", "--binarylog", "string", false, "Logs all project or solution load information to a binary log file."),
+                ("Report", "--report", "string", false, "Logs all project or solution load information to a binary log file."),
+            ],
+            false, false
+        ),
+        (
+            "DotNetFormatAnalyzers",
+            ["Formats code to match editorconfig settings for analyzers (excluding code style rules). The dotnet format analyzers subcommand only runs formatting rules associated with analyzers."],
+            ["format", "$Project", "analyzers"],
+            [
+                ("#Project", "", "", false, ""),
+                ("Diagnostics", "--diagnostics", "string", false, "A space-separated list of diagnostic IDs to use as a filter when fixing code style or third-party issues. Default value is whichever IDs are listed in the .editorconfig file. For a list of built-in analyzer rule IDs that you can specify, see the list of IDs for code-analysis style rules."),
+                ("Severity", "--severity", "DotnetFormatSeverity?", false, "The minimum severity of diagnostics to fix. Allowed values are info, warn, and error. The default value is warn"),
+                ("#NoRestore", "", "", false, "Doesn't execute an implicit restore before formatting. Default is to do implicit restore."),
+                ("VerifyNoChanges", "--verify-no-changes", "bool?", false, "Verifies that no formatting changes would be performed. Terminates with a non zero exit code if any files would have been formatted."),
+                ("Include", "--include", "string", false, "A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project."),
+                ("Exclude", "--exclude", "string", false, "A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project."),
+                ("IncludeGenerated", "--include-generated", "bool?", false, "Formats files generated by the SDK."),
+                ("#Verbosity", "", "", false, ""),
+                ("BinaryLog", "--binarylog", "string", false, "Logs all project or solution load information to a binary log file."),
+                ("Report", "--report", "string", false, "Logs all project or solution load information to a binary log file."),
             ],
             false, false
         ),
@@ -265,6 +355,7 @@ namespace HostApi;
                 ("#Runtime", "", "", false, ""),
                 ("#TerminalLogger", "", "", false, ""),
                 ("#Verbosity", "", "", false, ""),
+                ("#Diagnostics", "", "RollForward", false, ""),
             ],
             false, false
         )
@@ -346,7 +437,6 @@ using Internal.DotNet;
 <#
     }
 #>
-/// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record <#= command.Name #>(
@@ -377,7 +467,6 @@ public partial record <#= command.Name #>(
 #>
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -464,13 +553,13 @@ public partial record <#= command.Name #>(
     var boolArgs = command.Args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.Type.StartsWith("bool")).ToArray();
     for (var i = 0; i < boolArgs.Length; i++)
     {
+        var separator = i < boolArgs.Length - 1 ? "," : "";
         var arg = boolArgs[i];
 #>
-                ("<#= arg.ArgName #>", <#= arg.PropertyName #>),
+                ("<#= arg.ArgName #>", <#= arg.PropertyName #>)<#= separator #>
 <#
     }
 #>
-                ("--diagnostics", Diagnostics)
             )
 <#
     foreach (var arg in command.Args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.Type.StartsWith("IEnumerable") && i.ArgName == "--property").ToArray())

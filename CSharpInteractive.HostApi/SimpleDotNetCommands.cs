@@ -26,9 +26,9 @@ public partial record DotNet(
     string AdditionalDeps = "",
     string FxVersion = "",
     RollForward? RollForward = default,
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -98,9 +98,9 @@ public partial record DotNetExec(
     string FxVersion = "",
     RollForward? RollForward = default,
     string RuntimeConfig = "",
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -175,9 +175,9 @@ public partial record DotNetAddPackage(
     string PackageDirectory = "",
     bool? Prerelease = default,
     string Version = "",
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -260,9 +260,9 @@ public partial record DotNetListPackage(
     bool? IncludeTransitive = default,
     bool? Outdated = default,
     DotNetVerbosity? Verbosity = default,
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -330,9 +330,9 @@ public partial record DotNetRemovePackage(
     IEnumerable<(string name, string value)> Vars,
     string Project = "",
     string PackageName = "",
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -393,9 +393,9 @@ public partial record DotNetAddReference(
     IEnumerable<string> References,
     string Project = "",
     string Framework = "",
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -454,9 +454,9 @@ public partial record DotNetListReference(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
     string Project = "",
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -515,9 +515,9 @@ public partial record DotNetRemoveReference(
     IEnumerable<string> References,
     string Project = "",
     string Framework = "",
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -625,9 +625,9 @@ public partial record DotNetBuild(
     DotNetVerbosity? Verbosity = default,
     bool? UseCurrentRuntime = default,
     string VersionSuffix = "",
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -703,9 +703,9 @@ public partial record DotNetBuildServerShutdown(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
     IEnumerable<DotNetBuildServer> Servers,
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -779,9 +779,9 @@ public partial record DotNetClean(
     string Runtime = "",
     TerminalLogger? TerminalLogger = default,
     DotNetVerbosity? Verbosity = default,
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -864,9 +864,9 @@ public partial record DotNetDevCertsHttps(
     bool? Quiet = default,
     bool? Trust = default,
     bool? Verbose = default,
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
@@ -914,6 +914,348 @@ public partial record DotNetDevCertsHttps(
 
     /// <inheritdoc/>
     public override string ToString() => "".GetShortName(ShortName, "dev-certs", "https");
+}
+
+/// <summary>
+/// Formats code to match editorconfig settings.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
+/// <param name="Diagnostics">A space-separated list of diagnostic IDs to use as a filter when fixing code style or third-party issues. Default value is whichever IDs are listed in the .editorconfig file. For a list of built-in analyzer rule IDs that you can specify, see the list of IDs for code-analysis style rules.</param>
+/// <param name="Severity">The minimum severity of diagnostics to fix. Allowed values are info, warn, and error. The default value is warn</param>
+/// <param name="NoRestore">Doesn't execute an implicit restore before formatting. Default is to do implicit restore.</param>
+/// <param name="VerifyNoChanges">Verifies that no formatting changes would be performed. Terminates with a non zero exit code if any files would have been formatted.</param>
+/// <param name="Include">A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project.</param>
+/// <param name="Exclude">A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project.</param>
+/// <param name="IncludeGenerated">Formats files generated by the SDK.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="BinaryLog">Logs all project or solution load information to a binary log file.</param>
+/// <param name="Report">Logs all project or solution load information to a binary log file.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetFormat(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Project = "",
+    string Diagnostics = "",
+    DotnetFormatSeverity? Severity = default,
+    bool? NoRestore = default,
+    bool? VerifyNoChanges = default,
+    string Include = "",
+    string Exclude = "",
+    bool? IncludeGenerated = default,
+    DotNetVerbosity? Verbosity = default,
+    string BinaryLog = "",
+    string Report = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetFormat(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetFormat()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("format")
+            .AddNotEmptyArgs(Project)
+            .AddArgs(Diagnostics.ToArgs("--diagnostics"))
+            .AddArgs(Severity.ToArgs("--severity"))
+            .AddArgs(Include.ToArgs("--include"))
+            .AddArgs(Exclude.ToArgs("--exclude"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(BinaryLog.ToArgs("--binarylog"))
+            .AddArgs(Report.ToArgs("--report"))
+            .AddBooleanArgs(
+                ("--no-restore", NoRestore),
+                ("--verify-no-changes", VerifyNoChanges),
+                ("--include-generated", IncludeGenerated)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "format", Project);
+}
+
+/// <summary>
+/// Formats code to match editorconfig settings for whitespace. The dotnet format whitespace subcommand only runs formatting rules associated with whitespace formatting.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
+/// <param name="Diagnostics">A space-separated list of diagnostic IDs to use as a filter when fixing code style or third-party issues. Default value is whichever IDs are listed in the .editorconfig file. For a list of built-in analyzer rule IDs that you can specify, see the list of IDs for code-analysis style rules.</param>
+/// <param name="Severity">The minimum severity of diagnostics to fix. Allowed values are info, warn, and error. The default value is warn</param>
+/// <param name="NoRestore">Doesn't execute an implicit restore before formatting. Default is to do implicit restore.</param>
+/// <param name="VerifyNoChanges">Verifies that no formatting changes would be performed. Terminates with a non zero exit code if any files would have been formatted.</param>
+/// <param name="Include">A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project.</param>
+/// <param name="Exclude">A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project.</param>
+/// <param name="IncludeGenerated">Formats files generated by the SDK.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="BinaryLog">Logs all project or solution load information to a binary log file.</param>
+/// <param name="Report">Logs all project or solution load information to a binary log file.</param>
+/// <param name="Folder">Treat the project (or solution) argument as a path to a simple folder of code files.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetFormatWhitespace(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Project = "",
+    string Diagnostics = "",
+    DotnetFormatSeverity? Severity = default,
+    bool? NoRestore = default,
+    bool? VerifyNoChanges = default,
+    string Include = "",
+    string Exclude = "",
+    bool? IncludeGenerated = default,
+    DotNetVerbosity? Verbosity = default,
+    string BinaryLog = "",
+    string Report = "",
+    bool? Folder = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetFormatWhitespace(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetFormatWhitespace()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("format")
+            .AddNotEmptyArgs(Project)
+            .AddArgs("whitespace")
+            .AddArgs(Diagnostics.ToArgs("--diagnostics"))
+            .AddArgs(Severity.ToArgs("--severity"))
+            .AddArgs(Include.ToArgs("--include"))
+            .AddArgs(Exclude.ToArgs("--exclude"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(BinaryLog.ToArgs("--binarylog"))
+            .AddArgs(Report.ToArgs("--report"))
+            .AddBooleanArgs(
+                ("--no-restore", NoRestore),
+                ("--verify-no-changes", VerifyNoChanges),
+                ("--include-generated", IncludeGenerated),
+                ("--folder", Folder)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "format", Project, "whitespace");
+}
+
+/// <summary>
+/// Formats code to match EditorConfig settings for code style. The dotnet format style subcommand only runs formatting rules associated with code style formatting.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
+/// <param name="Diagnostics">A space-separated list of diagnostic IDs to use as a filter when fixing code style or third-party issues. Default value is whichever IDs are listed in the .editorconfig file. For a list of built-in analyzer rule IDs that you can specify, see the list of IDs for code-analysis style rules.</param>
+/// <param name="Severity">The minimum severity of diagnostics to fix. Allowed values are info, warn, and error. The default value is warn</param>
+/// <param name="NoRestore">Doesn't execute an implicit restore before formatting. Default is to do implicit restore.</param>
+/// <param name="VerifyNoChanges">Verifies that no formatting changes would be performed. Terminates with a non zero exit code if any files would have been formatted.</param>
+/// <param name="Include">A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project.</param>
+/// <param name="Exclude">A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project.</param>
+/// <param name="IncludeGenerated">Formats files generated by the SDK.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="BinaryLog">Logs all project or solution load information to a binary log file.</param>
+/// <param name="Report">Logs all project or solution load information to a binary log file.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetFormatStyle(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Project = "",
+    string Diagnostics = "",
+    DotnetFormatSeverity? Severity = default,
+    bool? NoRestore = default,
+    bool? VerifyNoChanges = default,
+    string Include = "",
+    string Exclude = "",
+    bool? IncludeGenerated = default,
+    DotNetVerbosity? Verbosity = default,
+    string BinaryLog = "",
+    string Report = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetFormatStyle(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetFormatStyle()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("format")
+            .AddNotEmptyArgs(Project)
+            .AddArgs("style")
+            .AddArgs(Diagnostics.ToArgs("--diagnostics"))
+            .AddArgs(Severity.ToArgs("--severity"))
+            .AddArgs(Include.ToArgs("--include"))
+            .AddArgs(Exclude.ToArgs("--exclude"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(BinaryLog.ToArgs("--binarylog"))
+            .AddArgs(Report.ToArgs("--report"))
+            .AddBooleanArgs(
+                ("--no-restore", NoRestore),
+                ("--verify-no-changes", VerifyNoChanges),
+                ("--include-generated", IncludeGenerated)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "format", Project, "style");
+}
+
+/// <summary>
+/// Formats code to match editorconfig settings for analyzers (excluding code style rules). The dotnet format analyzers subcommand only runs formatting rules associated with analyzers.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
+/// <param name="Diagnostics">A space-separated list of diagnostic IDs to use as a filter when fixing code style or third-party issues. Default value is whichever IDs are listed in the .editorconfig file. For a list of built-in analyzer rule IDs that you can specify, see the list of IDs for code-analysis style rules.</param>
+/// <param name="Severity">The minimum severity of diagnostics to fix. Allowed values are info, warn, and error. The default value is warn</param>
+/// <param name="NoRestore">Doesn't execute an implicit restore before formatting. Default is to do implicit restore.</param>
+/// <param name="VerifyNoChanges">Verifies that no formatting changes would be performed. Terminates with a non zero exit code if any files would have been formatted.</param>
+/// <param name="Include">A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project.</param>
+/// <param name="Exclude">A space-separated list of relative file or folder paths to include in formatting. The default is all files in the solution or project.</param>
+/// <param name="IncludeGenerated">Formats files generated by the SDK.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="BinaryLog">Logs all project or solution load information to a binary log file.</param>
+/// <param name="Report">Logs all project or solution load information to a binary log file.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetFormatAnalyzers(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Project = "",
+    string Diagnostics = "",
+    DotnetFormatSeverity? Severity = default,
+    bool? NoRestore = default,
+    bool? VerifyNoChanges = default,
+    string Include = "",
+    string Exclude = "",
+    bool? IncludeGenerated = default,
+    DotNetVerbosity? Verbosity = default,
+    string BinaryLog = "",
+    string Report = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetFormatAnalyzers(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetFormatAnalyzers()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("format")
+            .AddNotEmptyArgs(Project)
+            .AddArgs("analyzers")
+            .AddArgs(Diagnostics.ToArgs("--diagnostics"))
+            .AddArgs(Severity.ToArgs("--severity"))
+            .AddArgs(Include.ToArgs("--include"))
+            .AddArgs(Exclude.ToArgs("--exclude"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(BinaryLog.ToArgs("--binarylog"))
+            .AddArgs(Report.ToArgs("--report"))
+            .AddBooleanArgs(
+                ("--no-restore", NoRestore),
+                ("--verify-no-changes", VerifyNoChanges),
+                ("--include-generated", IncludeGenerated)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "format", Project, "analyzers");
 }
 
 /// <summary>
@@ -969,9 +1311,9 @@ public partial record DotNetRun(
     string Runtime = "",
     TerminalLogger? TerminalLogger = default,
     DotNetVerbosity? Verbosity = default,
+    bool? Diagnostics = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
-    bool? Diagnostics = default,
     string ShortName = "")
 {
     /// <summary>
