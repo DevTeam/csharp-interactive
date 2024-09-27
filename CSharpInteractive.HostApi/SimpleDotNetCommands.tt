@@ -216,6 +216,24 @@ namespace HostApi;
             true, false
         ),
         (
+            "DotNetDevCertsHttps",
+            ["Generates a self-signed certificate to enable HTTPS use in development. The dotnet dev-certs command manages a self-signed certificate to enable HTTPS use in local web app development. The dotnet dev-certs https command with no options checks if a development certificate is present in the current user's certificate store on the machine."],
+            ["dev-certs", "https"],
+            [
+                ("Check", "--check", "bool?", false, "Checks for the existence of the development certificate but doesn't perform any action. Use this option with the --trust option to check if the certificate is not only valid but also trusted."),
+                ("Clean", "--clean", "bool?", false, "Removes all HTTPS development certificates from the certificate store by using the .NET certificate store API. Doesn't remove any physical files that were created by using the --export-path option. On macOS in .NET 7.0, the dotnet dev-certs command creates the certificate on a path on disk, and the clean operation removes that certificate file."),
+                ("ExportPath", "--export-path", "string", false, "Exports the certificate to a file so that it can be used by other tools. Specify the full path to the exported certificate file, including the file name."),
+                ("Format", "--format", "string", false, "When used with --export-path, specifies the format of the exported certificate file. Valid values are PFX and PEM, case-insensitive. PFX is the default. The file format is independent of the file name extension. For example, if you specify --format pfx and --export-path ./cert.pem, you'll get a file named cert.pem in PFX format."),
+                ("Import", "--import", "string", false, "Imports the provided HTTPS development certificate into the local machine. Requires that you also specify the --clean option, which clears out any existing HTTPS developer certificates."),
+                ("NoPassword", "--no-password", "bool?", false, "Doesn't use a password for the key when exporting a certificate to PEM format files. The key file is exported in plain text. This option is not applicable to PFX files and is intended for internal testing use only."),
+                ("Password", "--password", "bool?", false, "Specifies the password to use."),
+                ("Quiet", "--quiet", "bool?", false, "Display warnings and errors only."),
+                ("Trust", "--trust", "bool?", false, "rusts the certificate on the local machine. If this option isn't specified, the certificate is added to the certificate store but not to a trusted list. When combined with the --check option, validates that the certificate is trusted."),
+                ("Verbose", "--verbose", "bool?", false, "Display debug information."),
+            ],
+            false, false
+        ),
+        (
             "DotNetRun",
             [
                 "Runs source code without any explicit compile or launch commands.",

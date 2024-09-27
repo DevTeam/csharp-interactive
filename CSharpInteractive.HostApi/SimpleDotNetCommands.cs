@@ -832,6 +832,91 @@ public partial record DotNetClean(
 }
 
 /// <summary>
+/// Generates a self-signed certificate to enable HTTPS use in development. The dotnet dev-certs command manages a self-signed certificate to enable HTTPS use in local web app development. The dotnet dev-certs https command with no options checks if a development certificate is present in the current user's certificate store on the machine.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Check">Checks for the existence of the development certificate but doesn't perform any action. Use this option with the --trust option to check if the certificate is not only valid but also trusted.</param>
+/// <param name="Clean">Removes all HTTPS development certificates from the certificate store by using the .NET certificate store API. Doesn't remove any physical files that were created by using the --export-path option. On macOS in .NET 7.0, the dotnet dev-certs command creates the certificate on a path on disk, and the clean operation removes that certificate file.</param>
+/// <param name="ExportPath">Exports the certificate to a file so that it can be used by other tools. Specify the full path to the exported certificate file, including the file name.</param>
+/// <param name="Format">When used with --export-path, specifies the format of the exported certificate file. Valid values are PFX and PEM, case-insensitive. PFX is the default. The file format is independent of the file name extension. For example, if you specify --format pfx and --export-path ./cert.pem, you'll get a file named cert.pem in PFX format.</param>
+/// <param name="Import">Imports the provided HTTPS development certificate into the local machine. Requires that you also specify the --clean option, which clears out any existing HTTPS developer certificates.</param>
+/// <param name="NoPassword">Doesn't use a password for the key when exporting a certificate to PEM format files. The key file is exported in plain text. This option is not applicable to PFX files and is intended for internal testing use only.</param>
+/// <param name="Password">Specifies the password to use.</param>
+/// <param name="Quiet">Display warnings and errors only.</param>
+/// <param name="Trust">rusts the certificate on the local machine. If this option isn't specified, the certificate is added to the certificate store but not to a trusted list. When combined with the --check option, validates that the certificate is trusted.</param>
+/// <param name="Verbose">Display debug information.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetDevCertsHttps(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    bool? Check = default,
+    bool? Clean = default,
+    string ExportPath = "",
+    string Format = "",
+    string Import = "",
+    bool? NoPassword = default,
+    bool? Password = default,
+    bool? Quiet = default,
+    bool? Trust = default,
+    bool? Verbose = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetDevCertsHttps(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetDevCertsHttps()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("dev-certs")
+            .AddArgs("https")
+            .AddArgs(ExportPath.ToArgs("--export-path"))
+            .AddArgs(Format.ToArgs("--format"))
+            .AddArgs(Import.ToArgs("--import"))
+            .AddBooleanArgs(
+                ("--check", Check),
+                ("--clean", Clean),
+                ("--no-password", NoPassword),
+                ("--password", Password),
+                ("--quiet", Quiet),
+                ("--trust", Trust),
+                ("--verbose", Verbose),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "dev-certs", "https");
+}
+
+/// <summary>
 /// Runs source code without any explicit compile or launch commands.
 /// <example>
 /// <code>
