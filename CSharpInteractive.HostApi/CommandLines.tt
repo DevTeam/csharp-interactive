@@ -25,6 +25,8 @@ namespace HostApi;
         "DotNetDevCertsHttps",
         "MSBuild",
         "DotNetNew",
+        "DotNetNewList",
+        "DotNetNewSearch",
         "DotNetNuGetPush",
         "DotNetPack",
         "DotNetPublish",

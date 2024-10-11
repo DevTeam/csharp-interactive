@@ -1090,6 +1090,142 @@ public partial record DotNetNew: ICommandLine
 }
 
 [ExcludeFromCodeCoverage]
+public partial record DotNetNewList: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewList operator +(DotNetNewList command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewList operator -(DotNetNewList command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNewList operator +(DotNetNewList command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewList operator -(DotNetNewList command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewList operator +(DotNetNewList command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewList operator -(DotNetNewList command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewList operator +(DotNetNewList command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewList operator -(DotNetNewList command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNewSearch: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewSearch operator +(DotNetNewSearch command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewSearch operator -(DotNetNewSearch command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNewSearch operator +(DotNetNewSearch command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewSearch operator -(DotNetNewSearch command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewSearch operator +(DotNetNewSearch command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewSearch operator -(DotNetNewSearch command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewSearch operator +(DotNetNewSearch command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNewSearch operator -(DotNetNewSearch command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
 public partial record DotNetNuGetPush: ICommandLine
 {
     /// <summary>

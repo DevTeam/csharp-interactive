@@ -3,7 +3,7 @@
 /// <summary>
 /// Terminal logger modes.
 /// </summary>
-public enum TerminalLogger
+public enum DotNetTerminalLogger
 {
     /// <summary>
     /// First verifies the environment before enabling terminal logging.

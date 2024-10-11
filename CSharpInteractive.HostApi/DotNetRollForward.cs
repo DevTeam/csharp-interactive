@@ -3,7 +3,7 @@
 /// <summary>
 /// Controls how roll forward is applied to the app. 
 /// </summary>
-public enum RollForward
+public enum DotNetRollForward
 {
     /// <summary>
     /// Roll forward to the highest patch version. This disables minor version roll forward. 

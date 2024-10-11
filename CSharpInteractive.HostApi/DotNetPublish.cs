@@ -72,7 +72,7 @@ public partial record DotNetPublish(
     DotNetVerbosity? Verbosity = default,
     string ArtifactsPath = "",
     bool? DisableBuildServers = default,
-    TerminalLogger? TerminalLogger = default,
+    DotNetTerminalLogger? TerminalLogger = default,
     bool? Diagnostics = default,
     string ShortName = "")
 {

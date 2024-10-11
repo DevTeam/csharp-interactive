@@ -63,7 +63,7 @@ public partial record DotNetRestore(
     bool? ForceEvaluate = default,
     DotNetVerbosity? Verbosity = default,
     bool? DisableBuildServers = default,
-    TerminalLogger? TerminalLogger = default,
+    DotNetTerminalLogger? TerminalLogger = default,
     bool? Diagnostics = default,
     string ShortName = "")
 {
