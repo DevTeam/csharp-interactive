@@ -1171,6 +1171,268 @@ public partial record DotNetNewSearch(
 }
 
 /// <summary>
+/// Displays template package metadata.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Sources">By default, dotnet new details uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If --nuget-source is specified, the source is added to the list of sources to be checked.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="TemplateName">If the argument is specified, only the templates containing TEMPLATE_NAME in template name or short name will be shown.</param>
+/// <param name="Force">Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNewDetails(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<string> Sources,
+    string TemplateName = "",
+    bool? Force = default,
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNewDetails(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNewDetails()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("new")
+            .AddArgs("details")
+            .AddNotEmptyArgs(TemplateName)
+            .AddArgs(Sources.ToArgs("--add-source"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--force", Force),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "new", "details", TemplateName);
+}
+
+/// <summary>
+/// Installs a template package.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Sources">By default, dotnet new details uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If --nuget-source is specified, the source is added to the list of sources to be checked.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Package">The folder on the file system or the NuGet package identifier to install the template package from. dotnet new attempts to install the NuGet package from the NuGet sources available for the current working directory and the sources specified via the --add-source option. If you want to install a specific version or prerelease version of a template package from NuGet source, specify the version in the format &lt;package-name&gt;::&lt;package-version&gt;.</param>
+/// <param name="Force">Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNewInstall(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<string> Sources,
+    string Package = "",
+    bool? Force = default,
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNewInstall(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNewInstall()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("new")
+            .AddArgs("install")
+            .AddNotEmptyArgs(Package)
+            .AddArgs(Sources.ToArgs("--add-source"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--force", Force),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "new", "install", Package);
+}
+
+/// <summary>
+/// Uninstalls a template package.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Package">The folder on the file system or the NuGet package identifier the package was installed from. Note that the version for the NuGet package should not be specified.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNewUninstall(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Package = "",
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNewUninstall(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNewUninstall()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("new")
+            .AddArgs("uninstall")
+            .AddNotEmptyArgs(Package)
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "new", "uninstall", Package);
+}
+
+/// <summary>
+/// Updates installed template packages.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Sources">By default, dotnet new install uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If Sources is specified, the source will be added to the list of sources to be checked. To check the configured sources for the current directory use dotnet nuget list source. Available since .NET SDK 7.0.100.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="CheckOnly">Only checks for updates and displays the template packages to be updated, without applying any updates.</param>
+/// <param name="DryRun">Only checks for updates and displays the template packages to be updated, without applying any updates.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNewUpdate(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<string> Sources,
+    bool? CheckOnly = default,
+    bool? DryRun = default,
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNewUpdate(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNewUpdate()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("new")
+            .AddArgs("update")
+            .AddArgs(Sources.ToArgs("--add-source"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--check-only", CheckOnly),
+                ("--dry-run", DryRun),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "new", "update");
+}
+
+/// <summary>
 /// Runs source code without any explicit compile or launch commands.
 /// <example>
 /// <code>

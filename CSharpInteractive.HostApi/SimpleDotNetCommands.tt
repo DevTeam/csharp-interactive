@@ -290,6 +290,52 @@ namespace HostApi;
             false, false
         ),
         (
+            "DotNetNewDetails",
+            ["Displays template package metadata."],
+            ["new", "details", "$TemplateName"],
+            [
+                ("Sources", "--add-source", "IEnumerable<string>", false, "By default, dotnet new details uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If --nuget-source is specified, the source is added to the list of sources to be checked."),
+                ("#TemplateName", "", "", false, "If the argument is specified, only the templates containing TEMPLATE_NAME in template name or short name will be shown."),
+                ("#Force", "", "", false, ""),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false
+        ),
+        (
+            "DotNetNewInstall",
+            ["Installs a template package."],
+            ["new", "install", "$Package"],
+            [
+                ("Sources", "--add-source", "IEnumerable<string>", false, "By default, dotnet new details uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If --nuget-source is specified, the source is added to the list of sources to be checked."),
+                ("Package", "", "string", true, "The folder on the file system or the NuGet package identifier to install the template package from. dotnet new attempts to install the NuGet package from the NuGet sources available for the current working directory and the sources specified via the --add-source option. If you want to install a specific version or prerelease version of a template package from NuGet source, specify the version in the format &lt;package-name&gt;::&lt;package-version&gt;."),
+                ("#Force", "", "", false, ""),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false
+        ),
+        (
+            "DotNetNewUninstall",
+            ["Uninstalls a template package."],
+            ["new", "uninstall", "$Package"],
+            [
+                ("Package", "", "string", true, "The folder on the file system or the NuGet package identifier the package was installed from. Note that the version for the NuGet package should not be specified."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false
+        ),
+        (
+            "DotNetNewUpdate",
+            ["Updates installed template packages."],
+            ["new", "update"],
+            [
+                ("Sources", "--add-source", "IEnumerable<string>", false, "By default, dotnet new install uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If Sources is specified, the source will be added to the list of sources to be checked. To check the configured sources for the current directory use dotnet nuget list source. Available since .NET SDK 7.0.100."),
+                ("CheckOnly", "--check-only", "bool?", false, "Only checks for updates and displays the template packages to be updated, without applying any updates."),
+                ("DryRun", "--dry-run", "bool?", false, "Only checks for updates and displays the template packages to be updated, without applying any updates."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false
+        ),
+        (
             "DotNetRun",
             [
                 "Runs source code without any explicit compile or launch commands.",
