@@ -191,6 +191,11 @@ if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     Environment.SetEnvironmentVariable("PATH", pathEnvVar);
 }
 
+await new DotNetBuild()
+    .WithProject(Path.Combine("Samples", "MySampleLib"))
+    .WithShortName($"Building sample")
+    .BuildAsync().EnsureSuccess();
+
 var installTool = new DotNetCustom("tool", "install", toolPackageId, "-g", "--version", packageVersion.ToString(), "--add-source", Path.Combine(outputDir, "CSharpInteractive.Tool"))
     .WithShortName("Installing tool");
 
