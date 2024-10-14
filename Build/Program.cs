@@ -202,7 +202,8 @@ installTool.Run(output =>
 
 new DotNetCustom("csi", "/?").WithShortName("Checking tool").Run().EnsureSuccess();
 
-var uninstallTemplates = new DotNetCustom("new", "uninstall", templatesPackageId)
+var uninstallTemplates = new DotNetNewUninstall()
+    .WithPackage(templatesPackageId)
     .WithShortName("Uninstalling template");
 
 uninstallTemplates.Run(output =>
@@ -211,7 +212,9 @@ uninstallTemplates.Run(output =>
     WriteLine(output.Line);
 }).EnsureSuccess(_ => true);
 
-var installTemplates = new DotNetCustom("new", "install", $"{templatesPackageId}::{packageVersion.ToString()}", "--nuget-source", templateOutputDir)
+var installTemplates = new DotNetNewInstall()
+    .WithPackage($"{templatesPackageId}::{packageVersion.ToString()}")
+    .AddSources(templateOutputDir)
     .WithShortName("Installing template");
 
 installTemplates.WithShortName(installTemplates.ShortName).Run().EnsureSuccess();
