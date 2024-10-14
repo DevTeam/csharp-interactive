@@ -225,7 +225,7 @@ foreach (var framework in frameworks)
 
 if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && packageVersion.Release != "dev")
 {
-    var push = new DotNetNuGetPush().WithApiKey(apiKey).WithSources(defaultNuGetSource);
+    var push = new DotNetNuGetPush().WithApiKey(apiKey).WithSource(defaultNuGetSource);
     foreach (var package in packages.Where(i => i.Publish))
     {
         push.WithPackage(package.Package)

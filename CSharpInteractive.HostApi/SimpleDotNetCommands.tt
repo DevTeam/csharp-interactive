@@ -1,6 +1,5 @@
 ﻿<#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="System.Text" #>
 // ReSharper disable InconsistentNaming
 namespace HostApi;
 
@@ -44,7 +43,8 @@ namespace HostApi;
         string[] CommandArgs,
         (string PropertyName, string ArgName, string  Type, bool IsProject, string Comments)[] Args,
         bool IsBuild,
-        bool IsTests)
+        bool IsTests,
+        string[] AdditionalArgs)
         [] {
         (
             "DotNet",
@@ -57,7 +57,7 @@ namespace HostApi;
                 ("#FxVersion", "", "", false, ""),
                 ("#RollForward", "", "RollForward", false, "")
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetExec",
@@ -72,7 +72,7 @@ namespace HostApi;
                 ("#RollForward", "", "RollForward", false, ""),
                 ("RuntimeConfig", "--runtimeconfig", "string", false, "Path to a runtimeconfig.json file. A runtimeconfig.json file contains run-time settings and is typically named &lt;applicationname&gt;.runtimeconfig.json."),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetAddPackage",
@@ -88,7 +88,7 @@ namespace HostApi;
                 ("Prerelease", "--prerelease", "bool?", false, "Allows prerelease packages to be installed. Available since .NET Core 5 SDK."),
                 ("Version", "--version", "string", false, "Version of the package"),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetListPackage",
@@ -107,7 +107,7 @@ namespace HostApi;
                 ("Outdated", "--outdated", "bool?", false, "Lists packages that have newer versions available."),
                 ("#Verbosity", "", "", false, ""),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetRemovePackage",
@@ -117,7 +117,7 @@ namespace HostApi;
                 ("#Project", "", "", false, ""),
                 ("PackageName", "", "string", false, "The package reference to add."),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetAddReference",
@@ -128,7 +128,7 @@ namespace HostApi;
                 ("#Project", "", "", false, ""),
                 ("#Framework", "", "", false, "Adds project references only when targeting a specific framework using the TFM format.")
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetListReference",
@@ -137,7 +137,7 @@ namespace HostApi;
             [
                 ("#Project", "", "", false, ""),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetRemoveReference",
@@ -148,7 +148,7 @@ namespace HostApi;
                 ("#Project", "", "", false, ""),
                 ("#Framework", "", "", false, "Removes the reference only when targeting a specific framework using the TFM format.")
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetBuild",
@@ -188,7 +188,7 @@ namespace HostApi;
                 ("#UseCurrentRuntime", "", "", false, ""),
                 ("#VersionSuffix", "", "", false, ""),
             ],
-            true, false
+            true, false, []
         ),
         (
             "DotNetBuildServerShutdown",
@@ -197,7 +197,7 @@ namespace HostApi;
             [
                 ("Servers", "", "IEnumerable<DotNetBuildServer>", false, "Shuts down build servers that are started from dotnet. By default, all servers are shut down."),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetClean",
@@ -215,7 +215,7 @@ namespace HostApi;
                 ("#TerminalLogger", "", "", false, ""),
                 ("#Verbosity", "", "", false, ""),
             ],
-            true, false
+            true, false, []
         ),
         (
             "DotNetDevCertsHttps",
@@ -233,7 +233,7 @@ namespace HostApi;
                 ("Trust", "--trust", "bool?", false, "rusts the certificate on the local machine. If this option isn't specified, the certificate is added to the certificate store but not to a trusted list. When combined with the --check option, validates that the certificate is trusted."),
                 ("Verbose", "--verbose", "bool?", false, "Display debug information."),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetNew",
@@ -251,7 +251,7 @@ namespace HostApi;
                 ("Project", "--project", "string", false, "The project that the template is added to. This project is used for context evaluation. If not specified, the project in the current or parent directories will be used. Available since .NET SDK 7.0.100."),
                 ("#Verbosity", "", "", false, ""),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetNewList",
@@ -270,7 +270,7 @@ namespace HostApi;
                 ("Type", "--type", "DotNetTemplateType?", false, "Filters templates based on template type."),
                 ("#Verbosity", "", "", false, ""),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetNewSearch",
@@ -287,7 +287,7 @@ namespace HostApi;
                 ("Type", "--type", "DotNetTemplateType?", false, "Filters templates based on template type."),
                 ("#Verbosity", "", "", false, ""),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetNewDetails",
@@ -299,7 +299,7 @@ namespace HostApi;
                 ("#Force", "", "", false, ""),
                 ("#Verbosity", "", "", false, ""),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetNewInstall",
@@ -311,7 +311,7 @@ namespace HostApi;
                 ("#Force", "", "", false, ""),
                 ("#Verbosity", "", "", false, ""),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetNewUninstall",
@@ -321,7 +321,7 @@ namespace HostApi;
                 ("Package", "", "string", true, "The folder on the file system or the NuGet package identifier the package was installed from. Note that the version for the NuGet package should not be specified."),
                 ("#Verbosity", "", "", false, ""),
             ],
-            false, false
+            false, false, []
         ),
         (
             "DotNetNewUpdate",
@@ -333,7 +333,61 @@ namespace HostApi;
                 ("DryRun", "--dry-run", "bool?", false, "Only checks for updates and displays the template packages to be updated, without applying any updates."),
                 ("#Verbosity", "", "", false, ""),
             ],
-            false, false
+            false, false, []
+        ),
+        (
+            "DotNetNuGetDelete",
+            ["Deletes or unlists a package from the server. The dotnet nuget delete command deletes or unlists a package from the server. For nuget.org, the action is to unlist the package."],
+            ["nuget", "delete", "$PackageName", "$PackageVersion"],
+            [
+                ("PackageName", "", "string", true, "Name/ID of the package to delete."),
+                ("PackageVersion", "", "string", true, "Version of the package to delete."),
+                ("ForceEnglishOutput", "--force-english-output", "bool?", false, "Forces the application to run using an invariant, English-based culture."),
+                ("ApiKey", "--api-key", "string", false, "The API key for the server."),
+                ("NoServiceEndpoint", "--no-service-endpoint", "bool?", false, "Doesn't append \"api/v2/package\" to the source URL."),
+                ("Source", "--source", "string", false, "Specifies the server URL. NuGet identifies a UNC or local folder source and simply copies the file there instead of pushing it using HTTP."),
+            ],
+            false, false, ["--non-interactive"]
+        ),
+        (
+            "DotNetNuGetLocalsClear",
+            ["Clears local NuGet resources. The dotnet nuget locals command clears local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder."],
+            ["nuget", "locals", "$CacheLocation"],
+            [
+                ("CacheLocation", "", "NuGetCacheLocation?", true, "The cache location to clear."),
+                ("ForceEnglishOutput", "--force-english-output", "bool?", false, "Forces the application to run using an invariant, English-based culture."),
+            ],
+            false, false, ["--clear"]
+        ),
+        (
+            "DotNetNuGetLocalsList",
+            ["Lists local NuGet resources. The dotnet nuget locals command lists local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder."],
+            ["nuget", "locals", "$CacheLocation"],
+            [
+                ("CacheLocation", "", "NuGetCacheLocation?", true, "The cache location to list."),
+                ("ForceEnglishOutput", "--force-english-output", "bool?", false, "Forces the application to run using an invariant, English-based culture."),
+            ],
+            false, false, ["--list"]
+        ),
+        (
+            "DotNetNuGetPush",
+            [@"Pushes a package to the server and publishes it. The dotnet nuget push command pushes a package to the server and publishes it. The push command uses server and credential details found in the system's NuGet config file or chain of config files. NuGet's default configuration is obtained by loading %AppData%\NuGet\NuGet.config (Windows) or $HOME/.nuget/NuGet/NuGet.Config (Linux/macOS), then loading any nuget.config or .nuget\nuget.config starting from the root of drive and ending in the current directory."],
+            ["nuget", "push", "$Package"],
+            [
+                ("Package", "", "string", true, "Specifies the file path to the package to be pushed."),
+                ("DisableBuffering", "--disable-buffering", "bool?", false, "Disables buffering when pushing to an HTTP(S) server to reduce memory usage."),
+                ("ForceEnglishOutput", "--force-english-output", "bool?", false, "Forces the application to run using an invariant, English-based culture."),
+                ("ApiKey", "--api-key", "string", false, "The API key for the server."),
+                ("NoSymbols", "--no-symbols", "bool?", false, "Doesn't push symbols (even if present)."),
+                ("NoServiceEndpoint", "--no-service-endpoint", "bool?", false, "Doesn't append \"api/v2/package\" to the source URL."),
+                ("Source", "--source", "string", false, "Specifies the server URL. NuGet identifies a UNC or local folder source and simply copies the file there instead of pushing it using HTTP."),
+                ("SkipDuplicate", "--skip-duplicate", "bool?", false, "When pushing multiple packages to an HTTP(S) server, treats any 409 Conflict response as a warning so that other pushes can continue."),
+                ("SymbolApiKey", "--symbol-api-key", "string", false, "The API key for the symbol server."),
+                ("SymbolSource", "--symbol-source", "string", false, "Specifies the symbol server URL."),
+                ("Timeout", "--timeout", "int?", false, "Specifies the timeout for pushing to a server in seconds. Defaults to 300 seconds (5 minutes). Specifying 0 applies the default value."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false, []
         ),
         (
             "DotNetRun",
@@ -368,7 +422,7 @@ namespace HostApi;
                 ("#TerminalLogger", "", "", false, ""),
                 ("#Verbosity", "", "", false, ""),
             ],
-            false, false
+            false, false, []
         )
     };
 #>
@@ -409,7 +463,7 @@ using Internal.DotNet;
                 }
                 else
                 {
-                    commandArgs.Add(curArg);
+                    commandArgs.Add($"{curArg}.ToArg()");
                 }
             }
             else
@@ -519,7 +573,7 @@ public partial record <#= command.Name #>(
                 notEmptyArg = $"{notEmptyArg}.ToArray()";
             }
 #>
-            .AddNotEmptyArgs(<#= notEmptyArg #>)
+            .AddNotEmptyArgs(<#= notEmptyArg #>.ToArg())
 <#
         }
         else
@@ -531,29 +585,34 @@ public partial record <#= command.Name #>(
     }
 #>
 <#
-        if (command.IsBuild)
-        {
+    if (command.IsBuild)
+    {
 #>
             .AddMSBuildLoggers(host, Verbosity)
 <#
-        }
+    }
 
-        if (command.IsTests)
-        {
+    if (command.IsTests)
+    {
 #>
             .AddTestLoggers(host, Loggers)
 <#
-        }
+    }
+    
+    foreach (var additionalArg in command.AdditionalArgs)
+    {
 #>
+            .AddArgs("<#= additionalArg #>")
 <#
+    }
+
     foreach (var arg in command.Args.Where(i => !i.IsProject).Where(i => i.Type.StartsWith("IEnumerable") && i.ArgName != "--property"))
     {
 #>
             .AddArgs(<#= arg.PropertyName #>.ToArgs("<#= arg.ArgName #>"))
 <#
     }
-#>
-<#
+
     foreach(var arg in command.Args.Where(i => !i.IsProject).Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && !i.Type.StartsWith("bool") && !i.Type.StartsWith("IEnumerable")))
     {
 #>

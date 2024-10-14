@@ -146,4 +146,6 @@ internal static class DotNetCommandLineExtensions
     
     public static string[] ToArgs(this IEnumerable<string> values, string name) =>
         values.SelectMany(value => string.IsNullOrWhiteSpace(value) ? [] : new [] {name, value}).ToArray();
+    
+    public static string ToArg<T>(this T value) => value?.ToString() ?? "";
 }

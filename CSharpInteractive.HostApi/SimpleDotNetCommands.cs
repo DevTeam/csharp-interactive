@@ -56,7 +56,7 @@ public partial record DotNet(
             .WithShortName(ToString())
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
-            .AddNotEmptyArgs(PathToApplication)
+            .AddNotEmptyArgs(PathToApplication.ToArg())
             .AddArgs(AdditionalProbingPaths.ToArgs("--additionalprobingpath"))
             .AddArgs(AdditionalDeps.ToArgs("--additional-deps"))
             .AddArgs(FxVersion.ToArgs("--fx-version"))
@@ -68,7 +68,7 @@ public partial record DotNet(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, PathToApplication);
+    public override string ToString() => "".GetShortName(ShortName, PathToApplication.ToArg());
 }
 
 /// <summary>
@@ -129,7 +129,7 @@ public partial record DotNetExec(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("exec")
-            .AddNotEmptyArgs(PathToApplication)
+            .AddNotEmptyArgs(PathToApplication.ToArg())
             .AddArgs(AdditionalProbingPaths.ToArgs("--additionalprobingpath"))
             .AddArgs(DepsFile.ToArgs("--depsfile"))
             .AddArgs(AdditionalDeps.ToArgs("--additional-deps"))
@@ -143,7 +143,7 @@ public partial record DotNetExec(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "exec", PathToApplication);
+    public override string ToString() => "".GetShortName(ShortName, "exec", PathToApplication.ToArg());
 }
 
 /// <summary>
@@ -206,9 +206,9 @@ public partial record DotNetAddPackage(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("add")
-            .AddNotEmptyArgs(Project)
+            .AddNotEmptyArgs(Project.ToArg())
             .AddArgs("package")
-            .AddNotEmptyArgs(PackageName)
+            .AddNotEmptyArgs(PackageName.ToArg())
             .AddArgs(Sources.ToArgs("--source"))
             .AddArgs(Framework.ToArgs("--framework"))
             .AddArgs(PackageDirectory.ToArgs("--package-directory"))
@@ -222,7 +222,7 @@ public partial record DotNetAddPackage(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "add", Project, "package", PackageName);
+    public override string ToString() => "".GetShortName(ShortName, "add", Project.ToArg(), "package", PackageName.ToArg());
 }
 
 /// <summary>
@@ -291,7 +291,7 @@ public partial record DotNetListPackage(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("list")
-            .AddNotEmptyArgs(Project)
+            .AddNotEmptyArgs(Project.ToArg())
             .AddArgs("package")
             .AddArgs(Frameworks.ToArgs("--framework"))
             .AddArgs(Sources.ToArgs("--source"))
@@ -310,7 +310,7 @@ public partial record DotNetListPackage(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "list", Project, "package");
+    public override string ToString() => "".GetShortName(ShortName, "list", Project.ToArg(), "package");
 }
 
 /// <summary>
@@ -361,9 +361,9 @@ public partial record DotNetRemovePackage(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("remove")
-            .AddNotEmptyArgs(Project)
+            .AddNotEmptyArgs(Project.ToArg())
             .AddArgs("package")
-            .AddNotEmptyArgs(PackageName)
+            .AddNotEmptyArgs(PackageName.ToArg())
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -371,7 +371,7 @@ public partial record DotNetRemovePackage(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "remove", Project, "package", PackageName);
+    public override string ToString() => "".GetShortName(ShortName, "remove", Project.ToArg(), "package", PackageName.ToArg());
 }
 
 /// <summary>
@@ -424,9 +424,9 @@ public partial record DotNetAddReference(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("add")
-            .AddNotEmptyArgs(Project)
+            .AddNotEmptyArgs(Project.ToArg())
             .AddArgs("reference")
-            .AddNotEmptyArgs(References.ToArray())
+            .AddNotEmptyArgs(References.ToArray().ToArg())
             .AddArgs(References.ToArgs("--source"))
             .AddArgs(Framework.ToArgs("--framework"))
             .AddBooleanArgs(
@@ -436,7 +436,7 @@ public partial record DotNetAddReference(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, new [] {"add", Project, "reference"}.Concat(References).ToArray());
+    public override string ToString() => "".GetShortName(ShortName, new [] {"add", Project.ToArg(), "reference"}.Concat(References).ToArray());
 }
 
 /// <summary>
@@ -485,7 +485,7 @@ public partial record DotNetListReference(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("list")
-            .AddNotEmptyArgs(Project)
+            .AddNotEmptyArgs(Project.ToArg())
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -493,7 +493,7 @@ public partial record DotNetListReference(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "list", Project);
+    public override string ToString() => "".GetShortName(ShortName, "list", Project.ToArg());
 }
 
 /// <summary>
@@ -546,9 +546,9 @@ public partial record DotNetRemoveReference(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("remove")
-            .AddNotEmptyArgs(Project)
+            .AddNotEmptyArgs(Project.ToArg())
             .AddArgs("reference")
-            .AddNotEmptyArgs(References.ToArray())
+            .AddNotEmptyArgs(References.ToArray().ToArg())
             .AddArgs(References.ToArgs("--source"))
             .AddArgs(Framework.ToArgs("--framework"))
             .AddBooleanArgs(
@@ -558,7 +558,7 @@ public partial record DotNetRemoveReference(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, new [] {"remove", Project, "reference"}.Concat(References).ToArray());
+    public override string ToString() => "".GetShortName(ShortName, new [] {"remove", Project.ToArg(), "reference"}.Concat(References).ToArray());
 }
 
 /// <summary>
@@ -656,7 +656,7 @@ public partial record DotNetBuild(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("build")
-            .AddNotEmptyArgs(Project)
+            .AddNotEmptyArgs(Project.ToArg())
             .AddMSBuildLoggers(host, Verbosity)
             .AddArgs(Sources.ToArgs("--source"))
             .AddArgs(Arch.ToArgs("--arch"))
@@ -685,7 +685,7 @@ public partial record DotNetBuild(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "build", Project);
+    public override string ToString() => "".GetShortName(ShortName, "build", Project.ToArg());
 }
 
 /// <summary>
@@ -810,7 +810,7 @@ public partial record DotNetClean(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("clean")
-            .AddNotEmptyArgs(Project)
+            .AddNotEmptyArgs(Project.ToArg())
             .AddMSBuildLoggers(host, Verbosity)
             .AddArgs(ArtifactsPath.ToArgs("--artifacts-path"))
             .AddArgs(Configuration.ToArgs("--configuration"))
@@ -828,7 +828,7 @@ public partial record DotNetClean(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "clean", Project);
+    public override string ToString() => "".GetShortName(ShortName, "clean", Project.ToArg());
 }
 
 /// <summary>
@@ -980,7 +980,7 @@ public partial record DotNetNew(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("new")
-            .AddNotEmptyArgs(TemplateName)
+            .AddNotEmptyArgs(TemplateName.ToArg())
             .AddArgs(Language.ToArgs("--language"))
             .AddArgs(Name.ToArgs("--name"))
             .AddArgs(Framework.ToArgs("--framework"))
@@ -997,7 +997,7 @@ public partial record DotNetNew(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "new", TemplateName);
+    public override string ToString() => "".GetShortName(ShortName, "new", TemplateName.ToArg());
 }
 
 /// <summary>
@@ -1067,7 +1067,7 @@ public partial record DotNetNewList(
             .WithVars(Vars.ToArray())
             .AddArgs("new")
             .AddArgs("list")
-            .AddNotEmptyArgs(TemplateName)
+            .AddNotEmptyArgs(TemplateName.ToArg())
             .AddArgs(Columns.ToArgs("--columns"))
             .AddArgs(Author.ToArgs("--author"))
             .AddArgs(Language.ToArgs("--language"))
@@ -1085,7 +1085,7 @@ public partial record DotNetNewList(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "new", "list", TemplateName);
+    public override string ToString() => "".GetShortName(ShortName, "new", "list", TemplateName.ToArg());
 }
 
 /// <summary>
@@ -1151,7 +1151,7 @@ public partial record DotNetNewSearch(
             .WithVars(Vars.ToArray())
             .AddArgs("new")
             .AddArgs("search")
-            .AddNotEmptyArgs(TemplateName)
+            .AddNotEmptyArgs(TemplateName.ToArg())
             .AddArgs(Columns.ToArgs("--columns"))
             .AddArgs(Author.ToArgs("--author"))
             .AddArgs(Language.ToArgs("--language"))
@@ -1167,7 +1167,7 @@ public partial record DotNetNewSearch(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "new", "search", TemplateName);
+    public override string ToString() => "".GetShortName(ShortName, "new", "search", TemplateName.ToArg());
 }
 
 /// <summary>
@@ -1223,7 +1223,7 @@ public partial record DotNetNewDetails(
             .WithVars(Vars.ToArray())
             .AddArgs("new")
             .AddArgs("details")
-            .AddNotEmptyArgs(TemplateName)
+            .AddNotEmptyArgs(TemplateName.ToArg())
             .AddArgs(Sources.ToArgs("--add-source"))
             .AddArgs(Verbosity.ToArgs("--verbosity"))
             .AddBooleanArgs(
@@ -1234,7 +1234,7 @@ public partial record DotNetNewDetails(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "new", "details", TemplateName);
+    public override string ToString() => "".GetShortName(ShortName, "new", "details", TemplateName.ToArg());
 }
 
 /// <summary>
@@ -1290,7 +1290,7 @@ public partial record DotNetNewInstall(
             .WithVars(Vars.ToArray())
             .AddArgs("new")
             .AddArgs("install")
-            .AddNotEmptyArgs(Package)
+            .AddNotEmptyArgs(Package.ToArg())
             .AddArgs(Sources.ToArgs("--add-source"))
             .AddArgs(Verbosity.ToArgs("--verbosity"))
             .AddBooleanArgs(
@@ -1301,7 +1301,7 @@ public partial record DotNetNewInstall(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "new", "install", Package);
+    public override string ToString() => "".GetShortName(ShortName, "new", "install", Package.ToArg());
 }
 
 /// <summary>
@@ -1353,7 +1353,7 @@ public partial record DotNetNewUninstall(
             .WithVars(Vars.ToArray())
             .AddArgs("new")
             .AddArgs("uninstall")
-            .AddNotEmptyArgs(Package)
+            .AddNotEmptyArgs(Package.ToArg())
             .AddArgs(Verbosity.ToArgs("--verbosity"))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
@@ -1362,7 +1362,7 @@ public partial record DotNetNewUninstall(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "new", "uninstall", Package);
+    public override string ToString() => "".GetShortName(ShortName, "new", "uninstall", Package.ToArg());
 }
 
 /// <summary>
@@ -1430,6 +1430,295 @@ public partial record DotNetNewUpdate(
 
     /// <inheritdoc/>
     public override string ToString() => "".GetShortName(ShortName, "new", "update");
+}
+
+/// <summary>
+/// Deletes or unlists a package from the server. The dotnet nuget delete command deletes or unlists a package from the server. For nuget.org, the action is to unlist the package.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="PackageName">Name/ID of the package to delete.</param>
+/// <param name="PackageVersion">Version of the package to delete.</param>
+/// <param name="ForceEnglishOutput">Forces the application to run using an invariant, English-based culture.</param>
+/// <param name="ApiKey">The API key for the server.</param>
+/// <param name="NoServiceEndpoint">Doesn't append "api/v2/package" to the source URL.</param>
+/// <param name="Source">Specifies the server URL. NuGet identifies a UNC or local folder source and simply copies the file there instead of pushing it using HTTP.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetDelete(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string PackageName = "",
+    string PackageVersion = "",
+    bool? ForceEnglishOutput = default,
+    string ApiKey = "",
+    bool? NoServiceEndpoint = default,
+    string Source = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetDelete(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetDelete()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("delete")
+            .AddNotEmptyArgs(PackageName.ToArg())
+            .AddNotEmptyArgs(PackageVersion.ToArg())
+            .AddArgs("--non-interactive")
+            .AddArgs(ApiKey.ToArgs("--api-key"))
+            .AddArgs(Source.ToArgs("--source"))
+            .AddBooleanArgs(
+                ("--force-english-output", ForceEnglishOutput),
+                ("--no-service-endpoint", NoServiceEndpoint),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "delete", PackageName.ToArg(), PackageVersion.ToArg());
+}
+
+/// <summary>
+/// Clears local NuGet resources. The dotnet nuget locals command clears local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="CacheLocation">The cache location to clear.</param>
+/// <param name="ForceEnglishOutput">Forces the application to run using an invariant, English-based culture.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetLocalsClear(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    NuGetCacheLocation? CacheLocation = default,
+    bool? ForceEnglishOutput = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetLocalsClear(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetLocalsClear()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("locals")
+            .AddNotEmptyArgs(CacheLocation.ToArg())
+            .AddArgs("--clear")
+            .AddBooleanArgs(
+                ("--force-english-output", ForceEnglishOutput),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "locals", CacheLocation.ToArg());
+}
+
+/// <summary>
+/// Lists local NuGet resources. The dotnet nuget locals command lists local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="CacheLocation">The cache location to list.</param>
+/// <param name="ForceEnglishOutput">Forces the application to run using an invariant, English-based culture.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetLocalsList(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    NuGetCacheLocation? CacheLocation = default,
+    bool? ForceEnglishOutput = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetLocalsList(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetLocalsList()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("locals")
+            .AddNotEmptyArgs(CacheLocation.ToArg())
+            .AddArgs("--list")
+            .AddBooleanArgs(
+                ("--force-english-output", ForceEnglishOutput),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "locals", CacheLocation.ToArg());
+}
+
+/// <summary>
+/// Pushes a package to the server and publishes it. The dotnet nuget push command pushes a package to the server and publishes it. The push command uses server and credential details found in the system's NuGet config file or chain of config files. NuGet's default configuration is obtained by loading %AppData%\NuGet\NuGet.config (Windows) or $HOME/.nuget/NuGet/NuGet.Config (Linux/macOS), then loading any nuget.config or .nuget\nuget.config starting from the root of drive and ending in the current directory.
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Package">Specifies the file path to the package to be pushed.</param>
+/// <param name="DisableBuffering">Disables buffering when pushing to an HTTP(S) server to reduce memory usage.</param>
+/// <param name="ForceEnglishOutput">Forces the application to run using an invariant, English-based culture.</param>
+/// <param name="ApiKey">The API key for the server.</param>
+/// <param name="NoSymbols">Doesn't push symbols (even if present).</param>
+/// <param name="NoServiceEndpoint">Doesn't append "api/v2/package" to the source URL.</param>
+/// <param name="Source">Specifies the server URL. NuGet identifies a UNC or local folder source and simply copies the file there instead of pushing it using HTTP.</param>
+/// <param name="SkipDuplicate">When pushing multiple packages to an HTTP(S) server, treats any 409 Conflict response as a warning so that other pushes can continue.</param>
+/// <param name="SymbolApiKey">The API key for the symbol server.</param>
+/// <param name="SymbolSource">Specifies the symbol server URL.</param>
+/// <param name="Timeout">Specifies the timeout for pushing to a server in seconds. Defaults to 300 seconds (5 minutes). Specifying 0 applies the default value.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetPush(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Package = "",
+    bool? DisableBuffering = default,
+    bool? ForceEnglishOutput = default,
+    string ApiKey = "",
+    bool? NoSymbols = default,
+    bool? NoServiceEndpoint = default,
+    string Source = "",
+    bool? SkipDuplicate = default,
+    string SymbolApiKey = "",
+    string SymbolSource = "",
+    int? Timeout = default,
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetPush(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetPush()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("push")
+            .AddNotEmptyArgs(Package.ToArg())
+            .AddArgs(ApiKey.ToArgs("--api-key"))
+            .AddArgs(Source.ToArgs("--source"))
+            .AddArgs(SymbolApiKey.ToArgs("--symbol-api-key"))
+            .AddArgs(SymbolSource.ToArgs("--symbol-source"))
+            .AddArgs(Timeout.ToArgs("--timeout"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--disable-buffering", DisableBuffering),
+                ("--force-english-output", ForceEnglishOutput),
+                ("--no-symbols", NoSymbols),
+                ("--no-service-endpoint", NoServiceEndpoint),
+                ("--skip-duplicate", SkipDuplicate),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "push", Package.ToArg());
 }
 
 /// <summary>
@@ -1516,7 +1805,7 @@ public partial record DotNetRun(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("run")
-            .AddNotEmptyArgs(Project)
+            .AddNotEmptyArgs(Project.ToArg())
             .AddArgs(Arch.ToArgs("--arch"))
             .AddArgs(Configuration.ToArgs("--configuration"))
             .AddArgs(Framework.ToArgs("--framework"))
@@ -1538,6 +1827,6 @@ public partial record DotNetRun(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "run", Project);
+    public override string ToString() => "".GetShortName(ShortName, "run", Project.ToArg());
 }
 
