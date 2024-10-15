@@ -4,6 +4,18 @@
 namespace HostApi;
 
 <#
+    const string ps = "<p>";
+    const string pf = "</p>";
+    string CreateRef(string command)
+    {
+        return $"<br/><a href=\"https://learn.microsoft.com/en-us/dotnet/core/tools/{command}\">.NET CLI command</a><br/>";
+    }
+
+    bool IsCollection(string type)
+    {
+        return type.StartsWith("IEnumerable<") || type.StartsWith("IReadOnlyCollection<");
+    }
+    
     (string PropertyName, string ArgName, string  Type, bool IsProject, string Comments)[] commonArgs =
     [
         ("Project", "", "string", true, "The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown."),
@@ -48,7 +60,13 @@ namespace HostApi;
         [] {
         (
             "DotNet",
-            ["Runs a dotnet application."],
+            [
+                "Runs a dotnet application.",
+                ps,
+                "You specify the path to an application .dll file to run the application. To run the application means to find and execute the entry point, which in the case of console apps is the Main method. For example, dotnet myapp.dll runs the myapp application.",
+                pf,
+                CreateRef("dotnet")
+            ],
             ["$PathToApplication"],
             [
                 ("#AdditionalProbingPaths", "", "", false, ""),
@@ -61,7 +79,13 @@ namespace HostApi;
         ),
         (
             "DotNetExec",
-            ["Executes a dotnet application."],
+            [
+                "Executes a dotnet application.",
+                ps,
+                "You specify the path to an application .dll file to run the application. To run the application means to find and execute the entry point, which in the case of console apps is the Main method. For example, dotnet myapp.dll runs the myapp application.",
+                pf,
+                CreateRef("dotnet")
+            ],
             ["exec", "$PathToApplication"],
             [
                 ("#AdditionalProbingPaths", "", "", false, ""),
@@ -76,7 +100,13 @@ namespace HostApi;
         ),
         (
             "DotNetAddPackage",
-            ["Adds or updates a package reference in a project file."],
+            [
+                "Adds or updates a package reference in a project file.",
+                ps,
+                "This command provides a convenient option to add or update a package reference in a project file. When you run the command, there&apos;s a compatibility check to ensure the package is compatible with the frameworks in the project. If the check passes and the package isn&apos;t referenced in the project file, a &lt;PackageReference&gt; element is added to the project file. If the check passes and the package is already referenced in the project file, the &lt;PackageReference&gt; element is updated to the latest compatible version. After the project file is updated, dotnet restore is run.",
+                pf,
+                CreateRef("dotnet-add-package")
+            ],
             ["add", "$Project", "package", "$PackageName"],
             [
                 ("Sources", "--source", "IEnumerable<string>", false, "The URI of the NuGet package source to use during the restore operation."),
@@ -92,7 +122,13 @@ namespace HostApi;
         ),
         (
             "DotNetListPackage",
-            ["Lists the package references for a project or solution."],
+            [
+                "Lists the package references for a project or solution.",
+                ps,
+                "This command provides a convenient option to list all NuGet package references for a specific project or a solution. You first need to build the project in order to have the assets needed for this command to process.",
+                pf,
+                CreateRef("dotnet-list-package")
+            ],
             ["list", "$Project", "package"],
             [
                 ("Frameworks", "--framework", "IEnumerable<string>", false, "Displays only the packages applicable for the specified target framework."),
@@ -111,7 +147,13 @@ namespace HostApi;
         ),
         (
             "DotNetRemovePackage",
-            ["Removes package reference from a project file."],
+            [
+                "Removes package reference from a project file.",
+                ps,
+                "This command provides a convenient option to remove a NuGet package reference from a project.",
+                pf,
+                CreateRef("dotnet-remove-package")
+            ],
             ["remove", "$Project", "package", "$PackageName"],
             [
                 ("#Project", "", "", false, ""),
@@ -121,7 +163,13 @@ namespace HostApi;
         ),
         (
             "DotNetAddReference",
-            ["Adds project-to-project (P2P) references."],
+            [
+                "Adds project-to-project (P2P) references.",
+                ps,
+                "This command provides a convenient option to add project references to a project. After running the command, the &lt;ProjectReference&gt; elements are added to the project file.",
+                pf,
+                CreateRef("dotnet-add-reference")
+            ],
             ["add", "$Project", "reference", "$References"],
             [
                 ("References", "--source", "IEnumerable<string>", false, "Project-to-project (P2P) references to add. Specify one or more projects. Glob patterns are supported on Unix/Linux-based systems."),
@@ -132,7 +180,13 @@ namespace HostApi;
         ),
         (
             "DotNetListReference",
-            ["The dotnet list reference command provides a convenient option to list project references for a given project."],
+            [
+                "Lists project-to-project references.",
+                ps,
+                "This command provides a convenient option to list project references for a given project.",
+                pf,
+                CreateRef("dotnet-list-reference")
+            ],
             ["list", "$Project"],
             [
                 ("#Project", "", "", false, ""),
@@ -141,7 +195,13 @@ namespace HostApi;
         ),
         (
             "DotNetRemoveReference",
-            ["Removes project-to-project (P2P) references."],
+            [
+                "Removes project-to-project (P2P) references.",
+                ps,
+                "This command provides a convenient option to remove project references from a project.",
+                pf,
+                CreateRef("dotnet-remove-reference")
+            ],
             ["remove", "$Project", "reference", "$References"],
             [
                 ("References", "--source", "IEnumerable<string>", false, "Project-to-project (P2P) references to remove. You can specify one or multiple projects. Glob patterns are supported on Unix/Linux based terminals."),
@@ -153,7 +213,13 @@ namespace HostApi;
         (
             "DotNetBuild",
             [
-                "The dotnet build command builds the project and its dependencies into a set of binaries. The binaries include the project's code in Intermediate Language (IL) files with a .dll extension. Depending on the project type and settings, other files may be included.",
+                "Builds a project and all of its dependencies.",
+                ps,
+                "This command builds the project and its dependencies into a set of binaries. The binaries include the project's code in Intermediate Language (IL) files with a .dll extension. For executable projects targeting versions earlier than .NET Core 3.0, library dependencies from NuGet are typically NOT copied to the output folder. They're resolved from the NuGet global packages folder at run time. With that in mind, the product of dotnet build isn't ready to be transferred to another machine to run. To create a version of the application that can be deployed, you need to publish it (for example, with the dotnet publish command). For more information, see .NET Application Deployment.",
+                pf,
+                ps,
+                "For executable projects targeting .NET Core 3.0 and later, library dependencies are copied to the output folder. This means that if there isn't any other publish-specific logic (such as Web projects have), the build output should be deployable.",
+                pf,
                 "<example>",
                 "<code>",
                 "var configuration = Props.Get(\"configuration\", \"Release\");",
@@ -162,7 +228,8 @@ namespace HostApi;
                 "new DotNetBuild().WithConfiguration(configuration)",
                 "    .Build().EnsureSuccess();",
                 "</code>",
-                "</example>"
+                "</example>",
+                CreateRef("dotnet-build")
             ],
             ["build", "$Project"],
             [
@@ -192,7 +259,13 @@ namespace HostApi;
         ),
         (
             "DotNetBuildServerShutdown",
-            ["Shuts down build servers that are started from dotnet. By default, all servers are shut down."],
+            [
+                "Shuts down build servers that are started from dotnet.",
+                ps,
+                "By default, all servers are shut down.",
+                pf,
+                CreateRef("dotnet-build-server")
+            ],
             ["build-server", "shutdown"],
             [
                 ("Servers", "", "IEnumerable<DotNetBuildServer>", false, "Shuts down build servers that are started from dotnet. By default, all servers are shut down."),
@@ -201,7 +274,13 @@ namespace HostApi;
         ),
         (
             "DotNetClean",
-            ["Cleans the output of the previous build. It's implemented as an MSBuild target, so the project is evaluated when the command is run. Only the outputs created during the build are cleaned. Both intermediate (obj) and final output (bin) folders are cleaned."],
+            [
+                "Cleans the output of a project.",
+                ps,
+                "This command cleans the output of the previous build. It's implemented as an MSBuild target, so the project is evaluated when the command is run. Only the outputs created during the build are cleaned. Both intermediate (obj) and final output (bin) folders are cleaned.",
+                pf,
+                CreateRef("dotnet-clean")
+            ],
             ["clean", "$Project"],
             [
                 ("#Props", "", "", false, ""),
@@ -219,7 +298,18 @@ namespace HostApi;
         ),
         (
             "DotNetDevCertsHttps",
-            ["Generates a self-signed certificate to enable HTTPS use in development. The dotnet dev-certs command manages a self-signed certificate to enable HTTPS use in local web app development. The dotnet dev-certs https command with no options checks if a development certificate is present in the current user's certificate store on the machine."],
+            [
+                "Generates a self-signed certificate to enable HTTPS use in development.",
+                ps,
+                "This command manages a self-signed certificate to enable HTTPS use in local web app development. Its main functions are:",
+                "<br/>- Generating a certificate for use with HTTPS endpoints during development.",
+                "<br/>- Trusting the generated certificate on the local machine.",
+                "<br/>- Removing the generated certificate from the local machine.",
+                "<br/>- Exporting a certificate in various formats so that it can be used by other tools.",
+                "<br/>- Importing an existing certificate generated by the tool into the local machine.",
+                pf,
+                CreateRef("dotnet-dev-certs")
+            ],
             ["dev-certs", "https"],
             [
                 ("Check", "--check", "bool?", false, "Checks for the existence of the development certificate but doesn't perform any action. Use this option with the --trust option to check if the certificate is not only valid but also trusted."),
@@ -237,7 +327,13 @@ namespace HostApi;
         ),
         (
             "DotNetNew",
-            ["Creates a new project, configuration file, or solution based on the specified template."],
+            [
+                "Creates a new project, configuration file, or solution based on the specified template.",
+                ps,
+                "This command creates a .NET project or other artifacts based on a template. The command calls the template engine to create the artifacts on disk based on the specified template and options.",
+                pf,
+                CreateRef("dotnet-new")
+            ],
             ["new", "$TemplateName"],
             [
                 ("#TemplateName", "", "", false, "The template to instantiate when the command is invoked. Each template might have specific options you can pass."),
@@ -255,7 +351,13 @@ namespace HostApi;
         ),
         (
             "DotNetNewList",
-            ["Lists available templates to be run using dotnet new."],
+            [
+                "Lists available templates to be run using dotnet new.",
+                ps,
+                "This command lists available templates to use with dotnet new. If the &lt;TEMPLATE_NAME&gt; is specified, lists templates containing the specified name. This option lists only default and installed templates. To find templates in NuGet that you can install locally, use the search command.",
+                pf,
+                CreateRef("dotnet-new-list")
+            ],
             ["new", "list", "$TemplateName"],
             [
                 ("Columns", "--columns", "IEnumerable<DotNetNewListColumn>", false, "Columns to display in the output."),
@@ -274,7 +376,13 @@ namespace HostApi;
         ),
         (
             "DotNetNewSearch",
-            ["Searches for the templates supported by dotnet new on NuGet.org."],
+            [
+                "Searches for the templates supported by dotnet new on NuGet.org.",
+                ps,
+                "This command searches for templates supported by dotnet new on NuGet.org. When the &lt;TEMPLATE_NAME&gt; is specified, searches for templates containing the specified name.",
+                pf,
+                CreateRef("dotnet-new-search")
+            ],
             ["new", "search", "$TemplateName"],
             [
                 ("Columns", "--columns", "IEnumerable<DotNetNewListColumn>", false, "Columns to display in the output."),
@@ -291,7 +399,13 @@ namespace HostApi;
         ),
         (
             "DotNetNewDetails",
-            ["Displays template package metadata."],
+            [
+                "Displays template package metadata.",
+                ps,
+                "This command displays the metadata of the template package from the package name provided. By default, the command searches for the latest available version. If the package is installed locally or is found on the official NuGet website, it also displays the templates that the package contains, otherwise it only displays basic metadata.",
+                pf,
+                CreateRef("dotnet-new-details")
+            ],
             ["new", "details", "$TemplateName"],
             [
                 ("Sources", "--add-source", "IEnumerable<string>", false, "By default, dotnet new details uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If --nuget-source is specified, the source is added to the list of sources to be checked."),
@@ -303,7 +417,13 @@ namespace HostApi;
         ),
         (
             "DotNetNewInstall",
-            ["Installs a template package."],
+            [
+                "Installs a template package.",
+                ps,
+                "This command installs a template package from the PATH or NUGET_ID provided. If you want to install a specific version or prerelease version of a template package, specify the version in the format &lt;package-name&gt;::&lt;package-version&gt;. By default, dotnet new passes * for the version, which represents the latest stable package version.",
+                pf,
+                CreateRef("dotnet-new-install")
+            ],
             ["new", "install", "$Package"],
             [
                 ("Sources", "--add-source", "IEnumerable<string>", false, "By default, dotnet new details uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If --nuget-source is specified, the source is added to the list of sources to be checked."),
@@ -315,7 +435,13 @@ namespace HostApi;
         ),
         (
             "DotNetNewUninstall",
-            ["Uninstalls a template package."],
+            [
+                "Uninstalls a template package.",
+                ps,
+                "This command uninstalls a template package at the PATH or NUGET_ID provided. When the &lt;PATH|NUGET_ID&gt; value isn&apos;t specified, all currently installed template packages and their associated templates are displayed. When specifying NUGET_ID, don&apos;t include the version number.",
+                pf,
+                CreateRef("dotnet-new-uninstall")
+            ],
             ["new", "uninstall", "$Package"],
             [
                 ("Package", "", "string", true, "The folder on the file system or the NuGet package identifier the package was installed from. Note that the version for the NuGet package should not be specified."),
@@ -325,7 +451,13 @@ namespace HostApi;
         ),
         (
             "DotNetNewUpdate",
-            ["Updates installed template packages."],
+            [
+                "Updates installed template packages.",
+                ps,
+                "This command updates installed template packages. The dotnet new update command with --check-only option checks for available updates for installed template packages without applying them.",
+                pf,
+                CreateRef("dotnet-new-update")
+            ],
             ["new", "update"],
             [
                 ("Sources", "--add-source", "IEnumerable<string>", false, "By default, dotnet new install uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If Sources is specified, the source will be added to the list of sources to be checked. To check the configured sources for the current directory use dotnet nuget list source. Available since .NET SDK 7.0.100."),
@@ -337,7 +469,13 @@ namespace HostApi;
         ),
         (
             "DotNetNuGetDelete",
-            ["Deletes or unlists a package from the server. The dotnet nuget delete command deletes or unlists a package from the server. For nuget.org, the action is to unlist the package."],
+            [
+                "Deletes or unlists a package from the server.",
+                ps,
+                "This command deletes or unlists a package from the server. For nuget.org, the action is to unlist the package.",
+                pf,
+                CreateRef("dotnet-nuget-delete")
+            ],
             ["nuget", "delete", "$PackageName", "$PackageVersion"],
             [
                 ("PackageName", "", "string", true, "Name/ID of the package to delete."),
@@ -351,7 +489,13 @@ namespace HostApi;
         ),
         (
             "DotNetNuGetLocalsClear",
-            ["Clears local NuGet resources. The dotnet nuget locals command clears local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder."],
+            [
+                "Clears local NuGet resources.",
+                ps,
+                "This command clears local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder.",
+                pf,
+                CreateRef("dotnet-nuget-locals")
+            ],
             ["nuget", "locals", "$CacheLocation"],
             [
                 ("CacheLocation", "", "NuGetCacheLocation?", true, "The cache location to clear."),
@@ -361,7 +505,13 @@ namespace HostApi;
         ),
         (
             "DotNetNuGetLocalsList",
-            ["Lists local NuGet resources. The dotnet nuget locals command lists local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder."],
+            [
+                "Lists local NuGet resources.",
+                ps,
+                "This command lists local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder.",
+                pf,
+                CreateRef("dotnet-nuget-locals")
+            ],
             ["nuget", "locals", "$CacheLocation"],
             [
                 ("CacheLocation", "", "NuGetCacheLocation?", true, "The cache location to list."),
@@ -371,7 +521,13 @@ namespace HostApi;
         ),
         (
             "DotNetNuGetPush",
-            [@"Pushes a package to the server and publishes it. The dotnet nuget push command pushes a package to the server and publishes it. The push command uses server and credential details found in the system's NuGet config file or chain of config files. NuGet's default configuration is obtained by loading %AppData%\NuGet\NuGet.config (Windows) or $HOME/.nuget/NuGet/NuGet.Config (Linux/macOS), then loading any nuget.config or .nuget\nuget.config starting from the root of drive and ending in the current directory."],
+            [
+                "Pushes a package to the server and publishes it.",
+                ps,
+                @"This command pushes a package to the server and publishes it. The push command uses server and credential details found in the system's NuGet config file or chain of config files. NuGet's default configuration is obtained by loading %AppData%\NuGet\NuGet.config (Windows) or $HOME/.nuget/NuGet/NuGet.Config (Linux/macOS), then loading any nuget.config or .nuget\nuget.config starting from the root of drive and ending in the current directory.",
+                pf,
+                CreateRef("dotnet-nuget-push")
+            ],
             ["nuget", "push", "$Package"],
             [
                 ("Package", "", "string", true, "Specifies the file path to the package to be pushed."),
@@ -390,9 +546,295 @@ namespace HostApi;
             false, false, []
         ),
         (
+            "DotNetNuGetAddSource",
+            [
+                "Add a NuGet source.",
+                ps,
+                "This command adds a new package source to your NuGet configuration files. When adding multiple package sources, be careful not to introduce a dependency confusion vulnerability.",
+                pf,
+                CreateRef("dotnet-nuget-add-source")
+            ],
+            ["nuget", "add", "source", "$PackageSourcePath"],
+            [
+                ("ValidAuthenticationTypes", "--valid-authentication-types", "IEnumerable<NuGetAuthenticationType>", false, "List of valid authentication types for this source. Set this to basic if the server advertises NTLM or Negotiate and your credentials must be sent using the Basic mechanism, for instance when using a PAT with on-premises Azure DevOps Server. Other valid values include negotiate, kerberos, ntlm, and digest, but these values are unlikely to be useful."),
+                ("PackageSourcePath", "", "string", true, "Path to the package source."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+                ("AllowInsecureConnections", "--allow-insecure-connections", "bool?", false, "Allows HTTP connections for adding or updating packages. This method is not secure. Available since .NET 9 SDK."),
+                ("Name", "--name", "string", false, "Name of the source."),
+                ("Password", "--password", "string", false, "Password to be used when connecting to an authenticated source."),
+                ("StorePasswordInClearText", "--store-password-in-clear-text", "bool?", false, "Enables storing portable package source credentials by disabling password encryption. Storing passwords in clear text is strongly discouraged."),
+                ("Username", "--username", "string", false, "Username to be used when connecting to an authenticated source."),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetDisableSource",
+            [
+                "Disable a NuGet source.",
+                ps,
+                "This command disables an existing source in your NuGet configuration files.",
+                pf,
+                CreateRef("dotnet-nuget-disable-source")
+            ],
+            ["nuget", "disable", "source", "$Name"],
+            [
+                ("Name", "--name", "string", true, "Name of the source."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see Common NuGet Configurations."),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetEnableSource",
+            [
+                "Enable a NuGet source.",
+                ps,
+                "This command enables an existing source in your NuGet configuration files.",
+                pf,
+                CreateRef("dotnet-nuget-enable-source")
+            ],
+            ["nuget", "enable", "source", "$Name"],
+            [
+                ("Name", "--name", "string", true, "Name of the source."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetListSource",
+            [
+                "Lists all configured NuGet sources.",
+                ps,
+                "This command lists all existing sources from your NuGet configuration files.",
+                pf,
+                CreateRef("dotnet-nuget-list-source")
+            ],
+            ["nuget", "list", "source"],
+            [
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see Common NuGet Configurations."),
+                ("Format", "--format", "NuGetListFormat?", false, "The format of the list command output: Detailed (the default) and Short."),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetRemoveSource",
+            [
+                "Remove a NuGet source.",
+                ps,
+                "This command removes an existing source from your NuGet configuration files.",
+                pf,
+                CreateRef("dotnet-nuget-remove-source")
+            ],
+            ["nuget", "remove", "source", "$Name"],
+            [
+                ("Name", "--name", "string", true, "Name of the source."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see Common NuGet Configurations."),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetUpdateSource",
+            [
+                "Update a NuGet source.",
+                ps,
+                "This command updates an existing source in your NuGet configuration files.",
+                pf,
+                CreateRef("dotnet-nuget-update-source")
+            ],
+            ["nuget", "update", "source", "$Name"],
+            [
+                ("ValidAuthenticationTypes", "--valid-authentication-types", "IEnumerable<NuGetAuthenticationType>", false, "List of valid authentication types for this source. Set this to basic if the server advertises NTLM or Negotiate and your credentials must be sent using the Basic mechanism, for instance when using a PAT with on-premises Azure DevOps Server. Other valid values include negotiate, kerberos, ntlm, and digest, but these values are unlikely to be useful."),
+                ("Name", "--name", "string", true, "Name of the source."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+                ("Password", "--password", "string", false, "Password to be used when connecting to an authenticated source."),
+                ("Source", "", "string", true, "Path to the package source."),
+                ("StorePasswordInClearText", "--store-password-in-clear-text", "bool?", false, "Enables storing portable package source credentials by disabling password encryption. Storing passwords in clear text is strongly discouraged."),
+                ("Username", "--username", "string", false, "Username to be used when connecting to an authenticated source."),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetVerify",
+            [
+                "Verifies a signed NuGet package.",
+                ps,
+                "This command verifies a signed NuGet package. This command requires a certificate root store that is valid for both code signing and timestamping. Also, this command may not be supported on some combinations of operating system and .NET SDK.",
+                pf,
+                CreateRef("dotnet-nuget-verify")
+            ],
+            ["nuget", "verify", "$Packages"],
+            [
+                ("Packages", "", "IEnumerable<string>", false, "Specifies the file path to the package(s) to be verified."),
+                ("Fingerprints", "--certificate-fingerprint", "IEnumerable<string>", false, "Verify that the signer certificate matches with one of the specified SHA256 fingerprints. This option can be supplied multiple times to provide multiple fingerprints."),
+                ("All", "--all", "bool?", false, "Specifies that all verifications possible should be performed on the package(s). By default, only signatures are verified."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetTrustList",
+            [
+                "Lists all the trusted signers in the configuration.",
+                ps,
+                "This option will include all the certificates (with fingerprint and fingerprint algorithm) each signer has. If a certificate has a preceding [U], it means that certificate entry has allowUntrustedRoot set as true.",
+                pf,
+                CreateRef("dotnet-nuget-trust#list")
+            ],
+            ["nuget", "trust", "list"],
+            [
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetTrustSync",
+            [
+                "Deletes the current list of certificates and replaces them with an up-to-date list from the repository.",
+                CreateRef("dotnet-nuget-trust#sync")
+            ],
+            ["nuget", "trust", "sync", "$Name"],
+            [
+                ("Name", "", "string", true, "The name of the existing trusted signer to sync."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetTrustRemove",
+            [
+                "Removes any trusted signers that match the given name.",
+                CreateRef("dotnet-nuget-trust#sync")
+            ],
+            ["nuget", "trust", "remove", "$Name"],
+            [
+                ("Name", "", "string", true, "The name of the existing trusted signer to remove."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetTrustAuthor",
+            [
+                "Adds a trusted signer with the given name, based on the author signature of the package.",
+                CreateRef("dotnet-nuget-trust#author")
+            ],
+            ["nuget", "trust", "author", "$Name", "$Package"],
+            [
+                ("Name", "", "string", true, "The name of the trusted signer to add. If NAME already exists in the configuration, the signature is appended."),
+                ("Package", "", "string", true, "The given PACKAGE should be a local path to the signed .nupkg file."),
+                ("AllowUntrustedRoot", "--allow-untrusted-root", "bool?", false, "Specifies if the certificate for the trusted signer should be allowed to chain to an untrusted root. This is not recommended."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetTrustRepository",
+            [
+                "Adds a trusted signer with the given name, based on the repository signature or countersignature of a signed package.",
+                CreateRef("dotnet-nuget-trust#repository")
+            ],
+            ["nuget", "trust", "repository", "$Name", "$Package"],
+            [
+                ("Owners", "--owners", "IReadOnlyCollection<string>", false, "List of trusted owners to further restrict the trust of a repository."),
+                ("Name", "", "string", true, "The name of the trusted signer to add. If NAME already exists in the configuration, the signature is appended."),
+                ("Package", "", "string", true, "The given PACKAGE should be a local path to the signed .nupkg file."),
+                ("AllowUntrustedRoot", "--allow-untrusted-root", "bool?", false, "Specifies if the certificate for the trusted signer should be allowed to chain to an untrusted root. This is not recommended."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetTrustCertificate",
+            [
+                "Adds a trusted signer with the given name, based on a certificate fingerprint.",
+                CreateRef("dotnet-nuget-trust#certificate")
+            ],
+            ["nuget", "trust", "certificate", "$Name", "$Fingerprint"],
+            [
+                ("Name", "", "string", true, "The name of the trusted signer to add. If a trusted signer with the given name already exists, the certificate item is added to that signer. Otherwise a trusted author is created with a certificate item from the given certificate information."),
+                ("Fingerprint", "", "string", true, "The fingerprint of the certificate."),
+                ("Algorithm", "--algorithm", "NuGetCertificateAlgorithm?", false, "Specifies the hash algorithm used to calculate the certificate fingerprint. Defaults to SHA256. Values supported are SHA256, SHA384 and SHA512."),
+                ("AllowUntrustedRoot", "--allow-untrusted-root", "bool?", false, "Specifies if the certificate for the trusted signer should be allowed to chain to an untrusted root. This is not recommended."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetTrustSource",
+            [
+                "Adds a trusted signer based on a given package source.",
+                CreateRef("dotnet-nuget-trust#source")
+            ],
+            ["nuget", "trust", "source", "$Name" ],
+            [
+                ("Owners", "--owners", "IReadOnlyCollection<string>", false, "List of trusted owners to further restrict the trust of a repository."),
+                ("Name", "", "string", true, "The name of the trusted signer to add. If only &lt;NAME&gt; is provided without --&lt;source-url&gt;, the package source from your NuGet configuration files with the same name is added to the trusted list. If &lt;NAME&gt; already exists in the configuration, the package source is appended to it."),
+                ("ConfigFile", "--configfile", "string", false, "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used."),
+                ("SourceUrl", "--source-url", "string", false, "If a source-url is provided, it must be a v3 package source URL (like https://api.nuget.org/v3/index.json). Other package source types are not supported."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetSign",
+            [
+                "Signs all the NuGet packages matching the first argument with a certificate.",
+                ps,
+                "This command signs all the packages matching the first argument with a certificate. The certificate with the private key can be obtained from a file or from a certificate installed in a certificate store by providing a subject name or a SHA-1 fingerprint. This command requires a certificate root store that is valid for both code signing and timestamping. Also, this command may not be supported on some combinations of operating system and .NET SDK.",
+                pf,
+                CreateRef("dotnet-nuget-sign")
+            ],
+            ["nuget", "sign", "$Packages"],
+            [
+                ("Packages", "--owners", "IEnumerable<string>", true, "Specifies the file path to the packages to be signed."),
+                ("CertificatePath", "--certificate-path", "string", false, "Specifies the file path to the certificate to be used in signing the package. This option currently supports only PKCS12 (PFX) files that contain the certificate's private key."),
+                ("CertificateStoreName", "--certificate-store-name", "string", false, "Specifies the name of the X.509 certificate store to use to search for the certificate. Defaults to \"My\", the X.509 certificate store for personal certificates. This option should be used when specifying the certificate via --certificate-subject-name or --certificate-fingerprint options."),
+                ("CertificateStoreLocation", "--certificate-store-location", "string", false, "Specifies the name of the X.509 certificate store use to search for the certificate. Defaults to \"CurrentUser\", the X.509 certificate store used by the current user. This option should be used when specifying the certificate via --certificate-subject-name or --certificate-fingerprint options."),
+                ("CertificateSubjectName", "--certificate-subject-name", "string", false, "Specifies the subject name of the certificate used to search a local certificate store for the certificate. The search is a case-insensitive string comparison using the supplied value, which finds all certificates with the subject name containing that string, regardless of other subject values. The certificate store can be specified by --certificate-store-name and --certificate-store-location options. This option currently supports only a single matching certificate in the result. If there are multiple matching certificates in the result, or no matching certificate in the result, the sign command will fail."),
+                ("CertificateFingerprint", "--certificate-fingerprint", "string", false, "Specifies the fingerprint of the certificate used to search a local certificate store for the certificate. Starting with .NET 9, this option can be used to specify the SHA-1, SHA-256, SHA-384, or SHA-512 fingerprint of the certificate. However, a NU3043 warning is raised when a SHA-1 certificate fingerprint is used because it is no longer considered secure. All the previous versions of the .NET SDK continue to accept only SHA-1 certificate fingerprint."),
+                ("CertificatePassword", "--certificate-password", "string", false, "Specifies the certificate password, if needed. If a certificate is password protected but no password is provided, the sign command will fail."),
+                ("HashAlgorithm", "--hash-algorithm", "NuGetCertificateAlgorithm?", false, "Hash algorithm to be used to sign the package. Defaults to SHA256. Possible values are SHA256, SHA384, and SHA512."),
+                ("Output", "--output", "string", false, "Specifies the directory where the signed package should be saved. If this option isn't specified, by default the original package is overwritten by the signed package."),
+                ("Overwrite", "--overwrite", "bool?", false, "Indicate that the current signature should be overwritten. By default the command will fail if the package already has a signature."),
+                ("TimestampHashAlgorithm", "--timestamp-hash-algorithm", "NuGetCertificateAlgorithm?", false, "Hash algorithm to be used by the RFC 3161 timestamp server. Defaults to SHA256."),
+                ("TimestampingServer", "--timestamper", "string", false, "URL to an RFC 3161 timestamping server."),
+                ("#Verbosity", "", "", false, ""),
+            ],
+            false, false, []
+        ),
+        (
+            "DotNetNuGetWhy",
+            [
+                "Shows the dependency graph for a particular package.",
+                ps,
+                @"This command shows the dependency graph for a particular package for a given project or solution. Starting from the .NET 9 SDK, it's possible to pass a NuGet assets file in place of the project file, in order to use the command with projects that can't be restored with the .NET SDK. First, restore the project in Visual Studio, or msbuild.exe. By default the assets file is in the project's obj\ directory, but you can find the location with msbuild.exe path\to\project.proj -getProperty:ProjectAssetsFile. Finally, run dotnet nuget why path\to\project.assets.json SomePackage.",
+                pf,
+                CreateRef("dotnet-nuget-why")
+            ],
+            ["nuget", "why", "$Project", "$Package"],
+            [
+                ("Frameworks", "--framework", "IEnumerable<string>", false, "The target frameworks for which dependency graphs are shown."),
+                ("Project", "", "string", true, "The project or solution file to operate on. If a directory is specified, the command searches the directory for a project or solution file. If more than one project or solution is found, an error is thrown."),
+                ("Package", "", "string", true, "The package name to look up in the dependency graph."),
+            ],
+            false, false, []
+        ),
+        (
             "DotNetRun",
             [
                 "Runs source code without any explicit compile or launch commands.",
+                ps,
+                "This command provides a convenient option to run your application from the source code with one command. It's useful for fast iterative development from the command line. The command depends on the dotnet build command to build the code. Any requirements for the build apply to dotnet run as well.",
+                pf,
+                ps,
+                "To run the application, the dotnet run command resolves the dependencies of the application that are outside of the shared runtime from the NuGet cache. Because it uses cached dependencies, it's not recommended to use dotnet run to run applications in production. Instead, create a deployment using the dotnet publish command and deploy the published output.",
+                pf,
                 "<example>",
                 "<code>",
                 "var result = new DotNetNew(\"console\", \"-n\", \"MyApp\", \"--force\")",
@@ -402,7 +844,8 @@ namespace HostApi;
                 "new DotNetRun().WithWorkingDirectory(\"MyApp\")",
                 "    .Build().EnsureSuccess();",
                 "</code>",
-                "</example>"
+                "</example>",
+                CreateRef("dotnet-run")
             ],
             ["run", "$Project"],
             [
@@ -454,7 +897,7 @@ using Internal.DotNet;
             if (arg.StartsWith("$"))
             {
                 var curArg = arg.Substring(1);
-                var notEmpty = command.Args.FirstOrDefault(i => i.PropertyName == curArg && i.Type.StartsWith("IEnumerable"));
+                var notEmpty = command.Args.FirstOrDefault(i => i.PropertyName == curArg && IsCollection(i.Type));
                 if (!string.IsNullOrWhiteSpace(notEmpty.PropertyName))
                 {
                     var compositeArg = $"new [] {{{string.Join(", ", commandArgs)}}}.Concat({curArg}).ToArray()";
@@ -485,7 +928,7 @@ using Internal.DotNet;
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
 <#
-    foreach (var arg in command.Args.Where(i => i.Type.StartsWith("IEnumerable")))
+    foreach (var arg in command.Args.Where(i => IsCollection(i.Type)))
     {
 #>
 /// <param name="<#= arg.PropertyName #>"><#= arg.Comments #></param>
@@ -495,7 +938,7 @@ using Internal.DotNet;
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 <#
-    foreach (var arg in command.Args.Where(i => !i.Type.StartsWith("IEnumerable")))
+    foreach (var arg in command.Args.Where(i => !IsCollection(i.Type)))
     {
 #>
 /// <param name="<#= arg.PropertyName #>"><#= arg.Comments #></param>
@@ -509,8 +952,8 @@ public partial record <#= command.Name #>(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
 <#
-    var initializer = string.Join(", ", new [] {"args", "[]"}.Concat(Enumerable.Repeat("[]", command.Args.Count(i => i.Type.StartsWith("IEnumerable")))));
-    var fullInitializer = string.Join(", ", new [] {"[]", "[]"}.Concat(Enumerable.Repeat("[]", command.Args.Count(i => i.Type.StartsWith("IEnumerable")))));
+    var initializer = string.Join(", ", new [] {"args", "[]"}.Concat(Enumerable.Repeat("[]", command.Args.Count(i => IsCollection(i.Type)))));
+    var fullInitializer = string.Join(", ", new [] {"[]", "[]"}.Concat(Enumerable.Repeat("[]", command.Args.Count(i => IsCollection(i.Type)))));
     foreach (var arg in command.Args)
     {
         var type = arg.Type;
@@ -521,7 +964,7 @@ public partial record <#= command.Name #>(
         }
         else
         {
-            if (!type.StartsWith("IEnumerable"))
+            if (!IsCollection(type))
             {
                 defaultValue = " = default";
             }
@@ -567,7 +1010,7 @@ public partial record <#= command.Name #>(
         if (arg.StartsWith("$"))
         {
             var notEmptyArg = arg.Substring(1);
-            var notEmpty = command.Args.FirstOrDefault(i => i.PropertyName == notEmptyArg && i.Type.StartsWith("IEnumerable"));
+            var notEmpty = command.Args.FirstOrDefault(i => i.PropertyName == notEmptyArg && IsCollection(i.Type));
             if (!string.IsNullOrWhiteSpace(notEmpty.PropertyName))
             {
                 notEmptyArg = $"{notEmptyArg}.ToArray()";
@@ -606,14 +1049,14 @@ public partial record <#= command.Name #>(
 <#
     }
 
-    foreach (var arg in command.Args.Where(i => !i.IsProject).Where(i => i.Type.StartsWith("IEnumerable") && i.ArgName != "--property"))
+    foreach (var arg in command.Args.Where(i => !i.IsProject).Where(i => IsCollection(i.Type) && i.ArgName != "--property"))
     {
 #>
             .AddArgs(<#= arg.PropertyName #>.ToArgs("<#= arg.ArgName #>"))
 <#
     }
 
-    foreach(var arg in command.Args.Where(i => !i.IsProject).Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && !i.Type.StartsWith("bool") && !i.Type.StartsWith("IEnumerable")))
+    foreach(var arg in command.Args.Where(i => !i.IsProject).Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && !i.Type.StartsWith("bool") && !IsCollection(i.Type)))
     {
 #>
             .AddArgs(<#= arg.PropertyName #>.ToArgs("<#= arg.ArgName #>"))
@@ -634,7 +1077,7 @@ public partial record <#= command.Name #>(
                 ("--diagnostics", Diagnostics)
             )
 <#
-    foreach (var arg in command.Args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.Type.StartsWith("IEnumerable") && i.ArgName == "--property").ToArray())
+    foreach (var arg in command.Args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && IsCollection(i.Type) && i.ArgName == "--property").ToArray())
     {
 #>
             .AddProps("--property", <#= arg.PropertyName #>.ToArray())

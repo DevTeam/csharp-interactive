@@ -5,6 +5,10 @@ using Internal.DotNet;
 
 /// <summary>
 /// Runs a dotnet application.
+/// <p>
+/// You specify the path to an application .dll file to run the application. To run the application means to find and execute the entry point, which in the case of console apps is the Main method. For example, dotnet myapp.dll runs the myapp application.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -73,6 +77,10 @@ public partial record DotNet(
 
 /// <summary>
 /// Executes a dotnet application.
+/// <p>
+/// You specify the path to an application .dll file to run the application. To run the application means to find and execute the entry point, which in the case of console apps is the Main method. For example, dotnet myapp.dll runs the myapp application.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -148,6 +156,10 @@ public partial record DotNetExec(
 
 /// <summary>
 /// Adds or updates a package reference in a project file.
+/// <p>
+/// This command provides a convenient option to add or update a package reference in a project file. When you run the command, there&apos;s a compatibility check to ensure the package is compatible with the frameworks in the project. If the check passes and the package isn&apos;t referenced in the project file, a &lt;PackageReference&gt; element is added to the project file. If the check passes and the package is already referenced in the project file, the &lt;PackageReference&gt; element is updated to the latest compatible version. After the project file is updated, dotnet restore is run.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-add-package">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -227,6 +239,10 @@ public partial record DotNetAddPackage(
 
 /// <summary>
 /// Lists the package references for a project or solution.
+/// <p>
+/// This command provides a convenient option to list all NuGet package references for a specific project or a solution. You first need to build the project in order to have the assets needed for this command to process.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-list-package">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -315,6 +331,10 @@ public partial record DotNetListPackage(
 
 /// <summary>
 /// Removes package reference from a project file.
+/// <p>
+/// This command provides a convenient option to remove a NuGet package reference from a project.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-remove-package">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -376,6 +396,10 @@ public partial record DotNetRemovePackage(
 
 /// <summary>
 /// Adds project-to-project (P2P) references.
+/// <p>
+/// This command provides a convenient option to add project references to a project. After running the command, the &lt;ProjectReference&gt; elements are added to the project file.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-add-reference">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -440,7 +464,11 @@ public partial record DotNetAddReference(
 }
 
 /// <summary>
-/// The dotnet list reference command provides a convenient option to list project references for a given project.
+/// Lists project-to-project references.
+/// <p>
+/// This command provides a convenient option to list project references for a given project.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-list-reference">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -498,6 +526,10 @@ public partial record DotNetListReference(
 
 /// <summary>
 /// Removes project-to-project (P2P) references.
+/// <p>
+/// This command provides a convenient option to remove project references from a project.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-remove-reference">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -562,7 +594,13 @@ public partial record DotNetRemoveReference(
 }
 
 /// <summary>
-/// The dotnet build command builds the project and its dependencies into a set of binaries. The binaries include the project's code in Intermediate Language (IL) files with a .dll extension. Depending on the project type and settings, other files may be included.
+/// Builds a project and all of its dependencies.
+/// <p>
+/// This command builds the project and its dependencies into a set of binaries. The binaries include the project's code in Intermediate Language (IL) files with a .dll extension. For executable projects targeting versions earlier than .NET Core 3.0, library dependencies from NuGet are typically NOT copied to the output folder. They're resolved from the NuGet global packages folder at run time. With that in mind, the product of dotnet build isn't ready to be transferred to another machine to run. To create a version of the application that can be deployed, you need to publish it (for example, with the dotnet publish command). For more information, see .NET Application Deployment.
+/// </p>
+/// <p>
+/// For executable projects targeting .NET Core 3.0 and later, library dependencies are copied to the output folder. This means that if there isn't any other publish-specific logic (such as Web projects have), the build output should be deployable.
+/// </p>
 /// <example>
 /// <code>
 /// var configuration = Props.Get("configuration", "Release");
@@ -572,6 +610,7 @@ public partial record DotNetRemoveReference(
 ///     .Build().EnsureSuccess();
 /// </code>
 /// </example>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -689,7 +728,11 @@ public partial record DotNetBuild(
 }
 
 /// <summary>
-/// Shuts down build servers that are started from dotnet. By default, all servers are shut down.
+/// Shuts down build servers that are started from dotnet.
+/// <p>
+/// By default, all servers are shut down.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build-server">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -747,7 +790,11 @@ public partial record DotNetBuildServerShutdown(
 }
 
 /// <summary>
-/// Cleans the output of the previous build. It's implemented as an MSBuild target, so the project is evaluated when the command is run. Only the outputs created during the build are cleaned. Both intermediate (obj) and final output (bin) folders are cleaned.
+/// Cleans the output of a project.
+/// <p>
+/// This command cleans the output of the previous build. It's implemented as an MSBuild target, so the project is evaluated when the command is run. Only the outputs created during the build are cleaned. Both intermediate (obj) and final output (bin) folders are cleaned.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-clean">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -832,7 +879,16 @@ public partial record DotNetClean(
 }
 
 /// <summary>
-/// Generates a self-signed certificate to enable HTTPS use in development. The dotnet dev-certs command manages a self-signed certificate to enable HTTPS use in local web app development. The dotnet dev-certs https command with no options checks if a development certificate is present in the current user's certificate store on the machine.
+/// Generates a self-signed certificate to enable HTTPS use in development.
+/// <p>
+/// This command manages a self-signed certificate to enable HTTPS use in local web app development. Its main functions are:
+/// <br/>- Generating a certificate for use with HTTPS endpoints during development.
+/// <br/>- Trusting the generated certificate on the local machine.
+/// <br/>- Removing the generated certificate from the local machine.
+/// <br/>- Exporting a certificate in various formats so that it can be used by other tools.
+/// <br/>- Importing an existing certificate generated by the tool into the local machine.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-dev-certs">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -918,6 +974,10 @@ public partial record DotNetDevCertsHttps(
 
 /// <summary>
 /// Creates a new project, configuration file, or solution based on the specified template.
+/// <p>
+/// This command creates a .NET project or other artifacts based on a template. The command calls the template engine to create the artifacts on disk based on the specified template and options.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1002,6 +1062,10 @@ public partial record DotNetNew(
 
 /// <summary>
 /// Lists available templates to be run using dotnet new.
+/// <p>
+/// This command lists available templates to use with dotnet new. If the &lt;TEMPLATE_NAME&gt; is specified, lists templates containing the specified name. This option lists only default and installed templates. To find templates in NuGet that you can install locally, use the search command.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-list">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1090,6 +1154,10 @@ public partial record DotNetNewList(
 
 /// <summary>
 /// Searches for the templates supported by dotnet new on NuGet.org.
+/// <p>
+/// This command searches for templates supported by dotnet new on NuGet.org. When the &lt;TEMPLATE_NAME&gt; is specified, searches for templates containing the specified name.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-search">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1172,6 +1240,10 @@ public partial record DotNetNewSearch(
 
 /// <summary>
 /// Displays template package metadata.
+/// <p>
+/// This command displays the metadata of the template package from the package name provided. By default, the command searches for the latest available version. If the package is installed locally or is found on the official NuGet website, it also displays the templates that the package contains, otherwise it only displays basic metadata.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-details">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1239,6 +1311,10 @@ public partial record DotNetNewDetails(
 
 /// <summary>
 /// Installs a template package.
+/// <p>
+/// This command installs a template package from the PATH or NUGET_ID provided. If you want to install a specific version or prerelease version of a template package, specify the version in the format &lt;package-name&gt;::&lt;package-version&gt;. By default, dotnet new passes * for the version, which represents the latest stable package version.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-install">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1306,6 +1382,10 @@ public partial record DotNetNewInstall(
 
 /// <summary>
 /// Uninstalls a template package.
+/// <p>
+/// This command uninstalls a template package at the PATH or NUGET_ID provided. When the &lt;PATH|NUGET_ID&gt; value isn&apos;t specified, all currently installed template packages and their associated templates are displayed. When specifying NUGET_ID, don&apos;t include the version number.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-uninstall">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1367,6 +1447,10 @@ public partial record DotNetNewUninstall(
 
 /// <summary>
 /// Updates installed template packages.
+/// <p>
+/// This command updates installed template packages. The dotnet new update command with --check-only option checks for available updates for installed template packages without applying them.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-update">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1433,7 +1517,11 @@ public partial record DotNetNewUpdate(
 }
 
 /// <summary>
-/// Deletes or unlists a package from the server. The dotnet nuget delete command deletes or unlists a package from the server. For nuget.org, the action is to unlist the package.
+/// Deletes or unlists a package from the server.
+/// <p>
+/// This command deletes or unlists a package from the server. For nuget.org, the action is to unlist the package.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-delete">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1507,7 +1595,11 @@ public partial record DotNetNuGetDelete(
 }
 
 /// <summary>
-/// Clears local NuGet resources. The dotnet nuget locals command clears local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder.
+/// Clears local NuGet resources.
+/// <p>
+/// This command clears local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-locals">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1569,7 +1661,11 @@ public partial record DotNetNuGetLocalsClear(
 }
 
 /// <summary>
-/// Lists local NuGet resources. The dotnet nuget locals command lists local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder.
+/// Lists local NuGet resources.
+/// <p>
+/// This command lists local NuGet resources in the http-request cache, temporary cache, or machine-wide global packages folder.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-locals">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1631,7 +1727,11 @@ public partial record DotNetNuGetLocalsList(
 }
 
 /// <summary>
-/// Pushes a package to the server and publishes it. The dotnet nuget push command pushes a package to the server and publishes it. The push command uses server and credential details found in the system's NuGet config file or chain of config files. NuGet's default configuration is obtained by loading %AppData%\NuGet\NuGet.config (Windows) or $HOME/.nuget/NuGet/NuGet.Config (Linux/macOS), then loading any nuget.config or .nuget\nuget.config starting from the root of drive and ending in the current directory.
+/// Pushes a package to the server and publishes it.
+/// <p>
+/// This command pushes a package to the server and publishes it. The push command uses server and credential details found in the system's NuGet config file or chain of config files. NuGet's default configuration is obtained by loading %AppData%\NuGet\NuGet.config (Windows) or $HOME/.nuget/NuGet/NuGet.Config (Linux/macOS), then loading any nuget.config or .nuget\nuget.config starting from the root of drive and ending in the current directory.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-push">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -1722,7 +1822,1174 @@ public partial record DotNetNuGetPush(
 }
 
 /// <summary>
+/// Add a NuGet source.
+/// <p>
+/// This command adds a new package source to your NuGet configuration files. When adding multiple package sources, be careful not to introduce a dependency confusion vulnerability.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-add-source">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ValidAuthenticationTypes">List of valid authentication types for this source. Set this to basic if the server advertises NTLM or Negotiate and your credentials must be sent using the Basic mechanism, for instance when using a PAT with on-premises Azure DevOps Server. Other valid values include negotiate, kerberos, ntlm, and digest, but these values are unlikely to be useful.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="PackageSourcePath">Path to the package source.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="AllowInsecureConnections">Allows HTTP connections for adding or updating packages. This method is not secure. Available since .NET 9 SDK.</param>
+/// <param name="Name">Name of the source.</param>
+/// <param name="Password">Password to be used when connecting to an authenticated source.</param>
+/// <param name="StorePasswordInClearText">Enables storing portable package source credentials by disabling password encryption. Storing passwords in clear text is strongly discouraged.</param>
+/// <param name="Username">Username to be used when connecting to an authenticated source.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetAddSource(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<NuGetAuthenticationType> ValidAuthenticationTypes,
+    string PackageSourcePath = "",
+    string ConfigFile = "",
+    bool? AllowInsecureConnections = default,
+    string Name = "",
+    string Password = "",
+    bool? StorePasswordInClearText = default,
+    string Username = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetAddSource(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetAddSource()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("add")
+            .AddArgs("source")
+            .AddNotEmptyArgs(PackageSourcePath.ToArg())
+            .AddArgs(ValidAuthenticationTypes.ToArgs("--valid-authentication-types"))
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(Name.ToArgs("--name"))
+            .AddArgs(Password.ToArgs("--password"))
+            .AddArgs(Username.ToArgs("--username"))
+            .AddBooleanArgs(
+                ("--allow-insecure-connections", AllowInsecureConnections),
+                ("--store-password-in-clear-text", StorePasswordInClearText),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "add", "source", PackageSourcePath.ToArg());
+}
+
+/// <summary>
+/// Disable a NuGet source.
+/// <p>
+/// This command disables an existing source in your NuGet configuration files.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-disable-source">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Name">Name of the source.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see Common NuGet Configurations.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetDisableSource(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Name = "",
+    string ConfigFile = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetDisableSource(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetDisableSource()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("disable")
+            .AddArgs("source")
+            .AddNotEmptyArgs(Name.ToArg())
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "disable", "source", Name.ToArg());
+}
+
+/// <summary>
+/// Enable a NuGet source.
+/// <p>
+/// This command enables an existing source in your NuGet configuration files.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-enable-source">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Name">Name of the source.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetEnableSource(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Name = "",
+    string ConfigFile = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetEnableSource(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetEnableSource()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("enable")
+            .AddArgs("source")
+            .AddNotEmptyArgs(Name.ToArg())
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "enable", "source", Name.ToArg());
+}
+
+/// <summary>
+/// Lists all configured NuGet sources.
+/// <p>
+/// This command lists all existing sources from your NuGet configuration files.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-list-source">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see Common NuGet Configurations.</param>
+/// <param name="Format">The format of the list command output: Detailed (the default) and Short.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetListSource(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string ConfigFile = "",
+    NuGetListFormat? Format = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetListSource(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetListSource()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("list")
+            .AddArgs("source")
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(Format.ToArgs("--format"))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "list", "source");
+}
+
+/// <summary>
+/// Remove a NuGet source.
+/// <p>
+/// This command removes an existing source from your NuGet configuration files.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-remove-source">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Name">Name of the source.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see Common NuGet Configurations.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetRemoveSource(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Name = "",
+    string ConfigFile = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetRemoveSource(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetRemoveSource()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("remove")
+            .AddArgs("source")
+            .AddNotEmptyArgs(Name.ToArg())
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "remove", "source", Name.ToArg());
+}
+
+/// <summary>
+/// Update a NuGet source.
+/// <p>
+/// This command updates an existing source in your NuGet configuration files.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-update-source">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ValidAuthenticationTypes">List of valid authentication types for this source. Set this to basic if the server advertises NTLM or Negotiate and your credentials must be sent using the Basic mechanism, for instance when using a PAT with on-premises Azure DevOps Server. Other valid values include negotiate, kerberos, ntlm, and digest, but these values are unlikely to be useful.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Name">Name of the source.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Password">Password to be used when connecting to an authenticated source.</param>
+/// <param name="Source">Path to the package source.</param>
+/// <param name="StorePasswordInClearText">Enables storing portable package source credentials by disabling password encryption. Storing passwords in clear text is strongly discouraged.</param>
+/// <param name="Username">Username to be used when connecting to an authenticated source.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetUpdateSource(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<NuGetAuthenticationType> ValidAuthenticationTypes,
+    string Name = "",
+    string ConfigFile = "",
+    string Password = "",
+    string Source = "",
+    bool? StorePasswordInClearText = default,
+    string Username = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetUpdateSource(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetUpdateSource()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("update")
+            .AddArgs("source")
+            .AddNotEmptyArgs(Name.ToArg())
+            .AddArgs(ValidAuthenticationTypes.ToArgs("--valid-authentication-types"))
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(Password.ToArgs("--password"))
+            .AddArgs(Username.ToArgs("--username"))
+            .AddBooleanArgs(
+                ("--store-password-in-clear-text", StorePasswordInClearText),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "update", "source", Name.ToArg());
+}
+
+/// <summary>
+/// Verifies a signed NuGet package.
+/// <p>
+/// This command verifies a signed NuGet package. This command requires a certificate root store that is valid for both code signing and timestamping. Also, this command may not be supported on some combinations of operating system and .NET SDK.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-verify">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Packages">Specifies the file path to the package(s) to be verified.</param>
+/// <param name="Fingerprints">Verify that the signer certificate matches with one of the specified SHA256 fingerprints. This option can be supplied multiple times to provide multiple fingerprints.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="All">Specifies that all verifications possible should be performed on the package(s). By default, only signatures are verified.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetVerify(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<string> Packages,
+    IEnumerable<string> Fingerprints,
+    bool? All = default,
+    string ConfigFile = "",
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetVerify(params string[] args)
+        : this(args, [], [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetVerify()
+        : this([], [], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("verify")
+            .AddNotEmptyArgs(Packages.ToArray().ToArg())
+            .AddArgs(Packages.ToArgs(""))
+            .AddArgs(Fingerprints.ToArgs("--certificate-fingerprint"))
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--all", All),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, new [] {"nuget", "verify"}.Concat(Packages).ToArray());
+}
+
+/// <summary>
+/// Lists all the trusted signers in the configuration.
+/// <p>
+/// This option will include all the certificates (with fingerprint and fingerprint algorithm) each signer has. If a certificate has a preceding [U], it means that certificate entry has allowUntrustedRoot set as true.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-trust#list">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetTrustList(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string ConfigFile = "",
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetTrustList(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetTrustList()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("trust")
+            .AddArgs("list")
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "trust", "list");
+}
+
+/// <summary>
+/// Deletes the current list of certificates and replaces them with an up-to-date list from the repository.
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-trust#sync">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Name">The name of the existing trusted signer to sync.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetTrustSync(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Name = "",
+    string ConfigFile = "",
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetTrustSync(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetTrustSync()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("trust")
+            .AddArgs("sync")
+            .AddNotEmptyArgs(Name.ToArg())
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "trust", "sync", Name.ToArg());
+}
+
+/// <summary>
+/// Removes any trusted signers that match the given name.
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-trust#sync">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Name">The name of the existing trusted signer to remove.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetTrustRemove(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Name = "",
+    string ConfigFile = "",
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetTrustRemove(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetTrustRemove()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("trust")
+            .AddArgs("remove")
+            .AddNotEmptyArgs(Name.ToArg())
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "trust", "remove", Name.ToArg());
+}
+
+/// <summary>
+/// Adds a trusted signer with the given name, based on the author signature of the package.
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-trust#author">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Name">The name of the trusted signer to add. If NAME already exists in the configuration, the signature is appended.</param>
+/// <param name="Package">The given PACKAGE should be a local path to the signed .nupkg file.</param>
+/// <param name="AllowUntrustedRoot">Specifies if the certificate for the trusted signer should be allowed to chain to an untrusted root. This is not recommended.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetTrustAuthor(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Name = "",
+    string Package = "",
+    bool? AllowUntrustedRoot = default,
+    string ConfigFile = "",
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetTrustAuthor(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetTrustAuthor()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("trust")
+            .AddArgs("author")
+            .AddNotEmptyArgs(Name.ToArg())
+            .AddNotEmptyArgs(Package.ToArg())
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--allow-untrusted-root", AllowUntrustedRoot),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "trust", "author", Name.ToArg(), Package.ToArg());
+}
+
+/// <summary>
+/// Adds a trusted signer with the given name, based on the repository signature or countersignature of a signed package.
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-trust#repository">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Owners">List of trusted owners to further restrict the trust of a repository.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Name">The name of the trusted signer to add. If NAME already exists in the configuration, the signature is appended.</param>
+/// <param name="Package">The given PACKAGE should be a local path to the signed .nupkg file.</param>
+/// <param name="AllowUntrustedRoot">Specifies if the certificate for the trusted signer should be allowed to chain to an untrusted root. This is not recommended.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetTrustRepository(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IReadOnlyCollection<string> Owners,
+    string Name = "",
+    string Package = "",
+    bool? AllowUntrustedRoot = default,
+    string ConfigFile = "",
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetTrustRepository(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetTrustRepository()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("trust")
+            .AddArgs("repository")
+            .AddNotEmptyArgs(Name.ToArg())
+            .AddNotEmptyArgs(Package.ToArg())
+            .AddArgs(Owners.ToArgs("--owners"))
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--allow-untrusted-root", AllowUntrustedRoot),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "trust", "repository", Name.ToArg(), Package.ToArg());
+}
+
+/// <summary>
+/// Adds a trusted signer with the given name, based on a certificate fingerprint.
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-trust#certificate">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Name">The name of the trusted signer to add. If a trusted signer with the given name already exists, the certificate item is added to that signer. Otherwise a trusted author is created with a certificate item from the given certificate information.</param>
+/// <param name="Fingerprint">The fingerprint of the certificate.</param>
+/// <param name="Algorithm">Specifies the hash algorithm used to calculate the certificate fingerprint. Defaults to SHA256. Values supported are SHA256, SHA384 and SHA512.</param>
+/// <param name="AllowUntrustedRoot">Specifies if the certificate for the trusted signer should be allowed to chain to an untrusted root. This is not recommended.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetTrustCertificate(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Name = "",
+    string Fingerprint = "",
+    NuGetCertificateAlgorithm? Algorithm = default,
+    bool? AllowUntrustedRoot = default,
+    string ConfigFile = "",
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetTrustCertificate(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetTrustCertificate()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("trust")
+            .AddArgs("certificate")
+            .AddNotEmptyArgs(Name.ToArg())
+            .AddNotEmptyArgs(Fingerprint.ToArg())
+            .AddArgs(Algorithm.ToArgs("--algorithm"))
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--allow-untrusted-root", AllowUntrustedRoot),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "trust", "certificate", Name.ToArg(), Fingerprint.ToArg());
+}
+
+/// <summary>
+/// Adds a trusted signer based on a given package source.
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-trust#source">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Owners">List of trusted owners to further restrict the trust of a repository.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Name">The name of the trusted signer to add. If only &lt;NAME&gt; is provided without --&lt;source-url&gt;, the package source from your NuGet configuration files with the same name is added to the trusted list. If &lt;NAME&gt; already exists in the configuration, the package source is appended to it.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="SourceUrl">If a source-url is provided, it must be a v3 package source URL (like https://api.nuget.org/v3/index.json). Other package source types are not supported.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetTrustSource(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IReadOnlyCollection<string> Owners,
+    string Name = "",
+    string ConfigFile = "",
+    string SourceUrl = "",
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetTrustSource(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetTrustSource()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("trust")
+            .AddArgs("source")
+            .AddNotEmptyArgs(Name.ToArg())
+            .AddArgs(Owners.ToArgs("--owners"))
+            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(SourceUrl.ToArgs("--source-url"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "trust", "source", Name.ToArg());
+}
+
+/// <summary>
+/// Signs all the NuGet packages matching the first argument with a certificate.
+/// <p>
+/// This command signs all the packages matching the first argument with a certificate. The certificate with the private key can be obtained from a file or from a certificate installed in a certificate store by providing a subject name or a SHA-1 fingerprint. This command requires a certificate root store that is valid for both code signing and timestamping. Also, this command may not be supported on some combinations of operating system and .NET SDK.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-sign">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Packages">Specifies the file path to the packages to be signed.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="CertificatePath">Specifies the file path to the certificate to be used in signing the package. This option currently supports only PKCS12 (PFX) files that contain the certificate's private key.</param>
+/// <param name="CertificateStoreName">Specifies the name of the X.509 certificate store to use to search for the certificate. Defaults to "My", the X.509 certificate store for personal certificates. This option should be used when specifying the certificate via --certificate-subject-name or --certificate-fingerprint options.</param>
+/// <param name="CertificateStoreLocation">Specifies the name of the X.509 certificate store use to search for the certificate. Defaults to "CurrentUser", the X.509 certificate store used by the current user. This option should be used when specifying the certificate via --certificate-subject-name or --certificate-fingerprint options.</param>
+/// <param name="CertificateSubjectName">Specifies the subject name of the certificate used to search a local certificate store for the certificate. The search is a case-insensitive string comparison using the supplied value, which finds all certificates with the subject name containing that string, regardless of other subject values. The certificate store can be specified by --certificate-store-name and --certificate-store-location options. This option currently supports only a single matching certificate in the result. If there are multiple matching certificates in the result, or no matching certificate in the result, the sign command will fail.</param>
+/// <param name="CertificateFingerprint">Specifies the fingerprint of the certificate used to search a local certificate store for the certificate. Starting with .NET 9, this option can be used to specify the SHA-1, SHA-256, SHA-384, or SHA-512 fingerprint of the certificate. However, a NU3043 warning is raised when a SHA-1 certificate fingerprint is used because it is no longer considered secure. All the previous versions of the .NET SDK continue to accept only SHA-1 certificate fingerprint.</param>
+/// <param name="CertificatePassword">Specifies the certificate password, if needed. If a certificate is password protected but no password is provided, the sign command will fail.</param>
+/// <param name="HashAlgorithm">Hash algorithm to be used to sign the package. Defaults to SHA256. Possible values are SHA256, SHA384, and SHA512.</param>
+/// <param name="Output">Specifies the directory where the signed package should be saved. If this option isn't specified, by default the original package is overwritten by the signed package.</param>
+/// <param name="Overwrite">Indicate that the current signature should be overwritten. By default the command will fail if the package already has a signature.</param>
+/// <param name="TimestampHashAlgorithm">Hash algorithm to be used by the RFC 3161 timestamp server. Defaults to SHA256.</param>
+/// <param name="TimestampingServer">URL to an RFC 3161 timestamping server.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetSign(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<string> Packages,
+    string CertificatePath = "",
+    string CertificateStoreName = "",
+    string CertificateStoreLocation = "",
+    string CertificateSubjectName = "",
+    string CertificateFingerprint = "",
+    string CertificatePassword = "",
+    NuGetCertificateAlgorithm? HashAlgorithm = default,
+    string Output = "",
+    bool? Overwrite = default,
+    NuGetCertificateAlgorithm? TimestampHashAlgorithm = default,
+    string TimestampingServer = "",
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetSign(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetSign()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("sign")
+            .AddNotEmptyArgs(Packages.ToArray().ToArg())
+            .AddArgs(CertificatePath.ToArgs("--certificate-path"))
+            .AddArgs(CertificateStoreName.ToArgs("--certificate-store-name"))
+            .AddArgs(CertificateStoreLocation.ToArgs("--certificate-store-location"))
+            .AddArgs(CertificateSubjectName.ToArgs("--certificate-subject-name"))
+            .AddArgs(CertificateFingerprint.ToArgs("--certificate-fingerprint"))
+            .AddArgs(CertificatePassword.ToArgs("--certificate-password"))
+            .AddArgs(HashAlgorithm.ToArgs("--hash-algorithm"))
+            .AddArgs(Output.ToArgs("--output"))
+            .AddArgs(TimestampHashAlgorithm.ToArgs("--timestamp-hash-algorithm"))
+            .AddArgs(TimestampingServer.ToArgs("--timestamper"))
+            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddBooleanArgs(
+                ("--overwrite", Overwrite),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, new [] {"nuget", "sign"}.Concat(Packages).ToArray());
+}
+
+/// <summary>
+/// Shows the dependency graph for a particular package.
+/// <p>
+/// This command shows the dependency graph for a particular package for a given project or solution. Starting from the .NET 9 SDK, it's possible to pass a NuGet assets file in place of the project file, in order to use the command with projects that can't be restored with the .NET SDK. First, restore the project in Visual Studio, or msbuild.exe. By default the assets file is in the project's obj\ directory, but you can find the location with msbuild.exe path\to\project.proj -getProperty:ProjectAssetsFile. Finally, run dotnet nuget why path\to\project.assets.json SomePackage.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-why">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Frameworks">The target frameworks for which dependency graphs are shown.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Project">The project or solution file to operate on. If a directory is specified, the command searches the directory for a project or solution file. If more than one project or solution is found, an error is thrown.</param>
+/// <param name="Package">The package name to look up in the dependency graph.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuGetWhy(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<string> Frameworks,
+    string Project = "",
+    string Package = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuGetWhy(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuGetWhy()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("why")
+            .AddNotEmptyArgs(Project.ToArg())
+            .AddNotEmptyArgs(Package.ToArg())
+            .AddArgs(Frameworks.ToArgs("--framework"))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "why", Project.ToArg(), Package.ToArg());
+}
+
+/// <summary>
 /// Runs source code without any explicit compile or launch commands.
+/// <p>
+/// This command provides a convenient option to run your application from the source code with one command. It's useful for fast iterative development from the command line. The command depends on the dotnet build command to build the code. Any requirements for the build apply to dotnet run as well.
+/// </p>
+/// <p>
+/// To run the application, the dotnet run command resolves the dependencies of the application that are outside of the shared runtime from the NuGet cache. Because it uses cached dependencies, it's not recommended to use dotnet run to run applications in production. Instead, create a deployment using the dotnet publish command and deploy the published output.
+/// </p>
 /// <example>
 /// <code>
 /// var result = new DotNetNew("console", "-n", "MyApp", "--force")
@@ -1733,6 +3000,7 @@ public partial record DotNetNuGetPush(
 ///     .Build().EnsureSuccess();
 /// </code>
 /// </example>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-run">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>

@@ -1770,6 +1770,1094 @@ public partial record DotNetNuGetPush: ICommandLine
 }
 
 [ExcludeFromCodeCoverage]
+public partial record DotNetNuGetAddSource: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetAddSource operator +(DotNetNuGetAddSource command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetAddSource operator -(DotNetNuGetAddSource command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetAddSource operator +(DotNetNuGetAddSource command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetAddSource operator -(DotNetNuGetAddSource command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetAddSource operator +(DotNetNuGetAddSource command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetAddSource operator -(DotNetNuGetAddSource command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetAddSource operator +(DotNetNuGetAddSource command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetAddSource operator -(DotNetNuGetAddSource command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetDisableSource: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetDisableSource operator +(DotNetNuGetDisableSource command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetDisableSource operator -(DotNetNuGetDisableSource command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetDisableSource operator +(DotNetNuGetDisableSource command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetDisableSource operator -(DotNetNuGetDisableSource command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetDisableSource operator +(DotNetNuGetDisableSource command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetDisableSource operator -(DotNetNuGetDisableSource command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetDisableSource operator +(DotNetNuGetDisableSource command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetDisableSource operator -(DotNetNuGetDisableSource command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetEnableSource: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetEnableSource operator +(DotNetNuGetEnableSource command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetEnableSource operator -(DotNetNuGetEnableSource command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetEnableSource operator +(DotNetNuGetEnableSource command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetEnableSource operator -(DotNetNuGetEnableSource command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetEnableSource operator +(DotNetNuGetEnableSource command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetEnableSource operator -(DotNetNuGetEnableSource command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetEnableSource operator +(DotNetNuGetEnableSource command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetEnableSource operator -(DotNetNuGetEnableSource command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetListSource: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetListSource operator +(DotNetNuGetListSource command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetListSource operator -(DotNetNuGetListSource command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetListSource operator +(DotNetNuGetListSource command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetListSource operator -(DotNetNuGetListSource command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetListSource operator +(DotNetNuGetListSource command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetListSource operator -(DotNetNuGetListSource command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetListSource operator +(DotNetNuGetListSource command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetListSource operator -(DotNetNuGetListSource command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetRemoveSource: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetRemoveSource operator +(DotNetNuGetRemoveSource command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetRemoveSource operator -(DotNetNuGetRemoveSource command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetRemoveSource operator +(DotNetNuGetRemoveSource command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetRemoveSource operator -(DotNetNuGetRemoveSource command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetRemoveSource operator +(DotNetNuGetRemoveSource command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetRemoveSource operator -(DotNetNuGetRemoveSource command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetRemoveSource operator +(DotNetNuGetRemoveSource command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetRemoveSource operator -(DotNetNuGetRemoveSource command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetUpdateSource: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetUpdateSource operator +(DotNetNuGetUpdateSource command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetUpdateSource operator -(DotNetNuGetUpdateSource command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetUpdateSource operator +(DotNetNuGetUpdateSource command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetUpdateSource operator -(DotNetNuGetUpdateSource command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetUpdateSource operator +(DotNetNuGetUpdateSource command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetUpdateSource operator -(DotNetNuGetUpdateSource command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetUpdateSource operator +(DotNetNuGetUpdateSource command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetUpdateSource operator -(DotNetNuGetUpdateSource command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetVerify: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetVerify operator +(DotNetNuGetVerify command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetVerify operator -(DotNetNuGetVerify command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetVerify operator +(DotNetNuGetVerify command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetVerify operator -(DotNetNuGetVerify command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetVerify operator +(DotNetNuGetVerify command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetVerify operator -(DotNetNuGetVerify command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetVerify operator +(DotNetNuGetVerify command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetVerify operator -(DotNetNuGetVerify command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetTrustList: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustList operator +(DotNetNuGetTrustList command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustList operator -(DotNetNuGetTrustList command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetTrustList operator +(DotNetNuGetTrustList command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustList operator -(DotNetNuGetTrustList command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustList operator +(DotNetNuGetTrustList command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustList operator -(DotNetNuGetTrustList command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustList operator +(DotNetNuGetTrustList command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustList operator -(DotNetNuGetTrustList command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetTrustSync: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSync operator +(DotNetNuGetTrustSync command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSync operator -(DotNetNuGetTrustSync command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetTrustSync operator +(DotNetNuGetTrustSync command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSync operator -(DotNetNuGetTrustSync command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSync operator +(DotNetNuGetTrustSync command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSync operator -(DotNetNuGetTrustSync command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSync operator +(DotNetNuGetTrustSync command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSync operator -(DotNetNuGetTrustSync command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetTrustRemove: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRemove operator +(DotNetNuGetTrustRemove command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRemove operator -(DotNetNuGetTrustRemove command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetTrustRemove operator +(DotNetNuGetTrustRemove command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRemove operator -(DotNetNuGetTrustRemove command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRemove operator +(DotNetNuGetTrustRemove command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRemove operator -(DotNetNuGetTrustRemove command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRemove operator +(DotNetNuGetTrustRemove command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRemove operator -(DotNetNuGetTrustRemove command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetTrustAuthor: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustAuthor operator +(DotNetNuGetTrustAuthor command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustAuthor operator -(DotNetNuGetTrustAuthor command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetTrustAuthor operator +(DotNetNuGetTrustAuthor command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustAuthor operator -(DotNetNuGetTrustAuthor command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustAuthor operator +(DotNetNuGetTrustAuthor command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustAuthor operator -(DotNetNuGetTrustAuthor command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustAuthor operator +(DotNetNuGetTrustAuthor command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustAuthor operator -(DotNetNuGetTrustAuthor command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetTrustRepository: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRepository operator +(DotNetNuGetTrustRepository command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRepository operator -(DotNetNuGetTrustRepository command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetTrustRepository operator +(DotNetNuGetTrustRepository command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRepository operator -(DotNetNuGetTrustRepository command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRepository operator +(DotNetNuGetTrustRepository command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRepository operator -(DotNetNuGetTrustRepository command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRepository operator +(DotNetNuGetTrustRepository command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustRepository operator -(DotNetNuGetTrustRepository command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetTrustCertificate: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustCertificate operator +(DotNetNuGetTrustCertificate command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustCertificate operator -(DotNetNuGetTrustCertificate command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetTrustCertificate operator +(DotNetNuGetTrustCertificate command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustCertificate operator -(DotNetNuGetTrustCertificate command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustCertificate operator +(DotNetNuGetTrustCertificate command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustCertificate operator -(DotNetNuGetTrustCertificate command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustCertificate operator +(DotNetNuGetTrustCertificate command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustCertificate operator -(DotNetNuGetTrustCertificate command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetTrustSource: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSource operator +(DotNetNuGetTrustSource command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSource operator -(DotNetNuGetTrustSource command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetTrustSource operator +(DotNetNuGetTrustSource command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSource operator -(DotNetNuGetTrustSource command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSource operator +(DotNetNuGetTrustSource command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSource operator -(DotNetNuGetTrustSource command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSource operator +(DotNetNuGetTrustSource command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetTrustSource operator -(DotNetNuGetTrustSource command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetSign: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetSign operator +(DotNetNuGetSign command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetSign operator -(DotNetNuGetSign command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetSign operator +(DotNetNuGetSign command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetSign operator -(DotNetNuGetSign command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetSign operator +(DotNetNuGetSign command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetSign operator -(DotNetNuGetSign command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetSign operator +(DotNetNuGetSign command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetSign operator -(DotNetNuGetSign command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
+public partial record DotNetNuGetWhy: ICommandLine
+{
+    /// <summary>
+    /// Appends an argument.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be added.</param>
+    /// <param name="arg">Argument to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetWhy operator +(DotNetNuGetWhy command, string arg) => command.AddArgs(arg);
+    
+    /// <summary>
+    /// Removes an argument by its name.
+    /// </summary>
+    /// <param name="command">The command to which an argument will be removed.</param>
+    /// <param name="arg">Argument to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetWhy operator -(DotNetNuGetWhy command, string arg) => command.RemoveArgs(arg);
+
+    /// <summary>
+    /// Appends arguments.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be added.</param>
+    /// <param name="args">Arguments to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>    
+    public static DotNetNuGetWhy operator +(DotNetNuGetWhy command, IEnumerable<string> args) => command.AddArgs(args);
+
+    /// <summary>
+    /// Removes arguments by their name.
+    /// </summary>
+    /// <param name="command">The command to which arguments will be removed.</param>
+    /// <param name="args">Arguments to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetWhy operator -(DotNetNuGetWhy command, IEnumerable<string> args) => command.RemoveArgs(args);
+    
+    /// <summary>
+    /// Appends an environment variable.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be added.</param>
+    /// <param name="var">Environment variable to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetWhy operator +(DotNetNuGetWhy command, (string name, string value) var) => command.AddVars(var);
+    
+    /// <summary>
+    /// Removes environment variable by its name and value.
+    /// </summary>
+    /// <param name="command">The command to which an environment variable will be removed.</param>
+    /// <param name="var">Environment variable to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetWhy operator -(DotNetNuGetWhy command, (string name, string value) var) => command.RemoveVars(var);
+    
+    /// <summary>
+    /// Appends environment variables.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be added.</param>
+    /// <param name="vars">Environment variables to add.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetWhy operator +(DotNetNuGetWhy command, IEnumerable<(string name, string value)> vars) => command.AddVars(vars);
+    
+    /// <summary>
+    /// Removes environment variables by their name and value.
+    /// </summary>
+    /// <param name="command">The command to which environment variables will be removed.</param>
+    /// <param name="vars">environment variables to remove.</param>
+    /// <returns>Returns a new command with the corresponding changes.</returns>
+    public static DotNetNuGetWhy operator -(DotNetNuGetWhy command, IEnumerable<(string name, string value)> vars) => command.RemoveVars(vars);
+}
+
+[ExcludeFromCodeCoverage]
 public partial record DotNetPack: ICommandLine
 {
     /// <summary>
