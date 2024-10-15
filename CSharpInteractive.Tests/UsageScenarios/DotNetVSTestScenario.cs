@@ -8,7 +8,7 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class DotNetVSTestScenario : BaseScenario
 {
     [Fact]
@@ -23,7 +23,8 @@ public class DotNetVSTestScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var result = new DotNetNew("mstest")
+        var result = new DotNetNew()
+            .WithTemplateName("mstest")
             .WithName("MyTests")
             .WithForce(true)
             .Build().EnsureSuccess();
@@ -56,7 +57,8 @@ public class DotNetVSTestScenario : BaseScenario
     public void RunAsCommandLine()
     {
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var result = new DotNetNew("mstest")
+        var result = new DotNetNew()
+            .WithTemplateName("mstest")
             .WithName("MyTests")
             .WithForce(true)
             .Build().EnsureSuccess();

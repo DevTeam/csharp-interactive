@@ -8,7 +8,7 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class DotNetMSBuildVSTestScenario : BaseScenario
 {
     [Fact]
@@ -23,12 +23,13 @@ public class DotNetMSBuildVSTestScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        var result = new DotNetNew("mstest")
+        var result = new DotNetNew()
+            .WithTemplateName("mstest")
             .WithName("MyTests")
             .WithForce(true)
             .Build().EnsureSuccess();
 
-        result.ExitCode.ShouldBe(0);
+        result.ExitCode.ShouldBe(0, result.ToString());
 
         // Runs tests via a command like: "dotnet msbuild /t:VSTest" from the directory "MyTests"
         result = new MSBuild()
@@ -37,9 +38,9 @@ public class DotNetMSBuildVSTestScenario : BaseScenario
             .Build().EnsureSuccess();
 
         // The "result" variable provides details about a build
-        result.ExitCode.ShouldBe(0);
-        result.Summary.Tests.ShouldBe(1);
-        result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+        result.ExitCode.ShouldBe(0, result.ToString());
+        result.Summary.Tests.ShouldBe(1, result.ToString());
+        result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
         // }
     }
 }

@@ -8,7 +8,7 @@ using Core;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class ScriptRunTests
 {

@@ -10,8 +10,8 @@ using System.Diagnostics.CodeAnalysis;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
-[Trait("Docker", "true")]
+[Trait("Integration", "True")]
+[Trait("Docker", "True")]
 public class DockerDotNetBuildScenario : BaseScenario
 {
     //[Fact(Skip = "Linux Docker only")]

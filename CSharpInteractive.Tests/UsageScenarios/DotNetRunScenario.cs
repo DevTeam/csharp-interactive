@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 [SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments")]
 public class DotNetRunScenario : BaseScenario
 {
@@ -24,7 +24,8 @@ public class DotNetRunScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
-        var result = new DotNetNew("console")
+        var result = new DotNetNew()
+            .WithTemplateName("console")
             .WithName("MyApp")
             .WithForce(true)
             .Build().EnsureSuccess();

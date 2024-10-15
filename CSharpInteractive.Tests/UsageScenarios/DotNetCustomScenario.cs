@@ -9,7 +9,7 @@ using HostApi;
 using NuGet.Versioning;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 [SuppressMessage("Performance", "CA1806:Do not ignore method results")]
 public class DotNetCustomScenario : BaseScenario
 {

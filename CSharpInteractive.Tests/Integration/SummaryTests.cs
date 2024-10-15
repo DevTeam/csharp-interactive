@@ -4,7 +4,7 @@
 namespace CSharpInteractive.Tests.Integration;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class SummaryTests
 {
     [Fact]

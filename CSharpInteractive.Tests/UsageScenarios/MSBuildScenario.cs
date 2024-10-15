@@ -9,7 +9,7 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class MSBuildScenario : BaseScenario
 {
     [Fact]
@@ -24,7 +24,8 @@ public class MSBuildScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
-        var result = new DotNetNew("classlib")
+        var result = new DotNetNew()
+            .WithTemplateName("classlib")
             .WithName("MyLib")
             .WithForce(true)
             .Build().EnsureSuccess();

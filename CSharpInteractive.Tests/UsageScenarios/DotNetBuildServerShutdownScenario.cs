@@ -7,7 +7,7 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class DotNetBuildServerShutdownScenario : BaseScenario
 {
     [Fact]

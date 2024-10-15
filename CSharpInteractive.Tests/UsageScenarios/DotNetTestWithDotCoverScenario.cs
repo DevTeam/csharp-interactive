@@ -7,7 +7,7 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class DotNetTestWithDotCoverScenario : BaseScenario
 {
     [Fact]
@@ -22,7 +22,8 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
         // ## using HostApi;
 
         // Creates a new test project, running a command like: "dotnet new mstest -n MyTests --force"
-        new DotNetNew("mstest")
+        new DotNetNew()
+            .WithTemplateName("mstest")
             .WithName("MyTests")
             .WithForce(true)
             .Run().EnsureSuccess();
@@ -30,7 +31,8 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
         // Creates the tool manifest and installs the dotCover tool locally
         // It is better to run the following 2 commands manually
         // and commit these changes to a source control
-        new DotNetNew("tool-manifest")
+        new DotNetNew()
+            .WithTemplateName("tool-manifest")
             .Run().EnsureSuccess();
 
         new DotNetCustom("tool", "install", "--local", "JetBrains.dotCover.GlobalTool")

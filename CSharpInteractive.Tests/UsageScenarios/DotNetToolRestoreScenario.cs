@@ -8,7 +8,7 @@ namespace CSharpInteractive.Tests.UsageScenarios;
 using HostApi;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
-[Trait("Integration", "true")]
+[Trait("Integration", "True")]
 public class DotNetToolRestoreScenario : BaseScenario
 {
     [Fact]
@@ -26,7 +26,8 @@ public class DotNetToolRestoreScenario : BaseScenario
         Directory.CreateDirectory(projectDir);
 
         // Creates a local tool manifest 
-        new DotNetNew("tool-manifest")
+        new DotNetNew()
+            .WithTemplateName("tool-manifest")
             .WithWorkingDirectory(projectDir)
             .Run()
             .EnsureSuccess();
