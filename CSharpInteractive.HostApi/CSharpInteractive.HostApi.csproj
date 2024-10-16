@@ -35,15 +35,15 @@
             <DependentUpon>CommandLines.tt</DependentUpon>
         </Compile>
 
-        <None Update="SimpleDotNetCommands.tt">
-            <LastGenOutput>SimpleDotNetCommands.cs</LastGenOutput>
+        <None Update="DotNetCommands.tt">
+            <LastGenOutput>DotNetCommands.cs</LastGenOutput>
             <Generator>TextTemplatingFileGenerator</Generator>
         </None>
 
-        <Compile Update="SimpleDotNetCommands.cs">
+        <Compile Update="DotNetCommands.cs">
             <AutoGen>True</AutoGen>
             <DesignTime>True</DesignTime>
-            <DependentUpon>SimpleDotNetCommands.tt</DependentUpon>
+            <DependentUpon>DotNetCommands.tt</DependentUpon>
         </Compile>
     </ItemGroup>
 

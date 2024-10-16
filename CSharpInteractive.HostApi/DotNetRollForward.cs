@@ -1,4 +1,5 @@
-﻿namespace HostApi;
+﻿// ReSharper disable UnusedMember.Global
+namespace HostApi;
 
 /// <summary>
 /// Controls how roll forward is applied to the app. 

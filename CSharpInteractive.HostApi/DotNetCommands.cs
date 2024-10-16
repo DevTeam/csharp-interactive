@@ -1,4 +1,5 @@
-﻿// ReSharper disable InconsistentNaming
+﻿// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
 namespace HostApi;
 
 using Internal.DotNet;
@@ -61,10 +62,10 @@ public partial record DotNet(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddNotEmptyArgs(PathToApplication.ToArg())
-            .AddArgs(AdditionalProbingPaths.ToArgs("--additionalprobingpath"))
-            .AddArgs(AdditionalDeps.ToArgs("--additional-deps"))
-            .AddArgs(FxVersion.ToArgs("--fx-version"))
-            .AddArgs(RollForward.ToArgs("--roll-forward"))
+            .AddArgs(AdditionalProbingPaths.ToArgs("--additionalprobingpath", ""))
+            .AddArgs(AdditionalDeps.ToArgs("--additional-deps", ""))
+            .AddArgs(FxVersion.ToArgs("--fx-version", ""))
+            .AddArgs(RollForward.ToArgs("--roll-forward", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -138,12 +139,12 @@ public partial record DotNetExec(
             .WithVars(Vars.ToArray())
             .AddArgs("exec")
             .AddNotEmptyArgs(PathToApplication.ToArg())
-            .AddArgs(AdditionalProbingPaths.ToArgs("--additionalprobingpath"))
-            .AddArgs(DepsFile.ToArgs("--depsfile"))
-            .AddArgs(AdditionalDeps.ToArgs("--additional-deps"))
-            .AddArgs(FxVersion.ToArgs("--fx-version"))
-            .AddArgs(RollForward.ToArgs("--roll-forward"))
-            .AddArgs(RuntimeConfig.ToArgs("--runtimeconfig"))
+            .AddArgs(AdditionalProbingPaths.ToArgs("--additionalprobingpath", ""))
+            .AddArgs(DepsFile.ToArgs("--depsfile", ""))
+            .AddArgs(AdditionalDeps.ToArgs("--additional-deps", ""))
+            .AddArgs(FxVersion.ToArgs("--fx-version", ""))
+            .AddArgs(RollForward.ToArgs("--roll-forward", ""))
+            .AddArgs(RuntimeConfig.ToArgs("--runtimeconfig", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -221,10 +222,10 @@ public partial record DotNetAddPackage(
             .AddNotEmptyArgs(Project.ToArg())
             .AddArgs("package")
             .AddNotEmptyArgs(PackageName.ToArg())
-            .AddArgs(Sources.ToArgs("--source"))
-            .AddArgs(Framework.ToArgs("--framework"))
-            .AddArgs(PackageDirectory.ToArgs("--package-directory"))
-            .AddArgs(Version.ToArgs("--version"))
+            .AddArgs(Sources.ToArgs("--source", ""))
+            .AddArgs(Framework.ToArgs("--framework", ""))
+            .AddArgs(PackageDirectory.ToArgs("--package-directory", ""))
+            .AddArgs(Version.ToArgs("--version", ""))
             .AddBooleanArgs(
                 ("--no-restore", NoRestore),
                 ("--prerelease", Prerelease),
@@ -309,10 +310,10 @@ public partial record DotNetListPackage(
             .AddArgs("list")
             .AddNotEmptyArgs(Project.ToArg())
             .AddArgs("package")
-            .AddArgs(Frameworks.ToArgs("--framework"))
-            .AddArgs(Sources.ToArgs("--source"))
-            .AddArgs(Config.ToArgs("--config"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Frameworks.ToArgs("--framework", ""))
+            .AddArgs(Sources.ToArgs("--source", ""))
+            .AddArgs(Config.ToArgs("--config", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--deprecated", Deprecated),
                 ("--highest-minor", HighestMinor),
@@ -451,8 +452,8 @@ public partial record DotNetAddReference(
             .AddNotEmptyArgs(Project.ToArg())
             .AddArgs("reference")
             .AddNotEmptyArgs(References.ToArray().ToArg())
-            .AddArgs(References.ToArgs("--source"))
-            .AddArgs(Framework.ToArgs("--framework"))
+            .AddArgs(References.ToArgs("--source", ""))
+            .AddArgs(Framework.ToArgs("--framework", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -581,8 +582,8 @@ public partial record DotNetRemoveReference(
             .AddNotEmptyArgs(Project.ToArg())
             .AddArgs("reference")
             .AddNotEmptyArgs(References.ToArray().ToArg())
-            .AddArgs(References.ToArgs("--source"))
-            .AddArgs(Framework.ToArgs("--framework"))
+            .AddArgs(References.ToArgs("--source", ""))
+            .AddArgs(Framework.ToArgs("--framework", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -697,17 +698,17 @@ public partial record DotNetBuild(
             .AddArgs("build")
             .AddNotEmptyArgs(Project.ToArg())
             .AddMSBuildLoggers(host, Verbosity)
-            .AddArgs(Sources.ToArgs("--source"))
-            .AddArgs(Arch.ToArgs("--arch"))
-            .AddArgs(ArtifactsPath.ToArgs("--artifacts-path"))
-            .AddArgs(Configuration.ToArgs("--configuration"))
-            .AddArgs(Framework.ToArgs("--framework"))
-            .AddArgs(Output.ToArgs("--output"))
-            .AddArgs(OS.ToArgs("--os"))
-            .AddArgs(Runtime.ToArgs("--runtime"))
-            .AddArgs(TerminalLogger.ToArgs("--tl"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
-            .AddArgs(VersionSuffix.ToArgs("--version-suffix"))
+            .AddArgs(Sources.ToArgs("--source", ""))
+            .AddArgs(Arch.ToArgs("--arch", ""))
+            .AddArgs(ArtifactsPath.ToArgs("--artifacts-path", ""))
+            .AddArgs(Configuration.ToArgs("--configuration", ""))
+            .AddArgs(Framework.ToArgs("--framework", ""))
+            .AddArgs(Output.ToArgs("--output", ""))
+            .AddArgs(OS.ToArgs("--os", ""))
+            .AddArgs(Runtime.ToArgs("--runtime", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
+            .AddArgs(VersionSuffix.ToArgs("--version-suffix", ""))
             .AddBooleanArgs(
                 ("--disable-build-servers", DisableBuildServers),
                 ("--force", Force),
@@ -778,7 +779,7 @@ public partial record DotNetBuildServerShutdown(
             .WithVars(Vars.ToArray())
             .AddArgs("build-server")
             .AddArgs("shutdown")
-            .AddArgs(Servers.ToArgs(""))
+            .AddArgs(Servers.ToArgs("", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -859,13 +860,13 @@ public partial record DotNetClean(
             .AddArgs("clean")
             .AddNotEmptyArgs(Project.ToArg())
             .AddMSBuildLoggers(host, Verbosity)
-            .AddArgs(ArtifactsPath.ToArgs("--artifacts-path"))
-            .AddArgs(Configuration.ToArgs("--configuration"))
-            .AddArgs(Framework.ToArgs("--framework"))
-            .AddArgs(Output.ToArgs("--output"))
-            .AddArgs(Runtime.ToArgs("--runtime"))
-            .AddArgs(TerminalLogger.ToArgs("--tl"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(ArtifactsPath.ToArgs("--artifacts-path", ""))
+            .AddArgs(Configuration.ToArgs("--configuration", ""))
+            .AddArgs(Framework.ToArgs("--framework", ""))
+            .AddArgs(Output.ToArgs("--output", ""))
+            .AddArgs(Runtime.ToArgs("--runtime", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--nologo", NoLogo),
                 ("--diagnostics", Diagnostics)
@@ -952,9 +953,9 @@ public partial record DotNetDevCertsHttps(
             .WithVars(Vars.ToArray())
             .AddArgs("dev-certs")
             .AddArgs("https")
-            .AddArgs(ExportPath.ToArgs("--export-path"))
-            .AddArgs(Format.ToArgs("--format"))
-            .AddArgs(Import.ToArgs("--import"))
+            .AddArgs(ExportPath.ToArgs("--export-path", ""))
+            .AddArgs(Format.ToArgs("--format", ""))
+            .AddArgs(Import.ToArgs("--import", ""))
             .AddBooleanArgs(
                 ("--check", Check),
                 ("--clean", Clean),
@@ -1041,12 +1042,12 @@ public partial record DotNetNew(
             .WithVars(Vars.ToArray())
             .AddArgs("new")
             .AddNotEmptyArgs(TemplateName.ToArg())
-            .AddArgs(Language.ToArgs("--language"))
-            .AddArgs(Name.ToArgs("--name"))
-            .AddArgs(Framework.ToArgs("--framework"))
-            .AddArgs(Output.ToArgs("--output"))
-            .AddArgs(Project.ToArgs("--project"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Language.ToArgs("--language", ""))
+            .AddArgs(Name.ToArgs("--name", ""))
+            .AddArgs(Framework.ToArgs("--framework", ""))
+            .AddArgs(Output.ToArgs("--output", ""))
+            .AddArgs(Project.ToArgs("--project", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--dry-run", DryRun),
                 ("--force", Force),
@@ -1132,14 +1133,14 @@ public partial record DotNetNewList(
             .AddArgs("new")
             .AddArgs("list")
             .AddNotEmptyArgs(TemplateName.ToArg())
-            .AddArgs(Columns.ToArgs("--columns"))
-            .AddArgs(Author.ToArgs("--author"))
-            .AddArgs(Language.ToArgs("--language"))
-            .AddArgs(Output.ToArgs("--output"))
-            .AddArgs(Project.ToArgs("--project"))
-            .AddArgs(Tag.ToArgs("--tag"))
-            .AddArgs(Type.ToArgs("--type"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Columns.ToArgs("--columns", ""))
+            .AddArgs(Author.ToArgs("--author", ""))
+            .AddArgs(Language.ToArgs("--language", ""))
+            .AddArgs(Output.ToArgs("--output", ""))
+            .AddArgs(Project.ToArgs("--project", ""))
+            .AddArgs(Tag.ToArgs("--tag", ""))
+            .AddArgs(Type.ToArgs("--type", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--columns-all", ColumnsAll),
                 ("--ignore-constraints", IgnoreConstraints),
@@ -1220,13 +1221,13 @@ public partial record DotNetNewSearch(
             .AddArgs("new")
             .AddArgs("search")
             .AddNotEmptyArgs(TemplateName.ToArg())
-            .AddArgs(Columns.ToArgs("--columns"))
-            .AddArgs(Author.ToArgs("--author"))
-            .AddArgs(Language.ToArgs("--language"))
-            .AddArgs(Package.ToArgs("--package"))
-            .AddArgs(Tag.ToArgs("--tag"))
-            .AddArgs(Type.ToArgs("--type"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Columns.ToArgs("--columns", ""))
+            .AddArgs(Author.ToArgs("--author", ""))
+            .AddArgs(Language.ToArgs("--language", ""))
+            .AddArgs(Package.ToArgs("--package", ""))
+            .AddArgs(Tag.ToArgs("--tag", ""))
+            .AddArgs(Type.ToArgs("--type", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--columns-all", ColumnsAll),
                 ("--diagnostics", Diagnostics)
@@ -1296,8 +1297,8 @@ public partial record DotNetNewDetails(
             .AddArgs("new")
             .AddArgs("details")
             .AddNotEmptyArgs(TemplateName.ToArg())
-            .AddArgs(Sources.ToArgs("--add-source"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Sources.ToArgs("--add-source", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--force", Force),
                 ("--diagnostics", Diagnostics)
@@ -1367,8 +1368,8 @@ public partial record DotNetNewInstall(
             .AddArgs("new")
             .AddArgs("install")
             .AddNotEmptyArgs(Package.ToArg())
-            .AddArgs(Sources.ToArgs("--add-source"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Sources.ToArgs("--add-source", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--force", Force),
                 ("--diagnostics", Diagnostics)
@@ -1434,7 +1435,7 @@ public partial record DotNetNewUninstall(
             .AddArgs("new")
             .AddArgs("uninstall")
             .AddNotEmptyArgs(Package.ToArg())
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -1502,8 +1503,8 @@ public partial record DotNetNewUpdate(
             .WithVars(Vars.ToArray())
             .AddArgs("new")
             .AddArgs("update")
-            .AddArgs(Sources.ToArgs("--add-source"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Sources.ToArgs("--add-source", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--check-only", CheckOnly),
                 ("--dry-run", DryRun),
@@ -1580,8 +1581,8 @@ public partial record DotNetNuGetDelete(
             .AddNotEmptyArgs(PackageName.ToArg())
             .AddNotEmptyArgs(PackageVersion.ToArg())
             .AddArgs("--non-interactive")
-            .AddArgs(ApiKey.ToArgs("--api-key"))
-            .AddArgs(Source.ToArgs("--source"))
+            .AddArgs(ApiKey.ToArgs("--api-key", ""))
+            .AddArgs(Source.ToArgs("--source", ""))
             .AddBooleanArgs(
                 ("--force-english-output", ForceEnglishOutput),
                 ("--no-service-endpoint", NoServiceEndpoint),
@@ -1800,12 +1801,12 @@ public partial record DotNetNuGetPush(
             .AddArgs("nuget")
             .AddArgs("push")
             .AddNotEmptyArgs(Package.ToArg())
-            .AddArgs(ApiKey.ToArgs("--api-key"))
-            .AddArgs(Source.ToArgs("--source"))
-            .AddArgs(SymbolApiKey.ToArgs("--symbol-api-key"))
-            .AddArgs(SymbolSource.ToArgs("--symbol-source"))
-            .AddArgs(Timeout.ToArgs("--timeout"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(ApiKey.ToArgs("--api-key", ""))
+            .AddArgs(Source.ToArgs("--source", ""))
+            .AddArgs(SymbolApiKey.ToArgs("--symbol-api-key", ""))
+            .AddArgs(SymbolSource.ToArgs("--symbol-source", ""))
+            .AddArgs(Timeout.ToArgs("--timeout", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--disable-buffering", DisableBuffering),
                 ("--force-english-output", ForceEnglishOutput),
@@ -1888,11 +1889,11 @@ public partial record DotNetNuGetAddSource(
             .AddArgs("add")
             .AddArgs("source")
             .AddNotEmptyArgs(PackageSourcePath.ToArg())
-            .AddArgs(ValidAuthenticationTypes.ToArgs("--valid-authentication-types"))
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(Name.ToArgs("--name"))
-            .AddArgs(Password.ToArgs("--password"))
-            .AddArgs(Username.ToArgs("--username"))
+            .AddArgs(ValidAuthenticationTypes.ToArgs("--valid-authentication-types", ""))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Name.ToArgs("--name", ""))
+            .AddArgs(Password.ToArgs("--password", ""))
+            .AddArgs(Username.ToArgs("--username", ""))
             .AddBooleanArgs(
                 ("--allow-insecure-connections", AllowInsecureConnections),
                 ("--store-password-in-clear-text", StorePasswordInClearText),
@@ -1917,7 +1918,7 @@ public partial record DotNetNuGetAddSource(
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 /// <param name="Name">Name of the source.</param>
-/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see Common NuGet Configurations.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
 /// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
@@ -1960,7 +1961,7 @@ public partial record DotNetNuGetDisableSource(
             .AddArgs("disable")
             .AddArgs("source")
             .AddNotEmptyArgs(Name.ToArg())
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -2026,7 +2027,7 @@ public partial record DotNetNuGetEnableSource(
             .AddArgs("enable")
             .AddArgs("source")
             .AddNotEmptyArgs(Name.ToArg())
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -2048,7 +2049,7 @@ public partial record DotNetNuGetEnableSource(
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
-/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see Common NuGet Configurations.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
 /// <param name="Format">The format of the list command output: Detailed (the default) and Short.</param>
 /// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
@@ -2091,8 +2092,8 @@ public partial record DotNetNuGetListSource(
             .AddArgs("nuget")
             .AddArgs("list")
             .AddArgs("source")
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(Format.ToArgs("--format"))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Format.ToArgs("--format", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -2115,7 +2116,7 @@ public partial record DotNetNuGetListSource(
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 /// <param name="Name">Name of the source.</param>
-/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see Common NuGet Configurations.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
 /// <param name="Diagnostics">Enables diagnostic output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
@@ -2158,7 +2159,7 @@ public partial record DotNetNuGetRemoveSource(
             .AddArgs("remove")
             .AddArgs("source")
             .AddNotEmptyArgs(Name.ToArg())
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -2234,10 +2235,11 @@ public partial record DotNetNuGetUpdateSource(
             .AddArgs("update")
             .AddArgs("source")
             .AddNotEmptyArgs(Name.ToArg())
-            .AddArgs(ValidAuthenticationTypes.ToArgs("--valid-authentication-types"))
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(Password.ToArgs("--password"))
-            .AddArgs(Username.ToArgs("--username"))
+            .AddArgs(ValidAuthenticationTypes.ToArgs("--valid-authentication-types", ""))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Password.ToArgs("--password", ""))
+            .AddArgs(Source.ToArgs("--source", ""))
+            .AddArgs(Username.ToArgs("--username", ""))
             .AddBooleanArgs(
                 ("--store-password-in-clear-text", StorePasswordInClearText),
                 ("--diagnostics", Diagnostics)
@@ -2309,10 +2311,10 @@ public partial record DotNetNuGetVerify(
             .AddArgs("nuget")
             .AddArgs("verify")
             .AddNotEmptyArgs(Packages.ToArray().ToArg())
-            .AddArgs(Packages.ToArgs(""))
-            .AddArgs(Fingerprints.ToArgs("--certificate-fingerprint"))
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Packages.ToArgs("", ""))
+            .AddArgs(Fingerprints.ToArgs("--certificate-fingerprint", ""))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--all", All),
                 ("--diagnostics", Diagnostics)
@@ -2378,8 +2380,8 @@ public partial record DotNetNuGetTrustList(
             .AddArgs("nuget")
             .AddArgs("trust")
             .AddArgs("list")
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -2444,8 +2446,8 @@ public partial record DotNetNuGetTrustSync(
             .AddArgs("trust")
             .AddArgs("sync")
             .AddNotEmptyArgs(Name.ToArg())
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -2510,8 +2512,8 @@ public partial record DotNetNuGetTrustRemove(
             .AddArgs("trust")
             .AddArgs("remove")
             .AddNotEmptyArgs(Name.ToArg())
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -2581,8 +2583,8 @@ public partial record DotNetNuGetTrustAuthor(
             .AddArgs("author")
             .AddNotEmptyArgs(Name.ToArg())
             .AddNotEmptyArgs(Package.ToArg())
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--allow-untrusted-root", AllowUntrustedRoot),
                 ("--diagnostics", Diagnostics)
@@ -2614,7 +2616,7 @@ public partial record DotNetNuGetTrustAuthor(
 public partial record DotNetNuGetTrustRepository(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
-    IReadOnlyCollection<string> Owners,
+    IEnumerable<string> Owners,
     string Name = "",
     string Package = "",
     bool? AllowUntrustedRoot = default,
@@ -2655,9 +2657,9 @@ public partial record DotNetNuGetTrustRepository(
             .AddArgs("repository")
             .AddNotEmptyArgs(Name.ToArg())
             .AddNotEmptyArgs(Package.ToArg())
-            .AddArgs(Owners.ToArgs("--owners"))
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Owners.ToArgs("--owners", ","))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--allow-untrusted-root", AllowUntrustedRoot),
                 ("--diagnostics", Diagnostics)
@@ -2730,9 +2732,9 @@ public partial record DotNetNuGetTrustCertificate(
             .AddArgs("certificate")
             .AddNotEmptyArgs(Name.ToArg())
             .AddNotEmptyArgs(Fingerprint.ToArg())
-            .AddArgs(Algorithm.ToArgs("--algorithm"))
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Algorithm.ToArgs("--algorithm", ""))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--allow-untrusted-root", AllowUntrustedRoot),
                 ("--diagnostics", Diagnostics)
@@ -2763,7 +2765,7 @@ public partial record DotNetNuGetTrustCertificate(
 public partial record DotNetNuGetTrustSource(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
-    IReadOnlyCollection<string> Owners,
+    IEnumerable<string> Owners,
     string Name = "",
     string ConfigFile = "",
     string SourceUrl = "",
@@ -2802,10 +2804,10 @@ public partial record DotNetNuGetTrustSource(
             .AddArgs("trust")
             .AddArgs("source")
             .AddNotEmptyArgs(Name.ToArg())
-            .AddArgs(Owners.ToArgs("--owners"))
-            .AddArgs(ConfigFile.ToArgs("--configfile"))
-            .AddArgs(SourceUrl.ToArgs("--source-url"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Owners.ToArgs("--owners", ","))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(SourceUrl.ToArgs("--source-url", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -2892,17 +2894,17 @@ public partial record DotNetNuGetSign(
             .AddArgs("nuget")
             .AddArgs("sign")
             .AddNotEmptyArgs(Packages.ToArray().ToArg())
-            .AddArgs(CertificatePath.ToArgs("--certificate-path"))
-            .AddArgs(CertificateStoreName.ToArgs("--certificate-store-name"))
-            .AddArgs(CertificateStoreLocation.ToArgs("--certificate-store-location"))
-            .AddArgs(CertificateSubjectName.ToArgs("--certificate-subject-name"))
-            .AddArgs(CertificateFingerprint.ToArgs("--certificate-fingerprint"))
-            .AddArgs(CertificatePassword.ToArgs("--certificate-password"))
-            .AddArgs(HashAlgorithm.ToArgs("--hash-algorithm"))
-            .AddArgs(Output.ToArgs("--output"))
-            .AddArgs(TimestampHashAlgorithm.ToArgs("--timestamp-hash-algorithm"))
-            .AddArgs(TimestampingServer.ToArgs("--timestamper"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(CertificatePath.ToArgs("--certificate-path", ""))
+            .AddArgs(CertificateStoreName.ToArgs("--certificate-store-name", ""))
+            .AddArgs(CertificateStoreLocation.ToArgs("--certificate-store-location", ""))
+            .AddArgs(CertificateSubjectName.ToArgs("--certificate-subject-name", ""))
+            .AddArgs(CertificateFingerprint.ToArgs("--certificate-fingerprint", ""))
+            .AddArgs(CertificatePassword.ToArgs("--certificate-password", ""))
+            .AddArgs(HashAlgorithm.ToArgs("--hash-algorithm", ""))
+            .AddArgs(Output.ToArgs("--output", ""))
+            .AddArgs(TimestampHashAlgorithm.ToArgs("--timestamp-hash-algorithm", ""))
+            .AddArgs(TimestampingServer.ToArgs("--timestamper", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--overwrite", Overwrite),
                 ("--diagnostics", Diagnostics)
@@ -2971,7 +2973,7 @@ public partial record DotNetNuGetWhy(
             .AddArgs("why")
             .AddNotEmptyArgs(Project.ToArg())
             .AddNotEmptyArgs(Package.ToArg())
-            .AddArgs(Frameworks.ToArgs("--framework"))
+            .AddArgs(Frameworks.ToArgs("--framework", ""))
             .AddBooleanArgs(
                 ("--diagnostics", Diagnostics)
             )
@@ -2980,6 +2982,75 @@ public partial record DotNetNuGetWhy(
 
     /// <inheritdoc/>
     public override string ToString() => "".GetShortName(ShortName, "nuget", "why", Project.ToArg(), Package.ToArg());
+}
+
+/// <summary>
+/// Gets the NuGet configuration settings that will be applied.
+/// <p>
+/// This command gets the NuGet configuration settings that will be applied from the config section.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-config-get">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="ConfigKey"><c>ALL</c> gets all merged NuGet configuration settings from multiple NuGet configuration files that will be applied, when invoking NuGet command from the working directory path. Otherwise gets the effective value of the specified configuration settings of the config section.</param>
+/// <param name="ShowPath">Indicate that the NuGet configuration file path will be shown beside the configuration settings.</param>
+/// <param name="Directory">Specifies the directory to start from when listing configuration files. If not specified, the current directory is used.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuConfigGet(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string ConfigKey = "",
+    bool? ShowPath = default,
+    string Directory = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuConfigGet(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuConfigGet()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("config")
+            .AddArgs("get")
+            .AddNotEmptyArgs(ConfigKey.ToArg())
+            .AddArgs(Directory.ToArgs("--working-directory", ""))
+            .AddBooleanArgs(
+                ("--show-path", ShowPath),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "config", "get", ConfigKey.ToArg());
 }
 
 /// <summary>
@@ -3074,14 +3145,14 @@ public partial record DotNetRun(
             .WithVars(Vars.ToArray())
             .AddArgs("run")
             .AddNotEmptyArgs(Project.ToArg())
-            .AddArgs(Arch.ToArgs("--arch"))
-            .AddArgs(Configuration.ToArgs("--configuration"))
-            .AddArgs(Framework.ToArgs("--framework"))
-            .AddArgs(LaunchProfile.ToArgs("--launch-profile"))
-            .AddArgs(OS.ToArgs("--os"))
-            .AddArgs(Runtime.ToArgs("--runtime"))
-            .AddArgs(TerminalLogger.ToArgs("--tl"))
-            .AddArgs(Verbosity.ToArgs("--verbosity"))
+            .AddArgs(Arch.ToArgs("--arch", ""))
+            .AddArgs(Configuration.ToArgs("--configuration", ""))
+            .AddArgs(Framework.ToArgs("--framework", ""))
+            .AddArgs(LaunchProfile.ToArgs("--launch-profile", ""))
+            .AddArgs(OS.ToArgs("--os", ""))
+            .AddArgs(Runtime.ToArgs("--runtime", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--force", Force),
                 ("--no-build", NoBuild),
@@ -3097,4 +3168,5 @@ public partial record DotNetRun(
     /// <inheritdoc/>
     public override string ToString() => "".GetShortName(ShortName, "run", Project.ToArg());
 }
+
 

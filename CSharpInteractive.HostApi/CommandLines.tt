@@ -1,7 +1,4 @@
-﻿<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="System.Text" #>
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable InconsistentNaming
 namespace HostApi;
 
 <#
@@ -51,6 +48,7 @@ namespace HostApi;
         "DotNetNuGetTrustSource",
         "DotNetNuGetSign",
         "DotNetNuGetWhy",
+        "DotNetNuConfigGet",
         "DotNetPack",
         "DotNetPublish",
         "DotNetRestore",

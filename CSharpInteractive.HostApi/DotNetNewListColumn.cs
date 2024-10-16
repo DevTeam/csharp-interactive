@@ -1,4 +1,5 @@
-﻿namespace HostApi;
+﻿// ReSharper disable UnusedMember.Global
+namespace HostApi;
 
 /// <summary>
 /// 
@@ -28,7 +29,8 @@ public enum DotNetNewListColumn
 
 internal static class DotNetNewListColumnExtensions
 {
-    public static string[] ToArgs(this IEnumerable<DotNetNewListColumn> columns, string name)
+    // ReSharper disable once UnusedParameter.Global
+    public static string[] ToArgs(this IEnumerable<DotNetNewListColumn> columns, string name, string collectionSeparator)
     {
         var columnsStr = string.Join(",", columns.Select(i => i.ToString()));
         return string.IsNullOrWhiteSpace(columnsStr) ? [] : [name, columnsStr];

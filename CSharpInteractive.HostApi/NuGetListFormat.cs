@@ -1,4 +1,5 @@
-﻿namespace HostApi;
+﻿// ReSharper disable UnusedMember.Global
+namespace HostApi;
 
 /// <summary>
 /// The format of the nuget list command output. 

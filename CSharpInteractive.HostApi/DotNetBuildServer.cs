@@ -27,7 +27,8 @@ public enum DotNetBuildServer
 
 internal static class DotNetBuildServerExtensions
 {
-    public static string[] ToArgs(this IEnumerable<DotNetBuildServer> servers, string name) =>
+    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+    public static string[] ToArgs(this IEnumerable<DotNetBuildServer> servers, string name, string collectionSeparator) =>
         servers.Select(server => server switch
         {
             DotNetBuildServer.MSBuild => "--msbuild",

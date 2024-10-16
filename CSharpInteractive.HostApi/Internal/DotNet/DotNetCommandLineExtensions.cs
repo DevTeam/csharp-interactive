@@ -138,20 +138,23 @@ internal static class DotNetCommandLineExtensions
         cmd.AddArgs(props.Select(i => $"{propertyName}:{i.name}={i.value}")
             .ToArray());
     
-    public static string[] ToArgs<T>(this T value, string name)
+    // ReSharper disable once UnusedParameter.Global
+    public static string[] ToArgs<T>(this T value, string name, string collectionSeparator)
     {
         var valueStr = value?.ToString();
         return string.IsNullOrWhiteSpace(valueStr) ? [] : [name, valueStr!];
     }
     
-    public static string[] ToArgs(this IEnumerable<string> values, string name) =>
-        values.SelectMany(value => string.IsNullOrWhiteSpace(value) ? [] : new [] {name, value}).ToArray();
-    
-    public static string[] ToArgs(this IReadOnlyCollection<string> values, string name)
+    public static string[] ToArgs(this IEnumerable<string> values, string name, string collectionSeparator)
     {
-        var str = string.Join(",", values);
+        if (string.IsNullOrWhiteSpace(collectionSeparator))
+        {
+            return values.SelectMany(value => string.IsNullOrWhiteSpace(value) ? [] : new[] {name, value}).ToArray();
+        }
+        
+        var str = string.Join(collectionSeparator, values);
         return string.IsNullOrWhiteSpace(str) ? [] : [name, str];
     }
-
+    
     public static string ToArg<T>(this T value) => value?.ToString() ?? "";
 }

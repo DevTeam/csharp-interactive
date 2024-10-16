@@ -23,12 +23,12 @@ public enum DotNetLanguage
     /// <summary>
     /// SQL
     /// </summary>
-    SQL,
+    Sql,
     
     /// <summary>
     /// JSON 
     /// </summary>
-    JSON,
+    Json,
     
     /// <summary>
     /// TypeScript 
@@ -38,14 +38,15 @@ public enum DotNetLanguage
 
 internal static class DotNetLanguageExtensions
 {
-    public static string[] ToArgs(this DotNetLanguage? language, string name) =>
+    // ReSharper disable once UnusedParameter.Global
+    public static string[] ToArgs(this DotNetLanguage? language, string name, string collectionSeparator) =>
         language switch
         {
             DotNetLanguage.CSharp => [name, "\"C#\""],
             DotNetLanguage.FSharp => [name, "\"F#\""],
             DotNetLanguage.VisualBasic => [name, "VB"],
-            DotNetLanguage.SQL => [name, "VB"],
-            DotNetLanguage.JSON => [name, "JSON"],
+            DotNetLanguage.Sql => [name, "VB"],
+            DotNetLanguage.Json => [name, "JSON"],
             DotNetLanguage.TypeScript => [name, "TypeScript"],
             _ => []
         };

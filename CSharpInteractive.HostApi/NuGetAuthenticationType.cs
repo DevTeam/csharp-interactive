@@ -1,4 +1,5 @@
-﻿namespace HostApi;
+﻿// ReSharper disable UnusedMember.Global
+namespace HostApi;
 
 /// <summary>
 /// NuGet authentication types.
@@ -33,7 +34,8 @@ public enum NuGetAuthenticationType
 
 internal static class NuGetAuthenticationTypeExtensions
 {
-    public static string[] ToArgs(this IEnumerable<NuGetAuthenticationType> authenticationTypes, string name)
+    // ReSharper disable once UnusedParameter.Global
+    public static string[] ToArgs(this IEnumerable<NuGetAuthenticationType> authenticationTypes, string name, string collectionSeparator)
     {
         var authenticationTypesStr = string.Join(",", authenticationTypes.Select(i => i.ToString().ToLowerInvariant()));
         return string.IsNullOrWhiteSpace(authenticationTypesStr) ? [] : [name, authenticationTypesStr];
