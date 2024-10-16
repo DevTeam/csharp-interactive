@@ -170,7 +170,7 @@ public partial record DotNetExec(
 /// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
 /// <param name="PackageName">The package reference to add.</param>
 /// <param name="Framework">Adds a package reference only when targeting a specific framework.</param>
-/// <param name="NoRestore">Adds a package reference without performing a restore preview and compatibility check.</param>
+/// <param name="NoRestore">Doesn't execute an implicit restore when running the command.</param>
 /// <param name="PackageDirectory">The directory where to restore the packages. The default package restore location is %userprofile%\.nuget\packages on Windows and ~/.nuget/packages on macOS and Linux.</param>
 /// <param name="Prerelease">Allows prerelease packages to be installed. Available since .NET Core 5 SDK.</param>
 /// <param name="Version">Version of the package</param>
@@ -615,6 +615,7 @@ public partial record DotNetRemoveReference(
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Props">MSBuild options for setting properties.</param>
 /// <param name="Sources">The URI of the NuGet package source to use during the restore operation.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
@@ -627,7 +628,7 @@ public partial record DotNetRemoveReference(
 /// <param name="Force">Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.</param>
 /// <param name="NoDependencies">When restoring a project with project-to-project (P2P) references, restores the root project and not the references.</param>
 /// <param name="NoIncremental">Marks the build as unsafe for incremental build. This flag turns off incremental compilation and forces a clean rebuild of the project's dependency graph.</param>
-/// <param name="NoRestore">Adds a package reference without performing a restore preview and compatibility check.</param>
+/// <param name="NoRestore">Doesn't execute an implicit restore when running the command.</param>
 /// <param name="NoLogo">Doesn't display the startup banner or the copyright message.</param>
 /// <param name="NoSelfContained">Publishes the application as a framework dependent application. A compatible .NET runtime must be installed on the target machine to run the application. Available since .NET 6 SDK.</param>
 /// <param name="Output">Directory in which to place the built binaries. If not specified, the default path is ./bin/&lt;configuration&gt;/&lt;framework&gt;/. For projects with multiple target frameworks (via the TargetFrameworks property), you also need to define --framework when you specify this option.</param>
@@ -644,6 +645,7 @@ public partial record DotNetRemoveReference(
 public partial record DotNetBuild(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
+    IEnumerable<(string name, string value)> Props,
     IEnumerable<string> Sources,
     string Project = "",
     string Arch = "",
@@ -675,7 +677,7 @@ public partial record DotNetBuild(
     /// </summary>
     /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
     public DotNetBuild(params string[] args)
-        : this(args, [], [])
+        : this(args, [], [], [])
     {
     }
 
@@ -683,7 +685,7 @@ public partial record DotNetBuild(
     /// Create a new instance of the command.
     /// </summary>
     public DotNetBuild()
-        : this([], [], [])
+        : this([], [], [], [])
     {
     }
 
@@ -721,6 +723,7 @@ public partial record DotNetBuild(
                 ("--use-current-runtime", UseCurrentRuntime),
                 ("--diagnostics", Diagnostics)
             )
+            .AddProps("--property", Props.ToArray())
             .AddArgs(Args.ToArray());
     }
 
@@ -3252,6 +3255,143 @@ public partial record DotNetNuConfigPaths(
 }
 
 /// <summary>
+/// Packs the code into a NuGet package.
+/// <p>
+/// The dotnet pack command builds the project and creates NuGet packages. The result of this command is a NuGet package (that is, a .nupkg file).
+/// </p>
+/// <p>
+/// NuGet dependencies of the packed project are added to the .nuspec file, so they're properly resolved when the package is installed. If the packed project has references to other projects, the other projects aren't included in the package. Currently, you must have a package per project if you have project-to-project dependencies.
+/// </p>
+/// <p>
+/// By default, dotnet pack builds the project first. If you wish to avoid this behavior, pass the --no-build option. This option is often useful in Continuous Integration (CI) build scenarios where you know the code was previously built.
+/// </p>
+/// <example>
+/// <code>
+/// new DotNetPack()
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Props">MSBuild options for setting properties.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during the restore operation.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Project">The project or solution to pack. It's either a path to a csproj, vbproj, or fsproj file, or to a solution file or directory. If not specified, the command searches the current directory for a project or solution file.</param>
+/// <param name="ArtifactsPath">All build output files from the executed command will go in subfolders under the specified path, separated by project.</param>
+/// <param name="Configuration">Defines the build configuration. The default for most projects is Debug, but you can override the build configuration settings in your project.</param>
+/// <param name="Force">Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.</param>
+/// <param name="IncludeSource">Includes the debug symbols NuGet packages in addition to the regular NuGet packages in the output directory. The sources files are included in the src folder within the symbols package.</param>
+/// <param name="IncludeSymbols">Includes the debug symbols NuGet packages in addition to the regular NuGet packages in the output directory.</param>
+/// <param name="NoBuild">Doesn't build the project before packing. It also implicitly sets the --no-restore flag.</param>
+/// <param name="NoDependencies">When restoring a project with project-to-project (P2P) references, restores the root project and not the references.</param>
+/// <param name="NoIncremental">Marks the build as unsafe for incremental build. This flag turns off incremental compilation and forces a clean rebuild of the project's dependency graph.</param>
+/// <param name="NoRestore">Doesn't execute an implicit restore when running the command.</param>
+/// <param name="NoLogo">Doesn't display the startup banner or the copyright message.</param>
+/// <param name="NoSelfContained">Publishes the application as a framework dependent application. A compatible .NET runtime must be installed on the target machine to run the application. Available since .NET 6 SDK.</param>
+/// <param name="Output">Directory in which to place the built binaries. If not specified, the default path is ./bin/&lt;configuration&gt;/&lt;framework&gt;/. For projects with multiple target frameworks (via the TargetFrameworks property), you also need to define --framework when you specify this option.</param>
+/// <param name="OS">Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6.</param>
+/// <param name="Runtime">Specifies the target runtime to restore packages for. For a list of Runtime Identifiers (RIDs), see the RID catalog. -r short option available since .NET Core 3.0 SDK.</param>
+/// <param name="SelfContained">Publishes the .NET runtime with the application so the runtime doesn't need to be installed on the target machine. The default is true if a runtime identifier is specified. Available since .NET 6.</param>
+/// <param name="TerminalLogger">Specifies whether the terminal logger should be used for the build output.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="UseCurrentRuntime">Sets the RuntimeIdentifier to a platform portable RuntimeIdentifier based on the one of your machine. This happens implicitly with properties that require a RuntimeIdentifier, such as SelfContained, PublishAot, PublishSelfContained, PublishSingleFile, and PublishReadyToRun. If the property is set to false, that implicit resolution will no longer occur.</param>
+/// <param name="VersionSuffix">Sets the value of the $(VersionSuffix) property to use when building the project. This only works if the $(Version) property isn't set. Then, $(Version) is set to the $(VersionPrefix) combined with the $(VersionSuffix), separated by a dash.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetPack(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<(string name, string value)> Props,
+    IEnumerable<string> Sources,
+    string Project = "",
+    string ArtifactsPath = "",
+    string Configuration = "",
+    bool? Force = default,
+    string IncludeSource = "",
+    string IncludeSymbols = "",
+    bool? NoBuild = default,
+    bool? NoDependencies = default,
+    bool? NoIncremental = default,
+    bool? NoRestore = default,
+    bool? NoLogo = default,
+    bool? NoSelfContained = default,
+    string Output = "",
+    string OS = "",
+    string Runtime = "",
+    bool? SelfContained = default,
+    DotNetTerminalLogger? TerminalLogger = default,
+    DotNetVerbosity? Verbosity = default,
+    bool? UseCurrentRuntime = default,
+    string VersionSuffix = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetPack(params string[] args)
+        : this(args, [], [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetPack()
+        : this([], [], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("pack")
+            .AddNotEmptyArgs(Project.ToArg())
+            .AddMSBuildLoggers(host, Verbosity)
+            .AddArgs(Sources.ToArgs("--source", ""))
+            .AddArgs(ArtifactsPath.ToArgs("--artifacts-path", ""))
+            .AddArgs(Configuration.ToArgs("--configuration", ""))
+            .AddArgs(IncludeSource.ToArgs("--include-source", ""))
+            .AddArgs(IncludeSymbols.ToArgs("--include-symbols", ""))
+            .AddArgs(Output.ToArgs("--output", ""))
+            .AddArgs(OS.ToArgs("--os", ""))
+            .AddArgs(Runtime.ToArgs("--runtime", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
+            .AddArgs(VersionSuffix.ToArgs("--version-suffix", ""))
+            .AddBooleanArgs(
+                ("--force", Force),
+                ("--no-build", NoBuild),
+                ("--no-dependencies", NoDependencies),
+                ("--no-incremental", NoIncremental),
+                ("--no-restore", NoRestore),
+                ("--nologo", NoLogo),
+                ("--no-self-contained", NoSelfContained),
+                ("--self-contained", SelfContained),
+                ("--use-current-runtime", UseCurrentRuntime),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddProps("--property", Props.ToArray())
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "pack", Project.ToArg());
+}
+
+/// <summary>
 /// Runs source code without any explicit compile or launch commands.
 /// <p>
 /// This command provides a convenient option to run your application from the source code with one command. It's useful for fast iterative development from the command line. The command depends on the dotnet build command to build the code. Any requirements for the build apply to dotnet run as well.
@@ -3285,7 +3425,8 @@ public partial record DotNetNuConfigPaths(
 /// <param name="NoBuild">Doesn't build the project before running. It also implicit sets the --no-restore flag.</param>
 /// <param name="NoDependencies">When restoring a project with project-to-project (P2P) references, restores the root project and not the references.</param>
 /// <param name="NoLaunchProfile">Doesn't try to use launchSettings.json to configure the application.</param>
-/// <param name="NoRestore">Adds a package reference without performing a restore preview and compatibility check.</param>
+/// <param name="NoRestore">Doesn't execute an implicit restore when running the command.</param>
+/// <param name="NoLogo">Doesn't display the startup banner or the copyright message.</param>
 /// <param name="OS">Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6.</param>
 /// <param name="Runtime">Specifies the target runtime to restore packages for. For a list of Runtime Identifiers (RIDs), see the RID catalog. -r short option available since .NET Core 3.0 SDK.</param>
 /// <param name="TerminalLogger">Specifies whether the terminal logger should be used for the build output.</param>
@@ -3307,6 +3448,7 @@ public partial record DotNetRun(
     bool? NoDependencies = default,
     bool? NoLaunchProfile = default,
     bool? NoRestore = default,
+    bool? NoLogo = default,
     string OS = "",
     string Runtime = "",
     DotNetTerminalLogger? TerminalLogger = default,
@@ -3357,6 +3499,7 @@ public partial record DotNetRun(
                 ("--no-dependencies", NoDependencies),
                 ("--no-launch-profile", NoLaunchProfile),
                 ("--no-restore", NoRestore),
+                ("--nologo", NoLogo),
                 ("--diagnostics", Diagnostics)
             )
             .AddProps("--property", Props.ToArray())

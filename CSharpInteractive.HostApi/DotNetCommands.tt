@@ -27,7 +27,7 @@ namespace HostApi;
     var configurationArg = new Arg("Configuration", "--configuration", "string", "Defines the build configuration. The default for most projects is Debug, but you can override the build configuration settings in your project.");
     var runtimeArg = new Arg("Runtime", "--runtime", "string", "Specifies the target runtime to restore packages for. For a list of Runtime Identifiers (RIDs), see the RID catalog. -r short option available since .NET Core 3.0 SDK.");
     var noBuildArg = new Arg("NoBuild", "--no-build", "bool?", "Doesn't build the project before running. It also implicit sets the --no-restore flag.");
-    var noRestoreArg = new Arg("NoRestore", "--no-restore", "bool?", "Adds a package reference without performing a restore preview and compatibility check.");
+    var noRestoreArg = new Arg("NoRestore", "--no-restore", "bool?", "Doesn't execute an implicit restore when running the command.");
     var noDependenciesArg = new Arg("NoDependencies", "--no-dependencies", "bool?", "When restoring a project with project-to-project (P2P) references, restores the root project and not the references.");
     var noIncrementalArg = new Arg("NoIncremental", "--no-incremental", "bool?", "Marks the build as unsafe for incremental build. This flag turns off incremental compilation and forces a clean rebuild of the project's dependency graph.");
     var noLogoArg = new Arg("NoLogo", "--nologo", "bool?", "Doesn't display the startup banner or the copyright message.");
@@ -217,6 +217,7 @@ namespace HostApi;
             ],
             ["build", "$Project"],
             [
+                propsArg,
                 new Arg("Sources", "--source", "IEnumerable<string>", "The URI of the NuGet package source to use during the restore operation.") { IsCollection = true },
                 projectArg,
                 archArg,
@@ -848,6 +849,54 @@ namespace HostApi;
             ]
         ),
         new(
+            "DotNetPack",
+            [
+                "Packs the code into a NuGet package.",
+                paraStart,
+                "The dotnet pack command builds the project and creates NuGet packages. The result of this command is a NuGet package (that is, a .nupkg file).",
+                paraFinish,
+                paraStart,
+                "NuGet dependencies of the packed project are added to the .nuspec file, so they're properly resolved when the package is installed. If the packed project has references to other projects, the other projects aren't included in the package. Currently, you must have a package per project if you have project-to-project dependencies.",
+                paraFinish,
+                paraStart,
+                "By default, dotnet pack builds the project first. If you wish to avoid this behavior, pass the --no-build option. This option is often useful in Continuous Integration (CI) build scenarios where you know the code was previously built.",
+                paraFinish,
+                exampleStart,
+                codeStart,
+                "new DotNetPack()",
+                "    .Build().EnsureSuccess();",
+                codeFinish,
+                exampleFinish,
+                CreateCliRef("dotnet-pack")
+            ],
+            ["pack", "$Project"],
+            [
+                propsArg,
+                new Arg("Sources", "--source", "IEnumerable<string>", "The URI of the NuGet package source to use during the restore operation.") { IsCollection = true },
+                projectArg with {Comments = "The project or solution to pack. It's either a path to a csproj, vbproj, or fsproj file, or to a solution file or directory. If not specified, the command searches the current directory for a project or solution file." },
+                artifactsPathArg,
+                configurationArg,
+                forceArg,
+                new Arg("IncludeSource", "--include-source", "string", "Includes the debug symbols NuGet packages in addition to the regular NuGet packages in the output directory. The sources files are included in the src folder within the symbols package."),
+                new Arg("IncludeSymbols", "--include-symbols", "string", "Includes the debug symbols NuGet packages in addition to the regular NuGet packages in the output directory."),
+                noBuildArg with { Comments = "Doesn't build the project before packing. It also implicitly sets the --no-restore flag." },
+                noDependenciesArg,
+                noIncrementalArg,
+                noRestoreArg,
+                noLogoArg,
+                noSelfContainedArg,
+                outputArg,
+                osArg,
+                runtimeArg,
+                selfContainedArg,
+                terminalLoggerArg,
+                verbosityArg,
+                useCurrentRuntimeArg,
+                versionSuffixArg
+            ],
+            CommandTypes.Build
+        ),
+        new(
             "DotNetRun",
             [
                 "Runs source code without any explicit compile or launch commands.",
@@ -882,6 +931,7 @@ namespace HostApi;
                 noDependenciesArg,
                 new Arg("NoLaunchProfile", "--no-launch-profile", "bool?", "Doesn't try to use launchSettings.json to configure the application."),
                 noRestoreArg,
+                noLogoArg,
                 osArg,
                 runtimeArg,
                 terminalLoggerArg,
