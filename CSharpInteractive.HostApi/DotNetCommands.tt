@@ -797,8 +797,53 @@ namespace HostApi;
             ],
             ["nuget", "config", "get", "$ConfigKey"],
             [
-                new Arg("ConfigKey", "", "string", "<c>ALL</c> gets all merged NuGet configuration settings from multiple NuGet configuration files that will be applied, when invoking NuGet command from the working directory path. Otherwise gets the effective value of the specified configuration settings of the config section.") { IsProject = true },
+                new Arg("ConfigKey", "", "string", "<c>ALL</c> is default value, gets all merged NuGet configuration settings from multiple NuGet configuration files that will be applied, when invoking NuGet command from the working directory path. Otherwise gets the effective value of the specified configuration settings of the config section.") { IsProject = true, DefaultValue = "\"ALL\"" },
                 new Arg("ShowPath", "--show-path", "bool?", "Indicate that the NuGet configuration file path will be shown beside the configuration settings."),
+                new Arg("Directory", "--working-directory", "string", "Specifies the directory to start from when listing configuration files. If not specified, the current directory is used.")
+            ]
+        ),
+        new(
+            "DotNetNuConfigSet",
+            [
+                "Set the value of a specified NuGet configuration setting.",
+                paraStart,
+                "This command sets the values for NuGet configuration settings that will be applied from the config section.",
+                paraFinish,
+                CreateCliRef("dotnet-nuget-config-set")
+            ],
+            ["nuget", "config", "set", "$ConfigKey", "$ConfigValue"],
+            [
+                new Arg("ConfigKey", "", "string", "The key of the settings that are to be set.") { IsProject = true },
+                new Arg("ConfigValue", "", "string", "The value of the settings that are to be set.") { IsProject = true },
+                configFileArg
+            ]
+        ),
+        new(
+            "DotNetNuConfigUnset",
+            [
+                "Removes the key-value pair from a specified NuGet configuration setting.",
+                paraStart,
+                "This command unsets the values for NuGet configuration settings that will be applied from the config section.",
+                paraFinish,
+                CreateCliRef("dotnet-nuget-config-unset")
+            ],
+            ["nuget", "config", "unset", "$ConfigKey"],
+            [
+                new Arg("ConfigKey", "", "string", "The key of the settings that are to be removed.") { IsProject = true },
+                configFileArg
+            ]
+        ),
+        new(
+            "DotNetNuConfigPaths",
+            [
+                "Lists nuget configuration files currently being appplied to a directory.",
+                paraStart,
+                "This command lists the paths to all NuGet configuration files that will be applied when invoking NuGet commands in a specific directory.",
+                paraFinish,
+                CreateCliRef("dotnet-nuget-config-paths")
+            ],
+            ["nuget", "config", "paths"],
+            [
                 new Arg("Directory", "--working-directory", "string", "Specifies the directory to start from when listing configuration files. If not specified, the current directory is used.")
             ]
         ),
@@ -918,15 +963,22 @@ public partial record <#= command.Name #>(
         {
             var type = arg.Type;
             var defaultValue = "";
-            if (type == "string")
+            if (!string.IsNullOrWhiteSpace(arg.DefaultValue))
             {
-                defaultValue = " = \"\"";
+                defaultValue = $" = {arg.DefaultValue}";
             }
             else
             {
-                if (!arg.IsCollection)
+                if (type == "string")
                 {
-                    defaultValue = " = default";
+                    defaultValue = " = \"\"";
+                }
+                else
+                {
+                    if (!arg.IsCollection)
+                    {
+                        defaultValue = " = default";
+                    }
                 }
             }
 #>
@@ -1069,6 +1121,7 @@ public partial record <#= command.Name #>(
         public bool IsProject { get; set; }
         public bool IsCollection { get; set; }
         public string CollectionSeparator { get; set; } = "";
+        public string DefaultValue { get; set; }
     }
 
     [Flags]

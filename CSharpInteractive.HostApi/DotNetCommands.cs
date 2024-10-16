@@ -2995,7 +2995,7 @@ public partial record DotNetNuGetWhy(
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
-/// <param name="ConfigKey"><c>ALL</c> gets all merged NuGet configuration settings from multiple NuGet configuration files that will be applied, when invoking NuGet command from the working directory path. Otherwise gets the effective value of the specified configuration settings of the config section.</param>
+/// <param name="ConfigKey"><c>ALL</c> is default value, gets all merged NuGet configuration settings from multiple NuGet configuration files that will be applied, when invoking NuGet command from the working directory path. Otherwise gets the effective value of the specified configuration settings of the config section.</param>
 /// <param name="ShowPath">Indicate that the NuGet configuration file path will be shown beside the configuration settings.</param>
 /// <param name="Directory">Specifies the directory to start from when listing configuration files. If not specified, the current directory is used.</param>
 /// <param name="Diagnostics">Enables diagnostic output.</param>
@@ -3004,7 +3004,7 @@ public partial record DotNetNuGetWhy(
 public partial record DotNetNuConfigGet(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
-    string ConfigKey = "",
+    string ConfigKey = "ALL",
     bool? ShowPath = default,
     string Directory = "",
     string ExecutablePath = "",
@@ -3051,6 +3051,204 @@ public partial record DotNetNuConfigGet(
 
     /// <inheritdoc/>
     public override string ToString() => "".GetShortName(ShortName, "nuget", "config", "get", ConfigKey.ToArg());
+}
+
+/// <summary>
+/// Set the value of a specified NuGet configuration setting.
+/// <p>
+/// This command sets the values for NuGet configuration settings that will be applied from the config section.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-config-set">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="ConfigKey">The key of the settings that are to be set.</param>
+/// <param name="ConfigValue">The value of the settings that are to be set.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuConfigSet(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string ConfigKey = "",
+    string ConfigValue = "",
+    string ConfigFile = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuConfigSet(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuConfigSet()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("config")
+            .AddArgs("set")
+            .AddNotEmptyArgs(ConfigKey.ToArg())
+            .AddNotEmptyArgs(ConfigValue.ToArg())
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "config", "set", ConfigKey.ToArg(), ConfigValue.ToArg());
+}
+
+/// <summary>
+/// Removes the key-value pair from a specified NuGet configuration setting.
+/// <p>
+/// This command unsets the values for NuGet configuration settings that will be applied from the config section.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-config-unset">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="ConfigKey">The key of the settings that are to be removed.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuConfigUnset(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string ConfigKey = "",
+    string ConfigFile = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuConfigUnset(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuConfigUnset()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("config")
+            .AddArgs("unset")
+            .AddNotEmptyArgs(ConfigKey.ToArg())
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "config", "unset", ConfigKey.ToArg());
+}
+
+/// <summary>
+/// Lists nuget configuration files currently being appplied to a directory.
+/// <p>
+/// This command lists the paths to all NuGet configuration files that will be applied when invoking NuGet commands in a specific directory.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-config-paths">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Directory">Specifies the directory to start from when listing configuration files. If not specified, the current directory is used.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetNuConfigPaths(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Directory = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetNuConfigPaths(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetNuConfigPaths()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("nuget")
+            .AddArgs("config")
+            .AddArgs("paths")
+            .AddArgs(Directory.ToArgs("--working-directory", ""))
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "nuget", "config", "paths");
 }
 
 /// <summary>
