@@ -164,7 +164,7 @@ public partial record DotNetExec(
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
-/// <param name="Sources">The URI of the NuGet package source to use during the restore operation.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during this operation.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 /// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
@@ -248,7 +248,7 @@ public partial record DotNetAddPackage(
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
 /// <param name="Frameworks">Displays only the packages applicable for the specified target framework.</param>
-/// <param name="Sources">The NuGet sources to use when searching for newer packages. Requires the --outdated or --deprecated option.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during this operation.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 /// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
@@ -616,7 +616,7 @@ public partial record DotNetRemoveReference(
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
 /// <param name="Props">MSBuild options for setting properties.</param>
-/// <param name="Sources">The URI of the NuGet package source to use during the restore operation.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during this operation.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 /// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
@@ -981,6 +981,15 @@ public partial record DotNetDevCertsHttps(
 /// <p>
 /// This command creates a .NET project or other artifacts based on a template. The command calls the template engine to create the artifacts on disk based on the specified template and options.
 /// </p>
+/// <example>
+/// <code>
+/// new DotNetNew()
+///     .WithTemplateName("console")
+///     .WithName("MyApp")
+///     .WithForce(true)
+///     .Run().EnsureSuccess();
+/// </code>
+/// </example>
 /// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
@@ -995,6 +1004,7 @@ public partial record DotNetDevCertsHttps(
 /// <param name="Framework">Specifies the target framework. It expects a target framework moniker (TFM). Examples: "net6.0", "net7.0-macos". This value will be reflected in the project file.</param>
 /// <param name="NoUpdateCheck">Disables checking for template package updates when instantiating a template. Available since .NET SDK 6.0.100.</param>
 /// <param name="Output">Location to place the generated output. The default is the current directory.</param>
+/// <param name="NoRestore">Doesn't execute an implicit restore when running the command.</param>
 /// <param name="Project">The project that the template is added to. This project is used for context evaluation. If not specified, the project in the current or parent directories will be used. Available since .NET SDK 7.0.100.</param>
 /// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
 /// <param name="Diagnostics">Enables diagnostic output.</param>
@@ -1011,6 +1021,7 @@ public partial record DotNetNew(
     string Framework = "",
     bool? NoUpdateCheck = default,
     string Output = "",
+    bool? NoRestore = default,
     string Project = "",
     DotNetVerbosity? Verbosity = default,
     string ExecutablePath = "",
@@ -1055,6 +1066,7 @@ public partial record DotNetNew(
                 ("--dry-run", DryRun),
                 ("--force", Force),
                 ("-no-update-check", NoUpdateCheck),
+                ("--no-restore", NoRestore),
                 ("--diagnostics", Diagnostics)
             )
             .AddArgs(Args.ToArray());
@@ -1251,7 +1263,7 @@ public partial record DotNetNewSearch(
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
-/// <param name="Sources">By default, dotnet new details uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If --nuget-source is specified, the source is added to the list of sources to be checked.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during this operation.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 /// <param name="TemplateName">If the argument is specified, only the templates containing TEMPLATE_NAME in template name or short name will be shown.</param>
@@ -1322,7 +1334,7 @@ public partial record DotNetNewDetails(
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
-/// <param name="Sources">By default, dotnet new details uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If --nuget-source is specified, the source is added to the list of sources to be checked.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during this operation.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 /// <param name="Package">The folder on the file system or the NuGet package identifier to install the template package from. dotnet new attempts to install the NuGet package from the NuGet sources available for the current working directory and the sources specified via the --add-source option. If you want to install a specific version or prerelease version of a template package from NuGet source, specify the version in the format &lt;package-name&gt;::&lt;package-version&gt;.</param>
@@ -1458,7 +1470,7 @@ public partial record DotNetNewUninstall(
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
-/// <param name="Sources">By default, dotnet new install uses the hierarchy of NuGet configuration files from the current directory to determine the NuGet source the package can be installed from. If Sources is specified, the source will be added to the list of sources to be checked. To check the configured sources for the current directory use dotnet nuget list source. Available since .NET SDK 7.0.100.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during this operation.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 /// <param name="CheckOnly">Only checks for updates and displays the template packages to be updated, without applying any updates.</param>
@@ -3276,7 +3288,7 @@ public partial record DotNetNuConfigPaths(
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
 /// <param name="Props">MSBuild options for setting properties.</param>
-/// <param name="Sources">The URI of the NuGet package source to use during the restore operation.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during this operation.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 /// <param name="Project">The project or solution to pack. It's either a path to a csproj, vbproj, or fsproj file, or to a solution file or directory. If not specified, the command searches the current directory for a project or solution file.</param>
@@ -3392,6 +3404,355 @@ public partial record DotNetPack(
 }
 
 /// <summary>
+/// Searches for a NuGet package.
+/// <p>
+/// This command searches for a NuGet package.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-package-search">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during this operation.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="SearchTerms">Specifies the search term to filter results. Use this argument to search for packages matching the provided query.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="ExactMatch">This option narrows the search to only include packages whose IDs exactly match the specified search term, effectively filtering out any partial matches. It provides a concise list of all available versions for the identified package. Causes --take and --skip options to be ignored. Utilize this option to display all available versions of a specified package.</param>
+/// <param name="Format">The format options are table and json. The default is table.</param>
+/// <param name="Prerelease">Allow prerelease packages to be shown.</param>
+/// <param name="Skip">The number of results to skip, for pagination. The default value is <c>0</c>.</param>
+/// <param name="Take">The number of results to return. The default value is <c>20</c>.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetPackageSearch(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<string> Sources,
+    string SearchTerms = "",
+    string ConfigFile = "",
+    bool? ExactMatch = default,
+    DotNetPackageSearchResultFormat? Format = default,
+    bool? Prerelease = default,
+    int? Skip = default,
+    int? Take = default,
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetPackageSearch(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetPackageSearch()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("package")
+            .AddArgs("search")
+            .AddArgs("paths")
+            .AddNotEmptyArgs(SearchTerms.ToArg())
+            .AddArgs(Sources.ToArgs("--source", ""))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(Format.ToArgs("--format", ""))
+            .AddArgs(Skip.ToArgs("--skip", ""))
+            .AddArgs(Take.ToArgs("--take", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
+            .AddBooleanArgs(
+                ("--exact-match", ExactMatch),
+                ("--prerelease", Prerelease),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "package", "search", "paths", SearchTerms.ToArg());
+}
+
+/// <summary>
+/// Publishes the application and its dependencies to a folder for deployment to a hosting system.
+/// <p>
+/// This command compiles the application, reads through its dependencies specified in the project file, and publishes the resulting set of files to a directory.
+/// </p>
+/// <example>
+/// <code>
+/// new DotNetPublish().AddProps(("PublishDir", ".publish"))
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-publish">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Props">MSBuild options for setting properties.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during this operation.</param>
+/// <param name="Manifests">Specifies one or several target manifests to use to trim the set of packages published with the app. The manifest file is part of the output of the dotnet store command.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
+/// <param name="Arch">Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6 Preview 7.</param>
+/// <param name="ArtifactsPath">All build output files from the executed command will go in subfolders under the specified path, separated by project.</param>
+/// <param name="Configuration">Defines the build configuration. The default for most projects is Debug, but you can override the build configuration settings in your project.</param>
+/// <param name="DisableBuildServers">Forces the command to ignore any persistent build servers. This option provides a consistent way to disable all use of build caching, which forces a build from scratch. A build that doesn't rely on caches is useful when the caches might be corrupted or incorrect for some reason. Available since .NET 7 SDK.</param>
+/// <param name="Framework">Builds and runs the app using the specified framework. The framework must be specified in the project file.</param>
+/// <param name="Force">Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.</param>
+/// <param name="NoBuild">Doesn't build the project before publishing. It also implicitly sets the --no-restore flag.</param>
+/// <param name="NoDependencies">When restoring a project with project-to-project (P2P) references, restores the root project and not the references.</param>
+/// <param name="NoLogo">Doesn't display the startup banner or the copyright message.</param>
+/// <param name="NoRestore">Doesn't execute an implicit restore when running the command.</param>
+/// <param name="Output">Specifies the path for the output directory. If not specified, it defaults to [project_file_folder]/bin/[configuration]/[framework]/publish/ for a framework-dependent executable and cross-platform binaries. It defaults to [project_file_folder]/bin/[configuration]/[framework]/[runtime]/publish/ for a self-contained executable. In a web project, if the output folder is in the project folder, successive dotnet publish commands result in nested output folders. For example, if the project folder is myproject, and the publish output folder is myproject/publish, and you run dotnet publish twice, the second run puts content files such as .config and .json files in myproject/publish/publish. To avoid nesting publish folders, specify a publish folder that isn't directly under the project folder, or exclude the publish folder from the project.</param>
+/// <param name="OS">Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6.</param>
+/// <param name="SelfContained">Publishes the .NET runtime with your application so the runtime doesn't need to be installed on the target machine. Default is true if a runtime identifier is specified and the project is an executable project (not a library project). For more information, see .NET application publishing and Publish .NET apps with the .NET CLI.</param>
+/// <param name="NoSelfContained">Publishes the application as a framework dependent application. A compatible .NET runtime must be installed on the target machine to run the application. Available since .NET 6 SDK.</param>
+/// <param name="Runtime">Publishes the application for a given runtime. For a list of Runtime Identifiers (RIDs), see the RID catalog. For more information, see .NET application publishing and Publish .NET apps with the .NET CLI.</param>
+/// <param name="TerminalLogger">Specifies whether the terminal logger should be used for the build output.</param>
+/// <param name="UseCurrentRuntime">Sets the RuntimeIdentifier to a platform portable RuntimeIdentifier based on the one of your machine. This happens implicitly with properties that require a RuntimeIdentifier, such as SelfContained, PublishAot, PublishSelfContained, PublishSingleFile, and PublishReadyToRun. If the property is set to false, that implicit resolution will no longer occur.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="VersionSuffix">Sets the value of the $(VersionSuffix) property to use when building the project. This only works if the $(Version) property isn't set. Then, $(Version) is set to the $(VersionPrefix) combined with the $(VersionSuffix), separated by a dash.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetPublish(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<(string name, string value)> Props,
+    IEnumerable<string> Sources,
+    IEnumerable<string> Manifests,
+    string Project = "",
+    string Arch = "",
+    string ArtifactsPath = "",
+    string Configuration = "",
+    bool? DisableBuildServers = default,
+    string Framework = "",
+    bool? Force = default,
+    bool? NoBuild = default,
+    bool? NoDependencies = default,
+    bool? NoLogo = default,
+    bool? NoRestore = default,
+    string Output = "",
+    string OS = "",
+    bool? SelfContained = default,
+    bool? NoSelfContained = default,
+    string Runtime = "",
+    DotNetTerminalLogger? TerminalLogger = default,
+    bool? UseCurrentRuntime = default,
+    DotNetVerbosity? Verbosity = default,
+    string VersionSuffix = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetPublish(params string[] args)
+        : this(args, [], [], [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetPublish()
+        : this([], [], [], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("publish")
+            .AddNotEmptyArgs(Project.ToArg())
+            .AddMSBuildLoggers(host, Verbosity)
+            .AddArgs(Sources.ToArgs("--source", ""))
+            .AddArgs(Manifests.ToArgs("--manifest", ""))
+            .AddArgs(Arch.ToArgs("--arch", ""))
+            .AddArgs(ArtifactsPath.ToArgs("--artifacts-path", ""))
+            .AddArgs(Configuration.ToArgs("--configuration", ""))
+            .AddArgs(Framework.ToArgs("--framework", ""))
+            .AddArgs(Output.ToArgs("--output", ""))
+            .AddArgs(OS.ToArgs("--os", ""))
+            .AddArgs(Runtime.ToArgs("--runtime", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
+            .AddArgs(VersionSuffix.ToArgs("--version-suffix", ""))
+            .AddBooleanArgs(
+                ("--disable-build-servers", DisableBuildServers),
+                ("--force", Force),
+                ("--no-build", NoBuild),
+                ("--no-dependencies", NoDependencies),
+                ("--nologo", NoLogo),
+                ("--no-restore", NoRestore),
+                ("--self-contained", SelfContained),
+                ("--no-self-contained", NoSelfContained),
+                ("--use-current-runtime", UseCurrentRuntime),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddProps("--property", Props.ToArray())
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "publish", Project.ToArg());
+}
+
+/// <summary>
+/// Restores the dependencies and tools of a project.
+/// <p>
+/// A .NET project typically references external libraries in NuGet packages that provide additional functionality. These external dependencies are referenced in the project file (.csproj or .vbproj). When you run the dotnet restore command, the .NET CLI uses NuGet to look for these dependencies and download them if necessary. It also ensures that all the dependencies required by the project are compatible with each other and that there are no conflicts between them. Once the command is completed, all the dependencies required by the project are available in a local cache and can be used by the .NET CLI to build and run the application.
+/// </p>
+/// <p>
+/// Sometimes, it might be inconvenient to run the implicit NuGet restore with these commands. For example, some automated systems, such as build systems, need to call dotnet restore explicitly to control when the restore occurs so that they can control network usage. To prevent the implicit NuGet restore, you can use the --no-restore flag with any of these commands.
+/// </p>
+/// <example>
+/// <code>
+/// new DotNetRestore()
+///     .Build().EnsureSuccess();
+/// </code>
+/// </example>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-restore">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Props">MSBuild options for setting properties.</param>
+/// <param name="Sources">The URI of the NuGet package source to use during this operation.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
+/// <param name="Arch">Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6 Preview 7.</param>
+/// <param name="ConfigFile">The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.</param>
+/// <param name="DisableBuildServers">Forces the command to ignore any persistent build servers. This option provides a consistent way to disable all use of build caching, which forces a build from scratch. A build that doesn't rely on caches is useful when the caches might be corrupted or incorrect for some reason. Available since .NET 7 SDK.</param>
+/// <param name="DisableParallel">Disables restoring multiple projects in parallel.</param>
+/// <param name="Force">Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.</param>
+/// <param name="ForceEvaluate">Forces restore to reevaluate all dependencies even if a lock file already exists.</param>
+/// <param name="IgnoreFailedSources">Only warn about failed sources if there are packages meeting the version requirement.</param>
+/// <param name="LockFilePath">Output location where project lock file is written. By default, this is PROJECT_ROOT\packages.lock.json.</param>
+/// <param name="LockedMode">Don't allow updating project lock file.</param>
+/// <param name="NoCache">Specifies to not cache HTTP requests.</param>
+/// <param name="NoDependencies">When restoring a project with project-to-project (P2P) references, restores the root project and not the references.</param>
+/// <param name="Packages">Specifies the directory for restored packages.</param>
+/// <param name="Runtime">Specifies the target runtime to restore packages for. For a list of Runtime Identifiers (RIDs), see the RID catalog. -r short option available since .NET Core 3.0 SDK.</param>
+/// <param name="TerminalLogger">Specifies whether the terminal logger should be used for the build output.</param>
+/// <param name="UseCurrentRuntime">Sets the RuntimeIdentifier to a platform portable RuntimeIdentifier based on the one of your machine. This happens implicitly with properties that require a RuntimeIdentifier, such as SelfContained, PublishAot, PublishSelfContained, PublishSingleFile, and PublishReadyToRun. If the property is set to false, that implicit resolution will no longer occur.</param>
+/// <param name="UseLockFile">Enables project lock file to be generated and used with restore.</param>
+/// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetRestore(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<(string name, string value)> Props,
+    IEnumerable<string> Sources,
+    string Project = "",
+    string Arch = "",
+    string ConfigFile = "",
+    bool? DisableBuildServers = default,
+    bool? DisableParallel = default,
+    bool? Force = default,
+    bool? ForceEvaluate = default,
+    bool? IgnoreFailedSources = default,
+    string LockFilePath = "",
+    bool? LockedMode = default,
+    bool? NoCache = default,
+    bool? NoDependencies = default,
+    string Packages = "",
+    string Runtime = "",
+    DotNetTerminalLogger? TerminalLogger = default,
+    bool? UseCurrentRuntime = default,
+    bool? UseLockFile = default,
+    DotNetVerbosity? Verbosity = default,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetRestore(params string[] args)
+        : this(args, [], [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetRestore()
+        : this([], [], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("restore")
+            .AddNotEmptyArgs(Project.ToArg())
+            .AddMSBuildLoggers(host, Verbosity)
+            .AddArgs(Sources.ToArgs("--source", ""))
+            .AddArgs(Arch.ToArgs("--arch", ""))
+            .AddArgs(ConfigFile.ToArgs("--configfile", ""))
+            .AddArgs(LockFilePath.ToArgs("--lock-file-path", ""))
+            .AddArgs(Packages.ToArgs("--packages", ""))
+            .AddArgs(Runtime.ToArgs("--runtime", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(Verbosity.ToArgs("--verbosity", ""))
+            .AddBooleanArgs(
+                ("--disable-build-servers", DisableBuildServers),
+                ("--disable-parallel", DisableParallel),
+                ("--force", Force),
+                ("--force-evaluate", ForceEvaluate),
+                ("--ignore-failed-sources", IgnoreFailedSources),
+                ("--locked-mode", LockedMode),
+                ("--no-cache", NoCache),
+                ("--no-dependencies", NoDependencies),
+                ("--use-current-runtime", UseCurrentRuntime),
+                ("--use-lock-file", UseLockFile),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddProps("--property", Props.ToArray())
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "restore", Project.ToArg());
+}
+
+/// <summary>
 /// Runs source code without any explicit compile or launch commands.
 /// <p>
 /// This command provides a convenient option to run your application from the source code with one command. It's useful for fast iterative development from the command line. The command depends on the dotnet build command to build the code. Any requirements for the build apply to dotnet run as well.
@@ -3401,8 +3762,11 @@ public partial record DotNetPack(
 /// </p>
 /// <example>
 /// <code>
-/// var result = new DotNetNew("console", "-n", "MyApp", "--force")
-///     .Build().EnsureSuccess();
+/// new DotNetNew()
+///     .WithTemplateName("console")
+///     .WithName("MyApp")
+///     .WithForce(true)
+///     .Run().EnsureSuccess();
 /// 
 /// 
 /// new DotNetRun().WithWorkingDirectory("MyApp")
@@ -3416,18 +3780,17 @@ public partial record DotNetPack(
 /// <param name="Props">MSBuild options for setting properties.</param>
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
-/// <param name="Project">The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.</param>
 /// <param name="Arch">Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6 Preview 7.</param>
 /// <param name="Configuration">Defines the build configuration. The default for most projects is Debug, but you can override the build configuration settings in your project.</param>
 /// <param name="Framework">Builds and runs the app using the specified framework. The framework must be specified in the project file.</param>
 /// <param name="Force">Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.</param>
-/// <param name="LaunchProfile">The name of the launch profile (if any) to use when launching the application. Launch profiles are defined in the launchSettings.json file and are typically called Development, Staging, and Production.</param>
+/// <param name="LaunchProfile">The name of the launch profile (if any) to use when launching the application. Launch profiles are defined in the launchSettings.json file and are typically called <c>Development</c>, <c>Staging</c>, and <c>Production</c>.</param>
 /// <param name="NoBuild">Doesn't build the project before running. It also implicit sets the --no-restore flag.</param>
 /// <param name="NoDependencies">When restoring a project with project-to-project (P2P) references, restores the root project and not the references.</param>
 /// <param name="NoLaunchProfile">Doesn't try to use launchSettings.json to configure the application.</param>
 /// <param name="NoRestore">Doesn't execute an implicit restore when running the command.</param>
-/// <param name="NoLogo">Doesn't display the startup banner or the copyright message.</param>
 /// <param name="OS">Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6.</param>
+/// <param name="Project">Specifies the path of the project file to run (folder name or full path). If not specified, it defaults to the current directory.</param>
 /// <param name="Runtime">Specifies the target runtime to restore packages for. For a list of Runtime Identifiers (RIDs), see the RID catalog. -r short option available since .NET Core 3.0 SDK.</param>
 /// <param name="TerminalLogger">Specifies whether the terminal logger should be used for the build output.</param>
 /// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
@@ -3438,7 +3801,6 @@ public partial record DotNetRun(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
     IEnumerable<(string name, string value)> Props,
-    string Project = "",
     string Arch = "",
     string Configuration = "",
     string Framework = "",
@@ -3448,8 +3810,8 @@ public partial record DotNetRun(
     bool? NoDependencies = default,
     bool? NoLaunchProfile = default,
     bool? NoRestore = default,
-    bool? NoLogo = default,
     string OS = "",
+    string Project = "",
     string Runtime = "",
     DotNetTerminalLogger? TerminalLogger = default,
     DotNetVerbosity? Verbosity = default,
@@ -3484,12 +3846,12 @@ public partial record DotNetRun(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
             .AddArgs("run")
-            .AddNotEmptyArgs(Project.ToArg())
             .AddArgs(Arch.ToArgs("--arch", ""))
             .AddArgs(Configuration.ToArgs("--configuration", ""))
             .AddArgs(Framework.ToArgs("--framework", ""))
             .AddArgs(LaunchProfile.ToArgs("--launch-profile", ""))
             .AddArgs(OS.ToArgs("--os", ""))
+            .AddArgs(Project.ToArgs("--project", ""))
             .AddArgs(Runtime.ToArgs("--runtime", ""))
             .AddArgs(TerminalLogger.ToArgs("--tl", ""))
             .AddArgs(Verbosity.ToArgs("--verbosity", ""))
@@ -3499,7 +3861,6 @@ public partial record DotNetRun(
                 ("--no-dependencies", NoDependencies),
                 ("--no-launch-profile", NoLaunchProfile),
                 ("--no-restore", NoRestore),
-                ("--nologo", NoLogo),
                 ("--diagnostics", Diagnostics)
             )
             .AddProps("--property", Props.ToArray())
@@ -3507,7 +3868,255 @@ public partial record DotNetRun(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => "".GetShortName(ShortName, "run", Project.ToArg());
+    public override string ToString() => "".GetShortName(ShortName, "run");
+}
+
+/// <summary>
+/// Lists the latest available version of the .NET SDK and .NET Runtime, for each feature band.
+/// <p>
+/// This command makes it easier to track when new versions of the SDK and Runtimes are available.
+/// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-sdk-check">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetSdkCheck(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetSdkCheck(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetSdkCheck()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("sdk")
+            .AddArgs("check")
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "sdk", "check");
+}
+
+/// <summary>
+/// Lists all projects in a solution file.
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-sln#list">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Solution">The solution file to use. If this argument is omitted, the command searches the current directory for one. If it finds no solution file or multiple solution files, the command fails.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetSlnList(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    string Solution = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetSlnList(params string[] args)
+        : this(args, [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetSlnList()
+        : this([], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("sln")
+            .AddNotEmptyArgs(Solution.ToArg())
+            .AddArgs("list")
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, "sln", Solution.ToArg(), "list");
+}
+
+/// <summary>
+/// Adds one or more projects to the solution file.
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-sln#add">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Projects">The path to the project or projects to add to the solution. Unix/Linux shell globbing pattern expansions are processed correctly by the dotnet sln command.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Solution">The solution file to use. If this argument is omitted, the command searches the current directory for one. If it finds no solution file or multiple solution files, the command fails.</param>
+/// <param name="InRoot">Places the projects in the root of the solution, rather than creating a solution folder. Can't be used with -s|--solution-folder.</param>
+/// <param name="SolutionFolder">The destination solution folder path to add the projects to. Can't be used with --in-root.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetSlnAdd(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<string> Projects,
+    string Solution = "",
+    bool? InRoot = default,
+    string SolutionFolder = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetSlnAdd(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetSlnAdd()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("sln")
+            .AddNotEmptyArgs(Solution.ToArg())
+            .AddArgs("add")
+            .AddNotEmptyArgs(Projects.ToArray().ToArg())
+            .AddArgs(SolutionFolder.ToArgs("--solution-folder", ""))
+            .AddBooleanArgs(
+                ("--in-root", InRoot),
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, new [] {"sln", Solution.ToArg(), "add"}.Concat(Projects).ToArray());
+}
+
+/// <summary>
+/// Removes a project or multiple projects from the solution file.
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-sln#remove">.NET CLI command</a><br/>
+/// </summary>
+/// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
+/// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
+/// <param name="Projects">The path to the project or projects to add to the solution. Unix/Linux shell globbing pattern expansions are processed correctly by the dotnet sln command.</param>
+/// <param name="ExecutablePath">Overrides the tool executable path.</param>
+/// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
+/// <param name="Solution">The solution file to use. If this argument is omitted, the command searches the current directory for one. If it finds no solution file or multiple solution files, the command fails.</param>
+/// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="ShortName">Specifies a short name for this operation.</param>
+[Target]
+public partial record DotNetSlnRemove(
+    IEnumerable<string> Args,
+    IEnumerable<(string name, string value)> Vars,
+    IEnumerable<string> Projects,
+    string Solution = "",
+    string ExecutablePath = "",
+    string WorkingDirectory = "",
+    bool? Diagnostics = default,
+    string ShortName = "")
+{
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    /// <param name="args">Specifies the set of command line arguments to use when starting the tool.</param>
+    public DotNetSlnRemove(params string[] args)
+        : this(args, [], [])
+    {
+    }
+
+    /// <summary>
+    /// Create a new instance of the command.
+    /// </summary>
+    public DotNetSlnRemove()
+        : this([], [], [])
+    {
+    }
+
+    /// <inheritdoc/>
+    public IStartInfo GetStartInfo(IHost host)
+    {
+        if (host == null) throw new ArgumentNullException(nameof(host));
+        return host.CreateCommandLine(ExecutablePath)
+            .WithShortName(ToString())
+            .WithWorkingDirectory(WorkingDirectory)
+            .WithVars(Vars.ToArray())
+            .AddArgs("sln")
+            .AddNotEmptyArgs(Solution.ToArg())
+            .AddArgs("remove")
+            .AddNotEmptyArgs(Projects.ToArray().ToArg())
+            .AddBooleanArgs(
+                ("--diagnostics", Diagnostics)
+            )
+            .AddArgs(Args.ToArray());
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => "".GetShortName(ShortName, new [] {"sln", Solution.ToArg(), "remove"}.Concat(Projects).ToArray());
 }
 
 

@@ -277,7 +277,10 @@ async Task CheckCompatibilityAsync(
     try
     {
         var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
-        await new DotNetNew("build", $"--version={nuGetVersion}", "-T", framework, "--no-restore")
+        await new DotNetNew()
+            .WithTemplateName("build")
+            .WithNoRestore(true)
+            .WithArgs($"--version={nuGetVersion}", "-T", framework)
             .WithWorkingDirectory(buildProjectDir)
             .WithShortName($"Creating a new {sampleProjectName}")
             .RunAsync().EnsureSuccess();
@@ -289,10 +292,10 @@ async Task CheckCompatibilityAsync(
             .BuildAsync().EnsureSuccess();
 
         await new DotNetRun()
-            .WithProject(buildProjectDir)
+            .WithWorkingDirectory(buildProjectDir)
+            .WithNoRestore(true)
             .WithNoBuild(true)
-            .WithFramework("net8.0")
-            .WithWorkingDirectory(sampleProjectDir)
+            .WithFramework(framework)
             .WithShortName($"Running a build for the {sampleProjectName}")
             .RunAsync().EnsureSuccess();
 
