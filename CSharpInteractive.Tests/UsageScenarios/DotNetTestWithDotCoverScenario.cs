@@ -60,8 +60,8 @@ public class DotNetTestWithDotCoverScenario : BaseScenario
             .Build().EnsureSuccess();
 
         // The "result" variable provides details about a build
-        result.ExitCode.ShouldBe(0);
-        result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1);
+        result.ExitCode.ShouldBe(0, result.ToString());
+        result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1, result.ToString());
 
         // Generates a HTML code coverage report.
         new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReport}", "--reportType=HTML")

@@ -36,7 +36,7 @@ public class CommandLineInParallelScenario : BaseScenario
         await task;
         // }
 
-        task.Result.ExitCode.HasValue.ShouldBeTrue();
-        result.ExitCode.HasValue.ShouldBeTrue();
+        task.Result.ExitCode.HasValue.ShouldBeTrue(result.ToString());
+        result.ExitCode.HasValue.ShouldBeTrue(result.ToString());
     }
 }

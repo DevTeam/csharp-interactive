@@ -49,12 +49,12 @@ public class DockerDotNetBuildScenario : BaseScenario
             .Build()
             .EnsureSuccess();
 
-        // The "result" variable provides details about a build
-        result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
-        result.ExitCode.ShouldBe(0);
-
         string ToAbsoluteLinuxPath(string path) =>
             "/" + path.Replace(":", "").Replace('\\', '/');
         // }
+        
+        // The "result" variable provides details about a build
+        result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse(result.ToString());
+        result.ExitCode.ShouldBe(0, result.ToString());
     }
 }

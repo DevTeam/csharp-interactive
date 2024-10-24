@@ -37,9 +37,9 @@ public class DotNetTestScenario : BaseScenario
             .EnsureSuccess();
 
         // The "result" variable provides details about a build
-        result.ExitCode.ShouldBe(0);
-        result.Summary.Tests.ShouldBe(1);
-        result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+        result.ExitCode.ShouldBe(0, result.ToString());
+        result.Summary.Tests.ShouldBe(1, result.ToString());
+        result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
         // }
     }
 

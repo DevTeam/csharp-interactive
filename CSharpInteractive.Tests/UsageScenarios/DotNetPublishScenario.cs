@@ -37,8 +37,8 @@ public class DotNetPublishScenario : BaseScenario
             .WithWorkingDirectory("MyLib")
             .WithFramework("net8.0")
             .Build().EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
         // }
+        
+        result.ExitCode.ShouldBe(0);
     }
 }

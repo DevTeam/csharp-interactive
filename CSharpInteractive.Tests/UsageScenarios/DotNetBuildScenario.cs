@@ -30,11 +30,13 @@ public class DotNetBuildScenario : BaseScenario
             .Build().EnsureSuccess();
 
         // Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
+        var messages = new List<BuildMessage>();
         var result = new DotNetBuild()
             .WithWorkingDirectory("MyLib")
-            .Build().EnsureSuccess();
+            .Build(message => messages.Add(message)).EnsureSuccess();
 
         // The "result" variable provides details about a build
+        messages.Count.ShouldBeGreaterThan(0, result.ToString());
         result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
         result.ExitCode.ShouldBe(0);
 
@@ -43,10 +45,10 @@ public class DotNetBuildScenario : BaseScenario
             .WithWorkingDirectory("MyLib")
             .Build()
             .EnsureSuccess();
-
+        // }
+        
         result.ExitCode.ShouldBe(0);
         result.Summary.Tests.ShouldBe(1);
         result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
-        // }
     }
 }

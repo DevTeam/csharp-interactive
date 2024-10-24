@@ -30,7 +30,7 @@ public class MSBuildScenario : BaseScenario
             .WithForce(true)
             .Build().EnsureSuccess();
 
-        result.ExitCode.ShouldBe(0);
+        result.ExitCode.ShouldBe(0, result.ToString());
 
         // Builds the library project, running a command like: "dotnet msbuild /t:Build -restore /p:configuration=Release -verbosity=detailed" from the directory "MyLib"
         result = new MSBuild()
@@ -42,8 +42,8 @@ public class MSBuildScenario : BaseScenario
             .Build().EnsureSuccess();
 
         // The "result" variable provides details about a build
-        result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
-        result.ExitCode.ShouldBe(0);
+        result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse(result.ToString());
+        result.ExitCode.ShouldBe(0, result.ToString());
         // }
     }
 }

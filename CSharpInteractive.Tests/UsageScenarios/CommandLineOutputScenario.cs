@@ -33,6 +33,6 @@ public class CommandLineOutputScenario : BaseScenario
         lines.ShouldContain("MyEnv=MyVal");
         // }
 
-        result.ExitCode.HasValue.ShouldBeTrue();
+        result.ExitCode.HasValue.ShouldBeTrue(result.ToString());
     }
 }

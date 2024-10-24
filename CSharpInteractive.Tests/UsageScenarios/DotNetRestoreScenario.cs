@@ -35,8 +35,8 @@ public class DotNetRestoreScenario : BaseScenario
         result = new DotNetRestore()
             .WithWorkingDirectory("MyLib")
             .Build().EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
         // }
+        
+        result.ExitCode.ShouldBe(0);
     }
 }

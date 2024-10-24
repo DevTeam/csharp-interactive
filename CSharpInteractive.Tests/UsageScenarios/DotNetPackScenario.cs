@@ -36,8 +36,8 @@ public class DotNetPackScenario : BaseScenario
             .WithWorkingDirectory("MyLib")
             .AddProps(("version", "1.2.3"))
             .Build().EnsureSuccess();
-
-        result.ExitCode.ShouldBe(0);
         // }
+        
+        result.ExitCode.ShouldBe(0, result.ToString());
     }
 }

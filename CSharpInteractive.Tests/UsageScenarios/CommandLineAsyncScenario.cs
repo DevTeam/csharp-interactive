@@ -35,6 +35,6 @@ public class CommandLineAsyncScenario : BaseScenario
             .EnsureSuccess();
         // }
 
-        result.ExitCode.HasValue.ShouldBeTrue();
+        result.ExitCode.HasValue.ShouldBeTrue(result.ToString());
     }
 }
