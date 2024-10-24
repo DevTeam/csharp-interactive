@@ -1,0 +1,11 @@
+// Adds the namespace "HostApi" to use Command Line API
+using HostApi;
+
+await GetService<ICommandLineRunner>()
+    .RunAsync(new CommandLine("cmd", "/C", "DIR"))
+    .EnsureSuccess();
+
+// or the same thing using the extension method
+var result = await new CommandLine("cmd", "/c", "DIR")
+    .RunAsync()
+    .EnsureSuccess();

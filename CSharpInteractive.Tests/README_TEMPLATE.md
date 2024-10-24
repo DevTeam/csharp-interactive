@@ -34,16 +34,19 @@
   - [Build a project](#build-a-project)
   - [Build a project using MSBuild](#build-a-project-using-msbuild)
   - [Clean a project](#clean-a-project)
+  - [Execute a dotnet application](#execute-a-dotnet-application)
   - [Pack a project](#pack-a-project)
   - [Publish a project](#publish-a-project)
   - [Restore a project](#restore-a-project)
   - [Restore local tools](#restore-local-tools)
   - [Run a custom .NET command](#run-a-custom-.net-command)
+  - [Run a dotnet application](#run-a-dotnet-application)
   - [Run a project](#run-a-project)
   - [Run tests under dotCover](#run-tests-under-dotcover)
   - [Test a project](#test-a-project)
   - [Test a project using the MSBuild VSTest target](#test-a-project-using-the-msbuild-vstest-target)
   - [Test an assembly](#test-an-assembly)
+  - [Run C# script](#run-c#-script)
   - [Shuts down build servers](#shuts-down-build-servers)
 - TeamCity API
   - [TeamCity integration via service messages](#teamcity-integration-via-service-messages)
@@ -411,8 +414,6 @@ int? exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
     .Run(default, TimeSpan.FromMilliseconds(1))
     .EnsureSuccess()
     .ExitCode;
-
-exitCode.HasValue.ShouldBeFalse();
 ```
 
 
@@ -446,10 +447,6 @@ var result = dockerRun
     .WithCommandLine(new DotNetBuild().WithProject("MyLib/MyLib.csproj"))
     .Build()
     .EnsureSuccess();
-
-// The "result" variable provides details about a build
-result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
-result.ExitCode.ShouldBe(0);
 
 string ToAbsoluteLinuxPath(string path) =>
     "/" + path.Replace(":", "").Replace('\\', '/');
@@ -493,11 +490,13 @@ new DotNetNew()
     .Build().EnsureSuccess();
 
 // Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
+var messages = new List<BuildMessage>();
 var result = new DotNetBuild()
     .WithWorkingDirectory("MyLib")
-    .Build().EnsureSuccess();
+    .Build(message => messages.Add(message)).EnsureSuccess();
 
 // The "result" variable provides details about a build
+messages.Count.ShouldBeGreaterThan(0, result.ToString());
 result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
 result.ExitCode.ShouldBe(0);
 
@@ -506,10 +505,6 @@ result = new DotNetTest()
     .WithWorkingDirectory("MyLib")
     .Build()
     .EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
-result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
 ```
 
 
@@ -568,6 +563,34 @@ version.ShouldNotBeNull();
 
 
 
+### Execute a dotnet application
+
+
+
+``` CSharp
+// Adds the namespace "HostApi" to use .NET build API
+using HostApi;
+
+// Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
+new DotNetNew()
+    .WithTemplateName("console")
+    .WithName("MyApp")
+    .WithForce(true)
+    .Build().EnsureSuccess();
+
+var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+new DotNetPublish()
+    .WithWorkingDirectory("MyApp")
+    .WithOutput(tempDirectory)
+    .Build().EnsureSuccess();
+
+new DotNetExec()
+    .WithPathToApplication(Path.Combine(tempDirectory, "MyApp.dll"))
+    .Run().EnsureSuccess();
+```
+
+
+
 ### Test a project using the MSBuild VSTest target
 
 
@@ -621,8 +644,6 @@ result = new DotNetPack()
     .WithWorkingDirectory("MyLib")
     .AddProps(("version", "1.2.3"))
     .Build().EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
 ```
 
 
@@ -650,8 +671,6 @@ result = new DotNetPublish()
     .WithWorkingDirectory("MyLib")
     .WithFramework("net8.0")
     .Build().EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
 ```
 
 
@@ -677,8 +696,6 @@ result.ExitCode.ShouldBe(0);
 result = new DotNetRestore()
     .WithWorkingDirectory("MyLib")
     .Build().EnsureSuccess();
-
-result.ExitCode.ShouldBe(0);
 ```
 
 
@@ -702,7 +719,8 @@ result.ExitCode.ShouldBe(0);
 
 // Runs the console project using a command like: "dotnet run" from the directory "MyApp"
 var stdOut = new List<string>();
-result = new DotNetRun().WithWorkingDirectory("MyApp")
+result = new DotNetRun()
+    .WithWorkingDirectory("MyApp")
     .Build(message => stdOut.Add(message.Text))
     .EnsureSuccess();
 
@@ -710,6 +728,34 @@ result.ExitCode.ShouldBe(0);
 
 // Checks StdOut
 stdOut.ShouldBe(new[] {"Hello, World!"});
+```
+
+
+
+### Run a dotnet application
+
+
+
+``` CSharp
+// Adds the namespace "HostApi" to use .NET build API
+using HostApi;
+
+// Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
+new DotNetNew()
+    .WithTemplateName("console")
+    .WithName("MyApp")
+    .WithForce(true)
+    .Build().EnsureSuccess();
+
+var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+new DotNetPublish()
+    .WithWorkingDirectory("MyApp")
+    .WithOutput(tempDirectory)
+    .Build().EnsureSuccess();
+
+new DotNet()
+    .WithPathToApplication(Path.Combine(tempDirectory, "MyApp.dll"))
+    .Run().EnsureSuccess();
 ```
 
 
@@ -738,9 +784,9 @@ result = new DotNetTest()
     .EnsureSuccess();
 
 // The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0);
-result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+result.ExitCode.ShouldBe(0, result.ToString());
+result.Summary.Tests.ShouldBe(1, result.ToString());
+result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
 ```
 
 
@@ -792,8 +838,8 @@ var result = testUnderDotCover
     .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0);
-result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1);
+result.ExitCode.ShouldBe(0, result.ToString());
+result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1, result.ToString());
 
 // Generates a HTML code coverage report.
 new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReport}", "--reportType=HTML")
@@ -847,7 +893,7 @@ var result = new DotNetNew()
     .WithForce(true)
     .Build().EnsureSuccess();
 
-result.ExitCode.ShouldBe(0);
+result.ExitCode.ShouldBe(0, result.ToString());
 
 // Builds the test project, running a command like: "dotnet build -c Release" from the directory "MyTests"
 result = new DotNetBuild()
@@ -856,7 +902,7 @@ result = new DotNetBuild()
     .WithOutput("MyOutput")
     .Build().EnsureSuccess();
 
-result.ExitCode.ShouldBe(0);
+result.ExitCode.ShouldBe(0, result.ToString());
 
 // Runs tests via a command like: "dotnet vstest" from the directory "MyTests"
 result = new VSTest()
@@ -865,9 +911,9 @@ result = new VSTest()
     .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0);
-result.Summary.Tests.ShouldBe(1);
-result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1);
+result.ExitCode.ShouldBe(0, result.ToString());
+result.Summary.Tests.ShouldBe(1, result.ToString());
+result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
 ```
 
 
@@ -887,7 +933,7 @@ var result = new DotNetNew()
     .WithForce(true)
     .Build().EnsureSuccess();
 
-result.ExitCode.ShouldBe(0);
+result.ExitCode.ShouldBe(0, result.ToString());
 
 // Builds the library project, running a command like: "dotnet msbuild /t:Build -restore /p:configuration=Release -verbosity=detailed" from the directory "MyLib"
 result = new MSBuild()
@@ -899,8 +945,8 @@ result = new MSBuild()
     .Build().EnsureSuccess();
 
 // The "result" variable provides details about a build
-result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse();
-result.ExitCode.ShouldBe(0);
+result.Errors.Any(message => message.State == BuildMessageState.StdError).ShouldBeFalse(result.ToString());
+result.ExitCode.ShouldBe(0, result.ToString());
 ```
 
 
@@ -917,6 +963,32 @@ using HostApi;
 new DotNetBuildServerShutdown()
     .Run()
     .EnsureSuccess();
+```
+
+
+
+### Run C# script
+
+
+
+``` CSharp
+// Adds the namespace "HostApi" to use .NET build API
+using HostApi;
+
+var script = Path.GetTempFileName();
+File.WriteAllText(script, "Console.WriteLine($\"Hello, {Args[0]}!\");");
+
+var stdOut = new List<string>();
+var result = new DotNetCsi()
+    .WithScript(script)
+    .AddArgs("World")
+    .Build(message => stdOut.Add(message.Text))
+    .EnsureSuccess();
+
+result.ExitCode.ShouldBe(0);
+
+// Checks StdOut
+stdOut.Contains("Hello, World!").ShouldBeTrue(result.ToString());
 ```
 
 

@@ -1,0 +1,10 @@
+// Adds the namespace "HostApi" to use .NET build API
+using HostApi;
+
+// Gets the dotnet version, running a command like: "dotnet --version"
+NuGetVersion? version = default;
+new DotNetCustom("--version")
+    .Run(message => NuGetVersion.TryParse(message.Line, out version))
+    .EnsureSuccess();
+
+version.ShouldNotBeNull();

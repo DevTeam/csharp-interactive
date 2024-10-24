@@ -10,6 +10,29 @@ using Internal;
 /// You specify the path to an application .dll file to run the application. To run the application means to find and execute the entry point, which in the case of console apps is the Main method. For example, dotnet myapp.dll runs the myapp application.
 /// </p>
 /// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet">.NET CLI command</a><br/>
+/// <example>
+///<code>
+/// // Adds the namespace "HostApi" to use .NET build API
+/// using HostApi;
+/// 
+/// // Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
+/// new DotNetNew()
+///     .WithTemplateName("console")
+///     .WithName("MyApp")
+///     .WithForce(true)
+///     .Build().EnsureSuccess();
+/// 
+/// var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+/// new DotNetPublish()
+///     .WithWorkingDirectory("MyApp")
+///     .WithOutput(tempDirectory)
+///     .Build().EnsureSuccess();
+/// 
+/// new DotNet()
+///     .WithPathToApplication(Path.Combine(tempDirectory, "MyApp.dll"))
+///     .Run().EnsureSuccess();
+///</code>
+/// </example>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -94,6 +117,29 @@ public partial record DotNet(
 /// You specify the path to an application .dll file to run the application. To run the application means to find and execute the entry point, which in the case of console apps is the Main method. For example, dotnet myapp.dll runs the myapp application.
 /// </p>
 /// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet">.NET CLI command</a><br/>
+/// <example>
+///<code>
+/// // Adds the namespace "HostApi" to use .NET build API
+/// using HostApi;
+/// 
+/// // Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
+/// new DotNetNew()
+///     .WithTemplateName("console")
+///     .WithName("MyApp")
+///     .WithForce(true)
+///     .Build().EnsureSuccess();
+/// 
+/// var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+/// new DotNetPublish()
+///     .WithWorkingDirectory("MyApp")
+///     .WithOutput(tempDirectory)
+///     .Build().EnsureSuccess();
+/// 
+/// new DotNetExec()
+///     .WithPathToApplication(Path.Combine(tempDirectory, "MyApp.dll"))
+///     .Run().EnsureSuccess();
+///</code>
+/// </example>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -614,16 +660,37 @@ public partial record DotNetRemoveReference(
 /// <p>
 /// For executable projects targeting .NET Core 3.0 and later, library dependencies are copied to the output folder. This means that if there isn't any other publish-specific logic (such as Web projects have), the build output should be deployable.
 /// </p>
-/// <example>
-/// <code>
-/// var configuration = Props.Get("configuration", "Release");
-/// 
-/// 
-/// new DotNetBuild().WithConfiguration(configuration)
-///     .Build().EnsureSuccess();
-/// </code>
-/// </example>
 /// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build">.NET CLI command</a><br/>
+/// <example>
+///<code>
+/// // Adds the namespace "HostApi" to use .NET build API
+/// using HostApi;
+/// 
+/// // Creates a new library project, running a command like: "dotnet new classlib -n MyLib --force"
+/// new DotNetNew()
+///     .WithTemplateName("xunit")
+///     .WithName("MyLib")
+///     .WithForce(true)
+///     .Build().EnsureSuccess();
+/// 
+/// // Builds the library project, running a command like: "dotnet build" from the directory "MyLib"
+/// var messages = new List&lt;BuildMessage&gt;();
+/// var result = new DotNetBuild()
+///     .WithWorkingDirectory("MyLib")
+///     .Build(message =&gt; messages.Add(message)).EnsureSuccess();
+/// 
+/// // The "result" variable provides details about a build
+/// messages.Count.ShouldBeGreaterThan(0, result.ToString());
+/// result.Errors.Any(message =&gt; message.State == BuildMessageState.StdError).ShouldBeFalse();
+/// result.ExitCode.ShouldBe(0);
+/// 
+/// // Runs tests in docker
+/// result = new DotNetTest()
+///     .WithWorkingDirectory("MyLib")
+///     .Build()
+///     .EnsureSuccess();
+///</code>
+/// </example>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
@@ -3772,20 +3839,34 @@ public partial record DotNetRestore(
 /// <p>
 /// To run the application, the dotnet run command resolves the dependencies of the application that are outside of the shared runtime from the NuGet cache. Because it uses cached dependencies, it's not recommended to use dotnet run to run applications in production. Instead, create a deployment using the dotnet publish command and deploy the published output.
 /// </p>
+/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-run">.NET CLI command</a><br/>
 /// <example>
-/// <code>
-/// new DotNetNew()
+///<code>
+/// // Adds the namespace "HostApi" to use .NET build API
+/// using HostApi;
+/// 
+/// // Creates a new console project, running a command like: "dotnet new console -n MyApp --force"
+/// var result = new DotNetNew()
 ///     .WithTemplateName("console")
 ///     .WithName("MyApp")
 ///     .WithForce(true)
-///     .Run().EnsureSuccess();
-/// 
-/// 
-/// new DotNetRun().WithWorkingDirectory("MyApp")
 ///     .Build().EnsureSuccess();
-/// </code>
+/// 
+/// result.ExitCode.ShouldBe(0);
+/// 
+/// // Runs the console project using a command like: "dotnet run" from the directory "MyApp"
+/// var stdOut = new List&lt;string&gt;();
+/// result = new DotNetRun()
+///     .WithWorkingDirectory("MyApp")
+///     .Build(message =&gt; stdOut.Add(message.Text))
+///     .EnsureSuccess();
+/// 
+/// result.ExitCode.ShouldBe(0);
+/// 
+/// // Checks StdOut
+/// stdOut.ShouldBe(new[] {"Hello, World!"});
+///</code>
 /// </example>
-/// <br/><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-run">.NET CLI command</a><br/>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>

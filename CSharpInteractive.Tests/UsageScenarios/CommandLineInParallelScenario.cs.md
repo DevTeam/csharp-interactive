@@ -1,0 +1,12 @@
+// Adds the namespace "HostApi" to use Command Line API
+using HostApi;
+
+var task = new CommandLine("cmd", "/c", "DIR")
+    .RunAsync()
+    .EnsureSuccess();
+
+var result = new CommandLine("cmd", "/c", "SET")
+    .Run()
+    .EnsureSuccess();
+
+await task;

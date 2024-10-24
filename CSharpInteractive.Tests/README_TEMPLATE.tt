@@ -12,6 +12,11 @@
     var solutionPath = Path.Combine(currentPath, "..");
 
     var infos = new List<Dictionary<string, string>>();
+    foreach (var file in Directory.GetFiles(scenariosPath, "*.md"))
+    {
+        File.Delete(file);
+    }
+    
     foreach (var file in Directory.GetFiles(scenariosPath, "*.cs"))
     {
         var isBody = false;
@@ -127,12 +132,15 @@
 <#
     foreach (var info in infos.OrderBy(i => i["tag"] + i["priority"]).Where(info => info["visible"] == "true"))
     {
+        var file = info["file"] + ".md";
+        var body = info["body"];
+        File.WriteAllText(file, body);
 #>### <#= info["description"] #>
 
 <#= info["header"] #>
 
 ``` CSharp
-<#= info["body"] #>```
+<#= body #>```
 
 <#= info["footer"] #>
 

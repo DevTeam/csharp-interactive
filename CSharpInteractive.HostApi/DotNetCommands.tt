@@ -1,7 +1,7 @@
 ﻿<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Xml" #>
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 namespace HostApi;
@@ -17,7 +17,7 @@ using Internal;
 
     string CreateCliRef(string command) => 
         $"<br/><a href=\"https://learn.microsoft.com/en-us/dotnet/core/tools/{command}\">.NET CLI command</a><br/>";
-
+    
     var projectArg = new Arg("Project", "", "string", "The project or solution file to operate on. If not specified, the command searches the current directory for one. If more than one solution or project is found, an error is thrown.") { IsProject = true };
     var solutionArg = new Arg("Solution", "", "string", "The solution file to use. If this argument is omitted, the command searches the current directory for one. If it finds no solution file or multiple solution files, the command fails.") { IsProject = true };
     var propsArg = new Arg("Props", "--property", "IEnumerable<(string name, string value)>", "MSBuild options for setting properties.") { IsCollection = true };
@@ -85,7 +85,7 @@ using Internal;
                 new Arg("ListRuntimes", "--list-runtimes", "bool?", "Prints out a list of the installed .NET runtimes. An x86 version of the SDK lists only x86 runtimes, and an x64 version of the SDK lists only x64 runtimes."),
                 new Arg("ListSdks", "--list-sdks", "bool?", "Prints out a list of the installed .NET SDKs.")
             ]
-        ),
+        ) { Example = "DotNetScenario.cs.md" },
         new(
             "DotNetExec",
             "Executes a dotnet application.",
@@ -106,7 +106,7 @@ using Internal;
                 new Arg("RuntimeConfig", "--runtimeconfig", "string", "Path to a runtimeconfig.json file. A runtimeconfig.json file contains run-time settings and is typically named &lt;applicationname&gt;.runtimeconfig.json."),
                 diagnosticsArg
             ]
-        ),
+        ) { Example = "DotNetExecScenario.cs.md" },
         new(
             "DotNetAddPackage",
             "Adds or updates a package reference in a project file.",
@@ -229,15 +229,6 @@ using Internal;
                 paraStart,
                 "For executable projects targeting .NET Core 3.0 and later, library dependencies are copied to the output folder. This means that if there isn't any other publish-specific logic (such as Web projects have), the build output should be deployable.",
                 paraFinish,
-                exampleStart,
-                codeStart,
-                "var configuration = Props.Get(\"configuration\", \"Release\");",
-                "",
-                "",
-                "new DotNetBuild().WithConfiguration(configuration)",
-                "    .Build().EnsureSuccess();",
-                codeFinish,
-                exampleFinish,
                 CreateCliRef("dotnet-build")
             ],
             ["build", "$Project"],
@@ -267,7 +258,7 @@ using Internal;
                 diagnosticsArg
             ],
             CommandTypes.Build
-        ),
+        ) { Example = "DotNetBuildScenario.cs.md" },
         new(
             "DotNetBuildServerShutdown",
             "Shuts down build servers that are started from dotnet.",
@@ -1088,19 +1079,6 @@ using Internal;
                 paraStart,
                 "To run the application, the dotnet run command resolves the dependencies of the application that are outside of the shared runtime from the NuGet cache. Because it uses cached dependencies, it's not recommended to use dotnet run to run applications in production. Instead, create a deployment using the dotnet publish command and deploy the published output.",
                 paraFinish,
-                exampleStart,
-                codeStart,
-                "new DotNetNew()",
-                "    .WithTemplateName(\"console\")",
-                "    .WithName(\"MyApp\")",
-                "    .WithForce(true)",
-                "    .Run().EnsureSuccess();",
-                "",
-                "",
-                "new DotNetRun().WithWorkingDirectory(\"MyApp\")",
-                "    .Build().EnsureSuccess();",
-                codeFinish,
-                exampleFinish,
                 CreateCliRef("dotnet-run")
             ],
             ["run"],
@@ -1122,7 +1100,7 @@ using Internal;
                 verbosityArg,
                 diagnosticsArg
             ]
-        ),
+        ) { Example = "DotNetRunScenario.cs.md" },
         new(
             "DotNetSdkCheck",
             "Lists the latest available version of the .NET SDK and .NET Runtime, for each feature band.",
@@ -1636,6 +1614,32 @@ using Internal;
 /// <#= comment #>
 <#
         }
+
+        if (!string.IsNullOrWhiteSpace(command.Example))
+        {
+            var exampleLines = File.ReadAllLines(Path.Combine("..", "CSharpInteractive.Tests", "UsageScenarios", command.Example));
+            if (exampleLines.Length > 0)
+            {
+#>
+/// <#= exampleStart #>
+///<#= codeStart #>
+<#
+                var doc = new XmlDocument();
+                foreach (var exampleLine in exampleLines.Select(i => i.TrimEnd()))
+                {
+                    var node = doc.CreateElement("root");
+                    node.InnerText = exampleLine;
+                    var line = node.InnerXml;
+#>
+/// <#= line #>
+<#
+                }
+#>
+///<#= codeFinish #>
+/// <#= exampleFinish #>
+<#
+            }
+        }
 #>
 /// </summary>
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
@@ -1869,5 +1873,6 @@ public partial record <#= command.Name #>(
         public Arg[] Args { get; } = Args;
         public CommandTypes CommandTypes { get; } = CommandTypes;
         public string[] AdditionalArgs { get; } = AdditionalArgs;
+        public string Example { get; set; } = "";
     }
 #>

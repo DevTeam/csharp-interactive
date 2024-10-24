@@ -1,0 +1,13 @@
+// Adds the namespace "HostApi" to use INuGet
+using HostApi;
+
+var packagesPath = Path.Combine(
+    Path.GetTempPath(),
+    Guid.NewGuid().ToString()[..4]);
+
+var settings = new NuGetRestoreSettings("IoC.Container")
+    .WithVersionRange(VersionRange.Parse("[1.3, 1.3.8)"))
+    .WithTargetFrameworkMoniker("net5.0")
+    .WithPackagesPath(packagesPath);
+
+IEnumerable<NuGetPackage> packages = GetService<INuGet>().Restore(settings);

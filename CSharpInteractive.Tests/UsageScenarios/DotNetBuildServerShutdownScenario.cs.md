@@ -1,0 +1,7 @@
+// Adds the namespace "HostApi" to use .NET build API
+using HostApi;
+
+// Shuts down all build servers that are started from dotnet.
+new DotNetBuildServerShutdown()
+    .Run()
+    .EnsureSuccess();

@@ -1,0 +1,5 @@
+// Adds the namespace "HostApi" to use INuGet
+using HostApi;
+
+IEnumerable<NuGetPackage> packages = GetService<INuGet>()
+    .Restore(new NuGetRestoreSettings("IoC.Container").WithVersionRange(VersionRange.All));
