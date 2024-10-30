@@ -19,6 +19,7 @@ public class DotNetToolUpdateScenario(ITestOutputHelper output) : BaseScenario(o
         new DotNetToolInstall()
             .WithLocal(true)
             .WithPackage("dotnet-csi")
+            .WithVersion("1.1.1")
             .Run().EnsureSuccess();
 
         // $visible=true

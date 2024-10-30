@@ -58,14 +58,11 @@ var packages = new[]
         false)
 };
 
-new DotNetToolRestore().Run().EnsureSuccess();
-
 new DotNetClean()
     .WithProject(solutionFile)
     .WithVerbosity(DotNetVerbosity.Quiet)
     .WithConfiguration(configuration)
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 foreach (var package in packages)
 {
@@ -82,14 +79,18 @@ foreach (var package in packages)
     }
 }
 
-var buildProps = new[] {("version", packageVersion.ToString())};
+var buildProps = new[]
+{
+    ("configuration", configuration),
+    ("version", packageVersion.ToString())
+};
+
 new MSBuild()
     .WithProject(Path.Combine(currentDir, "CSharpInteractive", "CSharpInteractive.Tool.csproj"))
     .WithRestore(true)
     .WithTarget("Rebuild;GetDependencyTargetPaths")
     .WithProps(buildProps)
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 const string templateJson = "CSharpInteractive.Templates/content/ConsoleApplication-CSharp/.template.config/template.json";
 var content = File.ReadAllText(templateJson);
@@ -102,8 +103,7 @@ try
         .WithProject(solutionFile)
         .WithConfiguration(configuration)
         .WithProps(buildProps)
-        .Build()
-        .EnsureSuccess();
+        .Build();
 }
 finally
 {
@@ -137,6 +137,9 @@ if (skipTests)
 }
 else
 {
+    new DotNetToolRestore()
+        .Run().EnsureSuccess();
+
     var reportDir = Path.Combine(currentDir, ".reports");
     var dotCoverSnapshot = Path.Combine(reportDir, "dotCover.dcvr");
     test
@@ -151,7 +154,8 @@ else
         .EnsureSuccess(buildResult => buildResult is {ExitCode: 0, Summary.FailedTests: 0});
 
     var dotCoverReportXml = Path.Combine(reportDir, "dotCover.xml");
-    new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportXml}", "--reportType=TeamCityXml").WithShortName("Generating the code coverage reports")
+    new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportXml}", "--reportType=TeamCityXml")
+        .WithShortName("Generating the code coverage reports")
         .Run().EnsureSuccess();
 
     if (TryGetCoverage(dotCoverReportXml, out coveragePercentage))
@@ -173,13 +177,17 @@ else
     }
 }
 
-var uninstallTool = new DotNetToolUninstall()
+var hasTool = new DotNetToolList()
     .WithPackage(toolPackageId)
-    .WithGlobal(true);
+    .WithGlobal(true)
+    .Run().ExitCode == 0;
 
-if (uninstallTool.Run(_ => { }).ExitCode != 0)
+if (hasTool)
 {
-    Warning($"{uninstallTool} failed.");
+    new DotNetToolUninstall()
+        .WithPackage(toolPackageId)
+        .WithGlobal(true)
+        .Run().EnsureSuccess();
 }
 
 if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -192,46 +200,43 @@ if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     Environment.SetEnvironmentVariable("PATH", pathEnvVar);
 }
 
-await new DotNetBuild()
+new DotNetBuild()
     .WithProject(Path.Combine("Samples", "MySampleLib"))
-    .BuildAsync().EnsureSuccess();
+    .Build().EnsureSuccess();
 
-var installTool = new DotNetToolInstall()
+new DotNetToolInstall()
     .WithPackage(toolPackageId)
     .WithGlobal(true)
+    .WithNoCache(true)
     .WithVersion(packageVersion.ToString())
-    .AddSources(Path.Combine(outputDir, "CSharpInteractive.Tool"));
+    .AddSources(Path.Combine(outputDir, "CSharpInteractive.Tool"))
+    .Run().EnsureSuccess();
 
-installTool.Run(output =>
-{
-    output.Handled = true;
-    WriteLine(output.Line);
-}).EnsureSuccess(_ => true);
+new DotNetCsi()
+    .WithVersion(true)
+    .WithShortName("Checking csi tool")
+    .Run().EnsureSuccess();
 
-new DotNetCsi().WithVersion(true).WithShortName("Checking csi tool").Run().EnsureSuccess();
+new DotNetNewUninstall()
+    .WithPackage(templatesPackageId)
+    .Run();
 
-var uninstallTemplates = new DotNetNewUninstall()
-    .WithPackage(templatesPackageId);
-
-uninstallTemplates.Run(output =>
-{
-    output.Handled = true;
-    WriteLine(output.Line);
-}).EnsureSuccess(_ => true);
-
-var installTemplates = new DotNetNewInstall()
+new DotNetNewInstall()
     .WithPackage($"{templatesPackageId}::{packageVersion.ToString()}")
-    .AddSources(templateOutputDir);
+    .AddSources(templateOutputDir)
+    .Run().EnsureSuccess();
 
-installTemplates.Run().EnsureSuccess();
 foreach (var framework in frameworks)
 {
-    await CheckCompatibilityAsync(framework, packageVersion, defaultNuGetSource, outputDir);
+    CheckCompatibilityAsync(framework, packageVersion, defaultNuGetSource, outputDir);
 }
 
 if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && packageVersion.Release != "dev")
 {
-    var push = new DotNetNuGetPush().WithApiKey(apiKey).WithSource(defaultNuGetSource);
+    var push = new DotNetNuGetPush()
+        .WithApiKey(apiKey)
+        .WithSource(defaultNuGetSource);
+
     foreach (var package in packages.Where(i => i.Publish))
     {
         push.WithPackage(package.Package)
@@ -240,32 +245,24 @@ if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && pac
 }
 else
 {
-    Info("Pushing NuGet packages were skipped.");
+    Info("Pushing NuGet packages was skipped.");
 }
 
-if (integrationTests || dockerLinuxTests)
+if (!skipTests && (integrationTests || dockerLinuxTests))
 {
     var logicOp = integrationTests && dockerLinuxTests ? "|" : "&";
-    var filter = $"Integration={integrationTests}{logicOp}Docker={dockerLinuxTests}";
     test
-        .WithFilter(filter)
+        .WithFilter($"Integration={integrationTests}{logicOp}Docker={dockerLinuxTests}")
         .Build().EnsureSuccess(buildResult => buildResult is {ExitCode: 0, Summary.FailedTests: 0});
 }
 
-WriteLine("To use the csi tool:", Color.Highlighted);
-WriteLine("    dotnet csi /?", Color.Highlighted);
-WriteLine("To create a build project from the template:", Color.Highlighted);
-WriteLine($"    dotnet new build --package-version={packageVersion}", Color.Highlighted);
-WriteLine($"Tool and package version: {packageVersion}", Color.Highlighted);
-WriteLine($"Template version: {packageVersion}", Color.Highlighted);
-if (skipTests)
-{
-    WriteLine($"The coverage percentage: {coveragePercentage}", Color.Highlighted);
-}
+Info($"Tool and package version: {packageVersion}");
+Info($"Template version: {packageVersion}");
+Info($"The coverage percentage: {coveragePercentage}");
 
 return 0;
 
-async Task CheckCompatibilityAsync(
+void CheckCompatibilityAsync(
     string framework,
     NuGetVersion nuGetVersion,
     string nuGetSource,
@@ -273,33 +270,32 @@ async Task CheckCompatibilityAsync(
 {
     var buildProjectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
     Directory.CreateDirectory(buildProjectDir);
-    var sampleProjectName = $"sample project for {framework}";
     try
     {
         var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
-        await new DotNetNew()
+        new DotNetNew()
             .WithTemplateName("build")
             .WithNoRestore(true)
             .WithArgs($"--version={nuGetVersion}", "-T", framework)
             .WithWorkingDirectory(buildProjectDir)
-            .RunAsync().EnsureSuccess();
+            .Run().EnsureSuccess();
 
-        await new DotNetBuild()
+        new DotNetBuild()
             .WithProject(buildProjectDir)
             .WithSources(nuGetSource, Path.Combine(output, "CSharpInteractive"))
-            .BuildAsync().EnsureSuccess();
+            .Build().EnsureSuccess();
 
-        await new DotNetRun()
+        new DotNetRun()
             .WithWorkingDirectory(buildProjectDir)
             .WithNoRestore(true)
             .WithNoBuild(true)
             .WithFramework(framework)
-            .RunAsync().EnsureSuccess();
+            .Run().EnsureSuccess();
 
-        await new DotNetCsi()
+        new DotNetCsi()
             .WithScript(Path.Combine(buildProjectDir, "Program.csx"))
             .WithWorkingDirectory(sampleProjectDir)
-            .RunAsync().EnsureSuccess();
+            .Run().EnsureSuccess();
     }
     finally
     {

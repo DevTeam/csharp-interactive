@@ -2,6 +2,8 @@
 using HostApi;
 using Microsoft.Extensions.DependencyInjection;
 using NuGet.Versioning;
+// ReSharper disable SeparateLocalFunctionsWithJumpStatement
+// ReSharper disable UnusedVariable
 
 // Output, logging and tracing API
 WriteLine("Hello");
@@ -58,7 +60,9 @@ foreach (var package in packages)
 }
 
 // API for .NET CLI
-var buildResult = new DotNetBuild().WithConfiguration(configuration).WithNoLogo(true)
+var buildResult = new DotNetBuild()
+    .WithConfiguration(configuration)
+    .WithNoLogo(true)
     .Build().EnsureSuccess();
 
 var warnings = buildResult.Warnings
@@ -76,11 +80,11 @@ foreach (var warning in warnings)
 
 // Asynchronous way
 var cts = new CancellationTokenSource();
-/*await new DotNetTest()
+await new DotNetTest()
     .WithConfiguration(configuration)
-    .WithNoLogo(true).WithNoBuild(true)
-    .BuildAsync(CancellationOnFirstFailedTest, cts.Token)
-    .EnsureSuccess();*/
+    .WithNoLogo(true)
+    .WithNoBuild(true)
+    .BuildAsync(CancellationOnFirstFailedTest, cts.Token);
 
 void CancellationOnFirstFailedTest(BuildMessage message)
 {
@@ -95,20 +99,35 @@ results.SelectMany(i => i).EnsureSuccess();
 
 async Task<IEnumerable<IBuildResult>> RunTestsAsync(string framework, params string[] platforms)
 {
-    var publish = new DotNetPublish().WithWorkingDirectory("MySampleLib.Tests")
-        .WithFramework($"net{framework}").WithConfiguration(configuration).WithNoBuild(true);
+    var publish = new DotNetPublish()
+        .WithWorkingDirectory("MySampleLib.Tests")
+        .WithFramework($"net{framework}")
+        .WithConfiguration(configuration)
+        .WithNoBuild(true);
+
     await publish.BuildAsync(cancellationToken: cts.Token).EnsureSuccess();
     var publishPath = Path.Combine(publish.WorkingDirectory, "bin", configuration, $"net{framework}", "publish");
 
-    var test = new VSTest().WithTestFileNames("*.Tests.dll");
-    var testInDocker = new DockerRun().WithCommandLine(test).WithAutoRemove(true).WithQuiet(true)
-        .WithVolumes((Path.GetFullPath(publishPath), "/app")).WithContainerWorkingDirectory("/app");
+    var test = new VSTest()
+        .WithTestFileNames("*.Tests.dll");
+
+    var testInDocker = new DockerRun()
+        .WithCommandLine(test)
+        .WithAutoRemove(true)
+        .WithQuiet(true)
+        .WithVolumes((Path.GetFullPath(publishPath), "/app"))
+        .WithContainerWorkingDirectory("/app");
+
     var tasks = from platform in platforms
         let image = $"mcr.microsoft.com/dotnet/sdk:{framework}-{platform}"
-        select testInDocker.WithImage(image).BuildAsync(CancellationOnFirstFailedTest, cts.Token);
+        select testInDocker
+            .WithImage(image)
+            .BuildAsync(CancellationOnFirstFailedTest, cts.Token);
     return await Task.WhenAll(tasks);
 }
 
 #pragma warning disable CS9113// Parameter is unread.
-class MyTool(INuGet nuGet);
+
+internal class MyTool(INuGet nuGet);
+
 #pragma warning restore CS9113// Parameter is unread.

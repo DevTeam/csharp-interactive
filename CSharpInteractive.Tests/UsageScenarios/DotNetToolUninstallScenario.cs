@@ -19,6 +19,7 @@ public class DotNetToolUninstallScenario(ITestOutputHelper output) : BaseScenari
         new DotNetToolInstall()
             .WithLocal(true)
             .WithPackage("dotnet-csi")
+            .WithVersion("1.1.1")
             .Run().EnsureSuccess();
 
         // $visible=true
