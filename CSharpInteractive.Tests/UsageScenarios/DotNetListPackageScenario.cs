@@ -21,7 +21,7 @@ public class DotNetListPackageScenario(ITestOutputHelper output) : BaseScenario(
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=NuGet package listing
+        // $description=Printing NuGet packages for a project
         // {
         // ## using HostApi;
         
@@ -32,7 +32,7 @@ public class DotNetListPackageScenario(ITestOutputHelper output) : BaseScenario(
 
         var lines = new List<string>();
         new DotNetListPackage()
-            .WithWorkingDirectory("MyLib")
+            .WithProject(Path.Combine("MyLib", "MyLib.csproj"))
             .WithVerbosity(DotNetVerbosity.Minimal)
             .Run(output => lines.Add(output.Line));
         

@@ -14,7 +14,7 @@ public class WriteLineWithColourScenario(ITestOutputHelper output) : BaseScenari
         // $visible=true
         // $tag=01 Output, logging and tracing
         // $priority=01
-        // $description=Write a line highlighted with "Header" color to a build log
+        // $description=Writing a line highlighted with "Header" color to a build log
         // {
         WriteLine("Hello", Header);
         // }

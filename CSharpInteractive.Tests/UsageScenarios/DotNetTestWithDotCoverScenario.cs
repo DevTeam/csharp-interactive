@@ -24,7 +24,7 @@ public class DotNetTestWithDotCoverScenario(ITestOutputHelper output) : BaseScen
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Run tests under dotCover
+        // $description=Running tests under dotCover
         // {
         // ## using HostApi;
 

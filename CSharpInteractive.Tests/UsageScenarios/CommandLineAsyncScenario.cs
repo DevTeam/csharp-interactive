@@ -19,7 +19,7 @@ public class CommandLineAsyncScenario(ITestOutputHelper output) : BaseScenario(o
         // $visible=true
         // $tag=05 Command Line
         // $priority=02
-        // $description=Run a command line asynchronously
+        // $description=Running a command line asynchronously
         // {
         // ## using HostApi;
 

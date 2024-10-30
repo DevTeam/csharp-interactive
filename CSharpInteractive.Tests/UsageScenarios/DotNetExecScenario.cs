@@ -14,7 +14,6 @@ public class DotNetExecScenario(ITestOutputHelper output) : BaseScenario(output)
     [Fact]
     public void Run()
     {
-        // Creates a new console project
         new DotNetNew()
             .WithTemplateName("console")
             .WithName("MyApp")
@@ -30,7 +29,7 @@ public class DotNetExecScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Execute a dotnet application
+        // $description=Executing a dotnet application
         // {
         // ## using HostApi;
         new DotNetExec()

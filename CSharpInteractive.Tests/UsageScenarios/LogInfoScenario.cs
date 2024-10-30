@@ -15,7 +15,7 @@ public class LogInfoScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=01 Output, logging and tracing
         // $priority=04
-        // $description=Log information to a build log
+        // $description=Registering information in the build log
         // {
         Info("Some info");
         // }

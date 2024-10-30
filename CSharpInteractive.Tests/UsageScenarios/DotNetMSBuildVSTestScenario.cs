@@ -21,7 +21,7 @@ public class DotNetMSBuildVSTestScenario(ITestOutputHelper output) : BaseScenari
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Test a project using the MSBuild VSTest target
+        // $description=Testing a project using the MSBuild VSTest target
         // {
         // ## using HostApi;
 

@@ -16,7 +16,7 @@ public class MSBuildScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Build a project using MSBuild
+        // $description=Building a project using MSBuild
         // {
         // ## using HostApi;
 

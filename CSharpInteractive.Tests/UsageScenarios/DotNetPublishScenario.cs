@@ -21,7 +21,7 @@ public class DotNetPublishScenario(ITestOutputHelper output) : BaseScenario(outp
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Publishing the application and its dependencies to a folder for deployment to a hosting system
+        // $description=Publishing an application and its dependencies to a folder for deployment to a hosting system
         // {
         // ## using HostApi;
 

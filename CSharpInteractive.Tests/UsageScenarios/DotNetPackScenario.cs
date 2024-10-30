@@ -23,7 +23,7 @@ public class DotNetPackScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Packing the code into a NuGet package
+        // $description=Packing a code into a NuGet package
         // {
         // ## using HostApi;
 

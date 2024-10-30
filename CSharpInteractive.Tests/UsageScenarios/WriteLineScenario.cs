@@ -11,7 +11,7 @@ public class WriteLineScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=01 Output, logging and tracing
         // $priority=00
-        // $description=Write a line to a build log
+        // $description=Writing a line to a build log
         // {
         WriteLine("Hello");
         // }

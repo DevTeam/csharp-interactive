@@ -21,7 +21,7 @@ public class DotNetFormatStyleScenario(ITestOutputHelper output) : BaseScenario(
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Fix code style issues
+        // $description=Fixing code style issues
         // {
         // ## using HostApi;
 

@@ -15,7 +15,7 @@ public class LogErrorScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=01 Output, logging and tracing
         // $priority=02
-        // $description=Log an error to a build log
+        // $description=Registering errors in the build log
         // {
         Error("Error info", "Error identifier");
         // }

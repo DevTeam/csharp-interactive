@@ -14,7 +14,7 @@ public class DotNetBuildServerShutdownScenario(ITestOutputHelper output) : BaseS
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=02
-        // $description=Shuts down build servers
+        // $description=Shutting down build servers
         // {
         // ## using HostApi;
 

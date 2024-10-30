@@ -15,7 +15,7 @@ public class LogTraceScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=01 Output, logging and tracing
         // $priority=05
-        // $description=Log trace information to a build log
+        // $description=Registering trace information in the build log
         // {
         Trace("Some trace info");
         // }

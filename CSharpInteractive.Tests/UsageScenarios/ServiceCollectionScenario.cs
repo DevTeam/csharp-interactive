@@ -11,7 +11,7 @@ public class ServiceCollectionScenario(ITestOutputHelper output) : BaseScenario(
     // $visible=true
     // $tag=03 Microsoft DI
     // $priority=03
-    // $description=Service collection
+    // $description=Using service collections
     // {
     public void Run()
     {

@@ -21,7 +21,7 @@ public class DotNetNuGetConfigGetScenario(ITestOutputHelper output) : BaseScenar
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Sets the value of a specified NuGet configuration setting
+        // $description=Setting the value of a specified NuGet configuration setting
         // {
         // ## using HostApi;
 

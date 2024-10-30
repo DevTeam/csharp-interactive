@@ -20,7 +20,7 @@ public class CommandLinesScenario(ITestOutputHelper output) : BaseScenario(outpu
         // $visible=true
         // $tag=05 Command Line
         // $priority=00
-        // $description=Build command lines
+        // $description=Building custom command lines
         // {
         // ## using HostApi;
 

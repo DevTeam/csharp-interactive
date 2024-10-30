@@ -15,7 +15,7 @@ public class NuGetRestoreScenario(ITestOutputHelper output) : BaseScenario(outpu
         // $visible=true
         // $tag=04 NuGet
         // $priority=00
-        // $description=Restore NuGet a package of newest version
+        // $description=Restoring a NuGet package of newest version
         // {
         // ## using HostApi;
 

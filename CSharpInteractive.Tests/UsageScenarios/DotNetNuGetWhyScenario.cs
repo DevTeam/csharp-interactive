@@ -28,7 +28,7 @@ public class DotNetNuGetWhyScenario(ITestOutputHelper output) : BaseScenario(out
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Show the dependency graph for NuGet package
+        // $description=Printing a dependency graph for NuGet package
         // {
         // ## using HostApi;
 

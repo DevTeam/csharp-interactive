@@ -27,7 +27,7 @@ public class DotNetNuGetConfigUnsetScenario(ITestOutputHelper output) : BaseScen
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Unsets the value of a specified NuGet configuration setting
+        // $description=Unsetting the value of a specified NuGet configuration setting
         // {
         // ## using HostApi;
 

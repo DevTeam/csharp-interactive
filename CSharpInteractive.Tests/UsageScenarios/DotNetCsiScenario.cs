@@ -17,7 +17,7 @@ public class DotNetCsiScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=02
-        // $description=Run C# script
+        // $description=Running C# script
         // {
         // ## using HostApi;
 

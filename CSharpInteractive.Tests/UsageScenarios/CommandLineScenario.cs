@@ -18,7 +18,7 @@ public class CommandLineScenario(ITestOutputHelper output) : BaseScenario(output
         // $visible=true
         // $tag=05 Command Line
         // $priority=01
-        // $description=Run a command line
+        // $description=Running a command line
         // {
         // ## using HostApi;
 

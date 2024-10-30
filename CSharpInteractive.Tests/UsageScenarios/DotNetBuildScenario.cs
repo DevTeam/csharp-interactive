@@ -21,7 +21,7 @@ public class DotNetBuildScenario(ITestOutputHelper output) : BaseScenario(output
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Build a project
+        // $description=Building a project
         // {
         // ## using HostApi;
 

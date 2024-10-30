@@ -19,7 +19,7 @@ public class CommandLineWithTimeoutScenario(ITestOutputHelper output) : BaseScen
         // $visible=true
         // $tag=05 Command Line
         // $priority=06
-        // $description=Run timeout
+        // $description=Running with timeout
         // $header=If timeout expired a process will be killed.
         // {
         // ## using HostApi;

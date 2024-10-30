@@ -18,7 +18,7 @@ public class DotNetCustomScenario(ITestOutputHelper output) : BaseScenario(outpu
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Run a custom .NET command
+        // $description=Running a custom .NET command
         // {
         // ## using HostApi;
 

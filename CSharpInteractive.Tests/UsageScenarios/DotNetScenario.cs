@@ -29,7 +29,7 @@ public class DotNetScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Run a dotnet application
+        // $description=Running a .NET application
         // {
         // Adds the namespace "HostApi" to use .NET build API
         // ## using HostApi;

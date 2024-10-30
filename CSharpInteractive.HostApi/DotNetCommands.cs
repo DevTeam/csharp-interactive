@@ -295,7 +295,7 @@ public partial record DotNetAddPackage(
 /// 
 /// var lines = new List&lt;string&gt;();
 /// new DotNetListPackage()
-///     .WithWorkingDirectory("MyLib")
+///     .WithProject(Path.Combine("MyLib", "MyLib.csproj"))
 ///     .WithVerbosity(DotNetVerbosity.Minimal)
 ///     .Run(output =&gt; lines.Add(output.Line));
 /// 

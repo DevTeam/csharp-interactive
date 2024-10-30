@@ -20,7 +20,7 @@ public class DotNetTestScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Test a project
+        // $description=Testing from the specified project
         // {
         // ## using HostApi;
 

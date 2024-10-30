@@ -21,7 +21,7 @@ public class DotNetFormatAnalyzersScenario(ITestOutputHelper output) : BaseScena
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Fix (non code style) analyzer issues
+        // $description=Fixing (non code style) analyzer issues
         // {
         // ## using HostApi;
 

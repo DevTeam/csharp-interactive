@@ -21,7 +21,7 @@ public class DotNetFormatScenario(ITestOutputHelper output) : BaseScenario(outpu
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Format a code
+        // $description=Formatting a code
         // {
         // ## using HostApi;
 

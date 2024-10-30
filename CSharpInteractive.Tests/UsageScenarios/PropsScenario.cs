@@ -11,7 +11,7 @@ public class PropsScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=02 Arguments and parameters
         // $priority=01
-        // $description=Using Props
+        // $description=Using properties
         // {
         WriteLine(Props["version"]);
         WriteLine(Props.Get("configuration", "Release"));

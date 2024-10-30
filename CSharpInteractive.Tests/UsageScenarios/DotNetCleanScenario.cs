@@ -25,7 +25,7 @@ public class DotNetCleanScenario(ITestOutputHelper output) : BaseScenario(output
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Clean a project
+        // $description=Cleaning a project
         // {
         // ## using HostApi;
         

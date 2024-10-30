@@ -15,7 +15,7 @@ public class DotNetNewDetailsScenario(ITestOutputHelper output) : BaseScenario(o
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Display template package metadata
+        // $description=Displaing template package metadata
         // {
         // ## using HostApi;
 

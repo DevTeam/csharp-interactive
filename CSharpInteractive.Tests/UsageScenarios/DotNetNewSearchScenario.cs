@@ -15,7 +15,7 @@ public class DotNetNewSearchScenario(ITestOutputHelper output) : BaseScenario(ou
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Searche for the templates
+        // $description=Searching for the templates
         // {
         // ## using HostApi;
 

@@ -15,7 +15,7 @@ public class NuGetRestoreAdvanced(ITestOutputHelper output) : BaseScenario(outpu
         // $visible=true
         // $tag=04 NuGet
         // $priority=01
-        // $description=Restore a NuGet package by a version range for the specified .NET and path
+        // $description=Restoring a NuGet package by a version range for the specified .NET and path
         // {
         // ## using HostApi;
 

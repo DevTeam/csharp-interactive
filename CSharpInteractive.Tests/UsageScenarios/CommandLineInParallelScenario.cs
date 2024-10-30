@@ -19,7 +19,7 @@ public class CommandLineInParallelScenario(ITestOutputHelper output) : BaseScena
         // $visible=true
         // $tag=05 Command Line
         // $priority=05
-        // $description=Run asynchronously in parallel
+        // $description=Running asynchronously in parallel
         // {
         // ## using HostApi;
 

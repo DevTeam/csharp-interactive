@@ -27,7 +27,7 @@ public class DotNetListReferenceScenario(ITestOutputHelper output) : BaseScenari
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Project reference listing
+        // $description=Printing project references for a project
         // {
         // ## using HostApi;
 

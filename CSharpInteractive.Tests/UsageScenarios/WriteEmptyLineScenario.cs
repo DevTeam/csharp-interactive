@@ -11,7 +11,7 @@ public class WriteEmptyLineScenario(ITestOutputHelper output) : BaseScenario(out
         // $visible=true
         // $tag=01 Output, logging and tracing
         // $priority=01
-        // $description=Write an empty line to a build log
+        // $description=Writing an empty line to a build log
         // {
         WriteLine();
         // }

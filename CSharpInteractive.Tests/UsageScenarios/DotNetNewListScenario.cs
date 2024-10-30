@@ -15,7 +15,7 @@ public class DotNetNewListScenario(ITestOutputHelper output) : BaseScenario(outp
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Creating a new project from template
+        // $description=Printing available templates to be run using dotnet new
         // {
         // ## using HostApi;
 

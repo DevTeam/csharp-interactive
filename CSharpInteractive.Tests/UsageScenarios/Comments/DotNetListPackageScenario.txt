@@ -7,7 +7,7 @@ new DotNetAddPackage()
 
 var lines = new List<string>();
 new DotNetListPackage()
-    .WithWorkingDirectory("MyLib")
+    .WithProject(Path.Combine("MyLib", "MyLib.csproj"))
     .WithVerbosity(DotNetVerbosity.Minimal)
     .Run(output => lines.Add(output.Line));
 

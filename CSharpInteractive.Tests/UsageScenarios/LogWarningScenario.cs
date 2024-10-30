@@ -15,7 +15,7 @@ public class LogWarningScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=01 Output, logging and tracing
         // $priority=03
-        // $description=Log a warning to a build log
+        // $description=Registering warnings in the build log
         // {
         Warning("Warning info");
         // }

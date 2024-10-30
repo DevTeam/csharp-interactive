@@ -2,33 +2,33 @@
 ## API
 
 - Output, logging and tracing
-  - [Write a line to a build log](#write-a-line-to-a-build-log)
-  - [Write a line highlighted with "Header" color to a build log](#write-a-line-highlighted-with-"header"-color-to-a-build-log)
-  - [Write an empty line to a build log](#write-an-empty-line-to-a-build-log)
-  - [Log an error to a build log](#log-an-error-to-a-build-log)
-  - [Log a warning to a build log](#log-a-warning-to-a-build-log)
-  - [Log information to a build log](#log-information-to-a-build-log)
-  - [Log trace information to a build log](#log-trace-information-to-a-build-log)
+  - [Writing a line to a build log](#writing-a-line-to-a-build-log)
+  - [Writing a line highlighted with "Header" color to a build log](#writing-a-line-highlighted-with-"header"-color-to-a-build-log)
+  - [Writing an empty line to a build log](#writing-an-empty-line-to-a-build-log)
+  - [Registering errors in the build log](#registering-errors-in-the-build-log)
+  - [Registering warnings in the build log](#registering-warnings-in-the-build-log)
+  - [Registering information in the build log](#registering-information-in-the-build-log)
+  - [Registering trace information in the build log](#registering-trace-information-in-the-build-log)
 - Arguments and parameters
-  - [Using Args](#using-args)
-  - [Using Props](#using-props)
+  - [Command line argsyments](#command-line-argsyments)
+  - [Using properties](#using-properties)
 - Microsoft DI
   - [Using the Host property](#using-the-host-property)
-  - [Get services](#get-services)
-  - [Service collection](#service-collection)
+  - [Getting services](#getting-services)
+  - [Using service collections](#using-service-collections)
 - NuGet
-  - [Restore NuGet a package of newest version](#restore-nuget-a-package-of-newest-version)
-  - [Restore a NuGet package by a version range for the specified .NET and path](#restore-a-nuget-package-by-a-version-range-for-the-specified-.net-and-path)
+  - [Restoring a NuGet package of newest version](#restoring-a-nuget-package-of-newest-version)
+  - [Restoring a NuGet package by a version range for the specified .NET and path](#restoring-a-nuget-package-by-a-version-range-for-the-specified-.net-and-path)
 - Command Line
-  - [Build command lines](#build-command-lines)
-  - [Run a command line](#run-a-command-line)
-  - [Run a command line asynchronously](#run-a-command-line-asynchronously)
-  - [Run and process output](#run-and-process-output)
-  - [Run asynchronously in parallel](#run-asynchronously-in-parallel)
+  - [Building custom command lines](#building-custom-command-lines)
+  - [Running a command line](#running-a-command-line)
+  - [Running a command line asynchronously](#running-a-command-line-asynchronously)
+  - [Running and analyzing an output](#running-and-analyzing-an-output)
+  - [Running asynchronously in parallel](#running-asynchronously-in-parallel)
   - [Cancellation of asynchronous run](#cancellation-of-asynchronous-run)
-  - [Run timeout](#run-timeout)
+  - [Running with timeout](#running-with-timeout)
 - Docker CLI
-  - [Build a project in a docker container](#build-a-project-in-a-docker-container)
+  - [Building a project in a docker container](#building-a-project-in-a-docker-container)
   - [Running in docker](#running-in-docker)
 - .NET CLI
   - [Adding a NuGet package](#adding-a-nuget-package)
@@ -37,21 +37,21 @@
   - [Adding a project reference](#adding-a-project-reference)
   - [Adding projects to the solution file](#adding-projects-to-the-solution-file)
   - [Adding projects to the solution file](#adding-projects-to-the-solution-file)
-  - [Build a project](#build-a-project)
-  - [Build a project using MSBuild](#build-a-project-using-msbuild)
-  - [Clean a project](#clean-a-project)
+  - [Building a project](#building-a-project)
+  - [Building a project using MSBuild](#building-a-project-using-msbuild)
+  - [Cleaning a project](#cleaning-a-project)
   - [Clearing the specified NuGet cache type](#clearing-the-specified-nuget-cache-type)
-  - [Creating a new project from template](#creating-a-new-project-from-template)
+  - [Createing a new project, configuration file, or solution based on the specified template](#createing-a-new-project,-configuration-file,-or-solution-based-on-the-specified-template)
   - [Deleting a NuGet package to the server](#deleting-a-nuget-package-to-the-server)
   - [Disabling a NuGet source](#disabling-a-nuget-source)
-  - [Display template package metadata](#display-template-package-metadata)
+  - [Displaing template package metadata](#displaing-template-package-metadata)
   - [Enabling a NuGet source](#enabling-a-nuget-source)
   - [Enabling or disabling workload-set update mode](#enabling-or-disabling-workload-set-update-mode)
-  - [Execute a dotnet application](#execute-a-dotnet-application)
-  - [Fix (non code style) analyzer issues](#fix-(non-code-style)-analyzer-issues)
-  - [Fix code style issues](#fix-code-style-issues)
-  - [Format a code](#format-a-code)
-  - [Gets the value of a specified NuGet configuration setting](#gets-the-value-of-a-specified-nuget-configuration-setting)
+  - [Executing a dotnet application](#executing-a-dotnet-application)
+  - [Fixing (non code style) analyzer issues](#fixing-(non-code-style)-analyzer-issues)
+  - [Fixing code style issues](#fixing-code-style-issues)
+  - [Formatting a code](#formatting-a-code)
+  - [Getting a value of a specified NuGet configuration setting](#getting-a-value-of-a-specified-nuget-configuration-setting)
   - [Installing a template package](#installing-a-template-package)
   - [Installing optional workloads](#installing-optional-workloads)
   - [Installing the .NET local tools that are in scope for the current directory](#installing-the-.net-local-tools-that-are-in-scope-for-the-current-directory)
@@ -59,52 +59,52 @@
   - [Installing the specified .NET tool](#installing-the-specified-.net-tool)
   - [Installing workloads needed for a project or a solution](#installing-workloads-needed-for-a-project-or-a-solution)
   - [Invoking a local tool](#invoking-a-local-tool)
-  - [List available templates](#list-available-templates)
-  - [NuGet package listing](#nuget-package-listing)
-  - [Packing the code into a NuGet package](#packing-the-code-into-a-nuget-package)
+  - [Packing a code into a NuGet package](#packing-a-code-into-a-nuget-package)
+  - [Printing a dependency graph for NuGet package](#printing-a-dependency-graph-for-nuget-package)
   - [Printing all .NET tools of the specified type currently installed](#printing-all-.net-tools-of-the-specified-type-currently-installed)
   - [Printing all configured NuGet sources](#printing-all-configured-nuget-sources)
   - [Printing all projects in a solution file](#printing-all-projects-in-a-solution-file)
+  - [Printing available templates to be run using dotnet new](#printing-available-templates-to-be-run-using-dotnet-new)
   - [Printing installed workloads](#printing-installed-workloads)
   - [Printing nuget configuration files currently being applied to a directory](#printing-nuget-configuration-files-currently-being-applied-to-a-directory)
+  - [Printing NuGet packages for a project](#printing-nuget-packages-for-a-project)
+  - [Printing project references for a project](#printing-project-references-for-a-project)
   - [Printing the latest available version of the .NET SDK and .NET Runtime, for each feature band](#printing-the-latest-available-version-of-the-.net-sdk-and-.net-runtime,-for-each-feature-band)
   - [Printing the location of the specified NuGet cache type](#printing-the-location-of-the-specified-nuget-cache-type)
-  - [Project reference listing](#project-reference-listing)
-  - [Publishing the application and its dependencies to a folder for deployment to a hosting system](#publishing-the-application-and-its-dependencies-to-a-folder-for-deployment-to-a-hosting-system)
+  - [Publishing an application and its dependencies to a folder for deployment to a hosting system](#publishing-an-application-and-its-dependencies-to-a-folder-for-deployment-to-a-hosting-system)
   - [Pushing a NuGet package to the server](#pushing-a-nuget-package-to-the-server)
   - [Removing a NuGet package](#removing-a-nuget-package)
   - [Removing a NuGet source.](#removing-a-nuget-source.)
   - [Repairing workloads installations](#repairing-workloads-installations)
   - [Restoring the dependencies and tools of a project](#restoring-the-dependencies-and-tools-of-a-project)
-  - [Run a custom .NET command](#run-a-custom-.net-command)
-  - [Run a dotnet application](#run-a-dotnet-application)
-  - [Run tests under dotCover](#run-tests-under-dotcover)
+  - [Running a .NET application](#running-a-.net-application)
+  - [Running a custom .NET command](#running-a-custom-.net-command)
   - [Running source code without any explicit compile or launch commands](#running-source-code-without-any-explicit-compile-or-launch-commands)
   - [Running tests from the specified assemblies](#running-tests-from-the-specified-assemblies)
-  - [Searche for the templates](#searche-for-the-templates)
+  - [Running tests under dotCover](#running-tests-under-dotcover)
   - [Searching all .NET tools that are published to NuGet](#searching-all-.net-tools-that-are-published-to-nuget)
   - [Searching for a NuGet package](#searching-for-a-nuget-package)
   - [Searching for optional workloads](#searching-for-optional-workloads)
-  - [Sets the value of a specified NuGet configuration setting](#sets-the-value-of-a-specified-nuget-configuration-setting)
-  - [Show the dependency graph for NuGet package](#show-the-dependency-graph-for-nuget-package)
+  - [Searching for the templates](#searching-for-the-templates)
+  - [Setting the value of a specified NuGet configuration setting](#setting-the-value-of-a-specified-nuget-configuration-setting)
   - [Signing with certificate](#signing-with-certificate)
   - [Storing the specified assemblies in the runtime package store.](#storing-the-specified-assemblies-in-the-runtime-package-store.)
-  - [Test a project](#test-a-project)
-  - [Test a project using the MSBuild VSTest target](#test-a-project-using-the-msbuild-vstest-target)
+  - [Testing a project using the MSBuild VSTest target](#testing-a-project-using-the-msbuild-vstest-target)
+  - [Testing from the specified project](#testing-from-the-specified-project)
   - [Uninstalling a specified workload](#uninstalling-a-specified-workload)
   - [Uninstalling a template package](#uninstalling-a-template-package)
   - [Uninstalling the specified .NET tool](#uninstalling-the-specified-.net-tool)
-  - [Unsets the value of a specified NuGet configuration setting](#unsets-the-value-of-a-specified-nuget-configuration-setting)
+  - [Unsetting the value of a specified NuGet configuration setting](#unsetting-the-value-of-a-specified-nuget-configuration-setting)
   - [Updating a NuGet source](#updating-a-nuget-source)
   - [Updating installed template packages](#updating-installed-template-packages)
   - [Updating installed workloads](#updating-installed-workloads)
   - [Working with development certificates](#working-with-development-certificates)
-  - [Run C# script](#run-c#-script)
-  - [Shuts down build servers](#shuts-down-build-servers)
+  - [Running C# script](#running-c#-script)
+  - [Shutting down build servers](#shutting-down-build-servers)
 - TeamCity API
   - [TeamCity integration via service messages](#teamcity-integration-via-service-messages)
 
-### Write a line to a build log
+### Writing a line to a build log
 
 
 
@@ -114,7 +114,7 @@ WriteLine("Hello");
 
 
 
-### Write an empty line to a build log
+### Writing an empty line to a build log
 
 
 
@@ -124,7 +124,7 @@ WriteLine();
 
 
 
-### Write a line highlighted with "Header" color to a build log
+### Writing a line highlighted with "Header" color to a build log
 
 
 
@@ -134,7 +134,7 @@ WriteLine("Hello", Header);
 
 
 
-### Log an error to a build log
+### Registering errors in the build log
 
 
 
@@ -144,7 +144,7 @@ Error("Error info", "Error identifier");
 
 
 
-### Log a warning to a build log
+### Registering warnings in the build log
 
 
 
@@ -154,7 +154,7 @@ Warning("Warning info");
 
 
 
-### Log information to a build log
+### Registering information in the build log
 
 
 
@@ -164,7 +164,7 @@ Info("Some info");
 
 
 
-### Log trace information to a build log
+### Registering trace information in the build log
 
 
 
@@ -174,7 +174,7 @@ Trace("Some trace info");
 
 
 
-### Using Args
+### Command line argsyments
 
 _Args_ have got from the script arguments.
 
@@ -192,7 +192,7 @@ if (Args.Count > 1)
 
 
 
-### Using Props
+### Using properties
 
 
 
@@ -218,7 +218,7 @@ Host.WriteLine("Hello");
 
 
 
-### Get services
+### Getting services
 
 This method might be used to get access to different APIs like [INuGet](TeamCity.CSharpInteractive.HostApi/INuGet.cs) or [ICommandLine](TeamCity.CSharpInteractive.HostApi/ICommandLine.cs).
 
@@ -231,7 +231,7 @@ serviceProvider.GetService(typeof(INuGet));
 
 Besides that, it is possible to get an instance of [System.IServiceProvider](https://docs.microsoft.com/en-US/dotnet/api/system.iserviceprovider) to access APIs.
 
-### Service collection
+### Using service collections
 
 
 
@@ -260,7 +260,7 @@ private class MyTask(ICommandLineRunner runner)
 
 
 
-### Restore NuGet a package of newest version
+### Restoring a NuGet package of newest version
 
 
 
@@ -273,7 +273,7 @@ IEnumerable<NuGetPackage> packages = GetService<INuGet>()
 
 
 
-### Restore a NuGet package by a version range for the specified .NET and path
+### Restoring a NuGet package by a version range for the specified .NET and path
 
 
 
@@ -294,7 +294,7 @@ IEnumerable<NuGetPackage> packages = GetService<INuGet>().Restore(settings);
 
 
 
-### Build command lines
+### Building custom command lines
 
 
 
@@ -342,7 +342,7 @@ cmd = new CommandLine("cmd", "/c", "echo", "Hello")
 
 
 
-### Run a command line
+### Running a command line
 
 
 
@@ -367,7 +367,7 @@ cmd.Run().EnsureSuccess();
 
 
 
-### Run a command line asynchronously
+### Running a command line asynchronously
 
 
 
@@ -384,7 +384,7 @@ var result = await new CommandLine("cmd", "/c", "DIR")
 
 
 
-### Run and process output
+### Running and analyzing an output
 
 
 
@@ -401,7 +401,7 @@ lines.ShouldContain("MyEnv=MyVal");
 
 
 
-### Run asynchronously in parallel
+### Running asynchronously in parallel
 
 
 
@@ -436,7 +436,7 @@ task.IsCompleted.ShouldBeFalse();
 
 
 
-### Run timeout
+### Running with timeout
 
 If timeout expired a process will be killed.
 
@@ -450,7 +450,7 @@ var exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
 
 
 
-### Build a project in a docker container
+### Building a project in a docker container
 
 
 
@@ -531,7 +531,7 @@ var result = new DotNetAddReference()
 
 
 
-### Build a project
+### Building a project
 
 
 
@@ -549,7 +549,7 @@ result.ExitCode.ShouldBe(0, result.ToString());
 
 
 
-### Clean a project
+### Cleaning a project
 
 
 
@@ -564,7 +564,7 @@ new DotNetClean()
 
 
 
-### Run a custom .NET command
+### Running a custom .NET command
 
 
 
@@ -600,7 +600,7 @@ new DotNetDevCertsHttps()
 
 
 
-### Execute a dotnet application
+### Executing a dotnet application
 
 
 
@@ -613,7 +613,7 @@ new DotNetExec()
 
 
 
-### Fix (non code style) analyzer issues
+### Fixing (non code style) analyzer issues
 
 
 
@@ -630,7 +630,7 @@ new DotNetFormatAnalyzers()
 
 
 
-### Format a code
+### Formatting a code
 
 
 
@@ -649,7 +649,7 @@ new DotNetFormat()
 
 
 
-### Fix code style issues
+### Fixing code style issues
 
 
 
@@ -666,7 +666,7 @@ new DotNetFormatStyle()
 
 
 
-### NuGet package listing
+### Printing NuGet packages for a project
 
 
 
@@ -680,7 +680,7 @@ new DotNetAddPackage()
 
 var lines = new List<string>();
 new DotNetListPackage()
-    .WithWorkingDirectory("MyLib")
+    .WithProject(Path.Combine("MyLib", "MyLib.csproj"))
     .WithVerbosity(DotNetVerbosity.Minimal)
     .Run(output => lines.Add(output.Line));
 
@@ -689,7 +689,7 @@ lines.Any(i => i.Contains("Pure.DI")).ShouldBeTrue();
 
 
 
-### Project reference listing
+### Printing project references for a project
 
 
 
@@ -711,7 +711,7 @@ lines.Any(i => i.Contains("MyLib.csproj")).ShouldBeTrue();
 
 
 
-### Test a project using the MSBuild VSTest target
+### Testing a project using the MSBuild VSTest target
 
 
 
@@ -732,7 +732,7 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.
 
 
 
-### Display template package metadata
+### Displaing template package metadata
 
 
 
@@ -760,7 +760,7 @@ new DotNetNewInstall()
 
 
 
-### Creating a new project from template
+### Printing available templates to be run using dotnet new
 
 
 
@@ -773,7 +773,7 @@ new DotNetNewList()
 
 
 
-### List available templates
+### Createing a new project, configuration file, or solution based on the specified template
 
 
 
@@ -789,7 +789,7 @@ new DotNetNew()
 
 
 
-### Searche for the templates
+### Searching for the templates
 
 
 
@@ -845,7 +845,7 @@ new DotNetNuGetAddSource()
 
 
 
-### Gets the value of a specified NuGet configuration setting
+### Getting a value of a specified NuGet configuration setting
 
 
 
@@ -874,7 +874,7 @@ new DotNetNuGetConfigPaths()
 
 
 
-### Sets the value of a specified NuGet configuration setting
+### Setting the value of a specified NuGet configuration setting
 
 
 
@@ -890,7 +890,7 @@ new DotNetNuGetConfigSet()
 
 
 
-### Unsets the value of a specified NuGet configuration setting
+### Unsetting the value of a specified NuGet configuration setting
 
 
 
@@ -1052,7 +1052,7 @@ new DotNetNuGetUpdateSource()
 
 
 
-### Show the dependency graph for NuGet package
+### Printing a dependency graph for NuGet package
 
 
 
@@ -1102,7 +1102,7 @@ record Package(
 
 
 
-### Packing the code into a NuGet package
+### Packing a code into a NuGet package
 
 
 
@@ -1119,7 +1119,7 @@ new DotNetPack()
 
 
 
-### Publishing the application and its dependencies to a folder for deployment to a hosting system
+### Publishing an application and its dependencies to a folder for deployment to a hosting system
 
 
 
@@ -1215,7 +1215,7 @@ stdOut.ShouldBe(new[] {"Hello, World!"});
 
 
 
-### Run a dotnet application
+### Running a .NET application
 
 
 
@@ -1331,7 +1331,7 @@ new DotNetStore()
 
 
 
-### Test a project
+### Testing from the specified project
 
 
 
@@ -1351,7 +1351,7 @@ result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.
 
 
 
-### Run tests under dotCover
+### Running tests under dotCover
 
 
 
@@ -1644,7 +1644,7 @@ new DotNetWorkloadUpdate()
 
 
 
-### Build a project using MSBuild
+### Building a project using MSBuild
 
 
 
@@ -1674,7 +1674,7 @@ result.ExitCode.ShouldBe(0, result.ToString());
 
 
 
-### Shuts down build servers
+### Shutting down build servers
 
 
 
@@ -1688,7 +1688,7 @@ new DotNetBuildServerShutdown()
 
 
 
-### Run C# script
+### Running C# script
 
 
 
