@@ -82,14 +82,18 @@ foreach (var package in packages)
     }
 }
 
-var buildProps = new[] {("version", packageVersion.ToString())};
+var buildProps = new[]
+{
+    ("configuration", configuration),
+    ("version", packageVersion.ToString())
+};
+
 new MSBuild()
     .WithProject(Path.Combine(currentDir, "CSharpInteractive", "CSharpInteractive.Tool.csproj"))
     .WithRestore(true)
     .WithTarget("Rebuild;GetDependencyTargetPaths")
     .WithProps(buildProps)
-    .Build()
-    .EnsureSuccess();
+    .Build().EnsureSuccess();
 
 const string templateJson = "CSharpInteractive.Templates/content/ConsoleApplication-CSharp/.template.config/template.json";
 var content = File.ReadAllText(templateJson);
@@ -173,13 +177,17 @@ else
     }
 }
 
-var uninstallTool = new DotNetToolUninstall()
+var hasTool = new DotNetToolList()
     .WithPackage(toolPackageId)
-    .WithGlobal(true);
+    .WithGlobal(true)
+    .Run().ExitCode == 0;
 
-if (uninstallTool.Run(_ => { }).ExitCode != 0)
+if (hasTool)
 {
-    Warning($"{uninstallTool} failed.");
+    new DotNetToolUninstall()
+        .WithPackage(toolPackageId)
+        .WithGlobal(true)
+        .Run().EnsureSuccess();
 }
 
 if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -196,28 +204,22 @@ await new DotNetBuild()
     .WithProject(Path.Combine("Samples", "MySampleLib"))
     .BuildAsync().EnsureSuccess();
 
-var installTool = new DotNetToolInstall()
+new DotNetToolInstall()
     .WithPackage(toolPackageId)
     .WithGlobal(true)
+    .WithNoCache(true)
     .WithVersion(packageVersion.ToString())
-    .AddSources(Path.Combine(outputDir, "CSharpInteractive.Tool"));
+    .AddSources(Path.Combine(outputDir, "CSharpInteractive.Tool"))
+    .Run().EnsureSuccess();
 
-installTool.Run(output =>
-{
-    output.Handled = true;
-    WriteLine(output.Line);
-}).EnsureSuccess(_ => true);
+new DotNetCsi()
+    .WithVersion(true)
+    .WithShortName("Checking csi tool")
+    .Run().EnsureSuccess();
 
-new DotNetCsi().WithVersion(true).WithShortName("Checking csi tool").Run().EnsureSuccess();
-
-var uninstallTemplates = new DotNetNewUninstall()
-    .WithPackage(templatesPackageId);
-
-uninstallTemplates.Run(output =>
-{
-    output.Handled = true;
-    WriteLine(output.Line);
-}).EnsureSuccess(_ => true);
+new DotNetNewUninstall()
+    .WithPackage(templatesPackageId)
+    .Run();
 
 var installTemplates = new DotNetNewInstall()
     .WithPackage($"{templatesPackageId}::{packageVersion.ToString()}")
@@ -243,7 +245,7 @@ else
     Info("Pushing NuGet packages were skipped.");
 }
 
-if (integrationTests || dockerLinuxTests)
+if (!skipTests && (integrationTests || dockerLinuxTests))
 {
     var logicOp = integrationTests && dockerLinuxTests ? "|" : "&";
     var filter = $"Integration={integrationTests}{logicOp}Docker={dockerLinuxTests}";
