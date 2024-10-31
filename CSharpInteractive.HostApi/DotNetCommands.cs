@@ -5178,7 +5178,7 @@ public partial record DotNetTest(
 /// new DotNetToolInstall()
 ///     .WithLocal(true)
 ///     .WithPackage("dotnet-csi")
-///     .WithVersion("1.1.1")
+///     .WithVersion("1.1.2")
 ///     .Run().EnsureSuccess();
 ///</code>
 /// </example>
@@ -5721,6 +5721,7 @@ public partial record DotNetToolUninstall(
 /// new DotNetToolUpdate()
 ///     .WithLocal(true)
 ///     .WithPackage("dotnet-csi")
+///     .WithVersion("1.1.2")
 ///     .Run().EnsureSuccess();
 ///</code>
 /// </example>

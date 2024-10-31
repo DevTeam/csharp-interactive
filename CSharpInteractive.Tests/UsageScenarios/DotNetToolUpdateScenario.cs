@@ -19,7 +19,7 @@ public class DotNetToolUpdateScenario(ITestOutputHelper output) : BaseScenario(o
         new DotNetToolInstall()
             .WithLocal(true)
             .WithPackage("dotnet-csi")
-            .WithVersion("1.1.1")
+            .WithVersion("1.1.2")
             .Run().EnsureSuccess();
 
         // $visible=true
@@ -32,6 +32,7 @@ public class DotNetToolUpdateScenario(ITestOutputHelper output) : BaseScenario(o
         new DotNetToolUpdate()
             .WithLocal(true)
             .WithPackage("dotnet-csi")
+            .WithVersion("1.1.2")
             .Run().EnsureSuccess();
         // }
     }

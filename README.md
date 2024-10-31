@@ -1524,7 +1524,7 @@ using HostApi;
 new DotNetToolInstall()
     .WithLocal(true)
     .WithPackage("dotnet-csi")
-    .WithVersion("1.1.1")
+    .WithVersion("1.1.2")
     .Run().EnsureSuccess();
 ```
 
@@ -1629,6 +1629,7 @@ using HostApi;
 new DotNetToolUpdate()
     .WithLocal(true)
     .WithPackage("dotnet-csi")
+    .WithVersion("1.1.2")
     .Run().EnsureSuccess();
 ```
 
