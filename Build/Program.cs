@@ -231,6 +231,14 @@ foreach (var framework in frameworks)
     CheckCompatibilityAsync(framework, packageVersion, defaultNuGetSource, outputDir);
 }
 
+if (!skipTests && (integrationTests || dockerLinuxTests))
+{
+    var logicOp = integrationTests && dockerLinuxTests ? "|" : "&";
+    test
+        .WithFilter($"Integration={integrationTests}{logicOp}Docker={dockerLinuxTests}")
+        .Build().EnsureSuccess(buildResult => buildResult is {ExitCode: 0, Summary.FailedTests: 0});
+}
+
 if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && packageVersion.Release != "dev")
 {
     var push = new DotNetNuGetPush()
@@ -246,14 +254,6 @@ if (!string.IsNullOrWhiteSpace(apiKey) && packageVersion.Release != "dev" && pac
 else
 {
     Info("Pushing NuGet packages was skipped.");
-}
-
-if (!skipTests && (integrationTests || dockerLinuxTests))
-{
-    var logicOp = integrationTests && dockerLinuxTests ? "|" : "&";
-    test
-        .WithFilter($"Integration={integrationTests}{logicOp}Docker={dockerLinuxTests}")
-        .Build().EnsureSuccess(buildResult => buildResult is {ExitCode: 0, Summary.FailedTests: 0});
 }
 
 Info($"Tool and package version: {packageVersion}");
