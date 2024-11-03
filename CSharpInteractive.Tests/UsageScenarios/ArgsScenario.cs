@@ -8,7 +8,7 @@ public class ArgsScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=02 Arguments and parameters
         // $priority=00
-        // $description=Command line argsyments
+        // $description=Command line arguments
         // $header=_Args_ have got from the script arguments.
         // {
         if (Args.Count > 0)

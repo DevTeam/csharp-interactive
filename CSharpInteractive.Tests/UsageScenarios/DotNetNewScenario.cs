@@ -15,7 +15,7 @@ public class DotNetNewScenario(ITestOutputHelper output) : BaseScenario(output)
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Createing a new project, configuration file, or solution based on the specified template
+        // $description=Creating a new project, configuration file, or solution based on the specified template
         // {
         // ## using HostApi;
 

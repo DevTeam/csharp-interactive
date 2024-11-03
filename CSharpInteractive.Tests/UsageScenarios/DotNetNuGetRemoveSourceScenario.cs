@@ -26,7 +26,7 @@ public class DotNetNuGetRemoveSourceScenario(ITestOutputHelper output) : BaseSce
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Removing a NuGet source.
+        // $description=Removing an existing source from your NuGet configuration files
         // {
         // ## using HostApi;
 

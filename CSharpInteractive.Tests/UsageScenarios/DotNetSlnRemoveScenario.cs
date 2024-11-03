@@ -40,7 +40,7 @@ public class DotNetSlnRemoveScenario(ITestOutputHelper output) : BaseScenario(ou
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Adding projects to the solution file
+        // $description=Removing a project or multiple projects from the solution file
         // {
         // ## using HostApi;
 
