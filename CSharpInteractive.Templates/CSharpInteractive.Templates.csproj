@@ -9,7 +9,6 @@
         <IncludeContentInPack>true</IncludeContentInPack>
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
         <EnableDefaultItems>False</EnableDefaultItems>
-        <NoWarn>2008;NU5105</NoWarn>
         <NoPackageAnalysis>true</NoPackageAnalysis>
         <PackageId>CSharpInteractive.Templates</PackageId>
         <Title>C# script Templates</Title>

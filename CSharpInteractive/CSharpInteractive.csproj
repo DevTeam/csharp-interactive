@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>$(Frameworks)</TargetFrameworks>
         <IsPackable>true</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DefineConstants>$(DefineConstants);APPLICATION</DefineConstants>
@@ -10,7 +10,6 @@
         <OutputPath>bin/$(ProjectOutputPath)</OutputPath>
         <IntermediateOutputPath>obj/$(MSBuildThisFileName)/</IntermediateOutputPath>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>CS1591</NoWarn>
         <PackageId>CSharpInteractive</PackageId>
         <IncludeAssets>All</IncludeAssets>
         <Title>C# {0} script library</Title>
@@ -26,7 +25,7 @@
         <PackageReference Include="NuGet.Build.Tasks" Version="6.4.0"/>
         <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all"/>
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="all"/>
-        <PackageReference Include="Pure.DI" Version="2.1.36">
+        <PackageReference Include="Pure.DI" Version="2.1.37">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
