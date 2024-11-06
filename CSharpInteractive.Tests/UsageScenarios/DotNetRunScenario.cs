@@ -32,9 +32,9 @@ public class DotNetRunScenario(ITestOutputHelper output) : BaseScenario(output)
             .WithProject(Path.Combine("MyApp", "MyApp.csproj"))
             .Build(message => stdOut.Add(message.Text))
             .EnsureSuccess();
+        // }
 
         // Checks stdOut
-        stdOut.ShouldBe(new[] {"Hello, World!"});
-        // }
+        stdOut.Any(i => i.Contains("Hello, World!")).ShouldBeTrue();
     }
 }

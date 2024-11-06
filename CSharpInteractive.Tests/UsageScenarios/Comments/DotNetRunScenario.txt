@@ -5,6 +5,3 @@ new DotNetRun()
     .WithProject(Path.Combine("MyApp", "MyApp.csproj"))
     .Build(message => stdOut.Add(message.Text))
     .EnsureSuccess();
-
-// Checks stdOut
-stdOut.ShouldBe(new[] {"Hello, World!"});

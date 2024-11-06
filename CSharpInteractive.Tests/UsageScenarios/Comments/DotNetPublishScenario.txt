@@ -2,6 +2,6 @@ using HostApi;
 
 new DotNetPublish()
     .WithWorkingDirectory("MyLib")
-    .WithFramework("net8.0")
+    .WithFramework(framework)
     .WithOutput("bin")
     .Build().EnsureSuccess();

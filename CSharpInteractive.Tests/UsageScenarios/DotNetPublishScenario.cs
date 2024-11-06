@@ -5,6 +5,8 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
+using NuGet.Versioning;
+
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "True")]
 public class DotNetPublishScenario(ITestOutputHelper output) : BaseScenario(output)
@@ -12,6 +14,24 @@ public class DotNetPublishScenario(ITestOutputHelper output) : BaseScenario(outp
     [Fact]
     public void Run()
     {
+        var versions = new List<NuGetVersion>();
+        new DotNetSdkCheck()
+            .Run(output =>
+            {
+                if (output.Line.StartsWith("Microsoft."))
+                {
+                    var data = output.Line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    if (data.Length >= 2)
+                    {
+                        versions.Add(NuGetVersion.Parse(data[1]));
+                    }
+                }
+            })
+            .EnsureSuccess();
+
+        var maxSdkVersion = versions.Max()!;
+        var framework = $"net{maxSdkVersion.Major}.{maxSdkVersion.Minor}";
+        
         new DotNetNew()
             .WithTemplateName("classlib")
             .WithName("MyLib")
@@ -27,7 +47,7 @@ public class DotNetPublishScenario(ITestOutputHelper output) : BaseScenario(outp
 
         new DotNetPublish()
             .WithWorkingDirectory("MyLib")
-            .WithFramework("net8.0")
+            .WithFramework(framework)
             .WithOutput("bin")
             .Build().EnsureSuccess();
         // }

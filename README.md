@@ -1247,7 +1247,7 @@ using HostApi;
 
 new DotNetPublish()
     .WithWorkingDirectory("MyLib")
-    .WithFramework("net8.0")
+    .WithFramework(framework)
     .WithOutput("bin")
     .Build().EnsureSuccess();
 ```
@@ -1327,9 +1327,6 @@ new DotNetRun()
     .WithProject(Path.Combine("MyApp", "MyApp.csproj"))
     .Build(message => stdOut.Add(message.Text))
     .EnsureSuccess();
-
-// Checks stdOut
-stdOut.ShouldBe(new[] {"Hello, World!"});
 ```
 
 
@@ -1461,11 +1458,6 @@ using HostApi;
 var result = new DotNetTest()
     .WithWorkingDirectory("MyTests")
     .Build().EnsureSuccess();
-
-// The "result" variable provides details about build and tests
-result.ExitCode.ShouldBe(0, result.ToString());
-result.Summary.Tests.ShouldBe(1, result.ToString());
-result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
 ```
 
 

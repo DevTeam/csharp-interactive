@@ -41,7 +41,7 @@ using Internal;
     var forceArg = new Arg("Force", "--force", "bool?", "Forces all dependencies to be resolved even if the last restore was successful. Specifying this flag is the same as deleting the project.assets.json file.");
     var archArg = new Arg("Arch", "--arch", "string", "Specifies the target architecture. This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --arch x86 sets the RID to win-x86. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6 Preview 7.");
     var osArg = new Arg("OS", "--os", "string", "Specifies the target operating system (OS). This is a shorthand syntax for setting the Runtime Identifier (RID), where the provided value is combined with the default RID. For example, on a win-x64 machine, specifying --os linux sets the RID to linux-x64. If you use this option, don&apos;t use the -r|--runtime option. Available since .NET 6.");
-    var terminalLoggerArg = new Arg("TerminalLogger", "--tl", "DotNetTerminalLogger?", "Specifies whether the terminal logger should be used for the build output.");
+    var terminalLoggerArg = new Arg("TerminalLogger", "--tl", "DotNetTerminalLogger?", "Specifies whether the terminal logger should be used for the build output.") { Separator = ":" };
     var artifactsPathArg = new Arg("ArtifactsPath", "--artifacts-path", "string", "All build output files from the executed command will go in subfolders under the specified path, separated by project.");
     var disableBuildServersArg = new Arg("DisableBuildServers", "--disable-build-servers", "bool?", "Forces the command to ignore any persistent build servers. This option provides a consistent way to disable all use of build caching, which forces a build from scratch. A build that doesn't rely on caches is useful when the caches might be corrupted or incorrect for some reason. Available since .NET 7 SDK.");
     var outputArg = new Arg("Output", "--output", "string", "Directory in which to place the built binaries. If not specified, the default path is ./bin/&lt;configuration&gt;/&lt;framework&gt;/. For projects with multiple target frameworks (via the TargetFrameworks property), you also need to define --framework when you specify this option.");
@@ -49,7 +49,7 @@ using Internal;
     var versionSuffixArg = new Arg("VersionSuffix", "--version-suffix", "string", "Sets the value of the $(VersionSuffix) property to use when building the project. This only works if the $(Version) property isn't set. Then, $(Version) is set to the $(VersionPrefix) combined with the $(VersionSuffix), separated by a dash.");
     var templateNameArg = new Arg("TemplateName", "", "string", "The template to instantiate when the command is invoked. Each template might have specific options you can pass.") { IsProject = true };
     var languageArg = new Arg("Language", "--language", "DotNetLanguage?", "");
-    var ownersArg = new Arg("Owners", "--owners", "IEnumerable<string>", "List of trusted owners to further restrict the trust of a repository.") { IsCollection = true, CollectionSeparator = ","};
+    var ownersArg = new Arg("Owners", "--owners", "IEnumerable<string>", "List of trusted owners to further restrict the trust of a repository.") { IsCollection = true, Separator = ","};
     var allowUntrustedRootArg = new Arg("AllowUntrustedRoot", "--allow-untrusted-root", "bool?", "Specifies if the certificate for the trusted signer should be allowed to chain to an untrusted root. This is not recommended.");
     var configFileArg = new Arg("ConfigFile", "--configfile", "string", "The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used.");
     var sourcesArg = new Arg("Sources", "--source", "IEnumerable<string>", "The URI of the NuGet package source to use during this operation.") { IsCollection = true };
@@ -60,14 +60,14 @@ using Internal;
     var includePreviewsArg = new Arg("IncludePreviews", "--include-previews", "bool?", "Allows prerelease workload manifests.");
     var skipManifestUpdateArg = new Arg("SkipManifestUpdate", "--skip-manifest-update", "bool?", "Skip updating the workload manifests. The workload manifests define what assets and versions need to be installed for each workload.");
     var tempDirArg = new Arg("TempDir", "--temp-dir", "string", "Specify the temporary directory used to download and extract NuGet packages (must be secure).");
-    var includesArg = new Arg("Includes", "--include", "IEnumerable<string>", "A list of relative file or folder paths to include in formatting. The default is all files in the solution or project.") {IsCollection = true, CollectionSeparator = " "};
-    var excludesArg = new Arg("Excludes", "--exclude", "IEnumerable<string>", "A space-separated list of relative file or folder paths to exclude from formatting. The default is none.") {IsCollection = true, CollectionSeparator = " "};
+    var includesArg = new Arg("Includes", "--include", "IEnumerable<string>", "A list of relative file or folder paths to include in formatting. The default is all files in the solution or project.") {IsCollection = true, Separator = " "};
+    var excludesArg = new Arg("Excludes", "--exclude", "IEnumerable<string>", "A space-separated list of relative file or folder paths to exclude from formatting. The default is none.") {IsCollection = true, Separator = " "};
     var dotNetFormatSeverityArg = new Arg("Severity", "--severity", "DotNetFormatSeverity?", "The minimum severity of diagnostics to fix. Allowed values are <c>Information</c>, <c>Warning</c>, and <c>Error</c>. The default value is <c>Warning</c>.");
     var verifyNoChangesArg = new Arg("VerifyNoChanges", "--verify-no-changes", "bool?", "Verifies that no formatting changes would be performed. Terminates with a non zero exit code if any files would have been formatted.");
     var includeGeneratedArg = new Arg("IncludeGenerated", "--include-generated", "bool?", "Formats files generated by the SDK.");
     var binaryLogArg = new Arg("BinaryLog", "--binarylog", "string", "Logs all project or solution load information to a binary log file.");
     var reportArg = new Arg("Report", "--report", "string", "Produces a JSON report in the specified directory.");
-    var formatDiagnosticsArg = new Arg("Diagnostics", "--diagnostics", "IEnumerable<string>", "A list of diagnostic IDs to use as a filter when fixing code style or third-party issues. Default value is whichever IDs are listed in the .editorconfig file. For a list of built-in analyzer rule IDs that you can specify, see the list of IDs for code-analysis style rules.") {IsCollection = true, CollectionSeparator = " "};
+    var formatDiagnosticsArg = new Arg("Diagnostics", "--diagnostics", "IEnumerable<string>", "A list of diagnostic IDs to use as a filter when fixing code style or third-party issues. Default value is whichever IDs are listed in the .editorconfig file. For a list of built-in analyzer rule IDs that you can specify, see the list of IDs for code-analysis style rules.") {IsCollection = true, Separator = " "};
 
     var commands = new Command[]
     {
@@ -1244,7 +1244,7 @@ using Internal;
             ["test", "$Project"],
             [
                 propsArg,
-                new Arg("Environments", "--environment", "IEnumerable<(string name, string value)>", "Sets the value of an environment variable. Creates the variable if it does not exist, overrides if it does exist. Use of this option will force the tests to be run in an isolated process.") { IsCollection = true, CollectionSeparator = "="},
+                new Arg("Environments", "--environment", "IEnumerable<(string name, string value)>", "Sets the value of an environment variable. Creates the variable if it does not exist, overrides if it does exist. Use of this option will force the tests to be run in an isolated process.") { IsCollection = true, Separator = "="},
                 new Arg("Loggers", "--logger ", "IEnumerable<string>", "Specifies a logger for test results and optionally switches for the logger.") { IsCollection = true },
                 projectArg with { Comments = "Path to the test project.<br/>Or path to the solution.<br/>Or path to a directory that contains a project or a solution.<br/>Or path to a test project .dll file.<br/>Or path to a test project .exe file.<br/>If not specified, the effect is the same as using the DIRECTORY argument to specify the current directory." },
                 new Arg("TestAdapterPath", "--test-adapter-path", "string", "Path to a directory to be searched for additional test adapters. Only .dll files with suffix .TestAdapter.dll are inspected. If not specified, the directory of the test .dll is searched.") { AddArgOverride = ".AddArgs(\"--test-adapter-path\", $\"{string.Join(\";\", new[] {TestAdapterPath, virtualContext.Resolve(settings.DotNetVSTestLoggerDirectory)}.Where(i => !string.IsNullOrWhiteSpace(i)))}\")" } ,
@@ -1272,7 +1272,8 @@ using Internal;
                 new Arg("Settings", "--settings", "string", "The .runsettings file to use for running the tests. The TargetPlatform element (x86|x64) has no effect for dotnet test. To run tests that target x86, install the x86 version of .NET Core. The bitness of the dotnet.exe that is on the path is what will be used for running tests."),
                 new Arg("ListTests", "--list-tests", "bool?", "List the discovered tests instead of running the tests."),
                 verbosityArg,
-                diagnosticsArg
+                diagnosticsArg,
+                terminalLoggerArg
             ],
             CommandTypes.Build | CommandTypes.Test | CommandTypes.RequiresSettings
         ),
@@ -1827,7 +1828,7 @@ public partial record <#= command.Name #>(
         foreach (var arg in command.Args.Where(i => !i.IsProject).Where(i => i.IsCollection && i.ArgName != "--property"))
         {
 #>
-            .AddArgs(<#= arg.PropertyName #>.ToArgs("<#= arg.ArgName #>", "<#= arg.CollectionSeparator #>"))
+            .AddArgs(<#= arg.PropertyName #>.ToArgs("<#= arg.ArgName #>", "<#= arg.Separator #>"))
 <#
         }
 
@@ -1836,7 +1837,7 @@ public partial record <#= command.Name #>(
             if (string.IsNullOrWhiteSpace(arg.AddArgOverride))
             {
 #>
-            .AddArgs(<#= arg.PropertyName #>.ToArgs("<#= arg.ArgName #>", "<#= arg.CollectionSeparator #>"))
+            .AddArgs(<#= arg.PropertyName #>.ToArgs("<#= arg.ArgName #>", "<#= arg.Separator #>"))
 <#
             }
             else
@@ -1886,7 +1887,7 @@ public partial record <#= command.Name #>(
         public string Comments { get; set; } = Comments;
         public bool IsProject { get; set; }
         public bool IsCollection { get; set; }
-        public string CollectionSeparator { get; set; } = "";
+        public string Separator { get; set; } = "";
         public string DefaultValue { get; set; }
         public string AddArgOverride { get; set; }
     }

@@ -28,12 +28,11 @@ public class DotNetTestScenario(ITestOutputHelper output) : BaseScenario(output)
         var result = new DotNetTest()
             .WithWorkingDirectory("MyTests")
             .Build().EnsureSuccess();
-
-        // The "result" variable provides details about build and tests
+        // }
+        
         result.ExitCode.ShouldBe(0, result.ToString());
         result.Summary.Tests.ShouldBe(1, result.ToString());
         result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
-        // }
     }
 
     [Fact]

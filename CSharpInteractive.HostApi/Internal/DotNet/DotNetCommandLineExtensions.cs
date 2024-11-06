@@ -83,7 +83,8 @@ internal static class DotNetCommandLineExtensions
                 .AddProps("-p",
                     ("VSTestLogger", TeamcityLoggerName),
                     ("VSTestTestAdapterPath", virtualContext.Resolve(settings.DotNetVSTestLoggerDirectory)),
-                    ("VSTestVerbosity", (verbosity.HasValue ? (verbosity.Value >= DotNetVerbosity.Normal ? verbosity.Value : DotNetVerbosity.Normal) : DotNetVerbosity.Normal).ToString().ToLowerInvariant()))
+                    ("VSTestVerbosity", (verbosity.HasValue ? (verbosity.Value >= DotNetVerbosity.Normal ? verbosity.Value : DotNetVerbosity.Normal) : DotNetVerbosity.Normal).ToString().ToLowerInvariant()),
+                    ("TestingPlatformDotnetTestSupport", "false"))
                 .AddVars(("TEAMCITY_SERVICE_MESSAGES_PATH", virtualContext.Resolve(settings.TeamCityMessagesPath)))
             : cmd;
     }
@@ -146,11 +147,16 @@ internal static class DotNetCommandLineExtensions
     {
         if (!string.IsNullOrWhiteSpace(collectionSeparator))
         {
-            return [$"{name}{collectionSeparator}\"{value}\""];
+            return [$"{name}{collectionSeparator}{value}"];
         }
         
         var valueStr = value?.ToString();
         return string.IsNullOrWhiteSpace(valueStr) ? [] : [name, valueStr!];
+    }
+    
+    public static string[] ToArgs<T>(this IEnumerable<(string name, T value) > values, string name, string separator)
+    {
+        return values.SelectMany(i => new [] { name, $"{i.name}{separator}{i.value}"}).ToArray();
     }
     
     public static string[] ToArgs(this IEnumerable<string> values, string name, string collectionSeparator)
@@ -159,13 +165,7 @@ internal static class DotNetCommandLineExtensions
         {
             return values.SelectMany(value => string.IsNullOrWhiteSpace(value) ? [] : new[] {name, value}).ToArray();
         }
-        
-        if (string.IsNullOrWhiteSpace(collectionSeparator))
-        {
-            var result = Enumerable.Repeat(name, 1).Concat(values).ToArray();
-            return result.Length > 1 ? result : [];
-        }
-        
+
         var str = string.Join(collectionSeparator, values);
         if (string.IsNullOrWhiteSpace(str))
         {

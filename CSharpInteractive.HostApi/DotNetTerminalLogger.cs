@@ -19,5 +19,5 @@ public enum DotNetTerminalLogger
     /// <summary>
     /// Skips the environment check and uses the default console logger.
     /// </summary>
-    Off   
+    Off
 }

@@ -834,7 +834,7 @@ public partial record DotNetBuild(
             .AddArgs(Output.ToArgs("--output", ""))
             .AddArgs(OS.ToArgs("--os", ""))
             .AddArgs(Runtime.ToArgs("--runtime", ""))
-            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ":"))
             .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddArgs(VersionSuffix.ToArgs("--version-suffix", ""))
             .AddBooleanArgs(
@@ -1013,7 +1013,7 @@ public partial record DotNetClean(
             .AddArgs(Framework.ToArgs("--framework", ""))
             .AddArgs(Output.ToArgs("--output", ""))
             .AddArgs(Runtime.ToArgs("--runtime", ""))
-            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ":"))
             .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--nologo", NoLogo),
@@ -4059,7 +4059,7 @@ public partial record DotNetPack(
             .AddArgs(Output.ToArgs("--output", ""))
             .AddArgs(OS.ToArgs("--os", ""))
             .AddArgs(Runtime.ToArgs("--runtime", ""))
-            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ":"))
             .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddArgs(VersionSuffix.ToArgs("--version-suffix", ""))
             .AddBooleanArgs(
@@ -4210,7 +4210,7 @@ public partial record DotNetPackageSearch(
 /// 
 /// new DotNetPublish()
 ///     .WithWorkingDirectory("MyLib")
-///     .WithFramework("net8.0")
+///     .WithFramework(framework)
 ///     .WithOutput("bin")
 ///     .Build().EnsureSuccess();
 ///</code>
@@ -4314,7 +4314,7 @@ public partial record DotNetPublish(
             .AddArgs(Output.ToArgs("--output", ""))
             .AddArgs(OS.ToArgs("--os", ""))
             .AddArgs(Runtime.ToArgs("--runtime", ""))
-            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ":"))
             .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddArgs(VersionSuffix.ToArgs("--version-suffix", ""))
             .AddBooleanArgs(
@@ -4445,7 +4445,7 @@ public partial record DotNetRestore(
             .AddArgs(LockFilePath.ToArgs("--lock-file-path", ""))
             .AddArgs(Packages.ToArgs("--packages", ""))
             .AddArgs(Runtime.ToArgs("--runtime", ""))
-            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ":"))
             .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--disable-build-servers", DisableBuildServers),
@@ -4486,9 +4486,6 @@ public partial record DotNetRestore(
 ///     .WithProject(Path.Combine("MyApp", "MyApp.csproj"))
 ///     .Build(message =&gt; stdOut.Add(message.Text))
 ///     .EnsureSuccess();
-/// 
-/// // Checks stdOut
-/// stdOut.ShouldBe(new[] {"Hello, World!"});
 ///</code>
 /// </example>
 /// </summary>
@@ -4570,7 +4567,7 @@ public partial record DotNetRun(
             .AddArgs(OS.ToArgs("--os", ""))
             .AddArgs(Project.ToArgs("--project", ""))
             .AddArgs(Runtime.ToArgs("--runtime", ""))
-            .AddArgs(TerminalLogger.ToArgs("--tl", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ":"))
             .AddArgs(Verbosity.ToArgs("--verbosity", ""))
             .AddBooleanArgs(
                 ("--force", Force),
@@ -5014,11 +5011,6 @@ public partial record DotNetStore(
 /// var result = new DotNetTest()
 ///     .WithWorkingDirectory("MyTests")
 ///     .Build().EnsureSuccess();
-/// 
-/// // The "result" variable provides details about build and tests
-/// result.ExitCode.ShouldBe(0, result.ToString());
-/// result.Summary.Tests.ShouldBe(1, result.ToString());
-/// result.Tests.Count(test =&gt; test.State == TestState.Finished).ShouldBe(1, result.ToString());
 ///</code>
 /// </example>
 /// </summary>
@@ -5056,6 +5048,7 @@ public partial record DotNetStore(
 /// <param name="ListTests">List the discovered tests instead of running the tests.</param>
 /// <param name="Verbosity">Sets the verbosity level of the command. Allowed values are <see cref="DotNetVerbosity.Quiet"/>, <see cref="DotNetVerbosity.Minimal"/>, <see cref="DotNetVerbosity.Normal"/>, <see cref="DotNetVerbosity.Detailed"/>, and <see cref="DotNetVerbosity.Diagnostic"/>. The default is <see cref="DotNetVerbosity.Minimal"/>. For more information, see <see cref="DotNetVerbosity"/>.</param>
 /// <param name="Diagnostics">Enables diagnostic output.</param>
+/// <param name="TerminalLogger">Specifies whether the terminal logger should be used for the build output.</param>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
 public partial record DotNetTest(
@@ -5091,6 +5084,7 @@ public partial record DotNetTest(
     bool? ListTests = default,
     DotNetVerbosity? Verbosity = default,
     bool? Diagnostics = default,
+    DotNetTerminalLogger? TerminalLogger = default,
     string ExecutablePath = "",
     string WorkingDirectory = "",
     string ShortName = "")
@@ -5146,6 +5140,7 @@ public partial record DotNetTest(
             .AddArgs(Runtime.ToArgs("--runtime", ""))
             .AddArgs(Settings.ToArgs("--settings", ""))
             .AddArgs(Verbosity.ToArgs("--verbosity", ""))
+            .AddArgs(TerminalLogger.ToArgs("--tl", ":"))
             .AddBooleanArgs(
                 ("--blame", Blame),
                 ("--blame-crash", BlameCrash),

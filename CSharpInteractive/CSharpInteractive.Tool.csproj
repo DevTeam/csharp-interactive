@@ -28,7 +28,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.10.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.11.0" />
         <PackageReference Include="NuGet.Build.Tasks" Version="6.4.0"/>
         <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="all"/>
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="all"/>
@@ -42,7 +42,7 @@
         </PackageReference>
         <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1"/>
         <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" PrivateAssets="all"/>
-        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.32" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none"/>
+        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.33" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
         <InternalsVisibleTo Include="CSharpInteractive.Tests"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     </ItemGroup>
