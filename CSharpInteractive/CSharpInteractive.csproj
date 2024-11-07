@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
         <IsPackable>true</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DefineConstants>$(DefineConstants);APPLICATION</DefineConstants>
@@ -34,22 +34,11 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
         <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" PrivateAssets="all" GeneratePathProperty="true" IncludeAssets="All"/>
         <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.33" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
         <InternalsVisibleTo Include="CSharpInteractive.Tests"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)'=='net7.0'">
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -109,24 +98,6 @@
         </Content>
 
         <Compile Remove="Program.cs"/>
-
-        <Compile Update="ServiceCollectionFactory.g.cs">
-            <NuGetPackageId>Pure.DI.MS</NuGetPackageId>
-            <NuGetPackageVersion>2.1.6</NuGetPackageVersion>
-            <NuGetItemType>Compile</NuGetItemType>
-            <Pack>false</Pack>
-            <Private>False</Private>
-            <Link>Pure.DI\MS\ServiceCollectionFactory.g.cs</Link>
-        </Compile>
-
-        <Compile Update="ServiceProviderFactory.g.cs">
-            <NuGetPackageId>Pure.DI.MS</NuGetPackageId>
-            <NuGetPackageVersion>2.1.6</NuGetPackageVersion>
-            <NuGetItemType>Compile</NuGetItemType>
-            <Pack>false</Pack>
-            <Private>False</Private>
-            <Link>Pure.DI\MS\ServiceProviderFactory.g.cs</Link>
-        </Compile>
     </ItemGroup>
 
 </Project>

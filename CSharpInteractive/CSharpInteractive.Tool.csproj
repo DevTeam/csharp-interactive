@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
         <OutputType>Exe</OutputType>
         <UseAppHost>false</UseAppHost>
         <AssemblyName>dotnet-csi</AssemblyName>
@@ -43,20 +43,9 @@
         <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1"/>
         <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" PrivateAssets="all"/>
         <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.33" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
         <InternalsVisibleTo Include="CSharpInteractive.Tests"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)'=='net7.0'">
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -114,6 +103,18 @@
 
         <Content Include="$(MSBuildProjectDirectory)\bin\vstest\*.*" Visible="false">
             <PackagePath>tools\net8.0\any\vstest</PackagePath>
+            <Pack>true</Pack>
+            <Visible>false</Visible>
+        </Content>
+
+        <Content Include="$(MSBuildProjectDirectory)\bin\msbuild\*.*" Visible="false">
+            <PackagePath>tools\net9.0\any\msbuild</PackagePath>
+            <Pack>true</Pack>
+            <Visible>false</Visible>
+        </Content>
+
+        <Content Include="$(MSBuildProjectDirectory)\bin\vstest\*.*" Visible="false">
+            <PackagePath>tools\net9.0\any\vstest</PackagePath>
             <Pack>true</Pack>
             <Visible>false</Visible>
         </Content>

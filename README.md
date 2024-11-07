@@ -1338,7 +1338,7 @@ using HostApi;
 
 // Runs tests
 var result = new DotNetTest()
-    .WithWorkingDirectory("MyTests")
+    .WithProject("MyTests")
     .Build().EnsureSuccess();
 ```
 

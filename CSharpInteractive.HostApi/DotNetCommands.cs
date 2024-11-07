@@ -5009,7 +5009,7 @@ public partial record DotNetStore(
 /// 
 /// // Runs tests
 /// var result = new DotNetTest()
-///     .WithWorkingDirectory("MyTests")
+///     .WithProject("MyTests")
 ///     .Build().EnsureSuccess();
 ///</code>
 /// </example>

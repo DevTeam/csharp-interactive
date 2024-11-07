@@ -12,7 +12,7 @@ public class DotNetTestScenario(ITestOutputHelper output) : BaseScenario(output)
     public void Run()
     {
         new DotNetNew()
-            .WithTemplateName("mstest")
+            .WithTemplateName("xunit")
             .WithName("MyTests")
             .WithForce(true)
             .Run().EnsureSuccess();
@@ -26,7 +26,7 @@ public class DotNetTestScenario(ITestOutputHelper output) : BaseScenario(output)
 
         // Runs tests
         var result = new DotNetTest()
-            .WithWorkingDirectory("MyTests")
+            .WithProject("MyTests")
             .Build().EnsureSuccess();
         // }
         
