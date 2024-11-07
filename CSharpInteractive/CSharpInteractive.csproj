@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>$(Frameworks)</TargetFrameworks>
+        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <IsPackable>true</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DefineConstants>$(DefineConstants);APPLICATION</DefineConstants>

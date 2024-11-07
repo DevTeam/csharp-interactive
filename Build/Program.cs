@@ -8,7 +8,6 @@ const string solutionFile = "CSharpInteractive.sln";
 const string packageId = "CSharpInteractive";
 const string toolPackageId = "dotnet-csi";
 const string templatesPackageId = "CSharpInteractive.Templates";
-var frameworks = new[] {"net6.0", "net7.0", "net8.0", "net9.0"};
 
 var currentDir = Environment.CurrentDirectory;
 if (!File.Exists(solutionFile))
@@ -39,6 +38,19 @@ var packageVersion = new[]
 }.Max()!;
 
 Info(packageVersion.ToString());
+
+const int minSdk = 6;
+var maxSdk = minSdk;
+new DotNet().WithVersion(true)
+    .Run(output => maxSdk = NuGetVersion.Parse(output.Line).Major)
+    .EnsureSuccess();
+
+var allFrameworks = Enumerable.Range(6, maxSdk - minSdk + 1).Select(i => $"net{i}.0").ToArray();
+var frameworks = string.Join(";", allFrameworks);
+var framework = $"net{maxSdk}.0";
+
+Info($"frameworks: {frameworks}");
+Info($"framework: {framework}");
 
 var packages = new[]
 {
@@ -226,9 +238,9 @@ new DotNetNewInstall()
     .AddSources(templateOutputDir)
     .Run().EnsureSuccess();
 
-foreach (var framework in frameworks)
+foreach (var checkingFramework in allFrameworks)
 {
-    CheckCompatibilityAsync(framework, packageVersion, defaultNuGetSource, outputDir);
+    CheckCompatibilityAsync(checkingFramework, packageVersion, defaultNuGetSource, outputDir);
 }
 
 if (!skipTests && (integrationTests || dockerLinuxTests))
@@ -263,7 +275,7 @@ Info($"The coverage percentage: {coveragePercentage}");
 return 0;
 
 void CheckCompatibilityAsync(
-    string framework,
+    string checkingFramework,
     NuGetVersion nuGetVersion,
     string nuGetSource,
     string output)
@@ -276,7 +288,7 @@ void CheckCompatibilityAsync(
         new DotNetNew()
             .WithTemplateName("build")
             .WithNoRestore(true)
-            .WithArgs($"--version={nuGetVersion}", "-T", framework)
+            .WithArgs($"--version={nuGetVersion}", "-T", checkingFramework)
             .WithWorkingDirectory(buildProjectDir)
             .Run().EnsureSuccess();
 
@@ -289,7 +301,7 @@ void CheckCompatibilityAsync(
             .WithWorkingDirectory(buildProjectDir)
             .WithNoRestore(true)
             .WithNoBuild(true)
-            .WithFramework(framework)
+            .WithFramework(checkingFramework)
             .Run().EnsureSuccess();
 
         new DotNetCsi()

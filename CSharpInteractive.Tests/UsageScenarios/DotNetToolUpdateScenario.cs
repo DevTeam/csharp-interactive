@@ -25,7 +25,7 @@ public class DotNetToolUpdateScenario(ITestOutputHelper output) : BaseScenario(o
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Installing the specified .NET tool
+        // $description=Updating the specified .NET tool
         // {
         // ## using HostApi;
 

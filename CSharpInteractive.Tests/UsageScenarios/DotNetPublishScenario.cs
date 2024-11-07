@@ -14,23 +14,12 @@ public class DotNetPublishScenario(ITestOutputHelper output) : BaseScenario(outp
     [Fact]
     public void Run()
     {
-        var versions = new List<NuGetVersion>();
-        new DotNetSdkCheck()
-            .Run(output =>
-            {
-                if (output.Line.StartsWith("Microsoft."))
-                {
-                    var data = output.Line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    if (data.Length >= 2)
-                    {
-                        versions.Add(NuGetVersion.Parse(data[1]));
-                    }
-                }
-            })
+        var maxSdk = 6;
+        new DotNet().WithVersion(true)
+            .Run(output => maxSdk = NuGetVersion.Parse(output.Line).Major)
             .EnsureSuccess();
-
-        var maxSdkVersion = versions.Max()!;
-        var framework = $"net{maxSdkVersion.Major}.{maxSdkVersion.Minor}";
+        
+        var framework = $"net{maxSdk}.0";
         
         new DotNetNew()
             .WithTemplateName("classlib")

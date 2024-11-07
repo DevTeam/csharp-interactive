@@ -13,8 +13,6 @@
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/DevTeam/csharp-interactive</RepositoryUrl>
         <ImmutypeAPI>False</ImmutypeAPI>
-        <Frameworks>net6.0;net7.0;net8.0</Frameworks>
-        <Framework>net8.0</Framework>
     </PropertyGroup>
 
     <ItemGroup>

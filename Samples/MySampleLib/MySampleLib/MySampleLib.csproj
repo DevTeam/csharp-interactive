@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>$(Frameworks)</TargetFrameworks>
+        <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
         <IsPackable>true</IsPackable>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     </PropertyGroup>

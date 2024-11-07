@@ -145,16 +145,21 @@ internal static class DotNetCommandLineExtensions
     // ReSharper disable once UnusedParameter.Global
     public static string[] ToArgs<T>(this T value, string name, string collectionSeparator)
     {
+        var valueStr = value?.ToString();
+        if (string.IsNullOrWhiteSpace(valueStr))
+        {
+            return [];
+        }
+        
         if (!string.IsNullOrWhiteSpace(collectionSeparator))
         {
             return [$"{name}{collectionSeparator}{value}"];
         }
         
-        var valueStr = value?.ToString();
-        return string.IsNullOrWhiteSpace(valueStr) ? [] : [name, valueStr!];
+        return [name, valueStr!];
     }
     
-    public static string[] ToArgs<T>(this IEnumerable<(string name, T value) > values, string name, string separator)
+    public static string[] ToArgs<T>(this IEnumerable<(string name, T value)> values, string name, string separator)
     {
         return values.SelectMany(i => new [] { name, $"{i.name}{separator}{i.value}"}).ToArray();
     }

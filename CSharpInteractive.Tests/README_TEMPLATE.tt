@@ -138,21 +138,27 @@
 #>
 
 <#
-    foreach (var info in infos.OrderBy(i => i["tag"] + i["priority"]).Where(info => info["visible"] == "true"))
+    foreach (var group in infos.Where(info => info["visible"] == "true").GroupBy(i => i["tag"]).OrderBy(i => i.Key))
     {
-        var file = info["file"];
-        var body = info["body"];
-        File.WriteAllText(Path.Combine(commentsDir, Path.GetFileNameWithoutExtension(file) + ".txt"), body);
-#>### <#= info["description"] #>
-
-<#= info["header"] #>
-
-``` CSharp
-<#= body #>```
-
-<#= info["footer"] #>
+        var groupNameIndex = group.Key.IndexOf(' ');
+        var groupName = group.Key.Substring(groupNameIndex + 1, group.Key.Length - groupNameIndex - 1);
+#>
+## <#= groupName #>
 
 <#
+        foreach (var info in group.OrderBy(i => i["priority"] + "_" + i["description"]))
+        {
+            var file = info["file"];
+            var body = info["body"];
+            File.WriteAllText(Path.Combine(commentsDir, Path.GetFileNameWithoutExtension(file) + ".txt"), body);
+#>
+### <#= info["description"] #>
+<#= info["header"] #>
+``` CSharp
+<#= body #>```
+<#= info["footer"] #>
+<#
+        }
     }
 
     var readmeBodyFile = Path.Combine(solutionPath, "README_BODY.md");

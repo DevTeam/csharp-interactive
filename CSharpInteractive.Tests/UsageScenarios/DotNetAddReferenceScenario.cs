@@ -27,7 +27,7 @@ public class DotNetAddReferenceScenario(ITestOutputHelper output) : BaseScenario
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
-        // $description=Adding a NuGet package
+        // $description=Adding project-to-project (P2P) references
         // {
         // ## using HostApi;
 

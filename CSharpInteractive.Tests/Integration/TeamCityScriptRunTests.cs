@@ -126,6 +126,6 @@ public class ScriptRunTeamCityScriptRunTests
         result.ExitCode.ShouldBe(1);
         result.StdErr.ShouldBeEmpty();
         var messages = result.StdOut.ParseMessages();
-        messages.ShouldContainBuildProblem(i => i.Contains("; expected"), i => i.Contains("CS1002"));
+        messages.ShouldContainBuildProblem(i => i.Contains("script.csx(1,9): error CS1002"), i => i.Contains("CS1002"));
     }
 }
