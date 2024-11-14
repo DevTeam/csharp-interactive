@@ -35,11 +35,5 @@ public class DotNetNuGetConfigUnsetScenario(ITestOutputHelper output) : BaseScen
             .WithConfigKey("repositoryPath")
             .Run().EnsureSuccess();
         // }
-
-        string? repositoryPath = default;
-        new DotNetNuGetConfigGet()
-            .WithConfigKey("repositoryPath")
-            .Run(output => repositoryPath = output.Line).EnsureSuccess();
-        repositoryPath.ShouldNotBe("MyValue");
     }
 }

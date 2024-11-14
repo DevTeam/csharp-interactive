@@ -247,6 +247,7 @@ if (!skipTests && (integrationTests || dockerLinuxTests))
 {
     var logicOp = integrationTests && dockerLinuxTests ? "|" : "&";
     test
+        .AddProps(("TestTfmsInParallel", "false"))
         .WithFilter($"Integration={integrationTests}{logicOp}Docker={dockerLinuxTests}")
         .Build().EnsureSuccess(buildResult => buildResult is {ExitCode: 0, Summary.FailedTests: 0});
 }
