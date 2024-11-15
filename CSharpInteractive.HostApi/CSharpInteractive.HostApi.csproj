@@ -15,7 +15,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="NuGet.Versioning" Version="6.4.0"/>
+        <PackageReference Include="NuGet.Versioning" Version="6.8.1"/>
         <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
         <InternalsVisibleTo Include="dotnet-csi"/>
