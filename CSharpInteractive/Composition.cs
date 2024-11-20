@@ -60,6 +60,7 @@ internal partial class Composition
                 .Bind(InteractionMode.NonInteractive).To<ScriptRunner>()
                 .Bind().To<CommandSource>()
                 .Bind().To<Setting<TTE>>()
+                .Bind(Tag.Type).Bind<IReferenceRegistry>().To<ReferencesScriptOptionsFactory>()
 #endif
 #if APPLICATION
             .Bind().As(Lifetime.Transient).To(_ => RunningMode.Application)
@@ -173,7 +174,6 @@ internal partial class Composition
                 .Bind().To<NuGetReferenceResolver>()
                 .Bind().To<ScriptContentReplacer>()
                 .Bind(Tag.Type).To<AssembliesScriptOptionsProvider>()
-                .Bind(Tag.Type).Bind<IReferenceRegistry>().To<ReferencesScriptOptionsFactory>()
                 .Bind(Tag.Type).To<SourceFileScriptOptionsFactory>()
                 .Bind(Tag.Type).To<MetadataResolverOptionsFactory>()
                 .Bind(Tag.Type).To<ImportsOptionsFactory>()
