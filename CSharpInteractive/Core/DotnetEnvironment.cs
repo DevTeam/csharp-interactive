@@ -7,8 +7,8 @@ using System.Runtime.InteropServices;
 using Pure.DI;
 
 internal class DotNetEnvironment(
-    [Tag("TargetFrameworkMoniker")] string targetFrameworkMoniker,
-    [Tag("ModuleFile")] string moduleFile,
+    [Tag(Tag.TargetFrameworkMoniker)] string targetFrameworkMoniker,
+    [Tag(Tag.ModuleFile)] string moduleFile,
     IEnvironment environment,
     IFileExplorer fileExplorer)
     : IDotNetEnvironment, ITraceSource

@@ -8,7 +8,7 @@ using JetBrains.TeamCity.ServiceMessages.Write.Special;
 using Pure.DI;
 
 internal class ProcessInFlowRunner(
-    [Tag("base")] IProcessRunner baseProcessRunner,
+    [Tag(Tag.Base)] IProcessRunner baseProcessRunner,
     ICISettings ciSettings,
     ITeamCityWriter teamCityWriter,
     IFlowContext flowContext)

@@ -7,8 +7,8 @@ using Pure.DI;
 
 internal class BuildMessageLogWriter(
     ILog<BuildMessageLogWriter> log,
-    [Tag("Default")] IStdOut stdOut,
-    [Tag("Default")] IStdErr stdErr)
+    [Tag(Tag.Base)] IStdOut stdOut,
+    [Tag(Tag.Base)] IStdErr stdErr)
     : IBuildMessageLogWriter
 {
     public void Write(ProcessInfo processInfo, BuildMessage message)

@@ -7,9 +7,9 @@ using Pure.DI;
 
 internal class CISpecific<T>(
     ICISettings settings,
-    [Tag("Default")] Func<T> defaultFactory,
-    [Tag("TeamCity")] Func<T> teamcityFactory,
-    [Tag("Ansi")] Func<T> ansiFactory)
+    [Tag(Tag.Base)] Func<T> defaultFactory,
+    [Tag(Tag.TeamCity)] Func<T> teamcityFactory,
+    [Tag(Tag.Ansi)] Func<T> ansiFactory)
     : ICISpecific<T>
 {
     public T Instance => settings.CIType switch

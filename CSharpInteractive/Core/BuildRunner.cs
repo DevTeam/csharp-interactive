@@ -17,8 +17,8 @@ internal class BuildRunner(
     Func<IBuildContext> buildContextFactory,
     IBuildOutputProcessor buildOutputProcessor,
     Func<IProcessMonitor> monitorFactory,
-    [Tag("default")] IBuildMessagesProcessor defaultBuildMessagesProcessor,
-    [Tag("custom")] IBuildMessagesProcessor customBuildMessagesProcessor,
+    [Tag(Tag.Base)] IBuildMessagesProcessor defaultBuildMessagesProcessor,
+    [Tag(Tag.Custom)] IBuildMessagesProcessor customBuildMessagesProcessor,
     IProcessResultHandler processResultHandler,
     IStartInfoDescription startInfoDescription,
     ICommandLineStatisticsRegistry statisticsRegistry)

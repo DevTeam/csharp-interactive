@@ -9,7 +9,7 @@ using JetBrains.TeamCity.ServiceMessages.Write.Special;
 using Pure.DI;
 
 internal class TeamCityProperties(
-    [Tag("Default")] IProperties properties,
+    [Tag(Tag.Base)] IProperties properties,
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     ITeamCityWriter teamCityWriter) : IProperties
 {
