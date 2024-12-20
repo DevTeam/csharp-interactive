@@ -7,9 +7,10 @@ using System.Collections;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 using Pure.DI;
+using static Pure.DI.Tag;
 
 internal class TeamCityProperties(
-    [Tag(Tag.Base)] IProperties properties,
+    [Tag(Base)] IProperties properties,
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     ITeamCityWriter teamCityWriter) : IProperties
 {

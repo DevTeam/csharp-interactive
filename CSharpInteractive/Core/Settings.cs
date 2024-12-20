@@ -4,13 +4,14 @@ namespace CSharpInteractive.Core;
 
 using System.Collections.Immutable;
 using Pure.DI;
+using static Pure.DI.Tag;
 
 internal class Settings(
     RunningMode runningMode,
     IEnvironment environment,
     ICommandLineParser commandLineParser,
     ICodeSource consoleCodeSource,
-    [Tag(typeof(LoadFileCodeSource))] Func<string, ICodeSource> fileCodeSourceFactory)
+    [Tag(LoadFileCode)] Func<string, ICodeSource> fileCodeSourceFactory)
     : ISettings, ISettingSetter<VerbosityLevel>
 {
     private readonly object _lockObject = new();

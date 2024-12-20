@@ -4,6 +4,7 @@ namespace CSharpInteractive.Core;
 
 using NuGet.Packaging;
 using Pure.DI;
+using static Pure.DI.Tag;
 
 internal class ScriptContentReplacer(
     INuGetReferenceResolver nuGetReferenceResolver,
@@ -13,7 +14,7 @@ internal class ScriptContentReplacer(
     IFileSystem fileSystem,
     IUniqueNameGenerator uniqueNameGenerator,
     IEnvironment environment,
-    [Tag(typeof(LineCodeSource))] Func<string, ICodeSource> codeSourceFactory)
+    [Tag(LineCode)] Func<string, ICodeSource> codeSourceFactory)
     : IScriptContentReplacer
 {
     [SuppressMessage("Performance", "CA1806:Do not ignore method results")]

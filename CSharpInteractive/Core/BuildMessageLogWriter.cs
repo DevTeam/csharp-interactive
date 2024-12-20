@@ -4,11 +4,12 @@ namespace CSharpInteractive.Core;
 
 using HostApi;
 using Pure.DI;
+using static Pure.DI.Tag;
 
 internal class BuildMessageLogWriter(
     ILog<BuildMessageLogWriter> log,
-    [Tag(Tag.Base)] IStdOut stdOut,
-    [Tag(Tag.Base)] IStdErr stdErr)
+    [Tag(Base)] IStdOut stdOut,
+    [Tag(Base)] IStdErr stdErr)
     : IBuildMessageLogWriter
 {
     public void Write(ProcessInfo processInfo, BuildMessage message)

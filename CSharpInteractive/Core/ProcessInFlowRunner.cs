@@ -6,9 +6,10 @@ using System.Diagnostics;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 using Pure.DI;
+using static Pure.DI.Tag;
 
 internal class ProcessInFlowRunner(
-    [Tag(Tag.Base)] IProcessRunner baseProcessRunner,
+    [Tag(Base)] IProcessRunner baseProcessRunner,
     ICISettings ciSettings,
     ITeamCityWriter teamCityWriter,
     IFlowContext flowContext)

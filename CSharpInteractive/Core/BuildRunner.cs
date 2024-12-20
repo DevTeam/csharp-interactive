@@ -9,6 +9,7 @@ namespace CSharpInteractive.Core;
 
 using HostApi;
 using Pure.DI;
+using static Pure.DI.Tag;
 
 internal class BuildRunner(
     IProcessRunner processRunner,
@@ -17,8 +18,8 @@ internal class BuildRunner(
     Func<IBuildContext> buildContextFactory,
     IBuildOutputProcessor buildOutputProcessor,
     Func<IProcessMonitor> monitorFactory,
-    [Tag(Tag.Base)] IBuildMessagesProcessor defaultBuildMessagesProcessor,
-    [Tag(Tag.Custom)] IBuildMessagesProcessor customBuildMessagesProcessor,
+    [Tag(Base)] IBuildMessagesProcessor defaultBuildMessagesProcessor,
+    [Tag(Custom)] IBuildMessagesProcessor customBuildMessagesProcessor,
     IProcessResultHandler processResultHandler,
     IStartInfoDescription startInfoDescription,
     ICommandLineStatisticsRegistry statisticsRegistry)

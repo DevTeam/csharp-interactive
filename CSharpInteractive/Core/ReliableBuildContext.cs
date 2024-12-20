@@ -6,12 +6,13 @@ namespace CSharpInteractive.Core;
 using HostApi;
 using JetBrains.TeamCity.ServiceMessages;
 using Pure.DI;
+using static Pure.DI.Tag;
 
 internal class ReliableBuildContext(
     ICISettings ciSettings,
     IFileSystem fileSystem,
     IMessagesReader messagesReader,
-    [Tag(Tag.Base)] IBuildContext baseBuildContext)
+    [Tag(Base)] IBuildContext baseBuildContext)
     : IBuildContext
 {
     private readonly Dictionary<string, Output> _sources = new();

@@ -5,10 +5,11 @@ namespace CSharpInteractive.Core;
 
 using System.Runtime.InteropServices;
 using Pure.DI;
+using static Pure.DI.Tag;
 
 internal class DotNetEnvironment(
-    [Tag(Tag.TargetFrameworkMoniker)] string targetFrameworkMoniker,
-    [Tag(Tag.ModuleFile)] string moduleFile,
+    [Tag(TargetFrameworkMoniker)] string targetFrameworkMoniker,
+    [Tag(ModuleFile)] string moduleFile,
     IEnvironment environment,
     IFileExplorer fileExplorer)
     : IDotNetEnvironment, ITraceSource

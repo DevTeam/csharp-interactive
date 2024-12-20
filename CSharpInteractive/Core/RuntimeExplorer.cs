@@ -3,9 +3,10 @@
 namespace CSharpInteractive.Core;
 
 using Pure.DI;
+using static Pure.DI.Tag;
 
 internal class RuntimeExplorer(
-    [Tag(Tag.RuntimePath)] string runtimePath,
+    [Tag(RuntimePath)] string runtimePath,
     IFileSystem fileSystem) : IRuntimeExplorer
 {
     public bool TryFindRuntimeAssembly(string assemblyPath, [MaybeNullWhen(false)] out string runtimeAssemblyPath)

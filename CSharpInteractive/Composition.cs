@@ -149,13 +149,13 @@ internal partial class Composition
                 .Bind().To<Settings>()
                 .Bind().To<Info>()
                 .Bind().To<ConsoleSource>()
-                .Bind(typeof(LoadFileCodeSource)).To(ctx => new Func<string, ICodeSource>(name =>
+                .Bind(LoadFileCode).To(ctx => new Func<string, ICodeSource>(name =>
                 {
                     ctx.Inject<LoadFileCodeSource>(out var loadFileCodeSource);
                     loadFileCodeSource.Name = name;
                     return loadFileCodeSource;
                 }))
-                .Bind(typeof(LineCodeSource)).To(ctx => new Func<string, ICodeSource>(line =>
+                .Bind(LineCode).To(ctx => new Func<string, ICodeSource>(line =>
                 {
                     ctx.Inject<LineCodeSource>(out var lineCodeSource);
                     lineCodeSource.Line = line;
