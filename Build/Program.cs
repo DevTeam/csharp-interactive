@@ -154,14 +154,12 @@ else
 
     var reportDir = Path.Combine(currentDir, ".reports");
     var dotCoverSnapshot = Path.Combine(reportDir, "dotCover.dcvr");
-    test
-        .Customize(cmd =>
-            cmd.WithArgs("dotcover")
-                .AddArgs(cmd.Args)
-                .AddArgs(
-                    $"--dcOutput={dotCoverSnapshot}",
-                    "--dcFilters=+:module=CSharpInteractive.HostApi;+:module=dotnet-csi",
-                    "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"))
+    test.Customize(cmd => cmd.WithArgs("dotcover")
+        .AddArgs(cmd.Args)
+        .AddArgs(
+            $"--dcOutput={dotCoverSnapshot}",
+            "--dcFilters=+:module=CSharpInteractive.HostApi;+:module=dotnet-csi",
+            "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"))
         .Build()
         .EnsureSuccess(buildResult => buildResult is {ExitCode: 0, Summary.FailedTests: 0});
 
