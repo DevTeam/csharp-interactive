@@ -25,11 +25,13 @@
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Description>$(Title) $(Version) $(TargetFramework)</Description>
         <PackageTags>C#;csharp;script;interactive</PackageTags>
+        <PureDIProfilePath>c:\profiling</PureDIProfilePath>
     </PropertyGroup>
 
     <ItemGroup>
+        <!--<CompilerVisibleProperty Include="PureDIProfilePath" />-->
         <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.12.0" />
-        <PackageReference Include="Pure.DI" Version="2.1.50">
+        <PackageReference Include="Pure.DI" Version="2.1.51">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
