@@ -90,7 +90,7 @@ public class BuildRunnerTests
             .Returns(_processResult);
 
         // When
-        var result = buildService.Build(_process.Object, default, TimeSpan.FromSeconds(1));
+        var result = buildService.Build(_process.Object, null, TimeSpan.FromSeconds(1));
 
         // Then
         output.Handled.ShouldBeTrue();

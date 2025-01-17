@@ -67,8 +67,8 @@ public readonly record struct TestResult(
             string.Empty,
             string.Empty,
             Guid.Empty,
-            default,
-            default)
+            null,
+            null)
     { }
 
     /// <inheritdoc/>

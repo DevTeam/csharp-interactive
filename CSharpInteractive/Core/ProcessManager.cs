@@ -54,7 +54,7 @@ internal class ProcessManager : IProcessManager
         {
             if (!_process.Start())
             {
-                error = default;
+                error = null;
                 return false;
             }
         }
@@ -76,7 +76,7 @@ internal class ProcessManager : IProcessManager
         _description = _startInfoDescription.GetDescription(_startInfo, Id);
         _process.BeginOutputReadLine();
         _process.BeginErrorReadLine();
-        error = default;
+        error = null;
         return true;
     }
 
@@ -128,14 +128,14 @@ internal class ProcessManager : IProcessManager
     private void ProcessOutput(DataReceivedEventArgs e, bool isError)
     {
         var line = e.Data;
-        if (line == default)
+        if (line == null)
         {
             return;
         }
 
         var handler = OnOutput;
         var output = new Output(_startInfo!, isError, line, Id);
-        if (handler != default)
+        if (handler != null)
         {
             _log.Trace(() => [isError ? StdErrPrefix : StdOutPrefix, new Text(line)], _description);
             handler(output);
@@ -156,8 +156,8 @@ internal class ProcessManager : IProcessManager
                 return;
             }
 
-            OnOutput = default;
-            OnExit = default;
+            OnOutput = null;
+            OnExit = null;
             _process.Exited -= ProcessOnExited;
             _process.OutputDataReceived -= ProcessOnOutputDataReceived;
             _process.ErrorDataReceived -= ProcessOnErrorDataReceived;

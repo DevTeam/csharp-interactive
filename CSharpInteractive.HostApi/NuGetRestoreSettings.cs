@@ -30,14 +30,14 @@ public record NuGetRestoreSettings(
     string PackageId,
     IEnumerable<string> Sources,
     IEnumerable<string> FallbackFolders,
-    VersionRange? VersionRange = default,
-    string? TargetFrameworkMoniker = default,
-    string? PackagesPath = default,
-    NuGetPackageType? PackageType = default,
-    bool? DisableParallel = default,
-    bool? IgnoreFailedSources = default,
-    bool? HideWarningsAndErrors = default,
-    bool? NoCache = default)
+    VersionRange? VersionRange = null,
+    string? TargetFrameworkMoniker = null,
+    string? PackagesPath = null,
+    NuGetPackageType? PackageType = null,
+    bool? DisableParallel = null,
+    bool? IgnoreFailedSources = null,
+    bool? HideWarningsAndErrors = null,
+    bool? NoCache = null)
 {
     /// <summary>
     /// Creates a new instance of the settings.

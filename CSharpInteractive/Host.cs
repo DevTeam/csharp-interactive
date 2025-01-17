@@ -149,7 +149,7 @@ public static class Components
     /// </summary>
     /// <param name="error">Error message.</param>
     /// <param name="errorId">Unique error identifier, optional.</param>
-    public static void Error(string? error, string? errorId = default) => CurHost.Error(error, errorId);
+    public static void Error(string? error, string? errorId = null) => CurHost.Error(error, errorId);
 
     /// <summary>
     /// Writes a warning to stdOut. This warning will affect the summary run statistics.
@@ -190,7 +190,7 @@ public static class Components
     /// </summary>
     /// <param name="trace">Trace message.</param>
     /// <param name="origin">Source of the trace message, optional.</param>
-    public static void Trace(string? trace, string? origin = default) => CurHost.Trace(trace, origin);
+    public static void Trace(string? trace, string? origin = null) => CurHost.Trace(trace, origin);
 
     /// <summary>
     /// Provides an instance of a service by its type.
@@ -227,7 +227,7 @@ public static class Components
     /// <seealso cref="Output"/>
     public static ICommandLineResult Run(
         this ICommandLine commandLine,
-        Action<Output>? handler = default,
+        Action<Output>? handler = null,
         TimeSpan timeout = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
@@ -252,7 +252,7 @@ public static class Components
     /// <seealso cref="CancellationToken"/>
     public static Task<ICommandLineResult> RunAsync(
         this ICommandLine commandLine,
-        Action<Output>? handler = default,
+        Action<Output>? handler = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
@@ -275,7 +275,7 @@ public static class Components
     /// <seealso cref="BuildMessage"/>
     public static IBuildResult Build(
         this ICommandLine commandLine,
-        Action<BuildMessage>? handler = default,
+        Action<BuildMessage>? handler = null,
         TimeSpan timeout = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
@@ -300,7 +300,7 @@ public static class Components
     /// <seealso cref="CancellationToken"/>
     public static Task<IBuildResult> BuildAsync(
         this ICommandLine commandLine,
-        Action<BuildMessage>? handler = default,
+        Action<BuildMessage>? handler = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
@@ -321,7 +321,7 @@ public static class Components
     /// <seealso cref="IBuildRunner.Build"/>
     public static IEnumerable<TResult> EnsureSuccess<TResult>(
         this IEnumerable<TResult> result,
-        Func<TResult, bool?>? isSuccess = default,
+        Func<TResult, bool?>? isSuccess = null,
         int? failureExitCode = 1)
         where TResult: ICommandLineResult
     {
@@ -344,7 +344,7 @@ public static class Components
     /// <seealso cref="Task{T}"/>
     public static async Task<IEnumerable<TResult>> EnsureSuccess<TResult>(
         this Task<IEnumerable<TResult>> result,
-        Func<TResult, bool?>? isSuccess = default,
+        Func<TResult, bool?>? isSuccess = null,
         int? failureExitCode = 1)
         where TResult: ICommandLineResult
     {
@@ -366,7 +366,7 @@ public static class Components
     /// <seealso cref="IBuildRunner.Build"/>
     public static TResult[] EnsureSuccess<TResult>(
         this TResult[] result,
-        Func<TResult, bool?>? isSuccess = default,
+        Func<TResult, bool?>? isSuccess = null,
         int? failureExitCode = 1)
         where TResult: ICommandLineResult
     {
@@ -389,7 +389,7 @@ public static class Components
     /// <seealso cref="Task{T}"/>
     public static async Task<TResult[]> EnsureSuccess<TResult>(
         this Task<TResult[]> result,
-        Func<TResult, bool?>? isSuccess = default,
+        Func<TResult, bool?>? isSuccess = null,
         int? failureExitCode = 1)
         where TResult: ICommandLineResult
     {
@@ -418,7 +418,7 @@ public static class Components
     /// <seealso cref="IBuildRunner.Build"/>
     public static TResult EnsureSuccess<TResult>(
         this TResult result,
-        Func<TResult, bool?>? isSuccess = default,
+        Func<TResult, bool?>? isSuccess = null,
         int? failureExitCode = 1)
         where TResult: ICommandLineResult
     {
@@ -448,7 +448,7 @@ public static class Components
     /// <seealso cref="Task{T}"/>
     public static async Task<TResult> EnsureSuccess<TResult>(
         this Task<TResult> result,
-        Func<TResult, bool?>? isSuccess = default,
+        Func<TResult, bool?>? isSuccess = null,
         int? failureExitCode = 1)
         where TResult: ICommandLineResult
     {
@@ -541,7 +541,7 @@ public static class Components
 
     private static T EnsureSuccess<T, TResult>(
         T result,
-        Func<TResult, bool?>? isSuccess = default,
+        Func<TResult, bool?>? isSuccess = null,
         int? failureExitCode = 1)
         where T: IEnumerable<TResult>
         where TResult: ICommandLineResult

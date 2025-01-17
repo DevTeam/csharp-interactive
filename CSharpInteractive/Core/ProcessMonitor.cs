@@ -40,7 +40,7 @@ internal class ProcessMonitor(
         }
     }
 
-    public ProcessResult Finished(ProcessInfo processInfo, long elapsedMilliseconds, ProcessState state, int? exitCode = default, Exception? error = default) =>
+    public ProcessResult Finished(ProcessInfo processInfo, long elapsedMilliseconds, ProcessState state, int? exitCode = null, Exception? error = null) =>
         new(
             processInfo,
             state,

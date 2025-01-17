@@ -29,7 +29,7 @@ using JetBrains.TeamCity.ServiceMessages;
 public record BuildMessage(
     Output Output,
     BuildMessageState State,
-    IServiceMessage? ServiceMessage = default,
+    IServiceMessage? ServiceMessage = null,
     string Text = "",
     string ErrorDetails = "",
     string Code = "",
@@ -37,11 +37,11 @@ public record BuildMessage(
     string Subcategory = "",
     string ProjectFile = "",
     string SenderName = "",
-    int? ColumnNumber = default,
-    int? EndColumnNumber = default,
-    int? LineNumber = default,
-    int? EndLineNumber = default,
-    DotNetMessageImportance? Importance = default)
+    int? ColumnNumber = null,
+    int? EndColumnNumber = null,
+    int? LineNumber = null,
+    int? EndLineNumber = null,
+    DotNetMessageImportance? Importance = null)
 {
     /// <summary>
     /// Contains the result of test execution when <see cref="State"/> is set to <see cref="BuildMessageState.TestResult"/>.
@@ -49,7 +49,7 @@ public record BuildMessage(
     public TestResult? TestResult =>
         ServiceMessage != null && TryGetTestState(ServiceMessage.Name, out var testState)
             ? CreateResult(CreateKey(ServiceMessage), ServiceMessage, testState)
-            : default(TestResult?);
+            : null;
 
     /// <inheritdoc />
     public override string ToString() => Text;

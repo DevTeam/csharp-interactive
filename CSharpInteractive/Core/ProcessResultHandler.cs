@@ -16,12 +16,12 @@ internal class ProcessResultHandler(
         }
 
         var description = result.Description;
-        if (result.Error != default)
+        if (result.Error != null)
         {
             description = description + Text.Space + new Text(result.Error.Message);
         }
 
-        if (handler == default)
+        if (handler == null)
         {
             switch (result.State)
             {

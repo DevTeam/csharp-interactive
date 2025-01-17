@@ -13,7 +13,7 @@ internal class AddNuGetReferenceCommandRunner(
     {
         if (command is not AddNuGetReferenceCommand addPackageReferenceCommand)
         {
-            return new CommandResult(command, default);
+            return new CommandResult(command, null);
         }
 
         if (!nuGetReferenceResolver.TryResolveAssemblies(addPackageReferenceCommand.PackageId, addPackageReferenceCommand.VersionRange, out var assemblies))

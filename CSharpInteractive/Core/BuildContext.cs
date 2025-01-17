@@ -33,12 +33,12 @@ internal class BuildContext : IBuildContext
         BuildMessage message;
         if (output.IsError)
         {
-            message = new BuildMessage(output, BuildMessageState.StdError, default, output.Line);
+            message = new BuildMessage(output, BuildMessageState.StdError, null, output.Line);
             _errors.Add(message);
         }
         else
         {
-            message = new BuildMessage(output, BuildMessageState.StdOut, default, output.Line);
+            message = new BuildMessage(output, BuildMessageState.StdOut, null, output.Line);
         }
 
         return [message];
@@ -153,7 +153,7 @@ internal class BuildContext : IBuildContext
         var buildMessage = new BuildMessage(
             srcOutput,
             state,
-            default,
+            null,
             text,
             message.GetValue("errorDetails") ?? string.Empty,
             message.GetValue("code") ?? string.Empty,
@@ -220,7 +220,7 @@ internal class BuildContext : IBuildContext
 
         public void AddStdOut(IStartInfo info, int processId, string? text)
         {
-            if (text != default)
+            if (text != null)
             {
                 Output.Add(new Output(info, false, text, processId));
             }
@@ -228,7 +228,7 @@ internal class BuildContext : IBuildContext
 
         public void AddStdErr(IStartInfo info, int processId, string? error)
         {
-            if (error != default)
+            if (error != null)
             {
                 Output.Add(new Output(info, true, error, processId));
             }

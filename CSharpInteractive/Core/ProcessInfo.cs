@@ -8,7 +8,7 @@ internal record ProcessInfo(
     IStartInfo StartInfo,
     IProcessMonitor Monitor,
     int RunId,
-    Action<Output>? Handler = default)
+    Action<Output>? Handler = null)
 {
     private static int _lastRunId;
 

@@ -14,12 +14,12 @@ using System.Text;
 [ExcludeFromCodeCoverage]
 [Target]
 public record BuildStatistics(
-    int Errors = default,
-    int Warnings = default,
-    int Tests = default,
-    int FailedTests = default,
-    int IgnoredTests = default,
-    int PassedTests = default)
+    int Errors = 0,
+    int Warnings = 0,
+    int Tests = 0,
+    int FailedTests = 0,
+    int IgnoredTests = 0,
+    int PassedTests = 0)
 {
     /// <summary>
     /// <c>True></c> if the statistic is empty, <c>False</c> if it contains any information.

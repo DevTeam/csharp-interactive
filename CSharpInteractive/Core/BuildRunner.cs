@@ -25,7 +25,7 @@ internal class BuildRunner(
     ICommandLineStatisticsRegistry statisticsRegistry)
     : IBuildRunner
 {
-    public IBuildResult Build(ICommandLine commandLine, Action<BuildMessage>? handler = default, TimeSpan timeout = default)
+    public IBuildResult Build(ICommandLine commandLine, Action<BuildMessage>? handler = null, TimeSpan timeout = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
         var buildContext = buildContextFactory();
@@ -42,7 +42,7 @@ internal class BuildRunner(
         return buildResult;
     }
 
-    public async Task<IBuildResult> BuildAsync(ICommandLine commandLine, Action<BuildMessage>? handler = default, CancellationToken cancellationToken = default)
+    public async Task<IBuildResult> BuildAsync(ICommandLine commandLine, Action<BuildMessage>? handler = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
         var buildContext = buildContextFactory();
@@ -75,7 +75,7 @@ internal class BuildRunner(
     private void Handle(ProcessInfo processInfo, Action<BuildMessage>? handler, Output output, IBuildContext buildContext)
     {
         var messages = buildOutputProcessor.Convert(output, buildContext).ToList();
-        if (handler != default)
+        if (handler != null)
         {
             customBuildMessagesProcessor.ProcessMessages(processInfo, output, messages, handler);
         }

@@ -8,7 +8,7 @@ internal class HelpCommandRunner(IInfo info) : ICommandRunner
     {
         if (command is not HelpCommand)
         {
-            return new CommandResult(command, default);
+            return new CommandResult(command, null);
         }
 
         info.ShowReplHelp();

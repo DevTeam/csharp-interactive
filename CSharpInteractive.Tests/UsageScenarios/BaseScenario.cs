@@ -22,7 +22,7 @@ public class BaseScenario : IHost, IDisposable
     {
         _output = output;
         Composition.Shared.Root.TestEnvironment.IsTesting = true;
-        Composition.Shared.Root.TestEnvironment.ExitCode = default;
+        Composition.Shared.Root.TestEnvironment.ExitCode = null;
         _tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
         Directory.CreateDirectory(_tempDir);
         _prevCurDir = Environment.CurrentDirectory;
@@ -69,13 +69,13 @@ public class BaseScenario : IHost, IDisposable
 
     public void WriteLine<T>(T line, Color color = Color.Default) => Composition.Shared.Root.Host.WriteLine(line, color);
 
-    public void Error(string? error, string? errorId = default) => Composition.Shared.Root.Host.Error(error, errorId);
+    public void Error(string? error, string? errorId = null) => Composition.Shared.Root.Host.Error(error, errorId);
 
     public void Warning(string? warning) => Composition.Shared.Root.Host.Warning(warning);
 
     public void Info(string? text) => Composition.Shared.Root.Host.Info(text);
 
-    public void Trace(string? trace, string? origin = default) => Composition.Shared.Root.Host.Trace(trace, origin);
+    public void Trace(string? trace, string? origin = null) => Composition.Shared.Root.Host.Trace(trace, origin);
 
     private class Properties : IProperties
     {

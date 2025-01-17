@@ -56,7 +56,7 @@ internal class AssembliesScriptOptionsProvider : IScriptOptionsFactory, IActive
     {
         _log.Trace(() => [new Text("Loading assemblies.")]);
         var assemblies = _assembliesProvider
-            .GetAssemblies(Refs.Where(i => i.type != default).Select(i => i.type!))
+            .GetAssemblies(Refs.Where(i => i.type != null).Select(i => i.type!))
             .Where(_ => !_cancellationToken.IsCancellationRequested)
             .Where(i => !string.IsNullOrWhiteSpace(i.Location))
             .ToHashSet();

@@ -14,12 +14,12 @@ public class CommandsRunnerTests
     {
         _commandRunner1 = new Mock<ICommandRunner>();
         _commandRunner1.Setup(i => i.TryRun(HelpCommand.Shared)).Returns(new CommandResult(HelpCommand.Shared, true));
-        _commandRunner1.Setup(i => i.TryRun(ResetCommand.Shared)).Returns(new CommandResult(HelpCommand.Shared, default));
-        _commandRunner1.Setup(i => i.TryRun(new CodeCommand(false))).Returns(new CommandResult(new CodeCommand(), default));
+        _commandRunner1.Setup(i => i.TryRun(ResetCommand.Shared)).Returns(new CommandResult(HelpCommand.Shared, null));
+        _commandRunner1.Setup(i => i.TryRun(new CodeCommand(false))).Returns(new CommandResult(new CodeCommand(), null));
         _commandRunner2 = new Mock<ICommandRunner>();
         _commandRunner2.Setup(i => i.TryRun(ResetCommand.Shared)).Returns(new CommandResult(ResetCommand.Shared, false));
-        _commandRunner2.Setup(i => i.TryRun(HelpCommand.Shared)).Returns(new CommandResult(HelpCommand.Shared, default));
-        _commandRunner2.Setup(i => i.TryRun(new CodeCommand(false))).Returns(new CommandResult(new CodeCommand(), default));
+        _commandRunner2.Setup(i => i.TryRun(HelpCommand.Shared)).Returns(new CommandResult(HelpCommand.Shared, null));
+        _commandRunner2.Setup(i => i.TryRun(new CodeCommand(false))).Returns(new CommandResult(new CodeCommand(), null));
         _statisticsToken = new Mock<IDisposable>();
         _statisticsRegistry = new Mock<IStatisticsRegistry>();
         _statisticsRegistry.Setup(i => i.Start()).Returns(_statisticsToken.Object);
@@ -55,12 +55,12 @@ public class CommandsRunnerTests
         new object[]
         {
             new[] {new CodeCommand()},
-            new[] {new CommandResult(new CodeCommand(), default)}
+            new[] {new CommandResult(new CodeCommand(), null)}
         },
         new object[]
         {
             new[] {new CodeCommand(), HelpCommand.Shared, ResetCommand.Shared},
-            new[] {new CommandResult(new CodeCommand(), default), new CommandResult(HelpCommand.Shared, true), new CommandResult(ResetCommand.Shared, false)}
+            new[] {new CommandResult(new CodeCommand(), null), new CommandResult(HelpCommand.Shared, true), new CommandResult(ResetCommand.Shared, false)}
         }
     };
 

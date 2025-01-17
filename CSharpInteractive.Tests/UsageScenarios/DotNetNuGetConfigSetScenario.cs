@@ -32,7 +32,7 @@ public class DotNetNuGetConfigGetScenario(ITestOutputHelper output) : BaseScenar
             .Run().EnsureSuccess();
         // }
 
-        string? repositoryPath = default;
+        string? repositoryPath = null;
         new DotNetNuGetConfigGet()
             .WithConfigKey("repositoryPath")
             .Run(output => repositoryPath = output.Line).EnsureSuccess();

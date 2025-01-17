@@ -15,7 +15,7 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.StdOut, default, "Abc"));
+        writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.StdOut, null, "Abc"));
 
         // Then
         _stdOut.Verify(i => i.WriteLine(It.Is<Text[]>(text => text.SequenceEqual(new[] {new Text("Abc")}))));
@@ -28,7 +28,7 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.StdError, default, "Abc"));
+        writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.StdError, null, "Abc"));
 
         // Then
         _stdErr.Verify(i => i.WriteLine(It.Is<Text[]>(text => text.SequenceEqual(new[] {new Text("Abc")}))));
@@ -41,7 +41,7 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.Warning, default, "Abc"));
+        writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.Warning, null, "Abc"));
 
         // Then
         _log.Verify(i => i.Warning(It.IsAny<Text[]>()));
@@ -56,7 +56,7 @@ public class BuildMessageLogWriterTests
         var writer = CreateInstance();
 
         // When
-        writer.Write(ProcessInfo, new BuildMessage(Output, state, default, "Abc"));
+        writer.Write(ProcessInfo, new BuildMessage(Output, state, null, "Abc"));
 
         // Then
         _log.Verify(i => i.Error(ErrorId.Build, It.IsAny<Text[]>()));

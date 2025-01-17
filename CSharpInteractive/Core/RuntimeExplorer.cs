@@ -13,11 +13,11 @@ internal class RuntimeExplorer(
     {
         if (string.IsNullOrWhiteSpace(runtimePath))
         {
-            runtimeAssemblyPath = default;
+            runtimeAssemblyPath = null;
             return false;
         }
 
         runtimeAssemblyPath = fileSystem.EnumerateFileSystemEntries(runtimePath, Path.GetFileName(assemblyPath), SearchOption.TopDirectoryOnly).FirstOrDefault();
-        return runtimeAssemblyPath != default;
+        return runtimeAssemblyPath != null;
     }
 }

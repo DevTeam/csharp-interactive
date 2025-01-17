@@ -62,7 +62,7 @@ public class ScriptRunnerTests
 
         new object[]
         {
-            new CommandResult[] {new(new CodeCommand(), default), new(new CodeCommand(), default), new(new ScriptCommand(string.Empty, string.Empty), default)},
+            new CommandResult[] {new(new CodeCommand(), null), new(new CodeCommand(), null), new(new ScriptCommand(string.Empty, string.Empty), null)},
             Array.Empty<string>(),
             Array.Empty<string>(),
             0
@@ -71,7 +71,7 @@ public class ScriptRunnerTests
         // Warnings
         new object[]
         {
-            new CommandResult[] {new(new CodeCommand(), default), new(new CodeCommand(), default), new(new ScriptCommand(string.Empty, string.Empty), true)},
+            new CommandResult[] {new(new CodeCommand(), null), new(new CodeCommand(), null), new(new ScriptCommand(string.Empty, string.Empty), true)},
             Array.Empty<string>(),
             new[] {"warn"},
             0

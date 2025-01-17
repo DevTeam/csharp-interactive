@@ -25,7 +25,7 @@ public class DefaultBuildMessagesProcessorTests
         var output = new Output(_startInfo.Object, false, "Output", 11);
         var messages = new BuildMessage[]
         {
-            new(Output, BuildMessageState.StdOut, default, "Msg1"),
+            new(Output, BuildMessageState.StdOut, null, "Msg1"),
             new(Output, state, Mock.Of<IServiceMessage>())
         };
 
@@ -46,7 +46,7 @@ public class DefaultBuildMessagesProcessorTests
     {
         // Given
         var output = new Output(_startInfo.Object, false, "Output", 11);
-        var msg1 = new BuildMessage(Output, BuildMessageState.StdOut, default, "Msg1");
+        var msg1 = new BuildMessage(Output, BuildMessageState.StdOut, null, "Msg1");
         var msg2 = new BuildMessage(Output, BuildMessageState.ServiceMessage, Mock.Of<IServiceMessage>());
 
         _teamCitySettings.SetupGet(i => i.CIType).Returns(CIType.Unknown);
@@ -68,8 +68,8 @@ public class DefaultBuildMessagesProcessorTests
     {
         // Given
         var output = new Output(_startInfo.Object, false, "Output", 11);
-        var msg1 = new BuildMessage(Output, BuildMessageState.StdOut, default, "Msg1");
-        var msg2 = new BuildMessage(Output, BuildMessageState.StdError, default, "Error");
+        var msg1 = new BuildMessage(Output, BuildMessageState.StdOut, null, "Msg1");
+        var msg2 = new BuildMessage(Output, BuildMessageState.StdError, null, "Error");
 
         _teamCitySettings.SetupGet(i => i.CIType).Returns(CIType.TeamCity);
         var nextHandler = new Mock<Action<BuildMessage>>();

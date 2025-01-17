@@ -17,7 +17,7 @@ internal class ScriptRunner(
         var summary = new Summary(true);
         try
         {
-            int? exitCode = default;
+            int? exitCode = null;
             foreach (var (command, success, currentExitCode) in commandsRunner.Run(GetCommands()))
             {
                 if (success.HasValue)

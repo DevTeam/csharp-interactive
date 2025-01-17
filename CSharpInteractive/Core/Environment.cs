@@ -128,14 +128,14 @@ internal class Environment :
             return !string.IsNullOrWhiteSpace(name);
         }
 
-        name = default;
+        name = null;
         return false;
     }
 
     private bool TryGetCurrentSource([NotNullWhen(true)] out ICodeSource? source)
     {
         source = _sources.LastOrDefault();
-        return source != default;
+        return source != null;
     }
 
     private static string GetWorkingDirectory() => Directory.GetCurrentDirectory();

@@ -61,7 +61,7 @@ internal class MSBuildArgumentsTool : IMSBuildArgumentsTool
                 return true;
 
             default:
-                value = default;
+                value = 0;
                 return false;
         }
     }

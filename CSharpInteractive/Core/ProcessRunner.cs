@@ -61,7 +61,7 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
 
         public bool TryStart([MaybeNullWhen(true)] out ProcessResult processResult)
         {
-            if (Handler != default)
+            if (Handler != null)
             {
                 ProcessManager.OnOutput += Handler;
             }
@@ -71,17 +71,17 @@ internal class ProcessRunner(Func<IProcessManager> processManagerFactory) : IPro
             {
                 Stopwatch.Stop();
                 {
-                    processResult = Monitor.Finished(processInfo, Stopwatch.ElapsedMilliseconds, ProcessState.FailedToStart, default, error);
+                    processResult = Monitor.Finished(processInfo, Stopwatch.ElapsedMilliseconds, ProcessState.FailedToStart, null, error);
                     return false;
                 }
             }
 
             Monitor.Started(StartInfo, ProcessManager.Id);
-            processResult = default;
+            processResult = null;
             return true;
         }
 
-        public ProcessResult Finish(bool finished, Exception? error = default)
+        public ProcessResult Finish(bool finished, Exception? error = null)
         {
             if (finished)
             {

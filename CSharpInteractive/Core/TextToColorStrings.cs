@@ -8,7 +8,7 @@ internal class TextToColorStrings : ITextToColorStrings
 {
     private static readonly Dictionary<int, ConsoleColor?> Colors = new()
     {
-        {39, default},
+        {39, null},
         {30, ConsoleColor.Black},
         {31, ConsoleColor.DarkRed},
         {32, ConsoleColor.DarkGreen},

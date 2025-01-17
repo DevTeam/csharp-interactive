@@ -17,7 +17,7 @@ internal class CSharpScriptCommandRunner(ICSharpScriptRunner scriptRunner) : ICo
                 return new CommandResult(command, true);
 
             default:
-                return new CommandResult(command, default);
+                return new CommandResult(command, null);
         }
     }
 }

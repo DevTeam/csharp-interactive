@@ -28,7 +28,7 @@ internal class CommandsRunner(
 
                 if (!processed)
                 {
-                    yield return new CommandResult(command, default);
+                    yield return new CommandResult(command, null);
                 }
             }
         }

@@ -11,7 +11,7 @@ internal class SettingCommandRunner<TOption>(
     {
         if (command is not SettingCommand<TOption> settingCommand)
         {
-            return new CommandResult(command, default);
+            return new CommandResult(command, null);
         }
 
         var previousValue = settingSetter.SetSetting(settingCommand.Value);

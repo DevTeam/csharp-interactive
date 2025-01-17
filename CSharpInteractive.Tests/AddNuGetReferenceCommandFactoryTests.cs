@@ -101,7 +101,7 @@ public class AddNuGetReferenceCommandFactoryTests
         new object[]
         {
             "#r \"nuget:Abc\"",
-            new[] {new AddNuGetReferenceCommand("Abc", default)},
+            new[] {new AddNuGetReferenceCommand("Abc", null)},
             false
         },
         // Errors

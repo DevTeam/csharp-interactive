@@ -70,7 +70,7 @@ internal static class DotNetCommandLineExtensions
     }
 
     [Pure]
-    public static CommandLine AddMSBuildLoggers(this CommandLine cmd, IHost host, DotNetVerbosity? verbosity = default)
+    public static CommandLine AddMSBuildLoggers(this CommandLine cmd, IHost host, DotNetVerbosity? verbosity = null)
     {
         // ReSharper disable once UseDeconstruction
         var components = host.GetService<HostComponents>();

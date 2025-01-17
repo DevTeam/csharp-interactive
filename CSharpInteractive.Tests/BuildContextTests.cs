@@ -13,7 +13,7 @@ public class BuildContextTests
         // Given
         var result = CreateInstance();
         var output = new Output(Mock.Of<IStartInfo>(), false, "Abc", 33);
-        var msg = new BuildMessage(output, BuildMessageState.StdOut, default, "Abc");
+        var msg = new BuildMessage(output, BuildMessageState.StdOut, null, "Abc");
 
         // When
         var messages = result.ProcessOutput(output);
@@ -30,7 +30,7 @@ public class BuildContextTests
         // Given
         var result = CreateInstance();
         var output = new Output(Mock.Of<IStartInfo>(), true, "Abc", 33);
-        var msg = new BuildMessage(output, BuildMessageState.StdError, default, "Abc");
+        var msg = new BuildMessage(output, BuildMessageState.StdError, null, "Abc");
 
         // When
         var messages = result.ProcessOutput(output);
@@ -226,7 +226,7 @@ public class BuildContextTests
         var buildMessage = new BuildMessage(
             output,
             state,
-            default,
+            null,
             "some text",
             "error details",
             "xUnit1026",
@@ -292,7 +292,7 @@ public class BuildContextTests
         var buildMessage = new BuildMessage(
             output,
             BuildMessageState.BuildProblem,
-            default,
+            null,
             "Problem description",
             "error details",
             "xUnit1026",

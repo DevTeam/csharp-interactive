@@ -31,7 +31,7 @@ public class AddNuGetReferenceCommandRunnerTests
         var result = runner.TryRun(command);
 
         // Then
-        result.ShouldBe(new CommandResult(command, default));
+        result.ShouldBe(new CommandResult(command, null));
     }
 
     [Fact]

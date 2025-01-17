@@ -11,7 +11,7 @@ internal partial class TestComposition
     private static void Setup() =>
         DI.Setup(nameof(TestComposition))
             .Bind<IFileSystem>().To<FileSystem>()
-            .Root<IFileSystem>("FileSystem", default, RootKinds.Static)
+            .Root<IFileSystem>("FileSystem", null, RootKinds.Static)
             .Bind<IServiceMessageParser>().To<ServiceMessageParser>()
-            .Root<IServiceMessageParser>("ServiceMessageParser", default, RootKinds.Static);
+            .Root<IServiceMessageParser>("ServiceMessageParser", null, RootKinds.Static);
 }

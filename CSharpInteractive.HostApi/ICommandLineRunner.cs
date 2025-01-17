@@ -32,7 +32,7 @@ public interface ICommandLineRunner
     /// <seealso cref="Output"/>
     ICommandLineResult Run(
         ICommandLine commandLine,
-        Action<Output>? handler = default,
+        Action<Output>? handler = null,
         TimeSpan timeout = default);
 
     /// <summary>
@@ -54,6 +54,6 @@ public interface ICommandLineRunner
     /// <seealso cref="CancellationToken"/>
     Task<ICommandLineResult> RunAsync(
         ICommandLine commandLine,
-        Action<Output>? handler = default,
+        Action<Output>? handler = null,
         CancellationToken cancellationToken = default);
 }

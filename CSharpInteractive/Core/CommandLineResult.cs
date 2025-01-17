@@ -8,8 +8,8 @@ internal record CommandLineResult(
     IStartInfo StartInfo,
     ProcessState State,
     long ElapsedMilliseconds,
-    int? ExitCode = default,
-    Exception? Error = default)
+    int? ExitCode = null,
+    Exception? Error = null)
     : ICommandLineResult, ISuccessDeterminant
 {
     public override string ToString()

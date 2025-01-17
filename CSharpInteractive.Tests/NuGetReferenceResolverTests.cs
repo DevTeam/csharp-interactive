@@ -36,7 +36,7 @@ public class NuGetReferenceResolverTests
             Sources,
             FallbackFolders,
             _command.VersionRange,
-            default,
+            null,
             PackagesPath);
         _nugetRestoreService.Setup(i => i.TryRestore(settings, out projectAssetsJson)).Returns(true);
 
@@ -76,7 +76,7 @@ public class NuGetReferenceResolverTests
             Sources,
             FallbackFolders,
             _command.VersionRange,
-            default,
+            null,
             PackagesPath);
         _nugetRestoreService.Setup(i => i.TryRestore(settings, out projectAssetsJson)).Returns(false);
         var result = resolver.TryResolveAssemblies(_command.PackageId, _command.VersionRange, out _);

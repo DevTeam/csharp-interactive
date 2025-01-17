@@ -38,7 +38,7 @@ public interface IBuildRunner
     /// <seealso cref="BuildMessage"/>
     IBuildResult Build(
         ICommandLine commandLine,
-        Action<BuildMessage>? handler = default,
+        Action<BuildMessage>? handler = null,
         TimeSpan timeout = default);
 
     /// <summary>
@@ -60,6 +60,6 @@ public interface IBuildRunner
     /// <seealso cref="CancellationToken"/>
     Task<IBuildResult> BuildAsync(
         ICommandLine commandLine,
-        Action<BuildMessage>? handler = default,
+        Action<BuildMessage>? handler = null,
         CancellationToken cancellationToken = default);
 }

@@ -69,7 +69,7 @@ public class Program
             using (Disposable.Create(_activeObjects.Select(i => i.Activate()).ToArray()))
             {
                 var result = _runner().Run();
-                if (_statistics.Errors.Any())
+                if (_statistics.Errors.Count != 0)
                 {
                     result = 1;
                 }

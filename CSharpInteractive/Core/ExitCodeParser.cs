@@ -43,7 +43,7 @@ internal class ExitCodeParser : IExitCodeParser
                     return true;
 
                 default:
-                    exitCode = default;
+                    exitCode = 0;
                     return false;
             }
         }

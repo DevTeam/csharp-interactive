@@ -44,7 +44,7 @@ internal class CSharpScriptRunner(
             stopwatch.Stop();
             log.Trace(() => [new Text($"Time Elapsed {stopwatch.Elapsed:g}")]);
             diagnosticsPresenter.Show(new CompilationDiagnostics(sourceCommand, _scriptState.Script.GetCompilation().GetDiagnostics().ToList().AsReadOnly()));
-            if (_scriptState.ReturnValue != default)
+            if (_scriptState.ReturnValue != null)
             {
                 if (success && exitCodeParser.TryParse(_scriptState.ReturnValue, out var exitCode))
                 {
@@ -77,6 +77,6 @@ internal class CSharpScriptRunner(
     public void Reset()
     {
         log.Trace(() => [new Text("Reset state.")]);
-        _scriptState = default;
+        _scriptState = null;
     }
 }

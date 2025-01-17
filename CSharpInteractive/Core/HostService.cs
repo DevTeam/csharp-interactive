@@ -29,9 +29,9 @@ internal class HostService(
 
     public void WriteLine<T>(T line, Color color = Color.Default) => stdOut.WriteLine(new Text(line?.ToString() ?? string.Empty, color));
 
-    public void Error(string? error, string? errorId = default)
+    public void Error(string? error, string? errorId = null)
     {
-        if (error != default)
+        if (error != null)
         {
             log.Error(new ErrorId(errorId ?? "Unknown"), error);
         }
@@ -39,7 +39,7 @@ internal class HostService(
 
     public void Warning(string? warning)
     {
-        if (warning != default)
+        if (warning != null)
         {
             log.Warning(warning);
         }
@@ -47,15 +47,15 @@ internal class HostService(
 
     public void Info(string? text)
     {
-        if (text != default)
+        if (text != null)
         {
             log.Info(text);
         }
     }
 
-    public void Trace(string? trace, string? origin = default)
+    public void Trace(string? trace, string? origin = null)
     {
-        if (trace != default)
+        if (trace != null)
         {
             log.Trace(() => [new Text(trace)], origin ?? string.Empty);
         }

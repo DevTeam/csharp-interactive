@@ -38,7 +38,7 @@ public class CISettingsTests
     [InlineData("Abc", true)]
     [InlineData("", false)]
     [InlineData("   ", false)]
-    [InlineData(default, false)]
+    [InlineData(null, false)]
     public void ShouldProvideIsGitLab(string? pipelineId, bool expectedIsUnderGitLab)
     {
         // Given
@@ -56,7 +56,7 @@ public class CISettingsTests
     [InlineData("Abc", true)]
     [InlineData("", false)]
     [InlineData("   ", false)]
-    [InlineData(default, false)]
+    [InlineData(null, false)]
     public void ShouldProvideIsAzureDevOps(string? pipelineId, bool expectedIsUnderAzureDevOps)
     {
         // Given

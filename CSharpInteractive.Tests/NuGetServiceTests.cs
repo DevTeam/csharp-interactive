@@ -43,7 +43,7 @@ public class NuGetServiceTests
     {
         new object?[] {"myPackages", false, Path.Combine("WD", "myPackages")},
         new object?[] {"myPackages", true, "myPackages"},
-        new object?[] {default, true, "defaultPackagesPath"}
+        new object?[] {null, true, "defaultPackagesPath"}
     };
 
     [Theory]

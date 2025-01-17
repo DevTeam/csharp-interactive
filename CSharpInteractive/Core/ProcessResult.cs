@@ -9,5 +9,5 @@ internal record ProcessResult(
     ProcessState State,
     long ElapsedMilliseconds,
     Text[] Description,
-    int? ExitCode = default,
-    Exception? Error = default);
+    int? ExitCode = null,
+    Exception? Error = null);

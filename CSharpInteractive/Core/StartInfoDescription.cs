@@ -7,7 +7,7 @@ using HostApi;
 
 internal class StartInfoDescription : IStartInfoDescription
 {
-    public string GetDescription(IStartInfo? startInfo, int? processId = default)
+    public string GetDescription(IStartInfo? startInfo, int? processId = null)
     {
         var sb = new StringBuilder();
         if (processId.HasValue)
@@ -35,7 +35,7 @@ internal class StartInfoDescription : IStartInfoDescription
         return sb.ToString();
     }
 
-    public IEnumerable<Text> GetDescriptionText(IStartInfo? startInfo, int? processId = default)
+    public IEnumerable<Text> GetDescriptionText(IStartInfo? startInfo, int? processId = null)
     {
         if (processId.HasValue)
         {

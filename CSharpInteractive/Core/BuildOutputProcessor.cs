@@ -10,7 +10,7 @@ internal class BuildOutputProcessor(IServiceMessageParser serviceMessageParser) 
     public IEnumerable<BuildMessage> Convert(Output output, IBuildContext context)
     {
         var messages = new List<BuildMessage>();
-        foreach (var message in serviceMessageParser.ParseServiceMessages(output.Line).Where(message => message != default))
+        foreach (var message in serviceMessageParser.ParseServiceMessages(output.Line).Where(message => message != null))
         {
             var buildMessage = new BuildMessage(output, BuildMessageState.ServiceMessage, message);
             if (buildMessage.TestResult.HasValue)

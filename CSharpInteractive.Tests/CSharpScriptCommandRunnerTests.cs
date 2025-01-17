@@ -13,7 +13,7 @@ public class CSharpScriptCommandRunnerTests
         var command = new ScriptCommand("abc", "code");
         var commandRunner = CreateInstance();
         // ReSharper disable once RedundantArgumentDefaultValue
-        _csharpScriptRunner.Setup(i => i.Run(command, "code")).Returns(new CommandResult(command, result, default));
+        _csharpScriptRunner.Setup(i => i.Run(command, "code")).Returns(new CommandResult(command, result, null));
 
         // When
         var actualResult = commandRunner.TryRun(command);
@@ -52,7 +52,7 @@ public class CSharpScriptCommandRunnerTests
 
         // Then
         actualResult.Command.ShouldBe(command);
-        actualResult.Success.ShouldBe(default);
+        actualResult.Success.ShouldBe(null);
     }
 
     private CSharpScriptCommandRunner CreateInstance() =>

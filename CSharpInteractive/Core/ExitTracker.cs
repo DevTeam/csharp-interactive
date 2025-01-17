@@ -47,14 +47,14 @@ internal class ExitTracker(
         foreach (var eventInfo in events)
         {
             var fieldInfo = type.GetField(eventInfo.Name, BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-            if (fieldInfo?.GetValue(default) is not Delegate eventHandler)
+            if (fieldInfo?.GetValue(null) is not Delegate eventHandler)
             {
                 continue;
             }
 
             foreach (var invocation in eventHandler.GetInvocationList())
             {
-                eventInfo?.GetRemoveMethod(fieldInfo.IsPrivate)?.Invoke(default, [invocation]);
+                eventInfo?.GetRemoveMethod(fieldInfo.IsPrivate)?.Invoke(null, [invocation]);
             }
         }
     }

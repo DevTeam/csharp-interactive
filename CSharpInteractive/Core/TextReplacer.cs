@@ -29,6 +29,6 @@ internal class TextReplacer : ITextReplacer
             {
                 yield return line;
             }
-        } while (line != default);
+        } while (line != null);
     }
 }

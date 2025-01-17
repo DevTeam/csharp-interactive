@@ -14,7 +14,7 @@ internal class ProcessOutputWriter(IConsole console) : IProcessOutputWriter
         }
         else
         {
-            console.WriteToOut((default, output.Line), (default, System.Environment.NewLine));
+            console.WriteToOut((null, output.Line), (null, System.Environment.NewLine));
         }
     }
 }

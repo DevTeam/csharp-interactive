@@ -25,7 +25,7 @@ public class CommandLineAsyncCancellation(ITestOutputHelper output) : BaseScenar
 
         var cancellationTokenSource = new CancellationTokenSource();
         var task = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
-            .RunAsync(default, cancellationTokenSource.Token);
+            .RunAsync(null, cancellationTokenSource.Token);
 
         cancellationTokenSource.CancelAfter(TimeSpan.FromMilliseconds(100));
         task.IsCompleted.ShouldBeFalse();

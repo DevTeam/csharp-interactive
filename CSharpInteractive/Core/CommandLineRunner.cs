@@ -13,7 +13,7 @@ internal class CommandLineRunner(
     ICommandLineStatisticsRegistry statisticsRegistry)
     : ICommandLineRunner
 {
-    public ICommandLineResult Run(ICommandLine commandLine, Action<Output>? handler = default, TimeSpan timeout = default)
+    public ICommandLineResult Run(ICommandLine commandLine, Action<Output>? handler = null, TimeSpan timeout = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
         var processResult = processRunner.Run(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), ProcessInfo.CreateRunId(), handler), timeout);
@@ -24,7 +24,7 @@ internal class CommandLineRunner(
         return commandLineResult;
     }
 
-    public async Task<ICommandLineResult> RunAsync(ICommandLine commandLine, Action<Output>? handler = default, CancellationToken cancellationToken = default)
+    public async Task<ICommandLineResult> RunAsync(ICommandLine commandLine, Action<Output>? handler = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
         var processResult = await processRunner.RunAsync(new ProcessInfo(commandLine.GetStartInfo(host), monitorFactory(), ProcessInfo.CreateRunId(), handler), cancellationToken);

@@ -75,7 +75,7 @@ public interface IHost
     /// </summary>
     /// <param name="error">Error message.</param>
     /// <param name="errorId">Unique error identifier, optional.</param>
-    void Error(string? error, string? errorId = default);
+    void Error(string? error, string? errorId = null);
 
     /// <summary>
     /// Writes a warning to stdOut. This warning will affect the summary run statistics.
@@ -116,7 +116,7 @@ public interface IHost
     /// </summary>
     /// <param name="trace">Trace message.</param>
     /// <param name="origin">Source of the trace message, optional.</param>
-    void Trace(string? trace, string? origin = default);
+    void Trace(string? trace, string? origin = null);
 
     /// <summary>
     /// Provides an instance of a service by its type.

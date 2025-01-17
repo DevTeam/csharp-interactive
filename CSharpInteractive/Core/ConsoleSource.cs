@@ -21,7 +21,7 @@ internal class ConsoleSource(CancellationToken cancellationToken) : ICodeSource,
 
     public bool MoveNext()
     {
-        if (Current == default)
+        if (Current == null)
         {
             Task.Run(() => { Current = System.Console.In.ReadLine() ?? string.Empty; }, cancellationToken).Wait(cancellationToken);
         }

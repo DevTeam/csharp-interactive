@@ -25,7 +25,7 @@ public class CommandLineWithTimeoutScenario(ITestOutputHelper output) : BaseScen
         // ## using HostApi;
 
         var exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
-            .Run(default, TimeSpan.FromMilliseconds(1))
+            .Run(null, TimeSpan.FromMilliseconds(1))
             .ExitCode;
         // }
 

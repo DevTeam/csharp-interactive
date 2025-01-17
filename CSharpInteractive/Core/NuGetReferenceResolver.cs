@@ -25,7 +25,7 @@ internal class NuGetReferenceResolver(
                 nugetEnvironment.Sources,
                 nugetEnvironment.FallbackFolders,
                 versionRange,
-                default,
+                null,
                 nugetEnvironment.PackagesPath
             ),
             out var projectAssetsJson);

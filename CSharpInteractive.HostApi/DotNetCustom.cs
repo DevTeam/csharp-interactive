@@ -29,9 +29,9 @@ using Internal.DotNet;
 public partial record DotNetCustom(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
-    bool? Build = default,
-    bool? Tests = default,
-    DotNetVerbosity? Verbosity = default,
+    bool? Build = null,
+    bool? Tests = null,
+    DotNetVerbosity? Verbosity = null,
     string ExecutablePath = "",
     string WorkingDirectory = "",
     string ShortName = "")

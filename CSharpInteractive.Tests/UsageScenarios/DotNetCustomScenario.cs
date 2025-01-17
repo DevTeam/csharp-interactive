@@ -23,7 +23,7 @@ public class DotNetCustomScenario(ITestOutputHelper output) : BaseScenario(outpu
         // ## using HostApi;
 
         // Gets the dotnet version, running a command like: "dotnet --version"
-        NuGetVersion? version = default;
+        NuGetVersion? version = null;
         new DotNetCustom("--version")
             .Run(message => NuGetVersion.TryParse(message.Line, out version))
             .EnsureSuccess();

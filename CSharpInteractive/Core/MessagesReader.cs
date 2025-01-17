@@ -43,7 +43,7 @@ internal class MessagesReader(
                 continue;
             }
 
-            foreach (var message in serviceMessageParser.ParseServiceMessages(line).Where(message => message != default))
+            foreach (var message in serviceMessageParser.ParseServiceMessages(line).Where(message => message != null))
             {
                 yield return message;
             }

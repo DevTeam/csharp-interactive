@@ -7,4 +7,4 @@ using Immutype;
 internal record CommandResult(
     ICommand Command,
     bool? Success,
-    int? ExitCode = default);
+    int? ExitCode = null);

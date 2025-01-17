@@ -15,7 +15,7 @@ public class DotNetNuGetConfigUnsetScenario(ITestOutputHelper output) : BaseScen
     public void Run()
     {
         Skip.IfNot(HasSdk("8.0.10"));
-        ExpectedExitCode = default;
+        ExpectedExitCode = null;
         var configFile = Path.GetFullPath("nuget.config");
         File.WriteAllText(configFile, "<configuration></configuration>");
         new DotNetNuGetConfigSet()
