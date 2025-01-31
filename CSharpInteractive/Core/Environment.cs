@@ -86,7 +86,7 @@ internal class Environment :
             return;
         }
 
-        System.Environment.Exit(exitCode);
+        NativeExit(exitCode);
     }
 
     public IEnumerable<Text> Trace
@@ -157,5 +157,54 @@ internal class Environment :
 
         var scriptDirectory = Path.GetDirectoryName(script);
         return !string.IsNullOrWhiteSpace(scriptDirectory) ? scriptDirectory : script;
+    }
+    
+    [DllImport("ucrtbase.dll", EntryPoint = "exit")]
+    private static extern void WindowsNativeExit(int exitCode);
+
+    [DllImport("libSystem.dylib", EntryPoint = "exit")]
+    private static extern void MacNativeExit(int exitCode);
+
+    [DllImport("libc.so.6", EntryPoint = "exit")]
+    private static extern void LinuxNativeExit(int exitCode);
+
+    private static void NativeExit(int exitCode)
+    {
+        try
+        {
+            // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
+            switch (System.Environment.OSVersion.Platform)
+            {
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.Win32NT:
+                case PlatformID.WinCE:
+                case PlatformID.Xbox:
+                    WindowsNativeExit(exitCode);
+                    break;
+
+                case PlatformID.Unix:
+                    try
+                    {
+                        LinuxNativeExit(exitCode);
+                    }
+                    catch (DllNotFoundException)
+                    {
+                        MacNativeExit(exitCode);
+                    }
+
+                    break;
+
+                case PlatformID.MacOSX:
+                    MacNativeExit(exitCode);
+                    break;
+            }
+        }
+        catch(Exception error)
+        {
+            System.Environment.FailFast("Failed to exit.", error);
+        }
+
+        System.Environment.FailFast("Failed to exit.");
     }
 }
