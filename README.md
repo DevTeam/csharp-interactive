@@ -128,6 +128,7 @@ The created project contains 2 entry points:
   - [Writing an empty line to a build log](#writing-an-empty-line-to-a-build-log)
   - [Registering errors in the build log](#registering-errors-in-the-build-log)
   - [Registering warnings in the build log](#registering-warnings-in-the-build-log)
+  - [Registering a summary in the build log](#registering-a-summary-in-the-build-log)
   - [Registering information in the build log](#registering-information-in-the-build-log)
   - [Registering trace information in the build log](#registering-trace-information-in-the-build-log)
 - Arguments and parameters
@@ -255,6 +256,12 @@ Error("Error info", "Error identifier");
 
 ``` CSharp
 Warning("Warning info");
+```
+
+### Registering a summary in the build log
+
+``` CSharp
+Summary("Summary message");
 ```
 
 ### Registering information in the build log
@@ -481,7 +488,7 @@ using HostApi;
 
 var cancellationTokenSource = new CancellationTokenSource();
 var task = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
-    .RunAsync(default, cancellationTokenSource.Token);
+    .RunAsync(null, cancellationTokenSource.Token);
 
 cancellationTokenSource.CancelAfter(TimeSpan.FromMilliseconds(100));
 task.IsCompleted.ShouldBeFalse();
@@ -493,7 +500,7 @@ If timeout expired a process will be killed.
 using HostApi;
 
 var exitCode = new CommandLine("cmd", "/c", "TIMEOUT", "/T", "120")
-    .Run(default, TimeSpan.FromMilliseconds(1))
+    .Run(null, TimeSpan.FromMilliseconds(1))
     .ExitCode;
 ```
 
@@ -799,7 +806,7 @@ new DotNetFormat()
 ``` CSharp
 using HostApi;
 
-string? repositoryPath = default;
+string? repositoryPath = null;
 new DotNetNuGetConfigGet()
     .WithConfigKey("repositoryPath")
     .Run(output => repositoryPath = output.Line).EnsureSuccess();
@@ -1139,7 +1146,7 @@ new DotNet()
 using HostApi;
 
 // Gets the dotnet version, running a command like: "dotnet --version"
-NuGetVersion? version = default;
+NuGetVersion? version = null;
 new DotNetCustom("--version")
     .Run(message => NuGetVersion.TryParse(message.Line, out version))
     .EnsureSuccess();

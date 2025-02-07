@@ -45,6 +45,14 @@ internal class HostService(
         }
     }
 
+    public void Summary(string? summary)
+    {
+        if (summary != null)
+        {
+            log.Summary(summary);
+        }
+    }
+
     public void Info(string? text)
     {
         if (text != null)

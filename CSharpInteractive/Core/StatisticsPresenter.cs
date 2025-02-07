@@ -18,6 +18,11 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
 
         Show(tests);
 
+        foreach (var summary in statistics.Summary)
+        {
+            log.Info(summary.AddPrefix(_ => Tab));
+        }
+
         foreach (var warning in statistics.Warnings)
         {
             log.Info(warning.AddPrefix(_ => Tab));

@@ -34,6 +34,17 @@ internal class Log<T>(
         stdOut.WriteLine(warning);
     }
 
+    public void Summary(params Text[] summary)
+    {
+        if (summary.Length == 0)
+        {
+            return;
+        }
+
+        statisticsRegistry.RegisterSummary(summary);
+        stdOut.WriteLine(GetMessage(summary, Color.Highlighted));
+    }
+
     public void Info(params Text[] message)
     {
         if (settings.VerbosityLevel >= VerbosityLevel.Normal)

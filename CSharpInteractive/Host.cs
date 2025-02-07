@@ -163,6 +163,17 @@ public static class Components
     public static void Warning(string? warning) => CurHost.Warning(warning);
 
     /// <summary>
+    /// Writes a summary message to stdOut.
+    /// <example>
+    /// <code>
+    /// Info("Some info");
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="summary">Summary message.</param>
+    public static void Summary(string? summary) => CurHost.Summary(summary);
+
+    /// <summary>
     /// Writes an information message to stdOut.
     /// <example>
     /// <code>

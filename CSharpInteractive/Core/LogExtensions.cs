@@ -31,4 +31,10 @@ internal static class LogExtensions
         log.Warning(warning.Select(i => new Text(i, Color.Warning)).ToArray());
         return log;
     }
+
+    public static ILog<T> Summary<T>(this ILog<T> log, params string[] summary)
+    {
+        log.Summary(summary.Select(i => new Text(i, Color.Highlighted)).ToArray());
+        return log;
+    }
 }

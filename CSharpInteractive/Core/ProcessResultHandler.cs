@@ -35,7 +35,7 @@ internal class ProcessResultHandler(
 
                 case ProcessState.Finished:
                 default:
-                    log.Info(description);
+                    log.Summary(description);
                     break;
             }
         }

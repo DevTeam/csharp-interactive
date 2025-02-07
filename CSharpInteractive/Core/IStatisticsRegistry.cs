@@ -7,4 +7,6 @@ internal interface IStatisticsRegistry
     void RegisterError(Text[] error);
 
     void RegisterWarning(Text[] warning);
+
+    void RegisterSummary(Text[] summary);
 }

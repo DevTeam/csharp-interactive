@@ -26,6 +26,12 @@ internal class TeamCityLog<T>(
         teamCityWriter.WriteWarning(message);
     }
 
+    public void Summary(params Text[] summary)
+    {
+        statisticsRegistry.RegisterSummary(summary);
+        teamCityWriter.WriteMessage(lineFormatter.Format(summary));
+    }
+
     public void Info(params Text[] message)
     {
         if (settings.VerbosityLevel >= VerbosityLevel.Normal)

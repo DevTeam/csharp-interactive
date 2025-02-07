@@ -29,7 +29,7 @@ public class ProcessResultHandlerTests
     }
 
     [Fact]
-    public void ShouldLogInfoWhenFinishedAndHasNoHandler()
+    public void ShouldLogSummaryWhenFinishedAndHasNoHandler()
     {
         // Given
         var handler = CreateInstance();
@@ -38,7 +38,7 @@ public class ProcessResultHandlerTests
         handler.Handle(new ProcessResult(_processInfo, ProcessState.Finished, 12, _description), default(Action<object>));
 
         // Then
-        _log.Verify(i => i.Info(_description));
+        _log.Verify(i => i.Summary(_description));
     }
 
     [Fact]

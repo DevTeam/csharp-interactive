@@ -23,11 +23,6 @@ internal class SummaryPresenter(
         if (!statistics.IsEmpty)
         {
             log.Info(new Text("Summary:", Color.Header));
-            foreach (var commandLineInfo in statistics.CommandLines)
-            {
-                log.Info(commandLineInfo.ProcessResult.Description.AddPrefix(_ => Tab));
-            }
-
             statisticsPresenter.Show(statistics);
         }
 

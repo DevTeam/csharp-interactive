@@ -12,6 +12,7 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
     private readonly Stopwatch _stopwatch = new();
     private readonly List<Text[]> _errors = [];
     private readonly List<Text[]> _warnings = [];
+    private readonly List<Text[]> _summary = [];
     private readonly List<CommandLineInfo> _info = [];
 
     public bool IsEmpty => Errors.Count == 0 && Warnings.Count == 0 && CommandLines.Count == 0;
@@ -22,7 +23,7 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
         {
             lock (_lockObject)
             {
-                return new ReadOnlyCollection<Text[]>(_errors);
+                return _errors.AsReadOnly();
             }
         }
     }
@@ -33,7 +34,18 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
         {
             lock (_lockObject)
             {
-                return new ReadOnlyCollection<Text[]>(_warnings);
+                return _warnings.AsReadOnly();
+            }
+        }
+    }
+
+    public IReadOnlyCollection<Text[]> Summary
+    {
+        get
+        {
+            lock (_lockObject)
+            {
+                return _summary.AsReadOnly();
             }
         }
     }
@@ -66,6 +78,18 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
             lock (_lockObject)
             {
                 _warnings.Add(warning);
+            }
+        }
+    }
+
+    public void RegisterSummary(Text[] summary)
+    {
+        summary = summary.Trim();
+        if (!summary.IsEmptyOrWhiteSpace())
+        {
+            lock (_lockObject)
+            {
+                _summary.Add(summary);
             }
         }
     }

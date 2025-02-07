@@ -73,6 +73,8 @@ public class BaseScenario : IHost, IDisposable
 
     public void Warning(string? warning) => Composition.Shared.Root.Host.Warning(warning);
 
+    public void Summary(string? summary) => Composition.Shared.Root.Host.Summary(summary);
+
     public void Info(string? text) => Composition.Shared.Root.Host.Info(text);
 
     public void Trace(string? trace, string? origin = null) => Composition.Shared.Root.Host.Trace(trace, origin);

@@ -8,6 +8,7 @@ using NuGet.Versioning;
 // Output, logging and tracing API
 WriteLine("Hello");
 WriteLine("Hello !!!", Color.Highlighted);
+Summary("Summary message");
 Error("Error details", "ErrorId");
 Warning("Warning");
 Info("Some info");

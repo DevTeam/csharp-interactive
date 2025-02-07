@@ -89,6 +89,17 @@ public interface IHost
     void Warning(string? warning);
 
     /// <summary>
+    /// Writes a summary message to stdOut.
+    /// <example>
+    /// <code>
+    /// Info("Some info");
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="summary">Summary message.</param>
+    void Summary(string? summary);
+
+    /// <summary>
     /// Writes an information message to stdOut.
     /// <example>
     /// <code>

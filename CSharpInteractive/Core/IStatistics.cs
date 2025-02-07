@@ -8,6 +8,8 @@ internal interface IStatistics
 
     IReadOnlyCollection<Text[]> Warnings { get; }
 
+    IReadOnlyCollection<Text[]> Summary { get; }
+
     TimeSpan TimeElapsed { get; }
 
     IReadOnlyCollection<CommandLineInfo> CommandLines { get; }
