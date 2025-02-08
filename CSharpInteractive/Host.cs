@@ -139,6 +139,17 @@ public static class Components
     public static void WriteLine<T>(T line, Color color = Color.Default) => CurHost.WriteLine(line, color);
 
     /// <summary>
+    /// Writes a line to stdOut.
+    /// <example>
+    /// <code>
+    /// WriteLine("Hello !".WithColor(Color.Highlighted));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="line">Any value that will be converted to a line.</param>
+    public static void WriteLine(params Text[] line) => CurHost.WriteLine(line);
+
+    /// <summary>
     /// Writes an error to stdErr. This error will affect the summary run statistics.
     /// <example>
     /// <code>
@@ -152,6 +163,29 @@ public static class Components
     public static void Error(string? error, string? errorId = null) => CurHost.Error(error, errorId);
 
     /// <summary>
+    /// Writes an error to stdErr. This error will affect the summary run statistics.
+    /// <example>
+    /// <code>
+    /// Error(new Text("Some "), new Text("error", Color.Error));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="error">Error message.</param>
+    public static void Error(params Text[] error) => CurHost.Error(error);
+
+    /// <summary>
+    /// Writes an error to stdErr. This error will affect the summary run statistics.
+    /// <example>
+    /// <code>
+    /// Error("ERR327", new Text("Some "), new Text("error", Color.Error));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="errorId">Unique error identifier, optional.</param>
+    /// <param name="error">Error message.</param>
+    public static void Error(string errorId, params Text[] error) => CurHost.Error(errorId, error);
+
+    /// <summary>
     /// Writes a warning to stdOut. This warning will affect the summary run statistics.
     /// <example>
     /// <code>
@@ -161,6 +195,17 @@ public static class Components
     /// </summary>
     /// <param name="warning">Warning message.</param>
     public static void Warning(string? warning) => CurHost.Warning(warning);
+
+    /// <summary>
+    /// Writes a warning to stdOut. This warning will affect the summary run statistics.
+    /// <example>
+    /// <code>
+    /// Warning(new Text("Some "), new Text("warning", Color.Warning));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="warning">Warning message.</param>
+    public static void  Warning(params Text[] warning) => CurHost.Warning(warning);
 
     /// <summary>
     /// Writes a summary message to stdOut.
@@ -174,6 +219,17 @@ public static class Components
     public static void Summary(string? summary) => CurHost.Summary(summary);
 
     /// <summary>
+    /// Writes a summary message to stdOut.
+    /// <example>
+    /// <code>
+    /// Summary(new Text("Some "), new Text("summary", Color.Highlighted));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="summary">Summary message.</param>
+    public static void Summary(params Text[] summary) => CurHost.Summary(summary);
+
+    /// <summary>
     /// Writes an information message to stdOut.
     /// <example>
     /// <code>
@@ -183,6 +239,17 @@ public static class Components
     /// </summary>
     /// <param name="text">Information message.</param>
     public static void Info(string? text) => CurHost.Info(text);
+
+    /// <summary>
+    /// Writes an information message to stdOut.
+    /// <example>
+    /// <code>
+    /// Ingo(new Text("Some "), new Text("info", Color.Highlighted));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="text">Information message.</param>
+    public static void Info(params Text[] text) => CurHost.Info(text);
 
     /// <summary>
     /// Writes a trace message to stdOut for the appropriate logging level.
@@ -202,6 +269,24 @@ public static class Components
     /// <param name="trace">Trace message.</param>
     /// <param name="origin">Source of the trace message, optional.</param>
     public static void Trace(string? trace, string? origin = null) => CurHost.Trace(trace, origin);
+
+    /// <summary>
+    /// Writes a trace message to stdOut for the appropriate logging level.
+    /// <example>
+    /// <code>
+    /// Trace(new Text("Trace message", Color.Details));
+    /// </code>
+    /// </example>
+    /// <example>
+    /// When run as a script:
+    /// <code>
+    /// #l Diagnostic
+    /// Trace("Tracing ", "details".WithColor(Color.Details));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="trace">Trace message.</param>
+    public static void Trace(Text[] trace) => CurHost.Trace(trace);
 
     /// <summary>
     /// Provides an instance of a service by its type.

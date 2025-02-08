@@ -1,1 +1,3 @@
+Error("Error info");
 Error("Error info", "Error identifier");
+Error("Error: ".WithColor(), "datails".WithColor(Color.Details));

@@ -2,6 +2,7 @@
 
 namespace CSharpInteractive.Core;
 
+using HostApi;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
 

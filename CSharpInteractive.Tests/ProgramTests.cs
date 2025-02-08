@@ -30,7 +30,7 @@ public class ProgramTests
         _active = new Mock<IActive>();
         _active.Setup(i => i.Activate()).Returns(_activationToken.Object);
         _statistics = new Mock<IStatistics>();
-        _statistics.SetupGet(i => i.Errors).Returns(Array.Empty<Text[]>());
+        _statistics.SetupGet(i => i.Items).Returns(Array.Empty<StatisticsItem>());
     }
 
     [Fact]
@@ -107,7 +107,7 @@ public class ProgramTests
         var program = CreateInstance();
 
         // When
-        _statistics.SetupGet(i => i.Errors).Returns([new Text("some error")]);
+        _statistics.SetupGet(i => i.Items).Returns([new StatisticsItem(StatisticsType.Error, new Text("some error"))]);
         var actualResult = program.Run();
 
         // Then

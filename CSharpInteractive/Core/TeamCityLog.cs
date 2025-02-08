@@ -15,20 +15,21 @@ internal class TeamCityLog<T>(
     public void Error(ErrorId id, params Text[] error)
     {
         var message = error.ToSimpleString();
-        statisticsRegistry.RegisterError(error);
+        statisticsRegistry.Register(StatisticsType.Error, error.WithDefaultColor(Color.Error));
         teamCityWriter.WriteBuildProblem(id.Id, message);
     }
 
     public void Warning(params Text[] warning)
     {
         var message = warning.ToSimpleString();
-        statisticsRegistry.RegisterWarning(warning);
+        statisticsRegistry.Register(StatisticsType.Warning, warning.WithDefaultColor(Color.Warning));
         teamCityWriter.WriteWarning(message);
     }
 
     public void Summary(params Text[] summary)
     {
-        statisticsRegistry.RegisterSummary(summary);
+        summary = summary.WithDefaultColor(Color.Highlighted);
+        statisticsRegistry.Register(StatisticsType.Summary, summary);
         teamCityWriter.WriteMessage(lineFormatter.Format(summary));
     }
 
@@ -36,7 +37,7 @@ internal class TeamCityLog<T>(
     {
         if (settings.VerbosityLevel >= VerbosityLevel.Normal)
         {
-            teamCityWriter.WriteMessage(lineFormatter.Format(message));
+            teamCityWriter.WriteMessage(lineFormatter.Format(message.WithDefaultColor(Color.Default)));
         }
     }
 

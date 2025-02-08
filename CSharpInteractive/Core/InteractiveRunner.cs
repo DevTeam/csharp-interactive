@@ -4,6 +4,8 @@
 
 namespace CSharpInteractive.Core;
 
+using HostApi;
+
 internal class InteractiveRunner(
     ICommandSource commandSource,
     ICommandsRunner commandsRunner,

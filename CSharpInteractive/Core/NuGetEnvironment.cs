@@ -2,6 +2,8 @@
 
 namespace CSharpInteractive.Core;
 
+using HostApi;
+
 [ExcludeFromCodeCoverage]
 internal class NuGetEnvironment(
     IEnvironment environment,

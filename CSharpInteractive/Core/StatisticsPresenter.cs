@@ -18,29 +18,34 @@ internal class StatisticsPresenter(ILog<StatisticsPresenter> log) : IPresenter<I
 
         Show(tests);
 
-        foreach (var summary in statistics.Summary)
+        var warningsCount = 0;
+        var errorsCount = 0;
+        var statisticsItems = statistics.Items;
+        foreach (var item in statisticsItems.OrderBy(i => i.Type))
         {
-            log.Info(summary.AddPrefix(_ => Tab));
+            // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
+            switch (item.Type)
+            {
+                case StatisticsType.Warning:
+                    warningsCount++;
+                    break;
+
+                case StatisticsType.Error:
+                    errorsCount++;
+                    break;
+            }
+
+            log.Info(item.Text.AddPrefix(_ => Tab));
         }
 
-        foreach (var warning in statistics.Warnings)
+        if (warningsCount > 0)
         {
-            log.Info(warning.AddPrefix(_ => Tab));
+            log.Info(new Text($"{warningsCount} Warning{ (warningsCount > 1 ? "s" : "") }", Color.Warning));
         }
 
-        foreach (var error in statistics.Errors)
+        if (errorsCount > 0)
         {
-            log.Info(error.AddPrefix(_ => Tab));
-        }
-
-        if (statistics.Warnings.Count > 0)
-        {
-            log.Info(new Text($"{statistics.Warnings.Count} Warning(s)", Color.Warning));
-        }
-
-        if (statistics.Errors.Count > 0)
-        {
-            log.Info(new Text($"{statistics.Errors.Count} Error(s)", Color.Error));
+            log.Info(new Text($"{errorsCount} Error{ (errorsCount > 1 ? "s" : "") }", Color.Error));
         }
 
         log.Info(new Text($"Time Elapsed {statistics.TimeElapsed:g}"));

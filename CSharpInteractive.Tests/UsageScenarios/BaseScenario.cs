@@ -69,15 +69,29 @@ public class BaseScenario : IHost, IDisposable
 
     public void WriteLine<T>(T line, Color color = Color.Default) => Composition.Shared.Root.Host.WriteLine(line, color);
 
+    public void WriteLine(params Text[] line) => Composition.Shared.Root.Host.WriteLine(line);
+
     public void Error(string? error, string? errorId = null) => Composition.Shared.Root.Host.Error(error, errorId);
+
+    public void Error(params Text[] error) => Composition.Shared.Root.Host.Error(error.WithDefaultColor(Color.Error));
+
+    public void Error(string errorId, params Text[] error) => Composition.Shared.Root.Host.Error(errorId, error.WithDefaultColor(Color.Error));
 
     public void Warning(string? warning) => Composition.Shared.Root.Host.Warning(warning);
 
+    public void Warning(params Text[] warning) => Composition.Shared.Root.Host.Warning(warning.WithDefaultColor(Color.Warning));
+
     public void Summary(string? summary) => Composition.Shared.Root.Host.Summary(summary);
+
+    public void Summary(params Text[] summary) => Composition.Shared.Root.Host.Summary(summary.WithDefaultColor(Color.Highlighted));
 
     public void Info(string? text) => Composition.Shared.Root.Host.Info(text);
 
+    public void Info(params Text[] text) => Composition.Shared.Root.Host.Info(text);
+
     public void Trace(string? trace, string? origin = null) => Composition.Shared.Root.Host.Trace(trace, origin);
+
+    public void Trace(params Text[] trace) => Composition.Shared.Root.Host.Trace(trace);
 
     private class Properties : IProperties
     {
@@ -134,7 +148,7 @@ public class BaseScenario : IHost, IDisposable
 
     private void AddOutput(string text, bool isError)
     {
-        _outputText.Append(text.Replace("\x001B", ""));
+        _outputText.Append(text.Replace("\e", ""));
         text = _outputText.ToString();
         do
         {

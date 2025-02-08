@@ -2,6 +2,8 @@
 
 namespace CSharpInteractive.Core;
 
+using HostApi;
+
 internal interface ILog<T>
 {
     void Error(ErrorId id, params Text[] error);

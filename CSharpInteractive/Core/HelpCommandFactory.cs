@@ -3,6 +3,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Text.RegularExpressions;
+using HostApi;
 
 [SuppressMessage("Performance", "SYSLIB1045:Convert to \'GeneratedRegexAttribute\'.")]
 internal class HelpCommandFactory(ILog<HelpCommandFactory> log) : ICommandFactory<string>

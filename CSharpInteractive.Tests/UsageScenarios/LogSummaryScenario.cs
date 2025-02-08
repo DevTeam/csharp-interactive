@@ -18,6 +18,7 @@ public class LogSummaryScenario(ITestOutputHelper output) : BaseScenario(output)
         // $description=Registering a summary in the build log
         // {
         Summary("Summary message");
+        Summary("Summary ", "message".WithColor(Color.Details));
         // }
     }
 }

@@ -10,7 +10,7 @@ internal class ProcessOutputWriter(IConsole console) : IProcessOutputWriter
     {
         if (output.IsError)
         {
-            console.WriteToErr(output.Line, System.Environment.NewLine);
+            console.WriteToErr((null, output.Line), (null, System.Environment.NewLine));
         }
         else
         {

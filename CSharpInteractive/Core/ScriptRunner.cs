@@ -4,6 +4,8 @@
 
 namespace CSharpInteractive.Core;
 
+using HostApi;
+
 internal class ScriptRunner(
     ILog<ScriptRunner> log,
     ICommandSource commandSource,
@@ -36,7 +38,7 @@ internal class ScriptRunner(
                 exitCode = currentExitCode;
             }
 
-            var actualExitCode = exitCode ?? (summary.Success == false || statistics.Errors.Count > 0 ? 1 : 0);
+            var actualExitCode = exitCode ?? (summary.Success == false || statistics.Items.Any(i => i.Type == StatisticsType.Error) ? 1 : 0);
             log.Trace(() => [new Text($"Exit code: {actualExitCode}.")]);
             return actualExitCode;
         }

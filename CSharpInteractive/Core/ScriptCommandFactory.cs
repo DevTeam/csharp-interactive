@@ -3,6 +3,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Text;
+using HostApi;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 

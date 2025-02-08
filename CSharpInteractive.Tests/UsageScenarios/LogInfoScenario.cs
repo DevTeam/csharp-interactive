@@ -18,6 +18,7 @@ public class LogInfoScenario(ITestOutputHelper output) : BaseScenario(output)
         // $description=Registering information in the build log
         // {
         Info("Some info");
+        Info("Some ", "info".WithColor(Color.Details));
         // }
     }
 }

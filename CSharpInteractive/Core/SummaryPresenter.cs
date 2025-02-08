@@ -12,7 +12,6 @@ internal class SummaryPresenter(
     IPresenter<IStatistics> statisticsPresenter)
     : IPresenter<Summary>
 {
-    private static readonly Text[] Tab = [Text.Tab];
     internal const string RunningSucceeded = "Running succeeded.";
     internal const string RunningSucceededWithWarnings = "Running succeeded with warnings.";
     internal const string RunningFailed = "Running FAILED.";
@@ -26,13 +25,14 @@ internal class SummaryPresenter(
             statisticsPresenter.Show(statistics);
         }
 
-        if (summary.Success == false || statistics.Errors.Count > 0)
+        var statisticsItems = statistics.Items;
+        if (summary.Success == false || statisticsItems.Any(i => i.Type == StatisticsType.Error))
         {
             log.Info(new Text(RunningFailed, Color.Error));
             return;
         }
 
-        if (statistics.Warnings.Count > 0)
+        if (statisticsItems.Any(i => i.Type == StatisticsType.Warning))
         {
             log.Info(new Text(RunningSucceededWithWarnings, Color.Warning));
             return;

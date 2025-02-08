@@ -5,6 +5,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Runtime.InteropServices;
+using HostApi;
 
 internal class Environment :
     IEnvironment,

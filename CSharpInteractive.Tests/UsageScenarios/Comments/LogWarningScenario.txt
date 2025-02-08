@@ -1,1 +1,2 @@
 Warning("Warning info");
+Warning("Warning ", "info".WithColor(Color.Details));

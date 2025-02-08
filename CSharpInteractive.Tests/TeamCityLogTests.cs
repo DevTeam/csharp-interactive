@@ -7,7 +7,7 @@ public class TeamCityLogTests
     private readonly Mock<ISettings> _settings;
     private readonly Mock<ITeamCityLineFormatter> _lineFormatter;
     private readonly Mock<ITeamCityWriter> _teamCityWriter;
-    private readonly Text[] _text = [new("line1"), new("line2")];
+    private readonly Text[] _text = [new("line1"), new("line2", Color.Details)];
     private readonly Mock<IStatisticsRegistry> _statisticsRegistry;
 
     public TeamCityLogTests()
@@ -34,7 +34,7 @@ public class TeamCityLogTests
 
         // Then
         _teamCityWriter.Verify(i => i.WriteBuildProblem("id", "line1line2"));
-        _statisticsRegistry.Verify(i => i.RegisterError(_text));
+        _statisticsRegistry.Verify(i => i.Register(StatisticsType.Error, _text.WithDefaultColor(Color.Error)));
     }
 
     [Theory]
@@ -52,7 +52,25 @@ public class TeamCityLogTests
 
         // Then
         _teamCityWriter.Verify(i => i.WriteWarning("line1line2"));
-        _statisticsRegistry.Verify(i => i.RegisterWarning(_text));
+        _statisticsRegistry.Verify(i => i.Register(StatisticsType.Warning, _text.WithDefaultColor(Color.Warning)));
+    }
+
+    [Theory]
+    [InlineData(VerbosityLevel.Normal)]
+    [InlineData(VerbosityLevel.Quiet)]
+    [InlineData(VerbosityLevel.Diagnostic)]
+    internal void ShouldSupportSummary(VerbosityLevel verbosityLevel)
+    {
+        // Given
+        var log = CreateInstance();
+        _settings.SetupGet(i => i.VerbosityLevel).Returns(verbosityLevel);
+
+        // When
+        log.Summary(_text);
+
+        // Then
+        _teamCityWriter.Verify(i => i.WriteMessage("F_line1line2"));
+        _statisticsRegistry.Verify(i => i.Register(StatisticsType.Summary, _text.WithDefaultColor(Color.Highlighted)));
     }
 
     [Theory]

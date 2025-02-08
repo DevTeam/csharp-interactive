@@ -3,6 +3,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Text.RegularExpressions;
+using HostApi;
 using NuGet.Versioning;
 
 [SuppressMessage("Performance", "SYSLIB1045:Convert to \'GeneratedRegexAttribute\'.")]

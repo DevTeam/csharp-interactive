@@ -37,8 +37,6 @@ var packageVersion = new[]
     GetNextNuGetVersion(new NuGetRestoreSettings(packageId), defaultVersion)
 }.Max()!;
 
-Info(packageVersion.ToString());
-
 const int minSdk = 6;
 var maxSdk = minSdk;
 new DotNet().WithVersion(true)
@@ -49,8 +47,8 @@ var allFrameworks = Enumerable.Range(6, maxSdk - minSdk + 1).Select(i => $"net{i
 var frameworks = string.Join(";", allFrameworks);
 var framework = $"net{maxSdk}.0";
 
-Info($"frameworks: {frameworks}");
-Info($"framework: {framework}");
+Summary("Frameworks: ".WithColor(Color.Header), frameworks.WithColor(Color.Details));
+Summary("Framework: ".WithColor(Color.Header), framework.WithColor(Color.Details));
 
 var packages = new[]
 {
@@ -267,9 +265,8 @@ else
     Info("Pushing NuGet packages was skipped.");
 }
 
-Info($"Tool and package version: {packageVersion}");
-Info($"Template version: {packageVersion}");
-Info($"The coverage percentage: {coveragePercentage}");
+Summary("Package version: ".WithColor(Color.Header), packageVersion.WithColor(Color.Details));
+Summary("Coverage percentage: ".WithColor(Color.Header), coveragePercentage.WithColor(Color.Details));
 
 return 0;
 

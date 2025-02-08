@@ -4,6 +4,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Text;
+using HostApi;
 
 internal class CodeSourceCommandFactory : ICommandFactory<ICodeSource>
 {

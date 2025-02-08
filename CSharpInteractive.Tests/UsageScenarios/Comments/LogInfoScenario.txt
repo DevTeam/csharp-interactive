@@ -1,1 +1,2 @@
 Info("Some info");
+Info("Some ", "info".WithColor(Color.Details));

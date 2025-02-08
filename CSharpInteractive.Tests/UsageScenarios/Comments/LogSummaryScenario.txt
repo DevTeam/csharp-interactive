@@ -1,1 +1,2 @@
 Summary("Summary message");
+Summary("Summary ", "message".WithColor(Color.Details));

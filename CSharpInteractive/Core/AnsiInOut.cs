@@ -7,7 +7,7 @@ using HostApi;
 [ExcludeFromCodeCoverage]
 internal class AnsiInOut(IColorTheme colorTheme) : IStdOut, IStdErr
 {
-    private const char EscapeSymbol = '\x001B';
+    private const char EscapeSymbol = '\e';
     private readonly object _lockObject = new();
 
     public void Write(params Text[] text) =>

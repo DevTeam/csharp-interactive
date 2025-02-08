@@ -31,7 +31,7 @@ public class ProcessOutputWriterTests
         writer.Write(new Output(Mock.Of<IStartInfo>(), true, "Err", 11));
 
         // Then
-        _console.Verify(i => i.WriteToErr("Err", Environment.NewLine));
+        _console.Verify(i => i.WriteToErr(new ValueTuple<ConsoleColor?, string>(null, "Err"), new ValueTuple<ConsoleColor?, string>(null, Environment.NewLine)));
     }
 
     private ProcessOutputWriter CreateInstance() =>

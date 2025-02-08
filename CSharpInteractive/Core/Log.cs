@@ -19,7 +19,8 @@ internal class Log<T>(
             return;
         }
 
-        statisticsRegistry.RegisterError(error);
+        error = error.WithDefaultColor(Color.Error);
+        statisticsRegistry.Register(StatisticsType.Error, error);
         stdErr.WriteLine(error);
     }
 
@@ -30,7 +31,8 @@ internal class Log<T>(
             return;
         }
 
-        statisticsRegistry.RegisterWarning(warning);
+        warning = warning.WithDefaultColor(Color.Warning);
+        statisticsRegistry.Register(StatisticsType.Warning, warning);
         stdOut.WriteLine(warning);
     }
 
@@ -41,15 +43,16 @@ internal class Log<T>(
             return;
         }
 
-        statisticsRegistry.RegisterSummary(summary);
-        stdOut.WriteLine(GetMessage(summary, Color.Highlighted));
+        summary = summary.WithDefaultColor(Color.Highlighted);
+        statisticsRegistry.Register(StatisticsType.Summary, summary);
+        stdOut.WriteLine(summary);
     }
 
     public void Info(params Text[] message)
     {
         if (settings.VerbosityLevel >= VerbosityLevel.Normal)
         {
-            stdOut.WriteLine(GetMessage(message, Color.Default));
+            stdOut.WriteLine(message.WithDefaultColor(Color.Default));
         }
     }
 
@@ -59,9 +62,7 @@ internal class Log<T>(
         if (settings.VerbosityLevel >= VerbosityLevel.Diagnostic)
         {
             origin = string.IsNullOrWhiteSpace(origin) ? typeof(T).Name : origin.Trim();
-            stdOut.WriteLine(GetMessage(new Text($"{origin,-40}") + traceMessagesFactory(), Color.Trace));
+            stdOut.WriteLine((new Text($"{origin,-40}") + traceMessagesFactory()).WithDefaultColor(Color.Trace));
         }
     }
-
-    private static Text[] GetMessage(Text[] message, Color defaultColor) => message.WithDefaultColor(defaultColor);
 }

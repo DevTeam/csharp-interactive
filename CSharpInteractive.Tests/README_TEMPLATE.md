@@ -117,6 +117,7 @@ WriteLine("Hello");
 
 ``` CSharp
 WriteLine("Hello", Header);
+WriteLine("Hello ".WithColor(Header), "world!");
 ```
 
 ### Writing an empty line to a build log
@@ -128,31 +129,37 @@ WriteLine();
 ### Registering errors in the build log
 
 ``` CSharp
+Error("Error info");
 Error("Error info", "Error identifier");
+Error("Error: ".WithColor(), "datails".WithColor(Color.Details));
 ```
 
 ### Registering warnings in the build log
 
 ``` CSharp
 Warning("Warning info");
+Warning("Warning ", "info".WithColor(Color.Details));
 ```
 
 ### Registering a summary in the build log
 
 ``` CSharp
 Summary("Summary message");
+Summary("Summary ", "message".WithColor(Color.Details));
 ```
 
 ### Registering information in the build log
 
 ``` CSharp
 Info("Some info");
+Info("Some ", "info".WithColor(Color.Details));
 ```
 
 ### Registering trace information in the build log
 
 ``` CSharp
 Trace("Some trace info");
+Trace("Some trace ", "info".WithColor(Color.Details));
 ```
 
 ## Arguments and parameters

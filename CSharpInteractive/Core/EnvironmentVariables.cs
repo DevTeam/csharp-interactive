@@ -3,6 +3,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Collections;
+using HostApi;
 
 [ExcludeFromCodeCoverage]
 internal class EnvironmentVariables(ILog<EnvironmentVariables> log) : IEnvironmentVariables, ITraceSource

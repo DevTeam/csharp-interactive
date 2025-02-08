@@ -10,7 +10,7 @@ internal class TeamCityLineFormatter(IColorTheme colorTheme) : ITeamCityLineForm
 {
     // ReSharper disable once MemberCanBePrivate.Global
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
-    internal char EscapeSymbol { get; set; } = '\x001B';
+    internal char EscapeSymbol { get; set; } = '\e';
 
     public string Format(params Text[] line)
     {

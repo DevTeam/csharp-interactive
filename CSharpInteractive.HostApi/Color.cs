@@ -8,7 +8,7 @@ namespace HostApi;
 /// </code>
 /// </example>
 /// </summary>
-/// <seealso cref="IHost.WriteLine"/>
+/// <seealso cref="IHost.WriteLine()"/>
 public enum Color
 {
     /// <summary>

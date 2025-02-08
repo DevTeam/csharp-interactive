@@ -4,6 +4,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Runtime.InteropServices;
+using HostApi;
 using Pure.DI;
 using static Pure.DI.Tag;
 

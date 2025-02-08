@@ -4,6 +4,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Runtime.InteropServices;
+using HostApi;
 
 internal class DockerEnvironment(
     IEnvironment environment,

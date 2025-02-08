@@ -18,35 +18,22 @@ public class StatisticsTests
         statistics.TimeElapsed.ShouldNotBe(TimeSpan.Zero);
     }
 
-    [Fact]
-    public void ShouldRegisterError()
+    [Theory]
+    [InlineData(StatisticsType.Error)]
+    [InlineData(StatisticsType.Warning)]
+    [InlineData(StatisticsType.Summary)]
+    internal void ShouldRegisterError(StatisticsType statisticsType)
     {
         // Given
         var statistics = new Statistics();
 
         // When
-        statistics.RegisterError(new Text("error1"));
-        statistics.RegisterError(Text.Empty);
-        statistics.RegisterError(new Text("   "));
-        statistics.RegisterError(new Text("error2"));
+        statistics.Register(statisticsType, new Text("Abc"));
+        statistics.Register(statisticsType, Text.Empty);
+        statistics.Register(statisticsType, new Text("   "));
+        statistics.Register(statisticsType, new Text("Xyz"));
 
         // Then
-        statistics.Errors.ToArray().ShouldBe([new Text("error1"), new Text("error2")]);
-    }
-
-    [Fact]
-    public void ShouldRegisterWarning()
-    {
-        // Given
-        var statistics = new Statistics();
-
-        // When
-        statistics.RegisterWarning(new Text("warning1"));
-        statistics.RegisterWarning(Text.Empty);
-        statistics.RegisterWarning(new Text("   "));
-        statistics.RegisterWarning(new Text("warning2"));
-
-        // Then
-        statistics.Warnings.ToArray().ShouldBe([new Text("warning1"), new Text("warning2")]);
+        statistics.Items.ShouldBe([new StatisticsItem(statisticsType, new Text("Abc")), new StatisticsItem(statisticsType, new Text("Xyz"))]);
     }
 }

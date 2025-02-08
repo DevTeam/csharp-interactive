@@ -6,7 +6,6 @@ using static Pure.DI.Lifetime;
 // ReSharper disable HeuristicUnreachableCode
 #pragma warning disable CS0162 // Unreachable code detected
 
-WriteLine("Hello");
 return await new Composition().Root.RunAsync(CancellationToken.None);
 
 DI.Setup(nameof(Composition))

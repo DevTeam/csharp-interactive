@@ -60,7 +60,7 @@ internal class TextToColorStrings : ITextToColorStrings
         {
             switch (ch)
             {
-                case '\x001B':
+                case '\e':
                     if (!isColor)
                     {
                         isColor = true;

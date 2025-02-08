@@ -1,5 +1,7 @@
 ﻿namespace CSharpInteractive.Core;
 
+using HostApi;
+
 // ReSharper disable once ClassNeverInstantiated.Global
 [ExcludeFromCodeCoverage]
 internal class ConsoleInOut(
@@ -13,5 +15,5 @@ internal class ConsoleInOut(
 
     void IStdOut.WriteLine(params Text[] line) => Write(line + Text.NewLine);
 
-    private void WriteStdErr(params Text[] text) => console.WriteToErr(text.Select(i => i.Value).ToArray());
+    private void WriteStdErr(params Text[] text) => console.WriteToErr(text.SelectMany(i => textToColorStrings.Convert(i.Value, colorTheme.GetConsoleColor(i.Color))).ToArray());
 }

@@ -2,6 +2,8 @@
 
 namespace CSharpInteractive.Core;
 
+using HostApi;
+
 internal class TracePresenter(ILog<TracePresenter> log) : IPresenter<IEnumerable<ITraceSource>>
 {
     public void Show(IEnumerable<ITraceSource> data) =>

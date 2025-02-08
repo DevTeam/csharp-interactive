@@ -17,6 +17,7 @@ public class WriteLineWithColourScenario(ITestOutputHelper output) : BaseScenari
         // $description=Writing a line highlighted with "Header" color to a build log
         // {
         WriteLine("Hello", Header);
+        WriteLine("Hello ".WithColor(Header), "world!");
         // }
     }
 }

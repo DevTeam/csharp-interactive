@@ -18,6 +18,7 @@ public class LogWarningScenario(ITestOutputHelper output) : BaseScenario(output)
         // $description=Registering warnings in the build log
         // {
         Warning("Warning info");
+        Warning("Warning ", "info".WithColor(Color.Details));
         // }
     }
 }

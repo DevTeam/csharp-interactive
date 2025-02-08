@@ -2,6 +2,8 @@
 
 namespace CSharpInteractive.Core;
 
+using HostApi;
+
 internal class SettingCommandRunner<TOption>(
     ILog<SettingCommandRunner<TOption>> log,
     ISettingSetter<TOption> settingSetter) : ICommandRunner

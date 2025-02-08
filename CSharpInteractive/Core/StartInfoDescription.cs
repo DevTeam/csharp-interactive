@@ -39,7 +39,7 @@ internal class StartInfoDescription : IStartInfoDescription
     {
         if (processId.HasValue)
         {
-            yield return new Text($"{processId.Value:00000}");
+            yield return new Text($"{processId.Value:00000}", Color.Header);
         }
 
         var sb = new StringBuilder();

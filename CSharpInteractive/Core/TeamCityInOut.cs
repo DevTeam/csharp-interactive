@@ -2,6 +2,7 @@
 
 namespace CSharpInteractive.Core;
 
+using HostApi;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
 internal class TeamCityInOut(

@@ -2,6 +2,8 @@
 
 namespace CSharpInteractive.Core;
 
+using HostApi;
+
 internal class Cleaner(ILog<Cleaner> log, IFileSystem fileSystem) : ICleaner
 {
     public IDisposable Track(string path)

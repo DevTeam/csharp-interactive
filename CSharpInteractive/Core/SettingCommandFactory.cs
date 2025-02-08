@@ -3,6 +3,7 @@
 namespace CSharpInteractive.Core;
 
 using System.Text.RegularExpressions;
+using HostApi;
 
 internal class SettingCommandFactory<TOption> : ICommandFactory<string>
     where TOption: struct, Enum

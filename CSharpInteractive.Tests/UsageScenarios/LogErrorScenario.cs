@@ -17,7 +17,9 @@ public class LogErrorScenario(ITestOutputHelper output) : BaseScenario(output)
         // $priority=02
         // $description=Registering errors in the build log
         // {
+        Error("Error info");
         Error("Error info", "Error identifier");
+        Error("Error: ".WithColor(), "datails".WithColor(Color.Details));
         // }
     }
 }

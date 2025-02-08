@@ -5,6 +5,7 @@ namespace CSharpInteractive.Core;
 
 using System.Net.Http;
 using System.Reflection;
+using HostApi;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
 

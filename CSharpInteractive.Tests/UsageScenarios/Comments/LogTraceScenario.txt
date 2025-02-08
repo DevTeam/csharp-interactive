@@ -1,1 +1,2 @@
 Trace("Some trace info");
+Trace("Some trace ", "info".WithColor(Color.Details));

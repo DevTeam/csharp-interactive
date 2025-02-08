@@ -1,12 +1,10 @@
 ﻿namespace CSharpInteractive.Core;
 
+using HostApi;
+
 internal interface IStatisticsRegistry
 {
     IDisposable Start();
 
-    void RegisterError(Text[] error);
-
-    void RegisterWarning(Text[] warning);
-
-    void RegisterSummary(Text[] summary);
+    void Register(StatisticsType type, Text[] message);
 }

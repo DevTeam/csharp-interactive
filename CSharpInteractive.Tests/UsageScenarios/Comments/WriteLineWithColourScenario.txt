@@ -1,1 +1,2 @@
 WriteLine("Hello", Header);
+WriteLine("Hello ".WithColor(Header), "world!");

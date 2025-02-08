@@ -4,11 +4,7 @@ internal interface IStatistics
 {
     bool IsEmpty { get; }
 
-    IReadOnlyCollection<Text[]> Errors { get; }
-
-    IReadOnlyCollection<Text[]> Warnings { get; }
-
-    IReadOnlyCollection<Text[]> Summary { get; }
+    IReadOnlyCollection<StatisticsItem> Items { get; }
 
     TimeSpan TimeElapsed { get; }
 

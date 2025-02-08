@@ -3,6 +3,7 @@
 
 namespace CSharpInteractive.Core;
 
+using HostApi;
 using NuGet.Common;
 
 [ExcludeFromCodeCoverage]

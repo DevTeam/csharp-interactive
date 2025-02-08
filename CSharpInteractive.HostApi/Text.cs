@@ -1,23 +1,34 @@
-﻿namespace CSharpInteractive.Core;
+﻿namespace HostApi;
 
 using System.Text;
-using HostApi;
 
+/// <summary>
+/// Represents text with a color.
+/// </summary>
+/// <param name="Value">Text.</param>
+/// <param name="Color">Color of text.</param>
 [ExcludeFromCodeCoverage]
-internal readonly record struct Text(string Value, Color Color)
+[Target]
+public readonly record struct Text(string Value = "", Color Color = Color.Default)
 {
     // ReSharper disable once UnusedMember.Global
     public static readonly Text Empty = new(string.Empty);
-    public static readonly Text NewLine = new(System.Environment.NewLine);
+    public static readonly Text NewLine = new(Environment.NewLine);
     public static readonly Text Space = new(" ");
     public static readonly Text Tab = new("  ");
 
+    /// <summary>
+    /// Creates text with the default color.
+    /// </summary>
+    /// <param name="value">Text.</param>
     public Text(string value)
         // ReSharper disable once IntroduceOptionalParameters.Global
         : this(value, Color.Default)
     { }
 
     public static implicit operator Text[](Text text) => [text];
+
+    public static implicit operator Text (string text) => new(text);
 
     public override string ToString()
     {
@@ -57,4 +68,8 @@ internal readonly record struct Text(string Value, Color Color)
         Array.Copy(text, 0, newText, 1, text.Length);
         return newText;
     }
+
+    public bool Equals(Text other) => Value == other.Value && Color == other.Color;
+
+    public override int GetHashCode() => Value.GetHashCode() ^ 33 + (int)Color;
 }

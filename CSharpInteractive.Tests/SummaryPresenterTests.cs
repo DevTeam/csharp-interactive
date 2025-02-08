@@ -23,26 +23,20 @@ public class SummaryPresenterTests
         // Given
         var presenter = CreateInstance();
         _statistics.SetupGet(i => i.CommandLines).Returns(ArraySegment<CommandLineInfo>.Empty);
+        var statisticsItems = new List<StatisticsItem>();
         if (hasError)
         {
-            _statistics.SetupGet(i => i.Errors).Returns([new Text("Err")]);
-        }
-        else
-        {
-            _statistics.SetupGet(i => i.Errors).Returns([]);
+            statisticsItems.Add(new StatisticsItem(StatisticsType.Error, new Text("Err")));
         }
 
         if (hasWarning)
         {
-            _statistics.SetupGet(i => i.Warnings).Returns([new Text("Warn")]);
+            statisticsItems.Add(new StatisticsItem(StatisticsType.Warning, new Text("Warn")));
         }
-        else
-        {
-            _statistics.SetupGet(i => i.Warnings).Returns([]);
-        }
+
+        _statistics.SetupGet(i => i.Items).Returns(statisticsItems);
 
         // When
-
         presenter.Show(new Summary(success));
 
         // Then

@@ -18,6 +18,7 @@ public class LogTraceScenario(ITestOutputHelper output) : BaseScenario(output)
         // $description=Registering trace information in the build log
         // {
         Trace("Some trace info");
+        Trace("Some trace ", "info".WithColor(Color.Details));
         // }
     }
 }

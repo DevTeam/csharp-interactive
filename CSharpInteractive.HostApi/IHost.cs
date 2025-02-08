@@ -65,6 +65,17 @@ public interface IHost
     void WriteLine<T>(T line, Color color = Color.Default);
 
     /// <summary>
+    /// Writes a line to stdOut.
+    /// <example>
+    /// <code>
+    /// WriteLine("Hello !".WithColor(Color.Highlighted));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="line">Any value that will be converted to a line.</param>
+    void WriteLine(params Text[] line);
+
+    /// <summary>
     /// Writes an error to stdErr. This error will affect the summary run statistics.
     /// <example>
     /// <code>
@@ -78,6 +89,29 @@ public interface IHost
     void Error(string? error, string? errorId = null);
 
     /// <summary>
+    /// Writes an error to stdErr. This error will affect the summary run statistics.
+    /// <example>
+    /// <code>
+    /// Error(new Text("Some "), new Text("error", Color.Error));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="error">Error message.</param>
+    void Error(params Text[] error);
+
+    /// <summary>
+    /// Writes an error to stdErr. This error will affect the summary run statistics.
+    /// <example>
+    /// <code>
+    /// Error("ERR327", new Text("Some "), new Text("error", Color.Error));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="errorId">Unique error identifier, optional.</param>
+    /// <param name="error">Error message.</param>
+    void Error(string errorId, params Text[] error);
+
+    /// <summary>
     /// Writes a warning to stdOut. This warning will affect the summary run statistics.
     /// <example>
     /// <code>
@@ -89,15 +123,37 @@ public interface IHost
     void Warning(string? warning);
 
     /// <summary>
+    /// Writes a warning to stdOut. This warning will affect the summary run statistics.
+    /// <example>
+    /// <code>
+    /// Warning(new Text("Some "), new Text("warning", Color.Warning));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="warning">Warning message.</param>
+    void Warning(params Text[] warning);
+
+    /// <summary>
     /// Writes a summary message to stdOut.
     /// <example>
     /// <code>
-    /// Info("Some info");
+    /// Info("Some summary");
     /// </code>
     /// </example>
     /// </summary>
     /// <param name="summary">Summary message.</param>
     void Summary(string? summary);
+
+    /// <summary>
+    /// Writes a summary message to stdOut.
+    /// <example>
+    /// <code>
+    /// Summary(new Text("Some "), new Text("summary", Color.Highlighted));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="summary">Summary message.</param>
+    void Summary(params Text[] summary);
 
     /// <summary>
     /// Writes an information message to stdOut.
@@ -109,6 +165,17 @@ public interface IHost
     /// </summary>
     /// <param name="text">Information message.</param>
     void Info(string? text);
+
+    /// <summary>
+    /// Writes an information message to stdOut.
+    /// <example>
+    /// <code>
+    /// Ingo(new Text("Some "), new Text("info", Color.Highlighted));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="text">Information message.</param>
+    void Info(params Text[] text);
 
     /// <summary>
     /// Writes a trace message to stdOut for the appropriate logging level.
@@ -128,6 +195,24 @@ public interface IHost
     /// <param name="trace">Trace message.</param>
     /// <param name="origin">Source of the trace message, optional.</param>
     void Trace(string? trace, string? origin = null);
+
+    /// <summary>
+    /// Writes a trace message to stdOut for the appropriate logging level.
+    /// <example>
+    /// <code>
+    /// Trace(new Text("Trace message", Color.Details));
+    /// </code>
+    /// </example>
+    /// <example>
+    /// When run as a script:
+    /// <code>
+    /// #l Diagnostic
+    /// Trace("Tracing ", "details".WithColor(Color.Details));
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <param name="trace">Trace message.</param>
+    void Trace(params Text[] trace);
 
     /// <summary>
     /// Provides an instance of a service by its type.

@@ -5,47 +5,33 @@ namespace CSharpInteractive.Core;
 
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using HostApi;
 
 internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatisticsRegistry
 {
     private readonly object _lockObject = new();
     private readonly Stopwatch _stopwatch = new();
-    private readonly List<Text[]> _errors = [];
-    private readonly List<Text[]> _warnings = [];
-    private readonly List<Text[]> _summary = [];
+    private readonly List<StatisticsItem> _items = [];
     private readonly List<CommandLineInfo> _info = [];
 
-    public bool IsEmpty => Errors.Count == 0 && Warnings.Count == 0 && CommandLines.Count == 0;
-
-    public IReadOnlyCollection<Text[]> Errors
+    public bool IsEmpty
     {
         get
         {
             lock (_lockObject)
             {
-                return _errors.AsReadOnly();
+                return _items.Count == 0 && CommandLines.Count == 0;
             }
         }
     }
 
-    public IReadOnlyCollection<Text[]> Warnings
+    public IReadOnlyCollection<StatisticsItem> Items
     {
         get
         {
             lock (_lockObject)
             {
-                return _warnings.AsReadOnly();
-            }
-        }
-    }
-
-    public IReadOnlyCollection<Text[]> Summary
-    {
-        get
-        {
-            lock (_lockObject)
-            {
-                return _summary.AsReadOnly();
+                return _items;
             }
         }
     }
@@ -58,38 +44,14 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
         return Disposable.Create(() => _stopwatch.Stop());
     }
 
-    public void RegisterError(Text[] error)
+    public void Register(StatisticsType type, Text[] message)
     {
-        error = error.Trim();
-        if (!error.IsEmptyOrWhiteSpace())
+        message = message.Trim();
+        if (!message.IsEmptyOrWhiteSpace())
         {
             lock (_lockObject)
             {
-                _errors.Add(error);
-            }
-        }
-    }
-
-    public void RegisterWarning(Text[] warning)
-    {
-        warning = warning.Trim();
-        if (!warning.IsEmptyOrWhiteSpace())
-        {
-            lock (_lockObject)
-            {
-                _warnings.Add(warning);
-            }
-        }
-    }
-
-    public void RegisterSummary(Text[] summary)
-    {
-        summary = summary.Trim();
-        if (!summary.IsEmptyOrWhiteSpace())
-        {
-            lock (_lockObject)
-            {
-                _summary.Add(summary);
+                _items.Add(new StatisticsItem(type, message));
             }
         }
     }
@@ -98,7 +60,7 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
     {
         get
         {
-            lock (_info)
+            lock (_lockObject)
             {
                 return new ReadOnlyCollection<CommandLineInfo>(_info);
             }
@@ -107,7 +69,7 @@ internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatis
 
     public void Register(CommandLineInfo info)
     {
-        lock (_info)
+        lock (_lockObject)
         {
             _info.Add(info);
         }

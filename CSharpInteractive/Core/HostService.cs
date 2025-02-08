@@ -27,7 +27,10 @@ internal class HostService(
 
     public void WriteLine() => stdOut.WriteLine();
 
-    public void WriteLine<T>(T line, Color color = Color.Default) => stdOut.WriteLine(new Text(line?.ToString() ?? string.Empty, color));
+    public void WriteLine<T>(T line, Color color = Color.Default) =>
+        stdOut.WriteLine(new Text(line?.ToString() ?? string.Empty, color));
+
+    public void WriteLine(params Text[] line) => stdOut.WriteLine(line);
 
     public void Error(string? error, string? errorId = null)
     {
@@ -37,6 +40,10 @@ internal class HostService(
         }
     }
 
+    public void Error(params Text[] error) => log.Error(new ErrorId("Unknown"), error);
+
+    public void Error(string errorId, params Text[] error) => log.Error(new ErrorId("Unknown"), error);
+
     public void Warning(string? warning)
     {
         if (warning != null)
@@ -44,6 +51,8 @@ internal class HostService(
             log.Warning(warning);
         }
     }
+
+    public void Warning(params Text[] warning) => log.Warning(warning);
 
     public void Summary(string? summary)
     {
@@ -53,6 +62,8 @@ internal class HostService(
         }
     }
 
+    public void Summary(params Text[] summary) => log.Summary(summary);
+
     public void Info(string? text)
     {
         if (text != null)
@@ -61,6 +72,8 @@ internal class HostService(
         }
     }
 
+    public void Info(params Text[] text) => log.Info(text);
+
     public void Trace(string? trace, string? origin = null)
     {
         if (trace != null)
@@ -68,6 +81,8 @@ internal class HostService(
             log.Trace(() => [new Text(trace)], origin ?? string.Empty);
         }
     }
+
+    public void Trace(Text[] trace) => log.Trace(() => trace, string.Empty);
 
     public T GetService<T>() => Composition.Shared.Root.GetService<T>()!;
 }

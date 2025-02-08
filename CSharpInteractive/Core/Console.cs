@@ -41,16 +41,21 @@ internal class Console(IColorTheme colorTheme) : IConsole, IConsoleHandler
         }
     }
 
-    public void WriteToErr(params string[] text)
+    public void WriteToErr(params (ConsoleColor? color, string output)[] text)
     {
         lock (_lockObject)
         {
             var foregroundColor = System.Console.ForegroundColor;
             try
             {
-                System.Console.ForegroundColor = _errorColor;
-                foreach (var error in text)
+                foreach (var (color, error) in text)
                 {
+                    System.Console.ForegroundColor = _errorColor;
+                    if (color.HasValue)
+                    {
+                        System.Console.ForegroundColor = color.Value;
+                    }
+
                     if (ErrorHandler is { } errorHandler)
                     {
                         errorHandler(this, error);
