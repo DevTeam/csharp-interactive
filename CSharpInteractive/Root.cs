@@ -21,14 +21,14 @@ internal record Root(
     ILog<Root> Log,
     IInfo Info,
     IExitTracker ExitTracker,
-    HostComponents HostComponents,
-    ICommandLineRunner CommandLineRunner,
-    IBuildRunner BuildRunner,
-    IEnvironment Environment,
-    IDotNetEnvironment DotNetEnvironment,
-    INuGet NuGet,
-    IServiceMessageParser ServiceMessageParser,
-    ITeamCityWriter TeamCityWriter,
+    Lazy<HostComponents> HostComponents,
+    Lazy<ICommandLineRunner> CommandLineRunner,
+    Lazy<IBuildRunner> BuildRunner,
+    Lazy<IEnvironment> Environment,
+    Lazy<IDotNetEnvironment> DotNetEnvironment,
+    Lazy<INuGet> NuGet,
+    Lazy<IServiceMessageParser> ServiceMessageParser,
+    Lazy<ITeamCityWriter> TeamCityWriter,
     IConsoleHandler ConsoleHandler) : IServiceProvider
 {
     private readonly Lazy<IServiceProvider> _serviceProvider = new(() =>
@@ -36,12 +36,12 @@ internal record Root(
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddTransient<IServiceCollection>(_ => serviceCollection);
         serviceCollection.AddTransient(_ => Host);
-        serviceCollection.AddTransient(_ => HostComponents);
-        serviceCollection.AddTransient(_ => NuGet);
-        serviceCollection.AddTransient(_ => CommandLineRunner);
-        serviceCollection.AddTransient(_ => BuildRunner);
-        serviceCollection.AddTransient(_ => ServiceMessageParser);
-        serviceCollection.AddTransient(_ => TeamCityWriter);
+        serviceCollection.AddTransient(_ => HostComponents.Value);
+        serviceCollection.AddTransient(_ => NuGet.Value);
+        serviceCollection.AddTransient(_ => CommandLineRunner.Value);
+        serviceCollection.AddTransient(_ => BuildRunner.Value);
+        serviceCollection.AddTransient(_ => ServiceMessageParser.Value);
+        serviceCollection.AddTransient(_ => TeamCityWriter.Value);
         return serviceCollection.BuildServiceProvider();
     });
 

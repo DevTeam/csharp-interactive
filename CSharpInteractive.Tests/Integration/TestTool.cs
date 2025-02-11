@@ -21,7 +21,7 @@ internal static class TestTool
     public static IProcessResult Run(in CommandLine commandLine)
     {
         var events = new List<Output>();
-        var result = Composition.Shared.Root.CommandLineRunner.Run(commandLine, output =>
+        var result = Composition.Shared.Root.CommandLineRunner.Value.Run(commandLine, output =>
         {
             output.Handled = true;
             events.Add(output);
@@ -70,7 +70,7 @@ internal static class TestTool
         var parser = Composition.Shared.Root.ServiceMessageParser;
         foreach (var line in lines)
         {
-            foreach (var message in parser.ParseServiceMessages(line))
+            foreach (var message in parser.Value.ParseServiceMessages(line))
             {
                 yield return message;
             }

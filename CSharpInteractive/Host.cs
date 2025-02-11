@@ -327,7 +327,7 @@ public static class Components
         TimeSpan timeout = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
-        return Root.CommandLineRunner.Run(commandLine, handler, timeout);
+        return Root.CommandLineRunner.Value.Run(commandLine, handler, timeout);
     }
 
     /// <summary>
@@ -352,7 +352,7 @@ public static class Components
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
-        return Root.CommandLineRunner.RunAsync(commandLine, handler, cancellationToken);
+        return Root.CommandLineRunner.Value.RunAsync(commandLine, handler, cancellationToken);
     }
 
     /// <summary>
@@ -375,7 +375,7 @@ public static class Components
         TimeSpan timeout = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
-        return Root.BuildRunner.Build(commandLine, handler, timeout);
+        return Root.BuildRunner.Value.Build(commandLine, handler, timeout);
     }
 
     /// <summary>
@@ -400,7 +400,7 @@ public static class Components
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(commandLine);
-        return Root.BuildRunner.BuildAsync(commandLine, handler, cancellationToken);
+        return Root.BuildRunner.Value.BuildAsync(commandLine, handler, cancellationToken);
     }
 
     /// <summary>

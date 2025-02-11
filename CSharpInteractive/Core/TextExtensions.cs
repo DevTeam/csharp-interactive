@@ -4,7 +4,7 @@ namespace CSharpInteractive.Core;
 
 using HostApi;
 
-internal static partial class TextExtensions
+internal static class TextExtensions
 {
     private static readonly Text[] SingleTab = [Text.Tab];
 

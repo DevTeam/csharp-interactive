@@ -36,9 +36,6 @@ internal class BuildEngine(ILog<BuildEngine> log) : IBuildEngine
         switch (e.Importance)
         {
             case MessageImportance.High:
-                log.Info([new Text(message)]);
-                break;
-
             case MessageImportance.Normal:
                 log.Info([new Text(message)]);
                 break;

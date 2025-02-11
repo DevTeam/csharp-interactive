@@ -1,7 +1,7 @@
 // ReSharper disable UnusedType.Global
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable MemberCanBePrivate.Global
-
+// ReSharper disable RedundantExplicitParamsArrayCreation
 namespace CSharpInteractive.Core;
 
 using HostApi;

@@ -1,5 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
-
+// ReSharper disable RedundantExplicitParamsArrayCreation
 namespace CSharpInteractive.Core;
 
 using HostApi;
