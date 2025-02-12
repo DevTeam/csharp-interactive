@@ -7,7 +7,7 @@
 
 ![](docs/CSharpInteractive.gif)
 
-C# interactive build automation system makes it easy to build .NET projects. It can be part of your solution as a regular console cross-platform .NET application, run C# scripts without compiling them, or even run in REPL mode - allowing you to run C# interactively.
+C# interactive build automation system makes it easy to build .NET projects. It can be part of your solution as a regular console cross-platform .NET application or run C# scripts without compiling them, or even run in REPL mode - allowing you to run C# interactively.
 
 ![](docs/icon.png)
 
@@ -16,32 +16,33 @@ C# interactive build automation system makes it easy to build .NET projects. It 
 - [X] 3 compatible [operating modes](#operating-modes)
 - [X] Cross-platform
 - [X] Debugging capability
-- [X] No model limitations (Task, Target, DependsOn, etc.)
-  - Regular .NET code
+- [X] No model limitations (no Tasks, Targets, DependsOn or other abstractions that would limit you from creating simple and cheap to maintain build scripts)
+  - Just plain .NET code and nothing extra
   - Best programming practices
 - [X] Powerful API for building .NET projects
 - [X] Summarised statistics
 
 ## Operating modes
 
-- [Interactive](#interactive-repl)
-- [Running C# script](#running-c-script)
-- [Regular .NET build project](#net-build-project)
+<details>
 
-These modes are practically compatible, i.e., for example, a script can be run as a .NET project, and vice versa, with minimal or no changes.
+<summary>Interactive</summary>
 
-## Interactive (REPL)
-
-Please see [this page](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template) for installation details.
+Please see [this page](https://www.nuget.org/packages/dotnet-csi) for installation details.
 
 Launch the tool in the interactive mode:
 
 ```Shell
 dotnet csi
 ```
+
 Simply enter C# commands sequentially one line after another and get the result in console output.
 
-## Running C# script
+</details>
+
+<details>
+
+<summary>Running C# script</summary>
 
 Run a specified script with a given argument:
 
@@ -84,7 +85,11 @@ Supported options:
 
 </details>
 
-## .NET build project
+</details>
+
+<details>
+
+<summary>.NET build project</summary>
 
 Please see [this page](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template) for details on how to install the [project template](https://www.nuget.org/packages/CSharpInteractive.Templates).
 
@@ -103,6 +108,8 @@ The created project contains 2 entry points:
   ```shell
   dotnet run --project ./Build
   ```
+
+</details>
 
 ## NuGet packages
 
