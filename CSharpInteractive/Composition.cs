@@ -216,7 +216,7 @@ internal partial class Composition
                 .Bind().To<FlowIdGenerator>()
                 .Bind().To<TimestampUpdater>()
                 .Bind().To((ITeamCityServiceMessages teamCityServiceMessages, IConsole console)
-                    => teamCityServiceMessages.CreateWriter(str => console.WriteToOut((null, str + "\n"))))
+                    => new SafeTeamCityWriter(teamCityServiceMessages.CreateWriter(str => console.WriteToOut((null, str + "\n")))))
                 .Bind().To<ServiceMessageParser>();
     }
 }
