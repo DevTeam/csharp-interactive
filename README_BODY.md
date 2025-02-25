@@ -7,20 +7,26 @@
 
 ![](docs/CSharpInteractive.gif)
 
-C# interactive build automation system makes it easy to build .NET projects. It can be part of your solution as a regular console cross-platform .NET application or run C# scripts without compiling them, or even run in REPL mode - allowing you to run C# interactively.
+C# interactive build automation system makes it easy to build .NET projects. It can be part of your solution as a regular .NET console project or run C# scripts without compiling them, or even run in REPL mode - allowing you to run C# interactively.
 
 ![](docs/icon.png)
 
-## Advantages
+## Key Features
 
-- [X] 3 compatible [operating modes](#operating-modes)
-- [X] Cross-platform
-- [X] Debugging capability
-- [X] No model limitations (no Tasks, Targets, DependsOn or other abstractions that would limit you from creating simple and cheap to maintain build scripts)
-  - Just plain .NET code and nothing extra
-  - Best programming practices
-- [X] Powerful API for building .NET projects
-- [X] Summarised statistics
+### ✔️ Three Integrated [Execution Modes](#operating-modes)
+Flexible interoperability between modes for diverse workflow requirements.
+### ✔️ Native Cross-Platform Support
+Seamless operation across Windows, Linux, and macOS environments.
+### ✔️ Debugging Support
+Ability to debug in “.NET build project” mode, allowing developers to efficiently identify and fix problems during the compilation and build process.
+### ✔️ Zero Abstraction Constraints
+No restrictive abstractions (e.g., Tasks, Targets, DependsOn) to limit script design:
+- Pure .NET codebase – no proprietary syntax or hidden layers
+- Adheres to industry-standard coding practices for maintainability
+### ✔️ Powerful API for building .NET projects
+Granular control over builds, tests, and deployments with streamlined project configuration.
+### ✔️ Summarised statistics
+Consolidated build statistics.
 
 ## Operating modes
 
@@ -28,7 +34,7 @@ C# interactive build automation system makes it easy to build .NET projects. It 
 
 <summary>Interactive</summary>
 
-Please see [this page](https://www.nuget.org/packages/dotnet-csi) for installation details.
+REPL (Read-Eval-Print-Loop) interface for interactive code evaluation. Please see [this page](https://www.nuget.org/packages/dotnet-csi) for installation details.
 
 Launch the tool in the interactive mode:
 
@@ -43,6 +49,13 @@ Simply enter C# commands sequentially one line after another and get the result 
 <details>
 
 <summary>Running C# script</summary>
+
+Direct execution of C# scripts without prior compilation:
+- Zero-Compilation Workflow - execute .csx files directly using Roslyn scripting engines, bypassing traditional dotnet build steps for rapid iteration.
+- Cross-Platform Scripting
+  - Windows - integrate with PowerShell/PowerShell Core automation pipelines
+  - Linux/macOS - combine with bash/zsh scripts via shebang directives (#!/usr/bin/env dotnet-script)
+  - Dependency Management - resolve NuGet packages in scripts via #r "nuget: PackageName/Version" syntax, with local cache optimization.
 
 Run a specified script with a given argument:
 
@@ -91,7 +104,7 @@ Supported options:
 
 <summary>.NET build project</summary>
 
-Please see [this page](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template) for details on how to install the [project template](https://www.nuget.org/packages/CSharpInteractive.Templates).
+Seamless integration into existing solutions as a standard .NET console project. Please see [this page](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template) for details on how to install the [project template](https://www.nuget.org/packages/CSharpInteractive.Templates).
 
 Create a console project *__Build__* containing a script from the template *__build__*
 
