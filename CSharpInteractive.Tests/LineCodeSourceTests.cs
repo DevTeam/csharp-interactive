@@ -3,19 +3,18 @@ namespace CSharpInteractive.Tests;
 public class LineCodeSourceTests
 {
     [Fact]
-    public void Should()
+    public void ShouldIntiLine()
     {
         // Given
-        var source = CreateInstance();
 
         // When
-        source.Line = "Abc";
+        var source = CreateInstance("Abc");
 
         // Then
         source.Name.ShouldBe("Abc");
         source.ToArray().ShouldBe(["Abc"]);
     }
 
-    private static LineCodeSource CreateInstance() =>
-        new();
+    private static LineCodeSource CreateInstance(string line) =>
+        new(line);
 }

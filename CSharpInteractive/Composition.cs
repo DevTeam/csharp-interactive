@@ -17,6 +17,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Scripting;
 using Pure.DI;
+using static DateTime;
 using static Pure.DI.Lifetime;
 using static Pure.DI.Tag;
 using CommandLineParser = Core.CommandLineParser;
@@ -29,8 +30,8 @@ internal partial class Composition
     private static void Setup()
     {
         DI.Setup()
-            .Hint(Hint.Resolve, "Off")
-            .Root<Root>("Root")
+            .Hint(Hint.Resolve, Name.Off)
+            .Root<Root>(nameof(Root))
 
 #if TOOL
             .DefaultLifetime(Transient)
@@ -40,12 +41,12 @@ internal partial class Composition
                     ctx.Inject<ISettings>(out var settings);
                     if (settings.InteractionMode == InteractionMode.Interactive)
                     {
-                        ctx.Inject<IScriptRunner>(InteractionMode.Interactive, out var scriptRunner);
+                        ctx.Inject<IScriptRunner>(InteractiveTag, out var scriptRunner);
                         return scriptRunner;
                     }
                     else
                     {
-                        ctx.Inject<IScriptRunner>(InteractionMode.NonInteractive, out var scriptRunner);
+                        ctx.Inject<IScriptRunner>(NonInteractiveTag, out var scriptRunner);
                         return scriptRunner;
                     }
                 })
@@ -58,8 +59,8 @@ internal partial class Composition
             .DefaultLifetime(Singleton)
                 .Bind(Unique).To<ExitManager>()
                 .Bind(Unique).To<Debugger>()
-                .Bind(InteractionMode.Interactive).To<InteractiveRunner>()
-                .Bind(InteractionMode.NonInteractive).To<ScriptRunner>()
+                .Bind(InteractiveTag).To<InteractiveRunner>()
+                .Bind(NonInteractiveTag).To<ScriptRunner>()
                 .Bind().To<CommandSource>()
                 .Bind().To<Setting<TTE>>()
                 .Bind(Unique).Bind<IReferenceRegistry>().To<ReferencesScriptOptionsFactory>()
@@ -68,19 +69,19 @@ internal partial class Composition
             .Bind().As(Transient).To(_ => RunningMode.Application)
 #endif
             .DefaultLifetime(Transient)
-                .Bind().To(_ => DateTime.Now)
+                .Bind().To(_ => Now)
                 .Bind().To(_ => typeof(Composition).Assembly)
                 .Bind().To(_ => new CSharpParseOptions().LanguageVersion)
-                .Bind(RuntimePath).To(_ => Path.GetDirectoryName(typeof(object).Assembly.Location) ?? string.Empty)
+                .Bind(RuntimePathTag).To(_ => Path.GetDirectoryName(typeof(object).Assembly.Location) ?? string.Empty)
                 .Bind().To((CancellationTokenSource cancellationTokenSource) => cancellationTokenSource.Token)
-                .Bind(TargetFrameworkMoniker).To((Assembly assembly) => assembly.GetCustomAttribute<System.Runtime.Versioning.TargetFrameworkAttribute>()?.FrameworkName ?? string.Empty)
+                .Bind(TargetFrameworkMonikerTag).To((Assembly assembly) => assembly.GetCustomAttribute<System.Runtime.Versioning.TargetFrameworkAttribute>()?.FrameworkName ?? string.Empty)
                 .Bind().To(_ => Process.GetCurrentProcess())
-                .Bind(ModuleFile).To((Process process) => process.MainModule?.FileName ?? string.Empty)
+                .Bind(ModuleFileTag).To((Process process) => process.MainModule?.FileName ?? string.Empty)
                 .Bind().To<ScriptCommandFactory>()
                 .Bind().To<ReliableBuildContext>()
                 .Bind().To<ProcessMonitor>()
                 .Bind().To<ProcessManager>()
-                .Bind(Base).To<BuildContext>()
+                .Bind(BaseTag).To<BuildContext>()
                 .Bind().To(_ => MemoryPool<TT>.Shared)
                 .Bind().To<SourceResolver>()
                 .Bind().To<MetadataResolver>()
@@ -119,12 +120,12 @@ internal partial class Composition
                 .Bind().To<FileExplorer>()
                 .Bind().To<Utf8Encoding>()
                 .Bind().To<BuildOutputProcessor>()
-                .Bind(Base).To<DefaultBuildMessagesProcessor>()
-                .Bind(Custom).To<CustomMessagesProcessor>()
+                .Bind(BaseTag).To<DefaultBuildMessagesProcessor>()
+                .Bind(CustomTag).To<CustomMessagesProcessor>()
                 .Bind().To<TeamCityContext>()
                 .Bind().To<SummaryPresenter>()
                 .Bind().To<ExitCodeParser>()
-                .Bind(Base).To<ProcessRunner>()
+                .Bind(BaseTag).To<ProcessRunner>()
                 .Bind().To<ProcessResultHandler>()
                 .Bind().To<TextReplacer>()
                 .Bind().To<RuntimeExplorer>()
@@ -133,14 +134,14 @@ internal partial class Composition
                 .Bind().To<Root>()
                 .Bind().To(_ => new CancellationTokenSource())
                 .Bind().To<CISpecific<TT>>()
-                .Bind(Base).To<ConsoleInOut>()
-                .Bind(TeamCity).To<TeamCityInOut>()
-                .Bind(Ansi).To<AnsiInOut>()
+                .Bind(BaseTag).To<ConsoleInOut>()
+                .Bind(TeamCityTag).To<TeamCityInOut>()
+                .Bind(AnsiTag).To<AnsiInOut>()
                 .Bind().To<Console>()
                 .Bind().To((ICISpecific<IStdOut> stdOut) => stdOut.Instance)
                 .Bind().To((ICISpecific<IStdErr> stdErr) => stdErr.Instance)
-                .Bind(Base, Ansi).To<Log<TT>>()
-                .Bind(TeamCity).To<TeamCityLog<TT>>()
+                .Bind(BaseTag, AnsiTag).To<Log<TT>>()
+                .Bind(TeamCityTag).To<TeamCityLog<TT>>()
                 .Bind().To((ICISpecific<ILog<TT>> log) => log.Instance)
                 .Bind().To<CISettings>()
                 .Bind().To<ExitTracker>()
@@ -149,18 +150,8 @@ internal partial class Composition
                 .Bind().To<Settings>()
                 .Bind().To<Info>()
                 .Bind().To<ConsoleSource>()
-                .Bind(LoadFileCode).To(ctx => new Func<string, ICodeSource>(name =>
-                {
-                    ctx.Inject<LoadFileCodeSource>(out var loadFileCodeSource);
-                    loadFileCodeSource.Name = name;
-                    return loadFileCodeSource;
-                }))
-                .Bind(LineCode).To(ctx => new Func<string, ICodeSource>(line =>
-                {
-                    ctx.Inject<LineCodeSource>(out var lineCodeSource);
-                    lineCodeSource.Line = line;
-                    return lineCodeSource;
-                }))
+                .Bind(LoadFileCodeTag).To<LoadFileCodeSource>()
+                .Bind(LineCodeTag).To<LineCodeSource>()
                 .Bind().To<Statistics>()
                 .Bind().To<CommandsRunner>()
                 .Bind().To<CodeSourceCommandFactory>()
@@ -202,8 +193,8 @@ internal partial class Composition
                 .Bind(Unique).To<SettingCommandRunner<VerbosityLevel>>()
                 .Bind(Unique).To<AddNuGetReferenceCommandFactory>()
                 .Bind(Unique).To<AddNuGetReferenceCommandRunner>()
-                .Bind(Base, Ansi).To<Properties>()
-                .Bind(TeamCity).To<TeamCityProperties>()
+                .Bind(BaseTag, AnsiTag).To<Properties>()
+                .Bind(TeamCityTag).To<TeamCityProperties>()
                 .Bind().To((ICISpecific<IProperties> properties) => properties.Instance)
 
                 // Public services
@@ -215,8 +206,9 @@ internal partial class Composition
                 .Bind().To<ServiceMessageFormatter>()
                 .Bind().To<FlowIdGenerator>()
                 .Bind().To<TimestampUpdater>()
-                .Bind().To((ITeamCityServiceMessages teamCityServiceMessages, IConsole console)
-                    => new SafeTeamCityWriter(teamCityServiceMessages.CreateWriter(str => console.WriteToOut((null, str + "\n")))))
+                .Bind(BaseTag).To((ITeamCityServiceMessages teamCityServiceMessages, IConsole console)
+                    => teamCityServiceMessages.CreateWriter(str => console.WriteToOut((null, str + "\n"))))
+                .Bind().To<SafeTeamCityWriter>()
                 .Bind().To<ServiceMessageParser>();
     }
 }

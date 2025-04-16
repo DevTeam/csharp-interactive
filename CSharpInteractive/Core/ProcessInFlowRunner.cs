@@ -9,7 +9,7 @@ using Pure.DI;
 using static Pure.DI.Tag;
 
 internal class ProcessInFlowRunner(
-    [Tag(Base)] IProcessRunner baseProcessRunner,
+    [Tag(BaseTag)] IProcessRunner baseProcessRunner,
     ICISettings ciSettings,
     ITeamCityWriter teamCityWriter,
     IFlowContext flowContext)

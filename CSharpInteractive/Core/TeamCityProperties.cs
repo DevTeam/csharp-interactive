@@ -10,7 +10,7 @@ using Pure.DI;
 using static Pure.DI.Tag;
 
 internal class TeamCityProperties(
-    [Tag(Base)] IProperties properties,
+    [Tag(BaseTag)] IProperties properties,
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     ITeamCityWriter teamCityWriter) : IProperties
 {

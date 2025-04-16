@@ -9,8 +9,8 @@ using Pure.DI;
 using static Pure.DI.Tag;
 
 internal class DotNetEnvironment(
-    [Tag(TargetFrameworkMoniker)] string targetFrameworkMoniker,
-    [Tag(ModuleFile)] string moduleFile,
+    [Tag(TargetFrameworkMonikerTag)] string targetFrameworkMoniker,
+    [Tag(ModuleFileTag)] string moduleFile,
     IEnvironment environment,
     IFileExplorer fileExplorer)
     : IDotNetEnvironment, ITraceSource

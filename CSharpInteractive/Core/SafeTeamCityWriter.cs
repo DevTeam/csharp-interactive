@@ -2,8 +2,10 @@
 
 using JetBrains.TeamCity.ServiceMessages;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
+using Pure.DI;
+using static Pure.DI.Tag;
 
-internal class SafeTeamCityWriter(ITeamCityWriter writer): ITeamCityWriter
+internal class SafeTeamCityWriter([Tag(BaseTag)] ITeamCityWriter writer): ITeamCityWriter
 {
     private readonly object _lockObject = new();
 

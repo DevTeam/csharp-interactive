@@ -25,5 +25,5 @@ public class LoadFileCodeSourceTests
     }
 
     private LoadFileCodeSource CreateInstance(string fileName) =>
-        new(_filePathResolver.Object, _workingDirectoryContext.Object) {Name = fileName};
+        new(_filePathResolver.Object, _workingDirectoryContext.Object, fileName);
 }

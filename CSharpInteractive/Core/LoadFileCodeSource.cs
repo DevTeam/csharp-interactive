@@ -3,33 +3,33 @@
 namespace CSharpInteractive.Core;
 
 using System.Collections;
+using Pure.DI;
 
-internal class LoadFileCodeSource(
-    IFilePathResolver filePathResolver,
-    IScriptContext scriptContext) : ICodeSource
+internal class LoadFileCodeSource : ICodeSource
 {
-    private string _fileName = "";
+    private readonly IScriptContext _scriptContext;
 
-    public string Name
+    public LoadFileCodeSource(IFilePathResolver filePathResolver,
+        IScriptContext scriptContext,
+        string name)
     {
-        get => _fileName;
-        set
+        _scriptContext = scriptContext;
+        if (!filePathResolver.TryResolve(name, out var fullFilePath))
         {
-            if (!filePathResolver.TryResolve(value, out var fullFilePath))
-            {
-                fullFilePath = value;
-            }
-
-            _fileName = fullFilePath;
+            Name = name;
         }
+
+        Name = fullFilePath;
     }
+
+    public string Name { get; }
 
     public bool Internal => false;
 
     public IEnumerator<string> GetEnumerator()
     {
-        var scope = scriptContext.CreateScope(this);
-        return new LinesEnumerator(new List<string> {$"#load \"{_fileName}\""}, () => scope.Dispose());
+        var scope = _scriptContext.CreateScope(this);
+        return new LinesEnumerator(new List<string> {$"#load \"{Name}\""}, () => scope.Dispose());
     }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

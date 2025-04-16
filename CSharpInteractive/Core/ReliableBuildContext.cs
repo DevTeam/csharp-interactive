@@ -12,7 +12,7 @@ internal class ReliableBuildContext(
     ICISettings ciSettings,
     IFileSystem fileSystem,
     IMessagesReader messagesReader,
-    [Tag(Base)] IBuildContext baseBuildContext)
+    [Tag(BaseTag)] IBuildContext baseBuildContext)
     : IBuildContext
 {
     private readonly Dictionary<string, Output> _sources = new();

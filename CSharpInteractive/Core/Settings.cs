@@ -11,7 +11,7 @@ internal class Settings(
     IEnvironment environment,
     ICommandLineParser commandLineParser,
     ICodeSource consoleCodeSource,
-    [Tag(LoadFileCode)] Func<string, ICodeSource> fileCodeSourceFactory)
+    [Tag(LoadFileCodeTag)] Func<string, ICodeSource> fileCodeSourceFactory)
     : ISettings, ISettingSetter<VerbosityLevel>
 {
     private readonly object _lockObject = new();

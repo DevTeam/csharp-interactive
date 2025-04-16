@@ -8,9 +8,9 @@ using static Pure.DI.Tag;
 
 internal class CISpecific<T>(
     ICISettings settings,
-    [Tag(Base)] Func<T> defaultFactory,
-    [Tag(TeamCity)] Func<T> teamcityFactory,
-    [Tag(Ansi)] Func<T> ansiFactory)
+    [Tag(BaseTag)] Func<T> defaultFactory,
+    [Tag(TeamCityTag)] Func<T> teamcityFactory,
+    [Tag(AnsiTag)] Func<T> ansiFactory)
     : ICISpecific<T>
 {
     public T Instance => settings.CIType switch

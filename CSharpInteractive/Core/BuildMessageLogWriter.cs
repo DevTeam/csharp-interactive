@@ -8,8 +8,8 @@ using static Pure.DI.Tag;
 
 internal class BuildMessageLogWriter(
     ILog<BuildMessageLogWriter> log,
-    [Tag(Base)] IStdOut stdOut,
-    [Tag(Base)] IStdErr stdErr)
+    [Tag(BaseTag)] IStdOut stdOut,
+    [Tag(BaseTag)] IStdErr stdErr)
     : IBuildMessageLogWriter
 {
     public void Write(ProcessInfo processInfo, BuildMessage message)

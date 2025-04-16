@@ -4,9 +4,9 @@ namespace CSharpInteractive.Core;
 
 using System.Collections;
 
-internal class LineCodeSource : ICodeSource
+internal class LineCodeSource(string line) : ICodeSource
 {
-    public string Line { get; set; } = string.Empty;
+    public string Line { get; set; } = line;
 
     public IEnumerator<string?> GetEnumerator() => Enumerable.Repeat(Line, 1).GetEnumerator();
 
