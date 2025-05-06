@@ -6,7 +6,7 @@ using Pure.DI;
 using static Pure.DI.Tag;
 
 internal class RuntimeExplorer(
-    [Tag(RuntimePathTag)] string runtimePath,
+    [Tag("RuntimePathTag")] string runtimePath,
     IFileSystem fileSystem) : IRuntimeExplorer
 {
     public bool TryFindRuntimeAssembly(string assemblyPath, [MaybeNullWhen(false)] out string runtimeAssemblyPath)

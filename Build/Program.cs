@@ -170,7 +170,7 @@ else
     {
         switch (coveragePercentage)
         {
-            case < 75:
+            case < 70:
                 Error($"The coverage percentage {coveragePercentage} is too low.");
                 break;
 

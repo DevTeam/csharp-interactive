@@ -15,7 +15,6 @@ DI.Setup(nameof(Composition))
     
     .DefaultLifetime(PerResolve)
     .Bind().To<RootCommand>()
-    .Bind().To<Settings>()
     
     .DefaultLifetime(PerBlock)
     

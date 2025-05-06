@@ -14,7 +14,7 @@ internal class ScriptContentReplacer(
     IFileSystem fileSystem,
     IUniqueNameGenerator uniqueNameGenerator,
     IEnvironment environment,
-    [Tag(LineCodeTag)] Func<string, ICodeSource> codeSourceFactory)
+    [Tag("LineCodeTag")] Func<string, ICodeSource> codeSourceFactory)
     : IScriptContentReplacer
 {
     [SuppressMessage("Performance", "CA1806:Do not ignore method results")]
