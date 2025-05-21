@@ -19,6 +19,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using Pure.DI;
 using static DateTime;
 using static Pure.DI.Lifetime;
+using static Pure.DI.Name;
 using static Pure.DI.Tag;
 using CommandLineParser = Core.CommandLineParser;
 using Debugger = Core.Debugger;
@@ -30,7 +31,7 @@ internal partial class Composition
     private static void Setup()
     {
         DI.Setup()
-            .Hint(Hint.Resolve, Name.Off)
+            .Hint(Hint.Resolve, Off)
             .Root<Root>(nameof(Root))
 
 #if TOOL
