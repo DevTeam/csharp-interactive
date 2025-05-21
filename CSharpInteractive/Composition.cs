@@ -27,11 +27,30 @@ using Debugger = Core.Debugger;
 internal partial class Composition
 {
     public static readonly Composition Shared = new();
-    
+
+#if DEBUG
+    private partial T OnDependencyInjection<T>(in T value, object? tag, Lifetime lifetime)
+    {
+        if (Equals(value, null))
+        {
+            if (!System.Diagnostics.Debugger.IsAttached)
+            {
+                System.Diagnostics.Debugger.Launch();
+            }
+        }
+
+        return value;
+    }
+#endif
+
     private static void Setup()
     {
         DI.Setup()
             .Hint(Hint.Resolve, Off)
+#if DEBUG
+            .Hint(Hint.FormatCode, "On")
+            .Hint(Hint.OnDependencyInjection, "On")
+#endif
             .Root<Root>(nameof(Root))
 
 #if TOOL
