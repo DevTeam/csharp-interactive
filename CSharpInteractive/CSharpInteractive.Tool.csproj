@@ -26,6 +26,7 @@
         <Description>$(Title) $(Version) $(TargetFramework)</Description>
         <PackageTags>C#;csharp;script;interactive</PackageTags>
         <PureDIProfilePath>c:\profiling</PureDIProfilePath>
+        <BuildInParallel Condition="$([MSBuild]::IsOSPlatform('Windows'))">false</BuildInParallel>
     </PropertyGroup>
 
     <ItemGroup>

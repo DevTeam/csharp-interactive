@@ -18,6 +18,7 @@
         <Description>$(Title) $(Version) $(TargetFramework)</Description>
         <PackageTags>C#;csharp;script;interactive</PackageTags>
         <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+        <BuildInParallel Condition="$([MSBuild]::IsOSPlatform('Windows'))">false</BuildInParallel>
     </PropertyGroup>
 
     <ItemGroup>
