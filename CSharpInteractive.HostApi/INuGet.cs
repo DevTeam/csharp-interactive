@@ -22,7 +22,7 @@ public interface INuGet
     /// 
     /// var settings = new NuGetRestoreSettings("MySampleLib")
     ///   .WithVersionRange(VersionRange.Parse("[1.0.14, 1.1)"))
-    ///   .WithTargetFrameworkMoniker("net6.0")
+    ///   .WithTargetFrameworkMoniker("net10.0")
     ///   .WithPackagesPath(".packages");
     ///
     /// 

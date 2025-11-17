@@ -26,12 +26,13 @@ public class DotNetSlnRemoveScenario(ITestOutputHelper output) : BaseScenario(ou
         
         new DotNetNew()
             .WithTemplateName("sln")
-            .WithName("NySolution")
+            .WithName("MySolution")
             .WithForce(true)
+            .AddArgs("--format", "sln")
             .Run().EnsureSuccess();
 
         new DotNetSlnAdd()
-            .WithSolution("NySolution.sln")
+            .WithSolution("MySolution.sln")
             .AddProjects(
                 Path.Combine("MyLib", "MyLib.csproj"),
                 Path.Combine("MyTests", "MyTests.csproj"))
@@ -45,7 +46,7 @@ public class DotNetSlnRemoveScenario(ITestOutputHelper output) : BaseScenario(ou
         // ## using HostApi;
 
         new DotNetSlnRemove()
-            .WithSolution("NySolution.sln")
+            .WithSolution("MySolution.sln")
             .AddProjects(
                 Path.Combine("MyLib", "MyLib.csproj"))
             .Run().EnsureSuccess();
@@ -53,7 +54,7 @@ public class DotNetSlnRemoveScenario(ITestOutputHelper output) : BaseScenario(ou
 
         var lines = new List<string>();
         new DotNetSlnList()
-            .WithSolution("NySolution.sln")
+            .WithSolution("MySolution.sln")
             .Run(output => lines.Add(output.Line))
             .EnsureSuccess();
         

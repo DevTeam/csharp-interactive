@@ -19,6 +19,7 @@ public class DotNetCleanScenario(ITestOutputHelper output) : BaseScenario(output
             .Run().EnsureSuccess();
         
         new DotNetBuild()
+            .WithConfiguration("Release")
             .WithWorkingDirectory("MyLib")
             .Build().EnsureSuccess();
 

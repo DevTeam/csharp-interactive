@@ -26,12 +26,13 @@ public class DotNetSlnListScenario(ITestOutputHelper output) : BaseScenario(outp
         
         new DotNetNew()
             .WithTemplateName("sln")
-            .WithName("NySolution")
+            .WithName("MySolution")
             .WithForce(true)
+            .AddArgs("--format", "sln")
             .Run().EnsureSuccess();
 
         new DotNetSlnAdd()
-            .WithSolution("NySolution.sln")
+            .WithSolution("MySolution.sln")
             .AddProjects(
                 Path.Combine("MyLib", "MyLib.csproj"),
                 Path.Combine("MyTests", "MyTests.csproj"))
@@ -46,7 +47,7 @@ public class DotNetSlnListScenario(ITestOutputHelper output) : BaseScenario(outp
 
         var lines = new List<string>();
         new DotNetSlnList()
-            .WithSolution("NySolution.sln")
+            .WithSolution("MySolution.sln")
             .Run(output => lines.Add(output.Line))
             .EnsureSuccess();
         // }

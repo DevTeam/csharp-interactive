@@ -30,7 +30,8 @@ internal class ScriptContentReplacer(
             }
 
             var assemblies = new HashSet<string>();
-            var commands = commandFactory.Create(codeSourceFactory(line)).ToArray();
+            var source = codeSourceFactory(line);
+            var commands = commandFactory.Create(source).ToArray();
             var repl = false;
             foreach (var command in commands)
             {

@@ -13,36 +13,76 @@ C# interactive build automation system makes it easy to build .NET projects. It 
 
 ## Key Features
 
-### ✔️ Three Integrated [Execution Modes](#operating-modes)
-Flexible interoperability between modes for diverse workflow requirements.
-### ✔️ Native Cross-Platform Support
-Seamless operation across Windows, Linux, and macOS environments.
-### ✔️ Debugging Support
-Ability to debug in “.NET build project” mode, allowing developers to efficiently identify and fix problems during the compilation and build process.
-### ✔️ Zero Abstraction Constraints
-No restrictive abstractions (e.g., Tasks, Targets, DependsOn) to limit script design:
-- Pure .NET codebase – no proprietary syntax or hidden layers
-- Adheres to industry-standard coding practices for maintainability
-### ✔️ Powerful API for building .NET projects
-Granular control over builds, tests, and deployments with streamlined project configuration.
-### ✔️ Summarised statistics
-Consolidated build statistics.
+✔️ Three Integrated Execution Modes
+  - Flexible interoperability between modes (#operating-modes) to adapt to diverse workflow requirements.
+
+✔️ Native Cross-Platform Support
+  - Seamlessly operates on Windows, Linux, and macOS without compatibility compromises.
+
+✔️ Integrated Debugging Capabilities
+  - Debug ".NET build projects" directly to identify and resolve issues during compilation and builds.
+
+✔️ Zero Abstraction Overhead
+  - Eliminates restrictive constructs (e.g., Tasks/Targets):
+  - Pure .NET codebase – no proprietary syntax or hidden layers
+  - Industry-standard practices ensure long-term maintainability
+
+✔️ Granular Build Control API
+  - Precise management of builds, tests, and deployments with streamlined project configuration.
+
+✔️ Consolidated Build Analytics
+  - Actionable insights through summarized statistics.
 
 ## Operating modes
 
 <details>
 
-<summary>Interactive</summary>
+<summary>.NET build project</summary>
 
-REPL (Read-Eval-Print-Loop) interface for interactive code evaluation. Please see [this page](https://www.nuget.org/packages/dotnet-csi) for installation details.
+Seamless integration into existing solutions as a standard .NET console project.
 
-Launch the tool in the interactive mode:
+### Typical .NET console project
 
-```Shell
-dotnet csi
-```
+1. Create the Project  
+  Initialize a new console application using .NET CLI:
+  ```bash
+  dotnet new console -n MyBuildApp
+  cd MyConsoleApp
+  ```  
 
-Simply enter C# commands sequentially one line after another and get the result in console output.
+2. Install Essential Package  
+  Add the [CSharpInteractive](https://www.nuget.org/packages/CSharpInteractive) NuGet package for scripting capabilities:
+  ```bash
+  dotnet add package CSharpInteractive
+  ```  
+
+### Creating a Build Automation Project from the _build_ template
+1. Install the Template  
+  First, install the `CSharpInteractive.Templates` NuGet package as a dotnet template:
+  ```bash
+  dotnet new install CSharpInteractive.Templates
+  ```  
+
+*[Detailed installation guide](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template)*
+
+2. Generate the Project  
+  Create a new project named **Build** using the template:
+  ```bash
+  dotnet new build -o ./Build
+  ```  
+
+### Dual Execution Modes
+
+The generated project supports two run methods:
+
+- **Compiled Application** (via `Program.cs`):
+  ```bash
+  dotnet run --project ./Build
+  ```  
+- **Script Execution** (via `Program.csx`):
+  ```bash
+  dotnet csi ./Build
+  ```
 
 </details>
 
@@ -102,25 +142,17 @@ Supported options:
 
 <details>
 
-<summary>.NET build project</summary>
+<summary>Interactive</summary>
 
-Seamless integration into existing solutions as a standard .NET console project. Please see [this page](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template) for details on how to install the [project template](https://www.nuget.org/packages/CSharpInteractive.Templates).
+REPL (Read-Eval-Print-Loop) interface for interactive code evaluation. Please see [this page](https://www.nuget.org/packages/dotnet-csi) for installation details.
 
-Create a console project *__Build__* containing a script from the template *__build__*
+Launch the tool in the interactive mode:
 
-```shell
-dotnet new build -o ./Build
+```Shell
+dotnet csi
 ```
 
-The created project contains 2 entry points:
-- _Program.csx_ to run as a script
-  ```shell
-  dotnet csi ./Build
-  ```
-- _Program.cs_ to run as .NET application
-  ```shell
-  dotnet run --project ./Build
-  ```
+Simply enter C# commands sequentially one line after another and get the result in console output.
 
 </details>
 
@@ -222,7 +254,6 @@ The created project contains 2 entry points:
   - [Running a custom .NET command](#running-a-custom-.net-command)
   - [Running source code without any explicit compile or launch commands](#running-source-code-without-any-explicit-compile-or-launch-commands)
   - [Running tests from the specified assemblies](#running-tests-from-the-specified-assemblies)
-  - [Running tests under dotCover](#running-tests-under-dotcover)
   - [Searching all .NET tools that are published to NuGet](#searching-all-.net-tools-that-are-published-to-nuget)
   - [Searching for a NuGet package](#searching-for-a-nuget-package)
   - [Searching for optional workloads](#searching-for-optional-workloads)
@@ -629,12 +660,12 @@ using HostApi;
 
 new DotNetNew()
     .WithTemplateName("sln")
-    .WithName("NySolution")
+    .WithName("MySolution")
     .WithForce(true)
     .Run().EnsureSuccess();
 
 new DotNetSlnAdd()
-    .WithSolution("NySolution.sln")
+    .WithSolution("MySolution.sln")
     .AddProjects(
         Path.Combine("MyLib", "MyLib.csproj"),
         Path.Combine("MyTests", "MyTests.csproj"))
@@ -970,7 +1001,7 @@ using HostApi;
 
 var lines = new List<string>();
 new DotNetSlnList()
-    .WithSolution("NySolution.sln")
+    .WithSolution("MySolution.sln")
     .Run(output => lines.Add(output.Line))
     .EnsureSuccess();
 ```
@@ -1121,7 +1152,7 @@ new DotNetRemovePackage()
 using HostApi;
 
 new DotNetSlnRemove()
-    .WithSolution("NySolution.sln")
+    .WithSolution("MySolution.sln")
     .AddProjects(
         Path.Combine("MyLib", "MyLib.csproj"))
     .Run().EnsureSuccess();
@@ -1208,46 +1239,6 @@ var result = new VSTest()
 result.ExitCode.ShouldBe(0, result.ToString());
 result.Summary.Tests.ShouldBe(1, result.ToString());
 result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
-```
-
-### Running tests under dotCover
-
-``` CSharp
-using HostApi;
-
-new DotNetToolInstall()
-    .WithLocal(true)
-    .WithPackage("JetBrains.dotCover.GlobalTool")
-    .Run().EnsureSuccess();
-
-// Creates a test command
-var test = new DotNetTest()
-    .WithProject("MyTests");
-
-var dotCoverSnapshot = Path.Combine("MyTests", "dotCover.dcvr");
-var dotCoverReport = Path.Combine("MyTests", "dotCover.html");
-// Modifies the test command by putting "dotCover" in front of all arguments
-// to have something like "dotnet dotcover test ..."
-// and adding few specific arguments to the end
-var testUnderDotCover = test.Customize(cmd =>
-    cmd.ClearArgs()
-    + "dotcover"
-    + cmd.Args
-    + $"--dcOutput={dotCoverSnapshot}"
-    + "--dcFilters=+:module=TeamCity.CSharpInteractive.HostApi;+:module=dotnet-csi"
-    + "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage");
-
-// Runs tests under dotCover
-var result = testUnderDotCover
-    .Build().EnsureSuccess();
-
-// The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0, result.ToString());
-result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1, result.ToString());
-
-// Generates a HTML code coverage report.
-new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReport}", "--reportType=HTML")
-    .Run().EnsureSuccess();
 ```
 
 ### Searching all .NET tools that are published to NuGet

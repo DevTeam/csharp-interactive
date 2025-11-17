@@ -81,7 +81,6 @@
   - [Running a custom .NET command](#running-a-custom-.net-command)
   - [Running source code without any explicit compile or launch commands](#running-source-code-without-any-explicit-compile-or-launch-commands)
   - [Running tests from the specified assemblies](#running-tests-from-the-specified-assemblies)
-  - [Running tests under dotCover](#running-tests-under-dotcover)
   - [Searching all .NET tools that are published to NuGet](#searching-all-.net-tools-that-are-published-to-nuget)
   - [Searching for a NuGet package](#searching-for-a-nuget-package)
   - [Searching for optional workloads](#searching-for-optional-workloads)
@@ -488,12 +487,12 @@ using HostApi;
 
 new DotNetNew()
     .WithTemplateName("sln")
-    .WithName("NySolution")
+    .WithName("MySolution")
     .WithForce(true)
     .Run().EnsureSuccess();
 
 new DotNetSlnAdd()
-    .WithSolution("NySolution.sln")
+    .WithSolution("MySolution.sln")
     .AddProjects(
         Path.Combine("MyLib", "MyLib.csproj"),
         Path.Combine("MyTests", "MyTests.csproj"))
@@ -829,7 +828,7 @@ using HostApi;
 
 var lines = new List<string>();
 new DotNetSlnList()
-    .WithSolution("NySolution.sln")
+    .WithSolution("MySolution.sln")
     .Run(output => lines.Add(output.Line))
     .EnsureSuccess();
 ```
@@ -980,7 +979,7 @@ new DotNetRemovePackage()
 using HostApi;
 
 new DotNetSlnRemove()
-    .WithSolution("NySolution.sln")
+    .WithSolution("MySolution.sln")
     .AddProjects(
         Path.Combine("MyLib", "MyLib.csproj"))
     .Run().EnsureSuccess();
@@ -1067,46 +1066,6 @@ var result = new VSTest()
 result.ExitCode.ShouldBe(0, result.ToString());
 result.Summary.Tests.ShouldBe(1, result.ToString());
 result.Tests.Count(test => test.State == TestState.Finished).ShouldBe(1, result.ToString());
-```
-
-### Running tests under dotCover
-
-``` CSharp
-using HostApi;
-
-new DotNetToolInstall()
-    .WithLocal(true)
-    .WithPackage("JetBrains.dotCover.GlobalTool")
-    .Run().EnsureSuccess();
-
-// Creates a test command
-var test = new DotNetTest()
-    .WithProject("MyTests");
-
-var dotCoverSnapshot = Path.Combine("MyTests", "dotCover.dcvr");
-var dotCoverReport = Path.Combine("MyTests", "dotCover.html");
-// Modifies the test command by putting "dotCover" in front of all arguments
-// to have something like "dotnet dotcover test ..."
-// and adding few specific arguments to the end
-var testUnderDotCover = test.Customize(cmd =>
-    cmd.ClearArgs()
-    + "dotcover"
-    + cmd.Args
-    + $"--dcOutput={dotCoverSnapshot}"
-    + "--dcFilters=+:module=TeamCity.CSharpInteractive.HostApi;+:module=dotnet-csi"
-    + "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage");
-
-// Runs tests under dotCover
-var result = testUnderDotCover
-    .Build().EnsureSuccess();
-
-// The "result" variable provides details about a build
-result.ExitCode.ShouldBe(0, result.ToString());
-result.Tests.Count(i => i.State == TestState.Finished).ShouldBe(1, result.ToString());
-
-// Generates a HTML code coverage report.
-new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReport}", "--reportType=HTML")
-    .Run().EnsureSuccess();
 ```
 
 ### Searching all .NET tools that are published to NuGet

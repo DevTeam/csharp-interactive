@@ -2,12 +2,12 @@ using HostApi;
 
 new DotNetNew()
     .WithTemplateName("sln")
-    .WithName("NySolution")
+    .WithName("MySolution")
     .WithForce(true)
     .Run().EnsureSuccess();
 
 new DotNetSlnAdd()
-    .WithSolution("NySolution.sln")
+    .WithSolution("MySolution.sln")
     .AddProjects(
         Path.Combine("MyLib", "MyLib.csproj"),
         Path.Combine("MyTests", "MyTests.csproj"))

@@ -2,6 +2,6 @@ using HostApi;
 
 var lines = new List<string>();
 new DotNetSlnList()
-    .WithSolution("NySolution.sln")
+    .WithSolution("MySolution.sln")
     .Run(output => lines.Add(output.Line))
     .EnsureSuccess();

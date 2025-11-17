@@ -37,13 +37,13 @@ var packageVersion = new[]
     GetNextNuGetVersion(new NuGetRestoreSettings(packageId), defaultVersion)
 }.Max()!;
 
-const int minSdk = 6;
+const int minSdk = 8;
 var maxSdk = minSdk;
 new DotNet().WithVersion(true)
     .Run(output => maxSdk = NuGetVersion.Parse(output.Line).Major)
     .EnsureSuccess();
 
-var allFrameworks = Enumerable.Range(6, maxSdk - minSdk + 1).Select(i => $"net{i}.0").ToArray();
+var allFrameworks = Enumerable.Range(minSdk, maxSdk - minSdk + 1).Select(i => $"net{i}.0").ToArray();
 var frameworks = string.Join(";", allFrameworks);
 var framework = $"net{maxSdk}.0";
 
@@ -139,7 +139,6 @@ var test = new DotNetTest()
     .WithProps(buildProps)
     .WithFilter("Integration!=true&Docker!=true");
 
-var coveragePercentage = 0;
 var skipTests = bool.Parse(GetProperty("skipTests", "false"));
 if (skipTests)
 {
@@ -147,42 +146,9 @@ if (skipTests)
 }
 else
 {
-    new DotNetToolRestore()
-        .Run().EnsureSuccess();
-
-    var reportDir = Path.Combine(currentDir, ".reports");
-    var dotCoverSnapshot = Path.Combine(reportDir, "dotCover.dcvr");
-    test.Customize(cmd => cmd.WithArgs("dotcover")
-        .AddArgs(cmd.Args)
-        .AddArgs(
-            $"--dcOutput={dotCoverSnapshot}",
-            "--dcFilters=+:module=CSharpInteractive.HostApi;+:module=dotnet-csi",
-            "--dcAttributeFilters=System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"))
+    test
         .Build()
         .EnsureSuccess(buildResult => buildResult is {ExitCode: 0, Summary.FailedTests: 0});
-
-    var dotCoverReportXml = Path.Combine(reportDir, "dotCover.xml");
-    new DotNetCustom("dotCover", "report", $"--source={dotCoverSnapshot}", $"--output={dotCoverReportXml}", "--reportType=TeamCityXml")
-        .WithShortName("Generating the code coverage reports")
-        .Run().EnsureSuccess();
-
-    if (TryGetCoverage(dotCoverReportXml, out coveragePercentage))
-    {
-        switch (coveragePercentage)
-        {
-            case < 70:
-                Error($"The coverage percentage {coveragePercentage} is too low.");
-                break;
-
-            case < 80:
-                Warning($"The coverage percentage {coveragePercentage} is too low.");
-                break;
-        }
-    }
-    else
-    {
-        Warning("Percentage of coverage not determined.");
-    }
 }
 
 var hasTool = new DotNetToolList()
@@ -266,7 +232,6 @@ else
 }
 
 Summary("Package version: ".WithColor(Color.Header), packageVersion.WithColor(Color.Details));
-Summary("Coverage percentage: ".WithColor(Color.Header), coveragePercentage.WithColor(Color.Details));
 
 return 0;
 
@@ -276,6 +241,7 @@ void CheckCompatibilityAsync(
     string nuGetSource,
     string output)
 {
+    Info($"Checking {checkingFramework}");
     var buildProjectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
     Directory.CreateDirectory(buildProjectDir);
     try

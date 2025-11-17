@@ -1,7 +1,7 @@
 using HostApi;
 
 new DotNetSlnRemove()
-    .WithSolution("NySolution.sln")
+    .WithSolution("MySolution.sln")
     .AddProjects(
         Path.Combine("MyLib", "MyLib.csproj"))
     .Run().EnsureSuccess();

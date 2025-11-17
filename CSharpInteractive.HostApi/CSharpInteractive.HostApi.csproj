@@ -23,14 +23,14 @@
     </ItemGroup>
 
     <Choose>
-        <When Condition="'$(TargetFramework)'=='net6.0' or '$(TargetFramework)'=='net7.0'">
-            <ItemGroup>
-                <PackageReference Include="NuGet.Versioning" Version="6.8.1"/>
-            </ItemGroup>
-        </When>
         <When Condition="'$(TargetFramework)'=='net8.0'">
             <ItemGroup>
                 <PackageReference Include="NuGet.Versioning" Version="6.11.1"/>
+            </ItemGroup>
+        </When>
+        <When Condition="'$(TargetFramework)'=='net9.0'">
+            <ItemGroup>
+                <PackageReference Include="NuGet.Versioning" Version="6.12.1"/>
             </ItemGroup>
         </When>
         <Otherwise>

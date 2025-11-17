@@ -43,7 +43,8 @@ internal class RootTarget(
             await initializable.InitializeAsync(cancellationToken);
         }
 
-        return await rootCommand.InvokeAsync(Args.ToArray());
+        var result = rootCommand.Parse(Args);
+        return await result.InvokeAsync(cancellationToken: cancellationToken);
     }
 
 }
@@ -74,13 +75,13 @@ internal class Commands(RootCommand rootCommand)
         params string[] aliases)
     {
         var command = new Command(name, description);
-        command.SetHandler(ctx => target.RunAsync(ctx.GetCancellationToken()));
+        command.SetAction(_ => target.RunAsync(CancellationToken.None));
         foreach (var alias in aliases)
         {
-            command.AddAlias(alias);
+            command.Aliases.Add(alias);
         }
         
-        rootCommand.AddCommand(command);
+        rootCommand.Subcommands.Add(command);
         return Task.CompletedTask;
     }
 }

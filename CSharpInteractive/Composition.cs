@@ -84,6 +84,7 @@ internal partial class Composition
                 .Bind().To<ScriptSubmissionAnalyzer>()
                 .Bind(Unique).To<HelpCommandFactory>()
                 .Bind(Unique).To<HelpCommandRunner>()
+                .Bind("LineCodeTag").To<LineCodeSource>()
             
             .DefaultLifetime(Singleton)
                 .Bind(Unique).To<ExitManager>()
@@ -101,7 +102,6 @@ internal partial class Composition
                 .Bind().To<CommandsRunner>()
                 .Bind().To<CodeSourceCommandFactory>()
                 .Bind().To<CSharpScriptRunner>()
-                .Bind("LineCodeTag").To<LineCodeSource>()
                 .Bind().To<NuGetReferenceResolver>()
                 .Bind().To<ScriptContentReplacer>()
                 .Bind(Unique).To<AssembliesScriptOptionsProvider>()
@@ -147,6 +147,7 @@ internal partial class Composition
                 .Bind().To(_ => MemoryPool<TT>.Shared)
                 .Bind().To<FilePathResolver>()
                 .Bind().To<StartInfoFactory>()
+                .Bind(LoadFileCodeTag).To<LoadFileCodeSource>()
             
             .DefaultLifetime(PerBlock)
                 .Bind().To<StartInfoDescription>()
@@ -199,7 +200,6 @@ internal partial class Composition
                 .Bind().To<Settings>()
                 .Bind().To<Info>()
                 .Bind().To<ConsoleSource>()
-                .Bind(LoadFileCodeTag).To<LoadFileCodeSource>()
                 .Bind().To<Statistics>()
                 .Bind().To<TargetFrameworkMonikerParser>()
                 .Bind().To<DockerSettings>()

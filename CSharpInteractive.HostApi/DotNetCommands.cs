@@ -4677,7 +4677,7 @@ public partial record DotNetSdkCheck(
 /// 
 /// var lines = new List&lt;string&gt;();
 /// new DotNetSlnList()
-///     .WithSolution("NySolution.sln")
+///     .WithSolution("MySolution.sln")
 ///     .Run(output =&gt; lines.Add(output.Line))
 ///     .EnsureSuccess();
 ///</code>
@@ -4747,12 +4747,12 @@ public partial record DotNetSlnList(
 /// 
 /// new DotNetNew()
 ///     .WithTemplateName("sln")
-///     .WithName("NySolution")
+///     .WithName("MySolution")
 ///     .WithForce(true)
 ///     .Run().EnsureSuccess();
 /// 
 /// new DotNetSlnAdd()
-///     .WithSolution("NySolution.sln")
+///     .WithSolution("MySolution.sln")
 ///     .AddProjects(
 ///         Path.Combine("MyLib", "MyLib.csproj"),
 ///         Path.Combine("MyTests", "MyTests.csproj"))
@@ -4832,7 +4832,7 @@ public partial record DotNetSlnAdd(
 /// using HostApi;
 /// 
 /// new DotNetSlnRemove()
-///     .WithSolution("NySolution.sln")
+///     .WithSolution("MySolution.sln")
 ///     .AddProjects(
 ///         Path.Combine("MyLib", "MyLib.csproj"))
 ///     .Run().EnsureSuccess();

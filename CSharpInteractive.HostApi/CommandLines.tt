@@ -87,7 +87,10 @@ namespace HostApi;
 
         // Docker
         "DockerCustom",
-        "DockerRun"
+        "DockerRun",
+
+        // Unity
+        "UnityPlayer"
     };
 #>
 <#

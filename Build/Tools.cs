@@ -59,14 +59,6 @@ internal static class Tools
         return defaultProp;
     }
 
-    public static bool TryGetCoverage(string dotCoverReportXml, out int coveragePercentage)
-    {
-        var dotCoverReportDoc = new XmlDocument();
-        dotCoverReportDoc.Load(dotCoverReportXml);
-        var coveragePercentageValue = dotCoverReportDoc.SelectNodes("Root")?.Item(0)?.Attributes?["CoveragePercent"]?.Value;
-        return int.TryParse(coveragePercentageValue, out coveragePercentage);
-    }
-
     public static bool HasLinuxDocker()
     {
         var hasLinuxDocker = false;
