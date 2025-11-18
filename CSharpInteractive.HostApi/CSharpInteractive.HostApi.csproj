@@ -8,6 +8,8 @@
         <RootNamespace>HostApi</RootNamespace>
         <ImmutypeAPI>True</ImmutypeAPI>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Title>Build automation library abstractions for .NET</Title>
+        <Description>$(Title)</Description>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,29 +18,12 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1"/>
+        <PackageReference Include="NuGet.Versioning" Version="6.14.0"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
         <InternalsVisibleTo Include="dotnet-csi"/>
         <InternalsVisibleTo Include="CSharpInteractive"/>
         <InternalsVisibleTo Include="CSharpInteractive.Tests"/>
     </ItemGroup>
-
-    <Choose>
-        <When Condition="'$(TargetFramework)'=='net8.0'">
-            <ItemGroup>
-                <PackageReference Include="NuGet.Versioning" Version="6.11.1"/>
-            </ItemGroup>
-        </When>
-        <When Condition="'$(TargetFramework)'=='net9.0'">
-            <ItemGroup>
-                <PackageReference Include="NuGet.Versioning" Version="6.12.1"/>
-            </ItemGroup>
-        </When>
-        <Otherwise>
-            <ItemGroup>
-                <PackageReference Include="NuGet.Versioning" Version="6.12.1"/>
-            </ItemGroup>
-        </Otherwise>
-    </Choose>
 
     <ItemGroup>
         <None Update="CommandLines.tt">

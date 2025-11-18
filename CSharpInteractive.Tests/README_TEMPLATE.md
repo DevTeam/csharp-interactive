@@ -489,6 +489,7 @@ new DotNetNew()
     .WithTemplateName("sln")
     .WithName("MySolution")
     .WithForce(true)
+    .AddArgs("--format", "sln")
     .Run().EnsureSuccess();
 
 new DotNetSlnAdd()

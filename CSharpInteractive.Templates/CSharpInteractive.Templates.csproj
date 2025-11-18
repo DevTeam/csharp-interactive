@@ -11,8 +11,8 @@
         <EnableDefaultItems>False</EnableDefaultItems>
         <NoPackageAnalysis>true</NoPackageAnalysis>
         <PackageId>CSharpInteractive.Templates</PackageId>
-        <Title>C# script Templates</Title>
-        <Description>$(Company) $(Title) $(Version) $(TargetFramework)</Description>
+        <Title>Build automation project templates for .NET</Title>
+        <Description>$(Title)</Description>
         <PackageType>Template</PackageType>
         <PackageReadmeFile>content/ConsoleApplication-CSharp/README.md</PackageReadmeFile>
         <SuppressDependenciesWhenPacking>True</SuppressDependenciesWhenPacking>

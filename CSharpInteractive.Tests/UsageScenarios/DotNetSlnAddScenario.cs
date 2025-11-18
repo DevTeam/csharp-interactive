@@ -38,8 +38,6 @@ public class DotNetSlnAddScenario(ITestOutputHelper output) : BaseScenario(outpu
             .AddArgs("--format", "sln")
             .Run().EnsureSuccess();
 
-        new CommandLine("dir").Run();
-
         new DotNetSlnAdd()
             .WithSolution("MySolution.sln")
             .AddProjects(

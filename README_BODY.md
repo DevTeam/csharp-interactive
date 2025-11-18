@@ -50,7 +50,7 @@ Seamless integration into existing solutions as a standard .NET console project.
   cd MyConsoleApp
   ```  
 
-2. Install Essential Package  
+2. Add a reference to the _Build automation library for .NET_  
   Add the [CSharpInteractive](https://www.nuget.org/packages/CSharpInteractive) NuGet package for scripting capabilities:
   ```bash
   dotnet add package CSharpInteractive
@@ -158,11 +158,11 @@ Simply enter C# commands sequentially one line after another and get the result 
 
 ## NuGet packages
 
-| Package name                | Link                                                                                                                                 | Description                                        | Installation                                   |
-|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------|------------------------------------------------|
-| dotnet-csi                  | [![NuGet](https://img.shields.io/nuget/v/dotnet-csi)](https://www.nuget.org/packages/dotnet-csi)                                     | Interactive .NET tool for REPL and running scripts | dotnet tool install --global dotnet-csi        |
-| CSharpInteractive.Templates | [![NuGet](https://img.shields.io/nuget/v/CSharpInteractive.Templates )](https://www.nuget.org/packages/CSharpInteractive.Templates ) | .NET build project template                        | dotnet new install CSharpInteractive.Templates |
-| CSharpInteractive           | [![NuGet](https://img.shields.io/nuget/v/CSharpInteractive)](https://www.nuget.org/packages/CSharpInteractive)                       | A library for use in .NET build projects           | dotnet add package CSharpInteractive           |
+| Package name                | Link                                                                                                                                 | Description                                         | Installation                                   |
+|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------|------------------------------------------------|
+| dotnet-csi                  | [![NuGet](https://img.shields.io/nuget/v/dotnet-csi)](https://www.nuget.org/packages/dotnet-csi)                                     | C# script runner and REPL tool for build automation | dotnet tool install --global dotnet-csi        |
+| CSharpInteractive           | [![NuGet](https://img.shields.io/nuget/v/CSharpInteractive)](https://www.nuget.org/packages/CSharpInteractive)                       | Build automation library for .NET                   | dotnet add package CSharpInteractive           |
+| CSharpInteractive.Templates | [![NuGet](https://img.shields.io/nuget/v/CSharpInteractive.Templates )](https://www.nuget.org/packages/CSharpInteractive.Templates ) | Build automation project templates for .NET         | dotnet new install CSharpInteractive.Templates |
 
 ## Usage examples
 
