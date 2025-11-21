@@ -307,100 +307,96 @@ public static class Components
     // ReSharper disable once UnusedMethodReturnValue.Global
     public static T GetService<T>() => CurHost.GetService<T>();
 
-    /// <summary>
-    /// Runs a command line.
-    /// <example>
-    /// <code>
-    /// new CommandLine("whoami").Run();
-    /// </code>
-    /// </example>
-    /// </summary>
     /// <param name="commandLine">Command line to run.</param>
-    /// <param name="handler">Event handler for running command line events, optional.</param>
-    /// <param name="timeout">Time to wait for command line running to complete, optional. By default, waits for the end of running without limit. If the value is exceeded, the command line process and its children will be cancelled.</param>
-    /// <returns>The result of a command line running.</returns>
-    /// <seealso cref="RunAsync"/>
-    /// <seealso cref="Output"/>
-    public static ICommandLineResult Run(
-        this ICommandLine commandLine,
-        Action<Output>? handler = null,
-        TimeSpan timeout = default)
+    extension (ICommandLine commandLine)
     {
-        ArgumentNullException.ThrowIfNull(commandLine);
-        return Root.CommandLineRunner.Value.Run(commandLine, handler, timeout);
-    }
+        /// <summary>
+        /// Runs a command line.
+        /// <example>
+        /// <code>
+        /// new CommandLine("whoami").Run();
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="handler">Event handler for running command line events, optional.</param>
+        /// <param name="timeout">Time to wait for command line running to complete, optional. By default, waits for the end of running without limit. If the value is exceeded, the command line process and its children will be cancelled.</param>
+        /// <returns>The result of a command line running.</returns>
+        /// <seealso cref="RunAsync"/>
+        /// <seealso cref="Output"/>
+        public ICommandLineResult Run(
+            Action<Output>? handler = null,
+            TimeSpan timeout = default)
+        {
+            ArgumentNullException.ThrowIfNull(commandLine);
+            return Root.CommandLineRunner.Value.Run(commandLine, handler, timeout);
+        }
 
-    /// <summary>
-    /// Runs a command line in asynchronous way.
-    /// <example>
-    /// <code>
-    /// await new CommandLine("whoami").RunAsync();
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="commandLine">Command line to run.</param>
-    /// <param name="handler">Event handler for running command line events, optional.</param>
-    /// <param name="cancellationToken">Propagates notification that a running should be canceled, optional.</param>
-    /// <returns>The result of an asynchronous command line running.</returns>
-    /// <seealso cref="Run"/>
-    /// <seealso cref="Task{T}"/>
-    /// <seealso cref="Output"/>
-    /// <seealso cref="CancellationToken"/>
-    public static Task<ICommandLineResult> RunAsync(
-        this ICommandLine commandLine,
-        Action<Output>? handler = null,
-        CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(commandLine);
-        return Root.CommandLineRunner.Value.RunAsync(commandLine, handler, cancellationToken);
-    }
+        /// <summary>
+        /// Runs a command line in asynchronous way.
+        /// <example>
+        /// <code>
+        /// await new CommandLine("whoami").RunAsync();
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="handler">Event handler for running command line events, optional.</param>
+        /// <param name="cancellationToken">Propagates notification that a running should be canceled, optional.</param>
+        /// <returns>The result of an asynchronous command line running.</returns>
+        /// <seealso cref="Run"/>
+        /// <seealso cref="Task{T}"/>
+        /// <seealso cref="Output"/>
+        /// <seealso cref="CancellationToken"/>
+        public Task<ICommandLineResult> RunAsync(
+            Action<Output>? handler = null,
+            CancellationToken cancellationToken = default)
+        {
+            ArgumentNullException.ThrowIfNull(commandLine);
+            return Root.CommandLineRunner.Value.RunAsync(commandLine, handler, cancellationToken);
+        }
 
-    /// <summary>
-    /// Runs a build.
-    /// <example>
-    /// <code>
-    /// new DotNetBuild().Build();
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="commandLine">Command line to build.</param>
-    /// <param name="handler">Event handler for build events, optional.</param>
-    /// <param name="timeout">Time to wait for build running to complete, optional. By default, waits for the end of build running without limit. If the value is exceeded, the command line process and its children will be cancelled.</param>
-    /// <returns>Result of building with the command line.</returns>
-    /// <seealso cref="BuildAsync"/>
-    /// <seealso cref="BuildMessage"/>
-    public static IBuildResult Build(
-        this ICommandLine commandLine,
-        Action<BuildMessage>? handler = null,
-        TimeSpan timeout = default)
-    {
-        ArgumentNullException.ThrowIfNull(commandLine);
-        return Root.BuildRunner.Value.Build(commandLine, handler, timeout);
-    }
+        /// <summary>
+        /// Runs a build.
+        /// <example>
+        /// <code>
+        /// new DotNetBuild().Build();
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="handler">Event handler for build events, optional.</param>
+        /// <param name="timeout">Time to wait for build running to complete, optional. By default, waits for the end of build running without limit. If the value is exceeded, the command line process and its children will be cancelled.</param>
+        /// <returns>Result of building with the command line.</returns>
+        /// <seealso cref="BuildAsync"/>
+        /// <seealso cref="BuildMessage"/>
+        public IBuildResult Build(
+            Action<BuildMessage>? handler = null,
+            TimeSpan timeout = default)
+        {
+            ArgumentNullException.ThrowIfNull(commandLine);
+            return Root.BuildRunner.Value.Build(commandLine, handler, timeout);
+        }
 
-    /// <summary>
-    /// Runs a build in asynchronous way.
-    /// <example>
-    /// <code>
-    /// await new DotNetBuild().BuildAsync();
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="commandLine">Command line to build.</param>
-    /// <param name="handler">Event handler for build events.</param>
-    /// <param name="cancellationToken">Propagates notification that a running of a build should be canceled, optional.</param>
-    /// <returns>Asynchronous build result using the command line.</returns>
-    /// <seealso cref="Build"/>
-    /// <seealso cref="Task{T}"/>
-    /// <seealso cref="BuildMessage"/>
-    /// <seealso cref="CancellationToken"/>
-    public static Task<IBuildResult> BuildAsync(
-        this ICommandLine commandLine,
-        Action<BuildMessage>? handler = null,
-        CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(commandLine);
-        return Root.BuildRunner.Value.BuildAsync(commandLine, handler, cancellationToken);
+        /// <summary>
+        /// Runs a build in asynchronous way.
+        /// <example>
+        /// <code>
+        /// await new DotNetBuild().BuildAsync();
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="handler">Event handler for build events.</param>
+        /// <param name="cancellationToken">Propagates notification that a running of a build should be canceled, optional.</param>
+        /// <returns>Asynchronous build result using the command line.</returns>
+        /// <seealso cref="Build"/>
+        /// <seealso cref="Task{T}"/>
+        /// <seealso cref="BuildMessage"/>
+        /// <seealso cref="CancellationToken"/>
+        public Task<IBuildResult> BuildAsync(
+            Action<BuildMessage>? handler = null,
+            CancellationToken cancellationToken = default)
+        {
+            ArgumentNullException.ThrowIfNull(commandLine);
+            return Root.BuildRunner.Value.BuildAsync(commandLine, handler, cancellationToken);
+        }
     }
 
     /// <summary>
@@ -552,87 +548,88 @@ public static class Components
         return EnsureSuccess(await result, isSuccess, failureExitCode);
     }
 
-    /// <summary>
-    /// Tries to get a property by its key.
-    /// <example>
-    /// <code>
-    /// if (Props.TryGet("configuration", out configuration))
-    /// {
-    ///     // do something
-    /// }
-    /// </code>
-    /// </example>
-    /// </summary>
     /// <param name="properties">A set of properties of type <see cref="IProperties"/>.</param>
-    /// <param name="key">Property key.</param>
-    /// <param name="value">The resulting property converted to type <typeparamref name="T"/>.</param>
-    /// <typeparam name="T">Property type.</typeparam>
-    /// <returns><c>True</c> if the property is obtained successfully, otherwise <c>False</c>.</returns>
-    /// <seealso cref="IProperties"/>
-    /// <seealso cref="IProperties.TryGetValue"/>
-    /// <seealso cref="IProperties.get_Item"/>
-    public static bool TryGet<T>(
-        this IProperties properties,
-        string key,
-        [MaybeNullWhen(false)] out T value)
+    extension (IProperties properties)
     {
-        ArgumentNullException.ThrowIfNull(properties);
-        ArgumentNullException.ThrowIfNull(key);
-        if (properties.TryGetValue(key, out var valStr))
+        /// <summary>
+        /// Tries to get a property by its key.
+        /// <example>
+        /// <code>
+        /// if (Props.TryGet("configuration", out configuration))
+        /// {
+        ///     // do something
+        /// }
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="key">Property key.</param>
+        /// <param name="value">The resulting property converted to type <typeparamref name="T"/>.</param>
+        /// <typeparam name="T">Property type.</typeparam>
+        /// <returns><c>True</c> if the property is obtained successfully, otherwise <c>False</c>.</returns>
+        /// <seealso cref="IProperties"/>
+        /// <seealso cref="IProperties.TryGetValue"/>
+        /// <seealso cref="IProperties.get_Item"/>
+        public bool TryGet<T>(
+            string key,
+            // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Global
+            [MaybeNullWhen(false)] out T value)
         {
-            if (typeof(T) == typeof(string))
+            ArgumentNullException.ThrowIfNull(properties);
+            ArgumentNullException.ThrowIfNull(key);
+            if (properties.TryGetValue(key, out var valStr))
             {
-                value = (T)(object)valStr;
-                return true;
-            }
-
-            var converter = TypeDescriptor.GetConverter(typeof(T));
-            if (converter.CanConvertFrom(typeof(string)))
-            {
-                var nullableValue = converter.ConvertFrom(valStr);
-                if (!Equals(nullableValue, null))
+                if (typeof(T) == typeof(string))
                 {
-                    try
+                    value = (T)(object)valStr;
+                    return true;
+                }
+
+                var converter = TypeDescriptor.GetConverter(typeof(T));
+                if (converter.CanConvertFrom(typeof(string)))
+                {
+                    var nullableValue = converter.ConvertFrom(valStr);
+                    if (!Equals(nullableValue, null))
                     {
-                        value = (T)nullableValue;
-                        return true;
+                        try
+                        {
+                            value = (T)nullableValue;
+                            return true;
+                        }
+                        catch (InvalidCastException)
+                        { }
                     }
-                    catch (InvalidCastException)
-                    { }
                 }
             }
+
+            value = default;
+            return false;
         }
 
-        value = default;
-        return false;
-    }
-
-    /// <summary>
-    /// Gets a property by its key if it is defined and convertible to type <typeparamref name="T"/>, or returns a default value.
-    /// <example>
-    /// <code>
-    /// var configuration = Props.Get("configuration", "Release");
-    /// </code>
-    /// </example>
-    /// </summary>
-    /// <param name="properties">A set of properties of type <see cref="IProperties"/></param>
-    /// <param name="key">Property key.</param>
-    /// <param name="defaultValue">Default value.</param>
-    /// <typeparam name="T">Property type.</typeparam>
-    /// <returns>The resulting property converted to type <typeparamref name="T"/>.</returns>
-    /// <seealso cref="IProperties"/>
-    /// <seealso cref="IProperties.TryGetValue"/>
-    /// <seealso cref="IProperties.get_Item"/>
-    public static T Get<T>(
-        this IProperties properties,
-        string key,
-        T defaultValue)
-    {
-        ArgumentNullException.ThrowIfNull(properties);
-        ArgumentNullException.ThrowIfNull(key);
-        return properties.TryGet<T>(key, out var value)
-            ? value
-            : defaultValue;
+        /// <summary>
+        /// Gets a property by its key if it is defined and convertible to type <typeparamref name="T"/>, or returns a default value.
+        /// <example>
+        /// <code>
+        /// var configuration = Props.Get("configuration", "Release");
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="key">Property key.</param>
+        /// <param name="defaultValue">Default value.</param>
+        /// <typeparam name="T">Property type.</typeparam>
+        /// <returns>The resulting property converted to type <typeparamref name="T"/>.</returns>
+        /// <seealso cref="IProperties"/>
+        /// <seealso cref="IProperties.TryGetValue"/>
+        /// <seealso cref="IProperties.get_Item"/>
+        public T Get<T>(
+            string key,
+            T defaultValue)
+        {
+            ArgumentNullException.ThrowIfNull(properties);
+            ArgumentNullException.ThrowIfNull(key);
+            return properties.TryGet<T>(key, out var value)
+                ? value
+                : defaultValue;
+        }
     }
 
     private static T EnsureSuccess<T, TResult>(

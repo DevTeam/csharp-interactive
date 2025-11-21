@@ -39,40 +39,46 @@ internal static class TestTool
         Run(DotNetScript.Create(lines).WithVars(DefaultVars));
 
     public static IProcessResult RunUnderTeamCity(params string[] lines) =>
-        Run(CreateScriptCommandLine(Array.Empty<string>(), Array.Empty<string>(), TeamCityVars, lines));
+        Run(CreateScriptCommandLine([], [], TeamCityVars, lines));
 
-    public static void ShouldContainNormalTextMessage(this IEnumerable<IServiceMessage> messages, Predicate<string> textMatcher) =>
-        messages.Count(i =>
-                i.Name == "message"
-                && i.GetValue("status") == "NORMAL"
-                && textMatcher(i.GetValue("text")))
-            .ShouldBe(1);
-
-    public static void ShouldContainWarningTextMessage(this IEnumerable<IServiceMessage> messages, Predicate<string> textMatcher) =>
-        messages.Count(i =>
-                i.Name == "message"
-                && i.GetValue("status") == "WARNING"
-                && textMatcher(i.GetValue("text")))
-            .ShouldBe(1);
-
-    public static void ShouldContainBuildProblem(this IEnumerable<IServiceMessage> messages, Predicate<string> errorMatcher, Predicate<string> errorIdMatcher) =>
-        messages.Count(i =>
-                i.Name == "buildProblem"
-                && errorIdMatcher(i.GetValue("identity"))
-                && errorMatcher(i.GetValue("description")))
-            .ShouldBe(1);
-
-    public static IReadOnlyCollection<IServiceMessage> ParseMessages(this IEnumerable<string> lines) =>
-        lines.ParseMessagesInternal().ToList().AsReadOnly();
-
-    private static IEnumerable<IServiceMessage> ParseMessagesInternal(this IEnumerable<string> lines)
+    extension (IEnumerable<IServiceMessage> messages)
     {
-        var parser = Composition.Shared.Root.ServiceMessageParser;
-        foreach (var line in lines)
+        public void ShouldContainNormalTextMessage(Predicate<string> textMatcher) =>
+            messages.Count(i =>
+                    i.Name == "message"
+                    && i.GetValue("status") == "NORMAL"
+                    && textMatcher(i.GetValue("text")))
+                .ShouldBe(1);
+
+        public void ShouldContainWarningTextMessage(Predicate<string> textMatcher) =>
+            messages.Count(i =>
+                    i.Name == "message"
+                    && i.GetValue("status") == "WARNING"
+                    && textMatcher(i.GetValue("text")))
+                .ShouldBe(1);
+
+        public void ShouldContainBuildProblem(Predicate<string> errorMatcher, Predicate<string> errorIdMatcher) =>
+            messages.Count(i =>
+                    i.Name == "buildProblem"
+                    && errorIdMatcher(i.GetValue("identity"))
+                    && errorMatcher(i.GetValue("description")))
+                .ShouldBe(1);
+    }
+
+    extension (IEnumerable<string> lines)
+    {
+        public IReadOnlyCollection<IServiceMessage> ParseMessages() =>
+            lines.ParseMessagesInternal().ToList().AsReadOnly();
+
+        private IEnumerable<IServiceMessage> ParseMessagesInternal()
         {
-            foreach (var message in parser.Value.ParseServiceMessages(line))
+            var parser = Composition.Shared.Root.ServiceMessageParser;
+            foreach (var line in lines)
             {
-                yield return message;
+                foreach (var message in parser.Value.ParseServiceMessages(line))
+                {
+                    yield return message;
+                }
             }
         }
     }

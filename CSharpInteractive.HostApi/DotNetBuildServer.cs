@@ -25,6 +25,7 @@ public enum DotNetBuildServer
     Razor
 }
 
+// ReSharper disable once UnusedType.Global
 internal static class DotNetBuildServerExtensions
 {
     [SuppressMessage("ReSharper", "UnusedParameter.Global")]

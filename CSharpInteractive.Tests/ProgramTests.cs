@@ -30,7 +30,7 @@ public class ProgramTests
         _active = new Mock<IActive>();
         _active.Setup(i => i.Activate()).Returns(_activationToken.Object);
         _statistics = new Mock<IStatistics>();
-        _statistics.SetupGet(i => i.Items).Returns(Array.Empty<StatisticsItem>());
+        _statistics.SetupGet(i => i.Items).Returns([]);
     }
 
     [Fact]

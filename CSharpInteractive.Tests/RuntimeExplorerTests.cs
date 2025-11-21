@@ -26,7 +26,7 @@ public class RuntimeExplorerTests
     {
         // Given
         var explorer = CreateInstance();
-        _fileSystem.Setup(i => i.EnumerateFileSystemEntries("Runtime", "Abc.dll", SearchOption.TopDirectoryOnly)).Returns(Array.Empty<string>());
+        _fileSystem.Setup(i => i.EnumerateFileSystemEntries("Runtime", "Abc.dll", SearchOption.TopDirectoryOnly)).Returns([]);
 
         // When
         explorer.TryFindRuntimeAssembly(Path.Combine("Bin", "Abc.dll"), out _).ShouldBeFalse();

@@ -14,7 +14,7 @@ internal class HelpCommandFactory(ILog<HelpCommandFactory> log) : ICommandFactor
 
     public IEnumerable<ICommand> Create(string replCommand)
     {
-        if (!Regex.Match(replCommand).Success)
+        if (!Regex.IsMatch(replCommand))
         {
             yield break;
         }

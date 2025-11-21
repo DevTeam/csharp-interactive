@@ -5,7 +5,6 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System.Diagnostics.CodeAnalysis;
-using NuGet.Versioning;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "True")]

@@ -357,7 +357,7 @@ using Internal;
                 includeGeneratedArg,
                 verbosityArg,
                 binaryLogArg,
-                reportArg,
+                reportArg
             ]
         ),
         new(
@@ -382,7 +382,7 @@ using Internal;
                 includeGeneratedArg,
                 verbosityArg,
                 binaryLogArg,
-                reportArg,
+                reportArg
             ]
         ),
         new(
@@ -406,7 +406,7 @@ using Internal;
                 includeGeneratedArg,
                 verbosityArg,
                 binaryLogArg,
-                reportArg,
+                reportArg
             ]
         ),
         new(
@@ -1616,16 +1616,15 @@ using Internal;
         )
     };
 
-    foreach (var command in commands)
+    foreach (var (name, description, comments, strings, args, commandTypes, additionalArgs) in commands)
     {
-        var name = command.Name;
         var commandArgs = new List<string>();
-        foreach (var arg in command.CommandArgs)
+        foreach (var arg in strings)
         {
             if (arg.StartsWith("$"))
             {
                 var curArg = arg.Substring(1);
-                var notEmpty = command.Args.FirstOrDefault(i => i.PropertyName == curArg && i.IsCollection);
+                var notEmpty = args.FirstOrDefault(i => i.PropertyName == curArg && i.IsCollection);
                 if (notEmpty is not null && !string.IsNullOrWhiteSpace(notEmpty.PropertyName))
                 {
                     var compositeArg = $"new [] {{{string.Join(", ", commandArgs)}}}.Concat({curArg}).ToArray()";
@@ -1645,16 +1644,16 @@ using Internal;
 #>
 
 /// <summary>
-/// <#= command.Description #>
+/// <#= description #>
 <#
-        foreach (var comment in command.Comments)
+        foreach (var comment in comments)
         {
 #>
 /// <#= comment #>
 <#
         }
 
-        var exampleFile = Path.Combine("..", "CSharpInteractive.Tests", "UsageScenarios", "Comments", $"{command.Name}Scenario.txt");
+        var exampleFile = Path.Combine("..", "CSharpInteractive.Tests", "UsageScenarios", "Comments", $"{name}Scenario.txt");
         if (File.Exists(exampleFile))
         {
             var exampleLines = File.ReadAllLines(exampleFile);
@@ -1685,7 +1684,7 @@ using Internal;
 /// <param name="Args">Specifies the set of command line arguments to use when starting the tool.</param>
 /// <param name="Vars">Specifies the set of environment variables that apply to this process and its child processes.</param>
 <#
-        foreach (var arg in command.Args.Where(i => i.IsCollection))
+        foreach (var arg in args.Where(i => i.IsCollection))
         {
 #>
 /// <param name="<#= arg.PropertyName #>"><#= arg.Comments #></param>
@@ -1695,7 +1694,7 @@ using Internal;
 /// <param name="ExecutablePath">Overrides the tool executable path.</param>
 /// <param name="WorkingDirectory">Specifies the working directory for the tool to be started.</param>
 <#
-        foreach (var arg in command.Args.Where(i => !i.IsCollection))
+        foreach (var arg in args.Where(i => !i.IsCollection))
         {
 #>
 /// <param name="<#= arg.PropertyName #>"><#= arg.Comments #></param>
@@ -1704,13 +1703,13 @@ using Internal;
 #>
 /// <param name="ShortName">Specifies a short name for this operation.</param>
 [Target]
-public partial record <#= command.Name #>(
+public partial record <#= name #>(
     IEnumerable<string> Args,
     IEnumerable<(string name, string value)> Vars,
 <#
-        var initializer = string.Join(", ", new[] {"args", "[]"}.Concat(Enumerable.Repeat("[]", command.Args.Count(i => i.IsCollection))));
-        var fullInitializer = string.Join(", ", new[] {"[]", "[]"}.Concat(Enumerable.Repeat("[]", command.Args.Count(i => i.IsCollection))));
-        foreach (var arg in command.Args)
+        var initializer = string.Join(", ", new[] {"args", "[]"}.Concat(Enumerable.Repeat("[]", args.Count(i => i.IsCollection))));
+        var fullInitializer = string.Join(", ", new[] {"[]", "[]"}.Concat(Enumerable.Repeat("[]", args.Count(i => i.IsCollection))));
+        foreach (var arg in args)
         {
             var type = arg.Type;
             var defaultValue = "";
@@ -1728,7 +1727,7 @@ public partial record <#= command.Name #>(
                 {
                     if (!arg.IsCollection)
                     {
-                        defaultValue = " = default";
+                        defaultValue = " = null";
                     }
                 }
             }
@@ -1763,7 +1762,7 @@ public partial record <#= command.Name #>(
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
 <#
-        if ((command.CommandTypes & CommandTypes.RequiresSettings) == CommandTypes.RequiresSettings)
+        if ((commandTypes & CommandTypes.RequiresSettings) == CommandTypes.RequiresSettings)
         {
 #>
         var components = host.GetService<HostComponents>();
@@ -1777,12 +1776,12 @@ public partial record <#= command.Name #>(
             .WithWorkingDirectory(WorkingDirectory)
             .WithVars(Vars.ToArray())
 <#
-        foreach (var arg in command.CommandArgs)
+        foreach (var arg in strings)
         {
             if (arg.StartsWith("$"))
             {
                 var notEmptyArg = arg.Substring(1);
-                var notEmpty = command.Args.FirstOrDefault(i => i.PropertyName == notEmptyArg && i.IsCollection);
+                var notEmpty = args.FirstOrDefault(i => i.PropertyName == notEmptyArg && i.IsCollection);
                 if (notEmpty is not null && !string.IsNullOrWhiteSpace(notEmpty.PropertyName))
                 {
                     notEmptyArg = $"{notEmptyArg}.ToArray()";
@@ -1804,35 +1803,35 @@ public partial record <#= command.Name #>(
         }
 #>
 <#
-        if ((command.CommandTypes & CommandTypes.Build) == CommandTypes.Build)
+        if ((commandTypes & CommandTypes.Build) == CommandTypes.Build)
         {
 #>
             .AddMSBuildLoggers(host, Verbosity)
 <#
         }
 
-        if ((command.CommandTypes & CommandTypes.Test) == CommandTypes.Test)
+        if ((commandTypes & CommandTypes.Test) == CommandTypes.Test)
         {
 #>
             .AddTestLoggers(host, Loggers)
 <#
         }
 
-        foreach (var additionalArg in command.AdditionalArgs)
+        foreach (var additionalArg in additionalArgs)
         {
 #>
             .AddArgs("<#= additionalArg #>")
 <#
         }
 
-        foreach (var arg in command.Args.Where(i => !i.IsProject).Where(i => i.IsCollection && i.ArgName != "--property"))
+        foreach (var arg in args.Where(i => !i.IsProject).Where(i => i.IsCollection && i.ArgName != "--property"))
         {
 #>
             .AddArgs(<#= arg.PropertyName #>.ToArgs("<#= arg.ArgName #>", "<#= arg.Separator #>"))
 <#
         }
 
-        foreach (var arg in command.Args.Where(i => !i.IsProject).Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && !i.Type.StartsWith("bool") && !i.IsCollection))
+        foreach (var arg in args.Where(i => !i.IsProject).Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && !i.Type.StartsWith("bool") && !i.IsCollection))
         {
             if (string.IsNullOrWhiteSpace(arg.AddArgOverride))
             {
@@ -1848,7 +1847,7 @@ public partial record <#= command.Name #>(
             }
         }
         
-        var boolArgs = command.Args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.Type.StartsWith("bool")).ToArray();
+        var boolArgs = args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.Type.StartsWith("bool")).ToArray();
 #><#= boolArgs.Length > 0 ? "            .AddBooleanArgs(\n": ""#><#
         for (var i = 0; i < boolArgs.Length; i++)
         {
@@ -1858,7 +1857,7 @@ public partial record <#= command.Name #>(
 <#
         }
 #><#= boolArgs.Length > 0 ? "            )\n": ""#><#
-        foreach (var arg in command.Args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.IsCollection && i.ArgName == "--property").ToArray())
+        foreach (var arg in args.Where(i => !string.IsNullOrWhiteSpace(i.ArgName) && i.IsCollection && i.ArgName == "--property").ToArray())
         {
 #>
             .AddProps("--property", <#= arg.PropertyName #>.ToArray())
@@ -1869,7 +1868,7 @@ public partial record <#= command.Name #>(
     }
 
     /// <inheritdoc/>
-    public override string ToString() => (ExecutablePath == string.Empty ? "dotnet" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName("<#= command.Description #>", ShortName, <#= string.Join(", ", commandArgs) #>);
+    public override string ToString() => (ExecutablePath == string.Empty ? "dotnet" : Path.GetFileNameWithoutExtension(ExecutablePath)).GetShortName("<#= description #>", ShortName, <#= string.Join(", ", commandArgs) #>);
 }
 <#
     }

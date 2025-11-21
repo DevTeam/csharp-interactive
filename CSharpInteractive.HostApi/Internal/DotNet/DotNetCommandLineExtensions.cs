@@ -4,6 +4,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 
+// ReSharper disable ConvertToExtensionBlock
 namespace HostApi.Internal.DotNet;
 
 using System.Diagnostics.Contracts;
@@ -144,6 +145,7 @@ internal static class DotNetCommandLineExtensions
     // ReSharper disable once UnusedParameter.Global
     public static string[] ToArgs<T>(this T value, string name, string collectionSeparator)
     {
+        // ReSharper disable once HeapView.PossibleBoxingAllocation
         var valueStr = value?.ToString();
         if (string.IsNullOrWhiteSpace(valueStr))
         {
@@ -152,6 +154,7 @@ internal static class DotNetCommandLineExtensions
         
         if (!string.IsNullOrWhiteSpace(collectionSeparator))
         {
+            // ReSharper disable once HeapView.PossibleBoxingAllocation
             return [$"{name}{collectionSeparator}{value}"];
         }
         
@@ -160,6 +163,7 @@ internal static class DotNetCommandLineExtensions
     
     public static string[] ToArgs<T>(this IEnumerable<(string name, T value)> values, string name, string separator)
     {
+        // ReSharper disable once HeapView.PossibleBoxingAllocation
         return values.SelectMany(i => new [] { name, $"{i.name}{separator}{i.value}"}).ToArray();
     }
     
@@ -183,5 +187,6 @@ internal static class DotNetCommandLineExtensions
     public static string[] ToArgs(this TimeSpan? value, string name, string collectionSeparator) => 
         value.HasValue ? [name, value.Value.TotalMilliseconds.ToString(CultureInfo.InvariantCulture)] : [];
 
+    // ReSharper disable once HeapView.PossibleBoxingAllocation
     public static string ToArg<T>(this T value) => value?.ToString() ?? "";
 }

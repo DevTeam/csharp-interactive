@@ -6,7 +6,11 @@ using JetBrains.TeamCity.ServiceMessages.Write.Special;
 
 internal class FlowIdGenerator(ICISettings ciSettings) : IFlowIdGenerator, IFlowContext
 {
+#if NET9_0_OR_GREATER
+    private readonly Lock _lockObject = new();
+#else
     private readonly object _lockObject = new();
+#endif
     private string _nextFlowId = ciSettings.FlowId;
     [ThreadStatic] private static string? _currentFlowId;
 

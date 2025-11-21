@@ -2,6 +2,7 @@
 // ReSharper disable RedundantCast
 // ReSharper disable UnusedMember.Local
 // ReSharper disable RedundantUsingDirective
+// ReSharper disable UnusedParameterInPartialMethod
 namespace CSharpInteractive;
 
 using System.Buffers;
@@ -29,14 +30,13 @@ internal partial class Composition
     public static readonly Composition Shared = new();
 
 #if DEBUG
+    [SuppressMessage("Performance", "CA1822:Mark members as static")]
     private partial T OnDependencyInjection<T>(in T value, object? tag, Lifetime lifetime)
     {
-        if (Equals(value, null))
+        // ReSharper disable once HeapView.PossibleBoxingAllocation
+        if (Equals(value, null) && !System.Diagnostics.Debugger.IsAttached)
         {
-            if (!System.Diagnostics.Debugger.IsAttached)
-            {
-                System.Diagnostics.Debugger.Launch();
-            }
+            System.Diagnostics.Debugger.Launch();
         }
 
         return value;

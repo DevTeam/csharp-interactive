@@ -27,6 +27,7 @@ public enum DotNetNewListColumn
     Type 
 }
 
+// ReSharper disable once UnusedType.Global
 internal static class DotNetNewListColumnExtensions
 {
     // ReSharper disable once UnusedParameter.Global

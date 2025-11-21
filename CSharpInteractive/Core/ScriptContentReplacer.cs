@@ -4,7 +4,6 @@ namespace CSharpInteractive.Core;
 
 using NuGet.Packaging;
 using Pure.DI;
-using static Pure.DI.Tag;
 
 internal class ScriptContentReplacer(
     INuGetReferenceResolver nuGetReferenceResolver,

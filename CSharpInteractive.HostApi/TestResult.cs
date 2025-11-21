@@ -63,7 +63,7 @@ public readonly record struct TestResult(
             string.Empty,
             string.Empty,
             TimeSpan.Zero,
-            Array.Empty<Output>(),
+            [],
             string.Empty,
             string.Empty,
             Guid.Empty,

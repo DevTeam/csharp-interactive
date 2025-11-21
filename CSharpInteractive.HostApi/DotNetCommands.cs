@@ -3643,7 +3643,7 @@ public partial record DotNetNuGetWhy(
 ///<code>
 /// using HostApi;
 /// 
-/// string? repositoryPath = default;
+/// string? repositoryPath = null;
 /// new DotNetNuGetConfigGet()
 ///     .WithConfigKey("repositoryPath")
 ///     .Run(output =&gt; repositoryPath = output.Line).EnsureSuccess();
@@ -4749,6 +4749,7 @@ public partial record DotNetSlnList(
 ///     .WithTemplateName("sln")
 ///     .WithName("MySolution")
 ///     .WithForce(true)
+///     .AddArgs("--format", "sln")
 ///     .Run().EnsureSuccess();
 /// 
 /// new DotNetSlnAdd()
@@ -5110,9 +5111,7 @@ public partial record DotNetTest(
     public IStartInfo GetStartInfo(IHost host)
     {
         if (host == null) throw new ArgumentNullException(nameof(host));
-        var components = host.GetService<HostComponents>();
-        var virtualContext = components.VirtualContext;
-        var settings = components.DotNetSettings;
+        var (_, settings, _, virtualContext) = host.GetService<HostComponents>();
         return host.CreateCommandLine(ExecutablePath)
             .WithShortName(ToString())
             .WithWorkingDirectory(WorkingDirectory)

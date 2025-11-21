@@ -1,4 +1,5 @@
-﻿namespace HostApi;
+﻿// ReSharper disable UnusedMember.Global
+namespace HostApi;
 
 /// <summary>
 /// The type of dump.

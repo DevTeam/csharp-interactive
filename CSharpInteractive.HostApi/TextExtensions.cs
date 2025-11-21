@@ -1,4 +1,5 @@
-﻿namespace HostApi;
+﻿// ReSharper disable HeapView.PossibleBoxingAllocation
+namespace HostApi;
 
 /// <summary>
 /// Text extensions.

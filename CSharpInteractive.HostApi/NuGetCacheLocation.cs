@@ -26,8 +26,10 @@ public enum NuGetCacheLocation
     Temp
 }
 
+// ReSharper disable once UnusedType.Global
 internal static class NuGetCacheLocationExtensions
 {
+    // ReSharper disable once UnusedMember.Global
     public static string ToArg(this NuGetCacheLocation? cacheLocation) =>
         cacheLocation switch
         {

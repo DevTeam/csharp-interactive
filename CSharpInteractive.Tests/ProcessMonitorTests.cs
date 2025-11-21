@@ -33,8 +33,8 @@ public class ProcessMonitorTests
         monitor.Started(_startInfo.Object, 99);
 
         // Then
-        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new[] {Description, new Text(" started "), new("\"Cm d\""), Text.Space, new("Arg1"), Text.Space, new("\"Arg 2\"")}))));
-        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new Text[] {new("in directory: "), new("\"W d\"")}))));
+        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.AsEnumerable().SequenceEqual(new[] {Description, new Text(" started "), new("\"Cm d\""), Text.Space, new("Arg1"), Text.Space, new("\"Arg 2\"")}))));
+        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.AsEnumerable().SequenceEqual(new Text[] {new("in directory: "), new("\"W d\"")}))));
         _log.Verify(i => i.Trace(It.IsAny<Func<Text[]>>(), It.IsAny<string>()), Times.Never);
         _log.Verify(i => i.Warning(It.IsAny<Text[]>()), Times.Never);
         _log.Verify(i => i.Error(It.IsAny<ErrorId>(), It.IsAny<Text[]>()), Times.Never);
@@ -53,8 +53,8 @@ public class ProcessMonitorTests
         monitor.Started(_startInfo.Object, 99);
 
         // Then
-        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new[] {Description, new Text(" started "), new("\"Cm d\""), Text.Space, new("Arg1"), Text.Space, new("\"Arg 2\"")}))));
-        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.SequenceEqual(new Text[] {new("in directory: "), new("\"Cur Wd\"")}))));
+        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.AsEnumerable().SequenceEqual(new[] {Description, new Text(" started "), new("\"Cm d\""), Text.Space, new("Arg1"), Text.Space, new("\"Arg 2\"")}))));
+        _log.Verify(i => i.Info(It.Is<Text[]>(text => text.AsEnumerable().SequenceEqual(new Text[] {new("in directory: "), new("\"Cur Wd\"")}))));
         _log.Verify(i => i.Trace(It.IsAny<Func<Text[]>>(), It.IsAny<string>()), Times.Never);
         _log.Verify(i => i.Warning(It.IsAny<Text[]>()), Times.Never);
         _log.Verify(i => i.Error(It.IsAny<ErrorId>(), It.IsAny<Text[]>()), Times.Never);

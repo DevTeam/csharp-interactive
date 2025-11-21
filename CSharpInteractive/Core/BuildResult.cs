@@ -13,12 +13,15 @@ internal record BuildResult(
     IReadOnlyList<BuildMessage> Warnings,
     IReadOnlyList<TestResult> Tests) : IBuildResult, ISuccessDeterminant
 {
+#if NET9_0_OR_GREATER
+    private readonly Lock _lockObject = new();
+#else
     private readonly object _lockObject = new();
-    private BuildStatistics? _buildStatistics;
+#endif
 
     // ReSharper disable once UnusedMember.Global
     public BuildResult(ICommandLineResult commandLineResult)
-        : this(commandLineResult, Array.Empty<BuildMessage>(), Array.Empty<BuildMessage>(), Array.Empty<TestResult>())
+        : this(commandLineResult, [], [], [])
     { }
 
     public IStartInfo StartInfo => CommandLineResult.StartInfo;
@@ -37,7 +40,7 @@ internal record BuildResult(
         {
             lock (_lockObject)
             {
-                return _buildStatistics ??= CalculateSummary();
+                return field ??= CalculateSummary();
             }
         }
     }

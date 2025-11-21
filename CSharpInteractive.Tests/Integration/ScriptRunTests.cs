@@ -84,7 +84,7 @@ public class ScriptRunTests
 
         // When
         var result = TestTool.Run(
-            Array.Empty<string>(),
+            [],
             ["Abc", "Xyz"],
             TestTool.DefaultVars,
             """WriteLine($"Args: {Args.Count}, {Args[0]}, {Args[1]}");"""
@@ -111,7 +111,7 @@ public class ScriptRunTests
                 "-p", "val3=ASD",
                 "/p", "4=_"
             ],
-            Array.Empty<string>(),
+            [],
             [("TEAMCITY_VERSION", teamcityVersionEnvVar)],
             """WriteLine(Props["Val1"] + Props["val2"] + Props["val3"] + Props["4"] + Props.Count);"""
         );
@@ -129,8 +129,8 @@ public class ScriptRunTests
 
         // When
         var result = TestTool.Run(
-            Array.Empty<string>(),
-            Array.Empty<string>(),
+            [],
+            [],
             [("TEAMCITY_VERSION", "2021")],
             """Props["Val1"]="Xyz";"""
         );
@@ -330,7 +330,7 @@ public class ScriptRunTests
         // When
         var result = TestTool.Run(
             ["-s", Path.Combine(Directory.GetCurrentDirectory(), "Integration", "Resources")],
-            Array.Empty<string>(),
+            [],
             [("TEAMCITY_VERSION", teamcityVersionEnvVar)],
             """
             #r "nuget: csinetstandard11, 1.0.0"

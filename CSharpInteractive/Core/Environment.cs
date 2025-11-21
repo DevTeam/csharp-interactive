@@ -98,7 +98,7 @@ internal class Environment :
             yield return Text.NewLine;
             yield return new Text($"ProcessArchitecture: {ProcessArchitecture}");
             yield return Text.NewLine;
-            foreach (var specialFolder in Enum.GetValues(typeof(SpecialFolder)).OfType<SpecialFolder>())
+            foreach (var specialFolder in Enum.GetValues<SpecialFolder>())
             {
                 yield return new Text($"Path({specialFolder}): {GetPath(specialFolder)}");
                 yield return Text.NewLine;
@@ -161,12 +161,15 @@ internal class Environment :
     }
     
     [DllImport("ucrtbase.dll", EntryPoint = "exit")]
+    [SuppressMessage("Interoperability", "SYSLIB1054:Use \'LibraryImportAttribute\' instead of \'DllImportAttribute\' to generate P/Invoke marshalling code at compile time")]
     private static extern void WindowsNativeExit(int exitCode);
 
     [DllImport("libSystem.dylib", EntryPoint = "exit")]
+    [SuppressMessage("Interoperability", "SYSLIB1054:Use \'LibraryImportAttribute\' instead of \'DllImportAttribute\' to generate P/Invoke marshalling code at compile time")]
     private static extern void MacNativeExit(int exitCode);
 
     [DllImport("libc.so.6", EntryPoint = "exit")]
+    [SuppressMessage("Interoperability", "SYSLIB1054:Use \'LibraryImportAttribute\' instead of \'DllImportAttribute\' to generate P/Invoke marshalling code at compile time")]
     private static extern void LinuxNativeExit(int exitCode);
 
     private static void NativeExit(int exitCode)

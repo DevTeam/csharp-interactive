@@ -1,9 +1,9 @@
 ﻿using System.CommandLine;
 using HostApi;
-using NuGet.Configuration;
 using Pure.DI;
 using static Pure.DI.Lifetime;
 // ReSharper disable HeuristicUnreachableCode
+// ReSharper disable UnusedParameter.Global
 #pragma warning disable CS0162 // Unreachable code detected
 
 return await new Composition().Root.RunAsync(CancellationToken.None);

@@ -26,7 +26,7 @@ internal class ReliableBuildContext(
         }
 
         _sources.TryAdd(source, output with {Line = string.Empty});
-        return Array.Empty<BuildMessage>();
+        return [];
     }
 
     public IReadOnlyList<BuildMessage> ProcessOutput(Output output) =>

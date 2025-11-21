@@ -1,7 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable ObjectCreationAsStatement
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
-
+// ReSharper disable UnusedVariable
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]

@@ -6,8 +6,8 @@ using NuGet.Versioning;
 [SuppressMessage("Usage", "xUnit1042:The member referenced by the MemberData attribute returns untyped data rows")]
 public class NuGetServiceTests
 {
-    private static readonly NuGetPackage NuGetPackage1 = new("Abc", new Version(1, 2, 3), new NuGetVersion(1, 2, 3), "package", "AbcPath", "111222", Array.Empty<string>(), false, false);
-    private static readonly NuGetPackage NuGetPackage2 = new("Abc.Contracts", new Version(1, 2, 3), new NuGetVersion(3, 2, 1), "package", "AbcContractsPath", "111233", Array.Empty<string>(), false, false);
+    private static readonly NuGetPackage NuGetPackage1 = new("Abc", new Version(1, 2, 3), new NuGetVersion(1, 2, 3), "package", "AbcPath", "111222", [], false, false);
+    private static readonly NuGetPackage NuGetPackage2 = new("Abc.Contracts", new Version(1, 2, 3), new NuGetVersion(3, 2, 1), "package", "AbcContractsPath", "111233", [], false, false);
     private static readonly IEnumerable<string> Sources = ["src1", "src2"];
     private static readonly IEnumerable<string> FallBacks = ["fb1", "fb2"];
 

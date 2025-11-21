@@ -40,7 +40,7 @@ internal class NuGetService(
         }
 
         var restoreResult = nugetRestoreService.TryRestore(settings, out var projectAssetsJson);
-        if (restoreResult == false)
+        if (!restoreResult)
         {
             log.Warning($"Cannot restore the NuGet package {settings.PackageId} {settings.VersionRange}".Trim() + '.');
             return [];

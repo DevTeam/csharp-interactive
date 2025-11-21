@@ -39,7 +39,7 @@ public class AddNuGetReferenceCommandRunnerTests
     {
         // Given
         var runner = CreateInstance();
-        IReadOnlyCollection<ReferencingAssembly> assemblies = Array.Empty<ReferencingAssembly>();
+        IReadOnlyCollection<ReferencingAssembly> assemblies = [];
         _nuGetReferenceResolver.Setup(i => i.TryResolveAssemblies(_command.PackageId, _command.VersionRange, out assemblies)).Returns(false);
 
         // When

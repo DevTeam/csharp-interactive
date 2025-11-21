@@ -5,11 +5,14 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
+using System.Diagnostics.CodeAnalysis;
+
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "True")]
 public class DotNetNewSearchScenario(ITestOutputHelper output) : BaseScenario(output)
 {
-    [Fact]
+    [Fact(Skip = "SSL")]
+    [SuppressMessage("Usage", "xUnit1004:Test methods should not be skipped")]
     public void Run()
     {
         // $visible=true

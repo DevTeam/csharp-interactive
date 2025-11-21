@@ -1,3 +1,4 @@
+// ReSharper disable UnusedMemberInSuper.Global
 namespace MySampleLib;
 
 public interface ICalculator

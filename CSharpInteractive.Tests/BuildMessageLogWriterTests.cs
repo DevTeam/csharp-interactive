@@ -18,7 +18,7 @@ public class BuildMessageLogWriterTests
         writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.StdOut, null, "Abc"));
 
         // Then
-        _stdOut.Verify(i => i.WriteLine(It.Is<Text[]>(text => text.SequenceEqual(new[] {new Text("Abc")}))));
+        _stdOut.Verify(i => i.WriteLine(It.Is<Text[]>(text => text.AsEnumerable().SequenceEqual(new[] {new Text("Abc")}))));
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public class BuildMessageLogWriterTests
         writer.Write(ProcessInfo, new BuildMessage(Output, BuildMessageState.StdError, null, "Abc"));
 
         // Then
-        _stdErr.Verify(i => i.WriteLine(It.Is<Text[]>(text => text.SequenceEqual(new[] {new Text("Abc")}))));
+        _stdErr.Verify(i => i.WriteLine(It.Is<Text[]>(text => text.AsEnumerable().SequenceEqual(new[] {new Text("Abc")}))));
     }
 
     [Fact]

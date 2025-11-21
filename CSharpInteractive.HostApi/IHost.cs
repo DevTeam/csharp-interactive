@@ -1,6 +1,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMemberInSuper.Global
 
+// ReSharper disable UnusedParameter.Global
 namespace HostApi;
 
 using System.Diagnostics.Contracts;

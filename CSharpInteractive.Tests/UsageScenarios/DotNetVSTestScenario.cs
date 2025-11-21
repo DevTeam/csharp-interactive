@@ -12,7 +12,7 @@ public class DotNetVSTestScenario(ITestOutputHelper output) : BaseScenario(outpu
     [Fact]
     public void Run()
     {
-        var path = "MyTests";
+        const string path = "MyTests";
         
         new DotNetNew()
             .WithTemplateName("mstest")

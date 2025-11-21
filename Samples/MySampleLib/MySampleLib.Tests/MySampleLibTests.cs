@@ -1,6 +1,7 @@
 namespace MySampleLib.Tests;
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 public class CalculatorTests
@@ -38,6 +39,7 @@ public class CalculatorTests
     }
 
     [Fact(Skip = "")]
+    [SuppressMessage("Usage", "xUnit1004:Test methods should not be skipped")]
     public void ShouldDiv()
     { }
 

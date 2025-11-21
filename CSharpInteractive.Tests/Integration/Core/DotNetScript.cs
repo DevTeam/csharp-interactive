@@ -5,7 +5,7 @@ using CSharpInteractive;
 internal static class DotNetScript
 {
     public static CommandLine Create(IEnumerable<string> args, params string[] lines) =>
-        CreateForScript("script.csx", default, args, lines);
+        CreateForScript("script.csx", null, args, lines);
 
     public static CommandLine Create(params string[] lines) =>
         Create([], lines);

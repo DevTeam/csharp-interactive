@@ -26,8 +26,7 @@ internal class ColorTheme : IColorTheme
 
         return color switch
         {
-            Color.Default => ConsoleColor.Black,
-            Color.Header => ConsoleColor.Black,
+            Color.Default or Color.Header => ConsoleColor.Black,
             Color.Trace => ConsoleColor.DarkGray,
             Color.Success => ConsoleColor.Green,
             Color.Warning => ConsoleColor.Yellow,

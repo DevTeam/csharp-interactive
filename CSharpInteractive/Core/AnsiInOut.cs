@@ -8,7 +8,11 @@ using HostApi;
 internal class AnsiInOut(IColorTheme colorTheme) : IStdOut, IStdErr
 {
     private const char EscapeSymbol = '\e';
+#if NET9_0_OR_GREATER
+    private readonly Lock _lockObject = new();
+#else
     private readonly object _lockObject = new();
+#endif
 
     public void Write(params Text[] text) =>
         Write(System.Console.Out, text, Color.Default);

@@ -22,6 +22,7 @@ public enum NuGetCertificateAlgorithm
     Sha512
 }
 
+// ReSharper disable once UnusedType.Global
 internal static class NuGetCertificateAlgorithmExtensions
 {
     // ReSharper disable once UnusedParameter.Global

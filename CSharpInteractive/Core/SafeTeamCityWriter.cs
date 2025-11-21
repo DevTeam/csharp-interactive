@@ -1,4 +1,5 @@
-﻿namespace CSharpInteractive.Core;
+﻿// ReSharper disable ClassNeverInstantiated.Global
+namespace CSharpInteractive.Core;
 
 using JetBrains.TeamCity.ServiceMessages;
 using JetBrains.TeamCity.ServiceMessages.Write.Special;
@@ -7,7 +8,11 @@ using static Pure.DI.Tag;
 
 internal class SafeTeamCityWriter([Tag(BaseTag)] ITeamCityWriter writer): ITeamCityWriter
 {
+#if NET9_0_OR_GREATER
+    private readonly Lock _lockObject = new();
+#else
     private readonly object _lockObject = new();
+#endif
 
     public ITeamCityWriter OpenBlock(string blockName)
     {

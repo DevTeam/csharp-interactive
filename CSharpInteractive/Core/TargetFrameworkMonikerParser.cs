@@ -23,32 +23,32 @@ internal class TargetFrameworkMonikerParser : ITargetFrameworkMonikerParser
 
         if (NetFull.IsMatch(tfm))
         {
-            var version = string.Join(".", tfm.Substring(3, tfm.Length - 3).Select(i => $"{i}"));
+            var version = string.Join(".", tfm[3..].Select(i => $"{i}"));
             return $".NETFramework,Version=v{version}";
         }
 
         if (Net.IsMatch(tfm))
         {
-            var version = tfm.Substring(3, tfm.Length - 3);
+            var version = tfm[3..];
             return $".NETCoreApp,Version=v{version}";
         }
 
         if (NetCore.IsMatch(tfm))
         {
-            var version = tfm.Substring(10, tfm.Length - 10);
+            var version = tfm[10..];
             return $".NETCoreApp,Version=v{version}";
         }
 
         if (NetStandard.IsMatch(tfm))
         {
-            var version = tfm.Substring(11, tfm.Length - 11);
+            var version = tfm[11..];
             return $".NETStandard,Version=v{version}";
         }
 
         // ReSharper disable once InvertIf
         if (Uap.IsMatch(tfm))
         {
-            var version = tfm.Substring(3, tfm.Length - 3);
+            var version = tfm[3..];
             return $"UAP,Version=v{version}";
         }
 

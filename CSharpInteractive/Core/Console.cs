@@ -6,7 +6,11 @@ using HostApi;
 [ExcludeFromCodeCoverage]
 internal class Console(IColorTheme colorTheme) : IConsole, IConsoleHandler
 {
+#if NET9_0_OR_GREATER
+    private readonly Lock _lockObject = new();
+#else
     private readonly object _lockObject = new();
+#endif
     private readonly ConsoleColor _errorColor = colorTheme.GetConsoleColor(Color.Error);
     
     public event EventHandler<string>? OutputHandler;

@@ -3,6 +3,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 
+// ReSharper disable ConvertToExtensionBlock
 namespace HostApi.Internal.Docker;
 
 using System.Diagnostics.Contracts;

@@ -16,9 +16,11 @@ public enum DotNetWorkloadUpdateMode
     Manifests
 }
 
+// ReSharper disable once UnusedType.Global
 internal static class DotNetWorkloadUpdateModeExtensions
 {
     // ReSharper disable once UnusedParameter.Global
+    // ReSharper disable once UnusedMember.Global
     public static string[] ToArgs(this DotNetWorkloadUpdateMode? updateMode, string name, string collectionSeparator) =>
         updateMode switch
         {

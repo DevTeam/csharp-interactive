@@ -8,33 +8,37 @@ using HostApi;
 [ExcludeFromCodeCoverage]
 internal static class LogExtensions
 {
-    public static ILog<T> Error<T>(this ILog<T> log, ErrorId id, params string[] error)
+    extension<T>(ILog<T> log)
     {
-        log.Error(id, error.Select(i => new Text(i, Color.Error)).ToArray());
-        return log;
+        public ILog<T> Error(ErrorId id, params string[] error)
+        {
+            log.Error(id, error.Select(i => new Text(i, Color.Error)).ToArray());
+            return log;
+        }
+
+        public ILog<T> Error(ErrorId id, Exception error)
+        {
+            log.Error(id, error.ToText());
+            return log;
+        }
+
+        public ILog<T> Info(params string[] message)
+        {
+            log.Info(message.Select(i => new Text(i)).ToArray());
+            return log;
+        }
+
+        public ILog<T> Warning(params string[] warning)
+        {
+            log.Warning(warning.Select(i => new Text(i, Color.Warning)).ToArray());
+            return log;
+        }
+
+        public ILog<T> Summary(params string[] summary)
+        {
+            log.Summary(summary.Select(i => new Text(i, Color.Highlighted)).ToArray());
+            return log;
+        }
     }
 
-    public static ILog<T> Error<T>(this ILog<T> log, ErrorId id, Exception error)
-    {
-        log.Error(id, error.ToText());
-        return log;
-    }
-
-    public static ILog<T> Info<T>(this ILog<T> log, params string[] message)
-    {
-        log.Info(message.Select(i => new Text(i)).ToArray());
-        return log;
-    }
-
-    public static ILog<T> Warning<T>(this ILog<T> log, params string[] warning)
-    {
-        log.Warning(warning.Select(i => new Text(i, Color.Warning)).ToArray());
-        return log;
-    }
-
-    public static ILog<T> Summary<T>(this ILog<T> log, params string[] summary)
-    {
-        log.Summary(summary.Select(i => new Text(i, Color.Highlighted)).ToArray());
-        return log;
-    }
 }

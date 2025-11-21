@@ -87,16 +87,19 @@ await new DotNetTest()
     .WithNoBuild(true)
     .BuildAsync(CancellationOnFirstFailedTest, cts.Token);
 
-void CancellationOnFirstFailedTest(BuildMessage message)
-{
-    if (message.TestResult is {State: TestState.Failed}) cts.Cancel();
-}
 
 // Parallel tests
 var results = await Task.WhenAll(
     RunTestsAsync("7.0", "bookworm-slim", "alpine"),
     RunTestsAsync("8.0", "bookworm-slim", "alpine", "noble"));
 results.SelectMany(i => i).EnsureSuccess();
+
+return;
+
+void CancellationOnFirstFailedTest(BuildMessage message)
+{
+    if (message.TestResult is {State: TestState.Failed}) cts.Cancel();
+}
 
 async Task<IEnumerable<IBuildResult>> RunTestsAsync(string framework, params string[] platforms)
 {

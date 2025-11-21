@@ -35,7 +35,6 @@ public partial record CommandLine(
     string ShortName = "")
     : IStartInfo
 {
-    private readonly string _shortName = ShortName;
 
     /// <summary>
     /// Creates a new command line.
@@ -43,7 +42,7 @@ public partial record CommandLine(
     /// <param name="executablePath">Path to the executable file.</param>
     /// <param name="args">Command line arguments.</param>
     public CommandLine(string executablePath, params string[] args)
-        : this(executablePath, string.Empty, args, Array.Empty<(string name, string value)>())
+        : this(executablePath, string.Empty, args, [])
     { }
 
     internal CommandLine(IStartInfo startInfo)
@@ -51,17 +50,16 @@ public partial record CommandLine(
     { }
 
     /// <inheritdoc/>
-    public string ShortName =>
-        !string.IsNullOrWhiteSpace(_shortName)
-            ? _shortName
+    public string ShortName
+    {
+        get => !string.IsNullOrWhiteSpace(field)
+            ? field
             : Path.GetFileNameWithoutExtension(ExecutablePath);
+    } = ShortName;
 
     /// <inheritdoc/>
-    public IStartInfo GetStartInfo(IHost host)
-    {
-        if (host == null) throw new ArgumentNullException(nameof(host));
-        return this;
-    }
+    public IStartInfo GetStartInfo(IHost host) =>
+        host != null ? this : throw new ArgumentNullException(nameof(host));
 
     /// <inheritdoc/>
     public override string ToString()

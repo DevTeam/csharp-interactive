@@ -3,7 +3,6 @@
 namespace CSharpInteractive.Core;
 
 using Pure.DI;
-using static Pure.DI.Tag;
 
 internal class RuntimeExplorer(
     [Tag("RuntimePathTag")] string runtimePath,

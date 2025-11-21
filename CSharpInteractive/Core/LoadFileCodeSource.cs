@@ -3,7 +3,6 @@
 namespace CSharpInteractive.Core;
 
 using System.Collections;
-using Pure.DI;
 
 internal class LoadFileCodeSource : ICodeSource
 {

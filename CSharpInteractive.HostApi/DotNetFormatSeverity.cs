@@ -21,9 +21,11 @@ public enum DotNetFormatSeverity
     Error 
 }
 
+// ReSharper disable once UnusedType.Global
 internal static class DotNetFormatSeverityExtensions
 {
     // ReSharper disable once UnusedParameter.Global
+    // ReSharper disable once UnusedMember.Global
     public static string[] ToArgs(this DotNetFormatSeverity? severity, string name, string collectionSeparator) =>
         severity switch
         {

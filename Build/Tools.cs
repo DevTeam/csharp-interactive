@@ -1,4 +1,3 @@
-using System.Xml;
 using HostApi;
 using NuGet.Versioning;
 // ReSharper disable CheckNamespace

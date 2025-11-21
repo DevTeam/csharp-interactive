@@ -23,7 +23,7 @@ public class TracePresenterTests
         presenter.Show([source1.Object, source2.Object]);
 
         // Then
-        _log.Verify(i => i.Trace(It.Is<Func<Text[]>>(func => func().SequenceEqual(new[] {Text.NewLine, text11, text12, text21})), "Trace:"));
+        _log.Verify(i => i.Trace(It.Is<Func<Text[]>>(func => func().AsEnumerable().SequenceEqual(new[] {Text.NewLine, text11, text12, text21})), "Trace:"));
     }
 
     private TracePresenter CreateInstance() =>

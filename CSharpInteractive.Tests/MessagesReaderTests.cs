@@ -61,7 +61,7 @@ public class MessagesReaderTests
         var streamReader = new Mock<IStreamReader>();
 
         _fileSystem.Setup(i => i.OpenReader("data.msg")).Returns(streamReader.Object);
-        _indicesReader.Setup(i => i.Read("data")).Returns(Array.Empty<ulong>());
+        _indicesReader.Setup(i => i.Read("data")).Returns([]);
 
         var reader = CreateInstance();
 

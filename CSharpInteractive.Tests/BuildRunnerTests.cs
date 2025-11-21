@@ -1,6 +1,6 @@
 namespace CSharpInteractive.Tests;
 
-using BuildResult = Core.BuildResult;
+using BuildResult = BuildResult;
 
 public class BuildRunnerTests
 {

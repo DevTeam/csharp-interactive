@@ -9,7 +9,11 @@ using HostApi;
 
 internal class Statistics : IStatisticsRegistry, IStatistics, ICommandLineStatisticsRegistry
 {
+#if NET9_0_OR_GREATER
+    private readonly Lock _lockObject = new();
+#else
     private readonly object _lockObject = new();
+#endif
     private readonly Stopwatch _stopwatch = new();
     private readonly List<StatisticsItem> _items = [];
     private readonly List<CommandLineInfo> _info = [];

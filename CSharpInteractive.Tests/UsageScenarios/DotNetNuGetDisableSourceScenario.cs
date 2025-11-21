@@ -5,8 +5,11 @@
 
 namespace CSharpInteractive.Tests.UsageScenarios;
 
+using System.Diagnostics.CodeAnalysis;
+
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "True")]
+[SuppressMessage("Usage", "xUnit1004:Test methods should not be skipped")]
 public class DotNetNuGetDisableSourceScenario(ITestOutputHelper output) : BaseScenario(output)
 {
     [Fact(Skip = "Fails on CI")]

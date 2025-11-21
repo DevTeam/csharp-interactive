@@ -46,7 +46,7 @@ public class BuildOutputProcessorTests
         // Given
         var output = new Output(_startInfo.Object, isError, "some output", 33);
         _serviceMessageParser.Setup(i => i.ParseServiceMessages("some output")).Returns([]);
-        _buildResult.Setup(i => i.ProcessMessage(output, It.IsAny<IServiceMessage>())).Returns(Array.Empty<BuildMessage>());
+        _buildResult.Setup(i => i.ProcessMessage(output, It.IsAny<IServiceMessage>())).Returns([]);
         BuildMessage buildMsg = new(output, BuildMessageState.StdOut);
         _buildResult.Setup(i => i.ProcessOutput(output)).Returns([buildMsg]);
         var processor = CreateInstance();

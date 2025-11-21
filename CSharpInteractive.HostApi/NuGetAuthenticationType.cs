@@ -32,6 +32,7 @@ public enum NuGetAuthenticationType
     Digest
 }
 
+// ReSharper disable once UnusedType.Global
 internal static class NuGetAuthenticationTypeExtensions
 {
     // ReSharper disable once UnusedParameter.Global

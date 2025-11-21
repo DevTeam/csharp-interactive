@@ -252,7 +252,7 @@ public class BuildContextTests
         {
             case BuildMessageState.ServiceMessage:
             case BuildMessageState.StdOut:
-                buildResult.Errors.ShouldBe(Array.Empty<BuildMessage>());
+                buildResult.Errors.ShouldBe([]);
                 break;
 
             case BuildMessageState.Warning:
