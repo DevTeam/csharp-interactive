@@ -10,7 +10,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
         <PackageReference Include="Moq" Version="4.20.72" />
-        <PackageReference Include="Pure.DI" Version="2.2.15">
+        <PackageReference Include="Pure.DI" Version="2.3.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -22,7 +22,7 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"/>
-        <PackageReference Include="Xunit.SkippableFact" Version="1.5.23" />
+        <PackageReference Include="Xunit.SkippableFact" Version="1.5.61" />
         <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj"/>
         <ProjectReference Include="..\CSharpInteractive\CSharpInteractive.Tool.csproj"/>
         <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.33" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
