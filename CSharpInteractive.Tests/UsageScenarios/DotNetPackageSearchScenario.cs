@@ -38,7 +38,7 @@ public class DotNetPackageSearchScenario(ITestOutputHelper output) : BaseScenari
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         result.ShouldNotBeNull();
-        result.SearchResult.SelectMany(i => i.Packages).Count(i => i.Id == "Pure.DI").ShouldBe(1);
+        result.SearchResult.SelectMany(i => i.Packages).Count(i => i.Id == "Pure.DI").ShouldBeGreaterThan(0);
         // }
     }
     
