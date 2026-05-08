@@ -9,6 +9,7 @@
         <IncludeContentInPack>true</IncludeContentInPack>
         <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
         <EnableDefaultItems>False</EnableDefaultItems>
+        <NoWarn>$(NoWarn);CS2008</NoWarn>
         <NoPackageAnalysis>true</NoPackageAnalysis>
         <PackageId>CSharpInteractive.Templates</PackageId>
         <Title>Build automation project templates for .NET</Title>
@@ -20,6 +21,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" PrivateAssets="all"/>
         <PackageReference Remove="Microsoft.NETCore.App"/>
         <Content Include="content\**">
             <PackagePath>content</PackagePath>
