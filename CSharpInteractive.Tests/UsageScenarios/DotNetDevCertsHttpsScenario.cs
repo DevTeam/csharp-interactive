@@ -5,6 +5,7 @@
 namespace CSharpInteractive.Tests.UsageScenarios;
 
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 
 [CollectionDefinition("Integration", DisableParallelization = true)]
 [Trait("Integration", "True")]
@@ -14,6 +15,14 @@ public class DotNetDevCertsHttpsScenario(ITestOutputHelper output) : BaseScenari
     [Fact]
     public void Run()
     {
+        // `dotnet dev-certs https --trust` reliably works only on Windows.
+        // On Linux it requires libnss3-tools + a user NSS DB and often exits non-zero;
+        // on macOS it requires interactive sudo. Skip on non-Windows CI.
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return;
+        }
+
         // $visible=true
         // $tag=07 .NET CLI
         // $priority=01
