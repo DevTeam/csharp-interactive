@@ -3,21 +3,26 @@
 namespace CSharpInteractive.Core;
 
 using HostApi;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
-using NuGet.Build.Tasks;
+using NuGet.Commands;
+using NuGet.Common;
+using NuGet.Configuration;
+using NuGet.Frameworks;
+using NuGet.LibraryModel;
+using NuGet.ProjectModel;
+using NuGet.Protocol;
+using NuGet.Protocol.Core.Types;
+using NuGet.Versioning;
 
 [ExcludeFromCodeCoverage]
 internal class NuGetRestoreService : INuGetRestoreService, ISettingSetter<NuGetRestoreSetting>
 {
-    private const string Project = "restore";
+    private const string ProjectName = "restore";
     private readonly ILog<NuGetRestoreService> _log;
-    private readonly IBuildEngine _buildEngine;
+    private readonly ILogger _logger;
     private readonly IUniqueNameGenerator _uniqueNameGenerator;
     private readonly IEnvironment _environment;
     private readonly IDotNetEnvironment _dotnetEnvironment;
     private readonly ITargetFrameworkMonikerParser _targetFrameworkMonikerParser;
-    private readonly ISettings _settings;
 
     private bool _restoreDisableParallel;
     private bool _restoreIgnoreFailedSources;
@@ -26,20 +31,18 @@ internal class NuGetRestoreService : INuGetRestoreService, ISettingSetter<NuGetR
 
     public NuGetRestoreService(
         ILog<NuGetRestoreService> log,
-        IBuildEngine buildEngine,
+        ILogger logger,
         IUniqueNameGenerator uniqueNameGenerator,
         IEnvironment environment,
         IDotNetEnvironment dotnetEnvironment,
-        ITargetFrameworkMonikerParser targetFrameworkMonikerParser,
-        ISettings settings)
+        ITargetFrameworkMonikerParser targetFrameworkMonikerParser)
     {
         _log = log;
-        _buildEngine = buildEngine;
+        _logger = logger;
         _uniqueNameGenerator = uniqueNameGenerator;
         _environment = environment;
         _dotnetEnvironment = dotnetEnvironment;
         _targetFrameworkMonikerParser = targetFrameworkMonikerParser;
-        _settings = settings;
         SetSetting(NuGetRestoreSetting.Default);
     }
 
@@ -47,75 +50,128 @@ internal class NuGetRestoreService : INuGetRestoreService, ISettingSetter<NuGetR
     {
         var tempDirectory = _environment.GetPath(SpecialFolder.Temp);
         var outputPath = Path.Combine(tempDirectory, _uniqueNameGenerator.Generate());
-        var targetFrameworkMoniker = settings.TargetFrameworkMoniker;
-        var tfm = targetFrameworkMoniker ?? _dotnetEnvironment.TargetFrameworkMoniker;
-        targetFrameworkMoniker = _targetFrameworkMonikerParser.Parse(tfm);
+        Directory.CreateDirectory(outputPath);
+        var tfm = settings.TargetFrameworkMoniker ?? _dotnetEnvironment.TargetFrameworkMoniker;
+        var targetFrameworkMoniker = _targetFrameworkMonikerParser.Parse(tfm);
+        var framework = NuGetFramework.ParseFrameworkName(targetFrameworkMoniker, DefaultFrameworkNameProvider.Instance);
         var projectStyle = settings.PackageType switch
         {
-            NuGetPackageType.Tool => "DotNetToolReference ",
-            _ => "PackageReference"
+            NuGetPackageType.Tool => ProjectStyle.DotnetToolReference,
+            _ => ProjectStyle.PackageReference
         };
 
-        _log.Trace(() => [new Text($"Restore nuget package {settings.PackageId} {settings.VersionRange} to \"{outputPath}\" and \"{settings.PackagesPath}\".")]);
-        ITaskItem[] restoreGraphItems =
-        [
-            CreateTaskItem("RestoreSpec"),
-
-            // { "ConfigFilePaths", @"C:\Users\Nikol\AppData\Roaming\NuGet\NuGet.Config;C:\Program Files (x86)\NuGet\Config\Microsoft.VisualStudio.FallbackLocation.config;C:\Program Files (x86)\NuGet\Config\Microsoft.VisualStudio.Offline.config;C:\Program Files (x86)\NuGet\Config\Xamarin.Offline.config" }
-            CreateTaskItem(
-                "ProjectSpec",
-                ("ProjectName", Project),
-                ("ProjectStyle", projectStyle),
-                ("Sources", string.Join(";", settings.Sources)),
-                ("FallbackFolders", string.Join(";", settings.FallbackFolders)),
-                ("OutputPath", outputPath),
-                ("PackagesPath", settings.PackagesPath),
-                ("ValidateRuntimeAssets", "false")),
-
-            CreateTaskItem(
-                "Dependency",
-                ("TargetFrameworks", tfm),
-                ("Id", settings.PackageId),
-                ("VersionRange", settings.VersionRange?.ToString() ?? "*"),
-                ("IncludeAssets", "All")),
-
-            CreateTaskItem(
-                "TargetFrameworkInformation",
-                ("TargetFramework", tfm),
-                ("TargetFrameworkMoniker", targetFrameworkMoniker))
-        ];
-
         projectAssetsJson = Path.Combine(outputPath, "project.assets.json");
-        return new RestoreTask
-        {
-            RestoreDisableParallel = settings.DisableParallel ?? _restoreDisableParallel,
-            RestoreIgnoreFailedSources = settings.IgnoreFailedSources ?? _restoreIgnoreFailedSources,
-            HideWarningsAndErrors = settings.HideWarningsAndErrors ?? _hideWarningsAndErrors,
-            RestoreNoCache = settings.NoCache ?? _restoreNoCache,
-            RestoreForceEvaluate = false,
-            RestorePackagesConfig = false,
-            RestoreRecursive = true,
-            RestoreForce = false,
-            Interactive = _settings.InteractionMode == InteractionMode.Interactive,
-            RestoreGraphItems = restoreGraphItems,
-            BuildEngine = _buildEngine
-        }.Execute();
-    }
+        var projectFile = Path.Combine(outputPath, $"{ProjectName}.csproj");
 
-    private static TaskItem CreateTaskItem(string type, params (string key, string? value)[] properties)
-    {
-        const string projectFile = Project + ".csproj";
-        var taskItem = new TaskItem(type);
-        taskItem.SetMetadata("ProjectUniqueName", projectFile);
-        taskItem.SetMetadata("MSBuildSourceProjectFile", projectFile);
-        taskItem.SetMetadata("ProjectPath", projectFile);
-        taskItem.SetMetadata("Type", type);
-        foreach (var (key, value) in properties.Where(i => i.value != null))
+        _log.Trace(() => [new Text($"Restore nuget package {settings.PackageId} {settings.VersionRange} to \"{outputPath}\" and \"{settings.PackagesPath}\".")]);
+
+        var dependency = new LibraryDependency
         {
-            taskItem.SetMetadata(key, value);
+            LibraryRange = new LibraryRange(
+                settings.PackageId,
+                settings.VersionRange ?? VersionRange.All,
+                LibraryDependencyTarget.Package),
+            IncludeType = LibraryIncludeFlags.All
+        };
+
+        var packageSpec = new PackageSpec(
+            [
+                new TargetFrameworkInformation
+                {
+                    FrameworkName = framework,
+                    TargetAlias = tfm,
+                    Dependencies = [dependency]
+                }
+            ])
+        {
+            Name = ProjectName,
+            FilePath = projectFile,
+            RestoreMetadata = new ProjectRestoreMetadata
+            {
+                ProjectStyle = projectStyle,
+                ProjectName = ProjectName,
+                ProjectUniqueName = projectFile,
+                ProjectPath = projectFile,
+                OutputPath = outputPath,
+                OriginalTargetFrameworks = [tfm],
+                Sources = settings.Sources.Select(s => new PackageSource(s)).ToList(),
+                FallbackFolders = settings.FallbackFolders.ToList(),
+                PackagesPath = settings.PackagesPath ?? string.Empty,
+                ConfigFilePaths = [],
+                ValidateRuntimeAssets = false,
+                TargetFrameworks =
+                [
+                    new ProjectRestoreMetadataFrameworkInfo(framework) { TargetAlias = tfm }
+                ]
+            }
+        };
+
+        var noCache = settings.NoCache ?? _restoreNoCache;
+        var ignoreFailedSources = settings.IgnoreFailedSources ?? _restoreIgnoreFailedSources;
+        var disableParallel = settings.DisableParallel ?? _restoreDisableParallel;
+        var hideWarningsAndErrors = settings.HideWarningsAndErrors ?? _hideWarningsAndErrors;
+
+        using var cacheContext = new SourceCacheContext
+        {
+            NoCache = noCache,
+            DirectDownload = false,
+            IgnoreFailedSources = ignoreFailedSources
+        };
+
+        var sourceRepositories = settings.Sources
+            .Select(source => Repository.Factory.GetCoreV3(source))
+            .ToList();
+
+        var nugetSettings = NuGet.Configuration.Settings.LoadDefaultSettings(_environment.GetPath(SpecialFolder.Script));
+        var globalFolderPath = string.IsNullOrWhiteSpace(settings.PackagesPath)
+            ? SettingsUtility.GetGlobalPackagesFolder(nugetSettings)
+            : settings.PackagesPath;
+
+        var providers = new RestoreCommandProvidersCache().GetOrCreate(
+            globalFolderPath,
+            settings.FallbackFolders.ToList(),
+            sourceRepositories,
+            cacheContext,
+            _logger);
+
+        var request = new RestoreRequest(
+            packageSpec,
+            providers,
+            cacheContext,
+            clientPolicyContext: null,
+            packageSourceMapping: PackageSourceMapping.GetPackageSourceMapping(nugetSettings),
+            _logger,
+            new LockFileBuilderCache())
+        {
+            LockFilePath = projectAssetsJson,
+            ProjectStyle = projectStyle,
+            AllowNoOp = false,
+            HideWarningsAndErrors = hideWarningsAndErrors,
+            RestoreForceEvaluate = false,
+            CacheContext = cacheContext
+        };
+
+        if (disableParallel)
+        {
+            request.MaxDegreeOfConcurrency = 1;
         }
 
-        return taskItem;
+        try
+        {
+            var command = new RestoreCommand(request);
+            var result = command.ExecuteAsync(CancellationToken.None).GetAwaiter().GetResult();
+            if (result.Success)
+            {
+                result.CommitAsync(_logger, CancellationToken.None).GetAwaiter().GetResult();
+            }
+
+            return result.Success;
+        }
+        catch (Exception ex)
+        {
+            _log.Error(ErrorId.NuGet, ex.Message);
+            return false;
+        }
     }
 
     public NuGetRestoreSetting SetSetting(NuGetRestoreSetting value)

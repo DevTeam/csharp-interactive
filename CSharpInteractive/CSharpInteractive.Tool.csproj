@@ -50,40 +50,26 @@
         <When Condition="'$(TargetFramework)'=='net8.0'">
             <ItemGroup>
                 <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-                <PackageReference Include="NuGet.Build.Tasks" Version="6.11.1"/>
-                <PackageReference Include="NuGet.Packaging" Version="6.14.3"/>
-                <PackageReference Include="NuGet.Protocol" Version="6.14.3"/>
-                <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.3"/>
-                <PackageReference Include="Microsoft.Build.Framework" Version="17.11.48" IncludeAssets="all"/>
-                <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.11.48" IncludeAssets="all"/>
-                <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.11.48" IncludeAssets="all"/>
             </ItemGroup>
         </When>
         <When Condition="'$(TargetFramework)'=='net9.0'">
             <ItemGroup>
                 <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.15" />
-                <PackageReference Include="NuGet.Build.Tasks" Version="6.12.4"/>
-                <PackageReference Include="NuGet.Packaging" Version="6.14.3"/>
-                <PackageReference Include="NuGet.Protocol" Version="6.14.3"/>
-                <PackageReference Include="System.Security.Cryptography.Xml" Version="9.0.15"/>
-                <PackageReference Include="Microsoft.Build.Framework" Version="17.12.50" IncludeAssets="all"/>
-                <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.12.50" IncludeAssets="all"/>
-                <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.12.50" IncludeAssets="all"/>
             </ItemGroup>
         </When>
         <Otherwise>
             <ItemGroup>
                 <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
-                <PackageReference Include="NuGet.Build.Tasks" Version="6.14.0"/>
-                <PackageReference Include="NuGet.Packaging" Version="6.14.3"/>
-                <PackageReference Include="NuGet.Protocol" Version="6.14.3"/>
-                <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7"/>
-                <PackageReference Include="Microsoft.Build.Framework" Version="18.0.2" IncludeAssets="all"/>
-                <PackageReference Include="Microsoft.Build.Utilities.Core" Version="18.0.2" IncludeAssets="all"/>
-                <PackageReference Include="Microsoft.Build.Tasks.Core" Version="18.0.2" IncludeAssets="all"/>
             </ItemGroup>
         </Otherwise>
     </Choose>
+
+    <ItemGroup>
+        <PackageReference Include="NuGet.Commands" Version="6.14.3"/>
+        <PackageReference Include="NuGet.Packaging" Version="6.14.3"/>
+        <PackageReference Include="NuGet.Protocol" Version="6.14.3"/>
+        <PackageReference Include="NuGet.ProjectModel" Version="6.14.3"/>
+    </ItemGroup>
 
     <PropertyGroup>
         <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>

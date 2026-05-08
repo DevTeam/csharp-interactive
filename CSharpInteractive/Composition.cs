@@ -117,7 +117,7 @@ internal partial class Composition
             .PerBlock<LanguageVersionSettingDescription, OptimizationLevelSettingDescription, WarningLevelSettingDescription
                 , CheckOverflowSettingDescription, AllowUnsafeSettingDescription, NuGetRestoreSettingDescription>(Unique)
             .PerBlock<StartInfoDescription, HostEnvironment, ColorTheme, TeamCityLineFormatter, FileSystem, MSBuildArgumentsTool
-                , CommandLineParser, TracePresenter, StatisticsPresenter, BuildEngine, NuGetRestoreService, NuGetLogger
+                , CommandLineParser, TracePresenter, StatisticsPresenter, NuGetRestoreService, NuGetLogger
                 , UniqueNameGenerator, NuGetAssetsReader, Cleaner, TextToColorStrings, FileExplorer, Utf8Encoding
                 , BuildOutputProcessor, TeamCityContext, SummaryPresenter, ProcessResultHandler>()
             .Singleton(() => new CancellationTokenSource())
