@@ -69,7 +69,7 @@ internal class NuGetRestoreService : INuGetRestoreService, ISettingSetter<NuGetR
         {
             LibraryRange = new LibraryRange(
                 settings.PackageId,
-                settings.VersionRange ?? VersionRange.All,
+                settings.VersionRange ?? VersionRange.Parse("*"),
                 LibraryDependencyTarget.Package),
             IncludeType = LibraryIncludeFlags.All
         };

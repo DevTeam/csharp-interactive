@@ -54,5 +54,25 @@ public class NuGetTests
         result.ExitCode.ShouldBe(0, result.ToString());
     }
 
+    [Fact]
+    public void ShouldRestoreLatestVersionWhenNoVersionSpecified()
+    {
+        // Given
+        var nuget = Composition.Shared.Root.NuGet;
+
+        // When
+        var version = nuget.Value
+            .Restore(new NuGetRestoreSettings("Pure.DI")
+                .WithHideWarningsAndErrors(true)
+                .WithNoCache(true))
+            .Where(i => i.Name == "Pure.DI")
+            .Select(i => i.NuGetVersion)
+            .Max();
+
+        // Then
+        version.ShouldNotBeNull();
+        version.ShouldBeGreaterThan(new NuGetVersion(1, 0, 0));
+    }
+
     private static string CreateTempDirectory() => Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
 }
