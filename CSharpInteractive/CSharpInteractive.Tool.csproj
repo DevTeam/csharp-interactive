@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
         <OutputType>Exe</OutputType>
         <UseAppHost>false</UseAppHost>
         <AssemblyName>dotnet-csi</AssemblyName>
@@ -30,8 +30,8 @@
 
     <ItemGroup>
         <!--<CompilerVisibleProperty Include="PureDIProfilePath" />-->
-        <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="5.0.0" />
-        <PackageReference Include="Pure.DI" Version="2.4.0">
+        <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="5.12.0" />
+        <PackageReference Include="Pure.DI" Version="2.5.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -41,7 +41,7 @@
         </PackageReference>
         <PackageReference Include="TeamCity.ServiceMessages" Version="4.1.1"/>
         <ProjectReference Include="..\CSharpInteractive.HostApi\CSharpInteractive.HostApi.csproj" PrivateAssets="all"/>
-        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.33" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
+        <PackageReference Include="TeamCity.DotNet.Integration" Version="1.0.35" PrivateAssets="all" GeneratePathProperty="true" ExcludeAssets="All" IncludeAssets="none" />
         <InternalsVisibleTo Include="CSharpInteractive.Tests"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     </ItemGroup>
@@ -50,25 +50,34 @@
         <When Condition="'$(TargetFramework)'=='net8.0'">
             <ItemGroup>
                 <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+                <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
             </ItemGroup>
         </When>
         <When Condition="'$(TargetFramework)'=='net9.0'">
             <ItemGroup>
-                <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.15" />
+                <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.23" />
+                <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.23" />
+            </ItemGroup>
+        </When>
+        <When Condition="'$(TargetFramework)'=='net10.0'">
+            <ItemGroup>
+                <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.15" />
+                <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.15" />
             </ItemGroup>
         </When>
         <Otherwise>
             <ItemGroup>
-                <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
+                <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
+                <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0" />
             </ItemGroup>
         </Otherwise>
     </Choose>
 
     <ItemGroup>
-        <PackageReference Include="NuGet.Commands" Version="6.14.3"/>
-        <PackageReference Include="NuGet.Packaging" Version="6.14.3"/>
-        <PackageReference Include="NuGet.Protocol" Version="6.14.3"/>
-        <PackageReference Include="NuGet.ProjectModel" Version="6.14.3"/>
+        <PackageReference Include="NuGet.Commands" Version="7.9.0"/>
+        <PackageReference Include="NuGet.Packaging" Version="7.9.0"/>
+        <PackageReference Include="NuGet.Protocol" Version="7.9.0"/>
+        <PackageReference Include="NuGet.ProjectModel" Version="7.9.0"/>
     </ItemGroup>
 
     <PropertyGroup>
@@ -126,6 +135,18 @@
 
         <Content Include="$(MSBuildProjectDirectory)\bin\vstest\*.*" Visible="false">
             <PackagePath>tools\net10.0\any\vstest</PackagePath>
+            <Pack>true</Pack>
+            <Visible>false</Visible>
+        </Content>
+
+        <Content Include="$(MSBuildProjectDirectory)\bin\msbuild\*.*" Visible="false">
+            <PackagePath>tools\net11.0\any\msbuild</PackagePath>
+            <Pack>true</Pack>
+            <Visible>false</Visible>
+        </Content>
+
+        <Content Include="$(MSBuildProjectDirectory)\bin\vstest\*.*" Visible="false">
+            <PackagePath>tools\net11.0\any\vstest</PackagePath>
             <Pack>true</Pack>
             <Visible>false</Visible>
         </Content>

@@ -244,6 +244,12 @@ void CheckCompatibilityAsync(
     Info($"Checking {checkingFramework}");
     var buildProjectDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()[..4]);
     Directory.CreateDirectory(buildProjectDir);
+
+    // A reusable MSBuild node keeps the logger assemblies of the temporary project loaded,
+    // so the directory cannot be removed when the check is finished. Temporary builds are tiny,
+    // so the node reuse gives nothing here and is disabled for the check duration.
+    var prevNodeReuse = Environment.GetEnvironmentVariable("MSBUILDDISABLENODEREUSE");
+    Environment.SetEnvironmentVariable("MSBUILDDISABLENODEREUSE", "1");
     try
     {
         var sampleProjectDir = Path.Combine("Samples", "MySampleLib", "MySampleLib.Tests");
@@ -273,6 +279,7 @@ void CheckCompatibilityAsync(
     }
     finally
     {
+        Environment.SetEnvironmentVariable("MSBUILDDISABLENODEREUSE", prevNodeReuse);
         Directory.Delete(buildProjectDir, true);
     }
 }

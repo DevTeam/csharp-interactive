@@ -56,7 +56,11 @@ internal class NuGetRestoreService : INuGetRestoreService, ISettingSetter<NuGetR
         var framework = NuGetFramework.ParseFrameworkName(targetFrameworkMoniker, DefaultFrameworkNameProvider.Instance);
         var projectStyle = settings.PackageType switch
         {
+            // NuGet 7.x marks DotnetToolReference as obsolete without removing it. The tool restore is still
+            // supported by the restore pipeline and remains the only way to restore a .NET tool package.
+#pragma warning disable CS0618
             NuGetPackageType.Tool => ProjectStyle.DotnetToolReference,
+#pragma warning restore CS0618
             _ => ProjectStyle.PackageReference
         };
 
