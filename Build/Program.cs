@@ -22,6 +22,7 @@ var configuration = GetProperty("configuration", "Release");
 var apiKey = GetProperty("apiKey", "");
 var integrationTests = bool.Parse(GetProperty("integrationTests", CI.ToString()));
 var defaultVersion = NuGetVersion.Parse(GetProperty("version", "1.1.0-dev", CI));
+var packageVersionText = GetProperty("packageVersion", "");
 var outputDir = Path.Combine(currentDir, "CSharpInteractive", "bin", configuration);
 var templateOutputDir = Path.Combine(currentDir, "CSharpInteractive.Templates", "bin", configuration);
 var dockerLinuxTests = HasLinuxDocker();
@@ -30,12 +31,26 @@ if (!dockerLinuxTests)
     Warning("The docker Linux container is unavailable. Integration tests are skipped.");
 }
 
-var packageVersion = new[]
+NuGetVersion packageVersion;
+if (string.IsNullOrWhiteSpace(packageVersionText))
 {
-    defaultVersion,
-    GetNextNuGetVersion(new NuGetRestoreSettings(toolPackageId).WithPackageType(NuGetPackageType.Tool), defaultVersion),
-    GetNextNuGetVersion(new NuGetRestoreSettings(packageId), defaultVersion)
-}.Max()!;
+    packageVersion = new[]
+    {
+        defaultVersion,
+        GetNextNuGetVersion(new NuGetRestoreSettings(toolPackageId).WithPackageType(NuGetPackageType.Tool), defaultVersion),
+        GetNextNuGetVersion(new NuGetRestoreSettings(packageId), defaultVersion)
+    }.Max()!;
+}
+else if (NuGetVersion.TryParse(packageVersionText, out var exactPackageVersion))
+{
+    // An exact version comes from a release tag, so publishing is not checked against nuget.org.
+    packageVersion = exactPackageVersion;
+}
+else
+{
+    Error($"The property \"packageVersion\" has an invalid version \"{packageVersionText}\".");
+    return 1;
+}
 
 const int minSdk = 8;
 var maxSdk = minSdk;
@@ -65,7 +80,7 @@ var packages = new[]
     new PackageInfo(
         templatesPackageId,
         Path.Combine(templateOutputDir, $"{templatesPackageId}.{packageVersion.ToString()}.nupkg"),
-        false)
+        true)
 };
 
 new DotNetClean()

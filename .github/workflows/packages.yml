@@ -1,0 +1,193 @@
+name: Publish NuGet packages
+
+on:
+  push:
+    # Any version tag without a "v" prefix: 1.2.3 or 1.0.4-beta7.
+    # The release job then validates the tag as canonical SemVer and fails on anything else.
+    tags:
+      - '[0-9]*.[0-9]*.[0-9]*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing version tag (1.2.3 or 1.0.4-beta7)'
+        required: true
+        type: string
+      publish:
+        description: 'Publish the built packages to NuGet.org'
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nuget-release
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  # Resolves the version tag to the commit that all other jobs build and publish.
+  release:
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      commit: ${{ steps.release.outputs.commit }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history and tags are needed to resolve the tag in either trigger.
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Resolve version tag
+        id: release
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = $env:RELEASE_TAG
+          # A canonical SemVer without a "v" prefix or build metadata: 1.2.3 or 1.0.4-beta7.
+          if ($version -cnotmatch '^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?$') {
+            throw 'Tag must be a canonical version such as 1.2.3 or 1.0.4-beta7, without a v prefix.'
+          }
+          git rev-parse --verify "refs/tags/${version}" 2>$null
+          if ($LASTEXITCODE -ne 0) {
+            git fetch --no-tags origin "refs/tags/${version}:refs/tags/${version}"
+            if ($LASTEXITCODE -ne 0) { throw 'Version tag was not found.' }
+          }
+          $commit = git rev-parse --verify "refs/tags/${version}^{commit}"
+          if ($LASTEXITCODE -ne 0) { throw 'Tag does not point to a commit.' }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "commit=$commit" >> $env:GITHUB_OUTPUT
+          "Tag: $version`n`nCommit: $commit" >> $env:GITHUB_STEP_SUMMARY
+
+  # Builds, tests and checks the package version on every supported operating system.
+  # Packages are built with the exact tag version, so publishing does not depend on nuget.org state.
+  check:
+    name: check (${{ matrix.os }})
+    needs: release
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+
+    steps:
+      - name: Checkout release sources
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.commit }}
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+            11.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-release-${{ hashFiles('global.json', '**/Directory.Build.props', '**/*.csproj') }}
+          restore-keys: nuget-${{ runner.os }}-release-
+
+      - name: Build, test and check compatibility
+        shell: pwsh
+        env:
+          PACKAGE_VERSION: ${{ needs.release.outputs.version }}
+        run: |
+          dotnet run --project ./Build -- "-p:version=$env:PACKAGE_VERSION" "-p:packageVersion=$env:PACKAGE_VERSION"
+          if ($LASTEXITCODE -ne 0) { throw 'Build, tests or compatibility checks failed.' }
+
+      # Packages built on Linux are the ones published to NuGet.org.
+      - name: Arrange NuGet packages
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        shell: pwsh
+        env:
+          PACKAGE_VERSION: ${{ needs.release.outputs.version }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sources = @(
+            "CSharpInteractive/bin/Release/CSharpInteractive/CSharpInteractive.$env:PACKAGE_VERSION.nupkg",
+            "CSharpInteractive/bin/Release/CSharpInteractive.Tool/dotnet-csi.$env:PACKAGE_VERSION.nupkg",
+            "CSharpInteractive.Templates/bin/Release/CSharpInteractive.Templates.$env:PACKAGE_VERSION.nupkg"
+          )
+          New-Item -ItemType Directory -Force -Path packages | Out-Null
+          foreach ($source in $sources) {
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) { throw "The package $source was not found." }
+            Copy-Item -LiteralPath $source -Destination packages
+          }
+          Get-ChildItem -LiteralPath packages
+
+      - name: Save NuGet packages
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: packages/*.nupkg
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    if: ${{ github.event_name == 'push' || inputs.publish }}
+    needs: [ release, check ]
+    runs-on: ubuntu-latest
+    environment: nuget
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.commit }}
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 11.0.x
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: nuget-packages
+          path: packages
+
+      - name: Validate release packages
+        shell: pwsh
+        env:
+          PACKAGE_VERSION: ${{ needs.release.outputs.version }}
+        run: ./.github/scripts/Validate-NuGetPackages.ps1 -Directory packages -Version $env:PACKAGE_VERSION
+
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Publish packages
+        shell: pwsh
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+          PACKAGE_VERSION: ${{ needs.release.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.release.outputs.commit }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($id in @('CSharpInteractive', 'dotnet-csi', 'CSharpInteractive.Templates')) {
+            dotnet nuget push "packages/$id.$env:PACKAGE_VERSION.nupkg" --source https://api.nuget.org/v3/index.json --api-key $env:NUGET_API_KEY --skip-duplicate
+            if ($LASTEXITCODE -ne 0) { throw "Publishing $id failed. Already pushed packages remain published; rerun this job to resume." }
+            "Processed $id $env:PACKAGE_VERSION (existing versions skipped)." >> $env:GITHUB_STEP_SUMMARY
+          }
+          "`nRelease commit: $env:RELEASE_COMMIT" >> $env:GITHUB_STEP_SUMMARY
