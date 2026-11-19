@@ -69,11 +69,17 @@ internal class NuGetRestoreService : INuGetRestoreService, ISettingSetter<NuGetR
 
         _log.Trace(() => [new Text($"Restore nuget package {settings.PackageId} {settings.VersionRange} to \"{outputPath}\" and \"{settings.PackagesPath}\".")]);
 
+        // NuGet 7 reports a range without any bound, such as VersionRange.All, as a missing version (NU1015)
+        // and restores nothing, so it is treated as no version: the newest stable version.
+        var versionRange = settings.VersionRange is { HasLowerBound: false, HasUpperBound: false, IsFloating: false } or null
+            ? VersionRange.Parse("*")
+            : settings.VersionRange;
+
         var dependency = new LibraryDependency
         {
             LibraryRange = new LibraryRange(
                 settings.PackageId,
-                settings.VersionRange ?? VersionRange.Parse("*"),
+                versionRange,
                 LibraryDependencyTarget.Package),
             IncludeType = LibraryIncludeFlags.All
         };

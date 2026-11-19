@@ -25,6 +25,27 @@ public class NuGetTests
         result[0].Name.ShouldBe("IoC.Container");
     }
 
+    [Theory]
+    [InlineData("all")]
+    [InlineData("(,2.0.0]")]
+    [InlineData("[1.3.6,)")]
+    [InlineData("*")]
+    public void ShouldRestoreForOpenVersionRange(string versionRange)
+    {
+        // Given
+        var nuget = Composition.Shared.Root.NuGet;
+
+        // When
+        var result = nuget.Value.Restore(
+                new NuGetRestoreSettings("IoC.Container")
+                    .WithVersionRange(versionRange == "all" ? VersionRange.All : VersionRange.Parse(versionRange))
+                    .WithHideWarningsAndErrors(true))
+            .ToList();
+
+        // Then
+        result.ShouldContain(i => i.Name == "IoC.Container");
+    }
+
     [Fact]
     public void ShouldSupportRestoreForDefaults()
     {
