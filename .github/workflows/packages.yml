@@ -6,10 +6,12 @@ on:
     # The release job then validates the tag as canonical SemVer and fails on anything else.
     tags:
       - '[0-9]*.[0-9]*.[0-9]*'
+  # A manual run builds the version's tag, or the selected branch when the tag does not exist yet,
+  # and publishes only when asked. Publishing requires an existing tag.
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Existing version tag (1.2.3 or 1.0.4-beta7)'
+        description: 'Version (1.2.3 or 1.0.4-beta7); without its tag, builds the selected branch and cannot publish'
         required: true
         type: string
       publish:
@@ -29,13 +31,15 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 jobs:
-  # Resolves the version tag to the commit that all other jobs build and publish.
+  # Resolves the version to the commit that all other jobs build and publish:
+  # the version tag's commit, or the selected branch's commit for a manual build without publication.
   release:
     runs-on: ubuntu-latest
 
     outputs:
       version: ${{ steps.release.outputs.version }}
       commit: ${{ steps.release.outputs.commit }}
+      publish: ${{ steps.release.outputs.publish }}
 
     steps:
       - uses: actions/checkout@v4
@@ -45,29 +49,54 @@ jobs:
           fetch-tags: true
           persist-credentials: false
 
-      - name: Resolve version tag
+      - name: Resolve version
         id: release
         shell: pwsh
         env:
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          RELEASE_TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+          PUBLISH_PACKAGES: ${{ github.event_name == 'push' || inputs.publish }}
         run: |
           $ErrorActionPreference = 'Stop'
           $version = $env:RELEASE_TAG
-          # A canonical SemVer without a "v" prefix or build metadata: 1.2.3 or 1.0.4-beta7.
-          # Dots are written as [.] so that the single-quoted pattern needs no backslash escaping.
-          if ($version -cnotmatch '^(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)([.](0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?$') {
-            throw 'Tag must be a canonical version such as 1.2.3 or 1.0.4-beta7, without a v prefix.'
+          $publish = $env:PUBLISH_PACKAGES -eq 'true'
+          # Canonical SemVer without a v prefix or build metadata.
+          if ($version -cnotmatch '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?$') {
+            throw "Version must be canonical, such as 1.2.3 or 1.0.4-beta7, but it is '$version'."
           }
-          git rev-parse --verify --quiet "refs/tags/${version}" | Out-Null
-          if ($LASTEXITCODE -ne 0) {
-            git fetch --no-tags origin "refs/tags/${version}:refs/tags/${version}"
-            if ($LASTEXITCODE -ne 0) { throw 'Version tag was not found.' }
+          # actions/checkout already has the tag that started a tag push run,
+          # and fetching it again can fail with "would clobber existing tag".
+          $commit = git rev-parse --verify --quiet "refs/tags/${version}^{commit}"
+          if ($LASTEXITCODE -eq 0) {
+            $source = "tag $version"
           }
-          $commit = git rev-parse --verify "refs/tags/${version}^{commit}"
-          if ($LASTEXITCODE -ne 0) { throw 'Tag does not point to a commit.' }
+          else {
+            # Exit code 2 means that the remote has no such tag.
+            git ls-remote --exit-code --tags origin "refs/tags/${version}" | Out-Null
+            $tagStatus = $LASTEXITCODE
+            if ($tagStatus -eq 0) {
+              git fetch --no-tags origin "+refs/tags/${version}:refs/tags/${version}"
+              if ($LASTEXITCODE -ne 0) { throw 'Version tag could not be fetched.' }
+              $commit = git rev-parse --verify "refs/tags/${version}^{commit}"
+              if ($LASTEXITCODE -ne 0) { throw 'Tag does not point to a commit.' }
+              $source = "tag $version"
+            }
+            elseif ($tagStatus -eq 2 -and -not $publish) {
+              $commit = $env:GITHUB_SHA
+              $source = "branch $env:GITHUB_REF_NAME (tag $version does not exist)"
+            }
+            elseif ($tagStatus -eq 2) {
+              throw "Tag $version was not found. Publishing requires an existing version tag; push the tag to build and publish it."
+            }
+            else {
+              throw 'Remote tags could not be listed.'
+            }
+          }
+          # The runner ends a pwsh step with "exit $LASTEXITCODE", so a missing tag must not fail it.
+          $global:LASTEXITCODE = 0
           "version=$version" >> $env:GITHUB_OUTPUT
           "commit=$commit" >> $env:GITHUB_OUTPUT
-          "Tag: $version`n`nCommit: $commit" >> $env:GITHUB_STEP_SUMMARY
+          "publish=$($publish.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+          "Version: $version`n`nSource: $source`n`nCommit: $commit`n`nPublish: $publish" >> $env:GITHUB_STEP_SUMMARY
 
   # Builds, tests and checks the package version on every supported operating system.
   # Packages are built with the exact tag version, so publishing does not depend on nuget.org state.
@@ -143,7 +172,7 @@ jobs:
           retention-days: 30
 
   publish:
-    if: ${{ github.event_name == 'push' || inputs.publish }}
+    if: ${{ needs.release.outputs.publish == 'true' }}
     needs: [ release, check ]
     runs-on: ubuntu-latest
     environment: nuget
