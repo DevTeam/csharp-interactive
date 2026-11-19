@@ -22,7 +22,7 @@
         <Using Include="System.Threading.Tasks"/>
         <Using Include="Host" Static="True"/>
         <PackageReference Include="System.CommandLine" Version="3.0.0" />
-        <PackageReference Include="Pure.DI" Version="2.5.8">
+        <PackageReference Include="Pure.DI" Version="2.5.9">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
