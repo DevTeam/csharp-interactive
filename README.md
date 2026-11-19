@@ -1,173 +1,121 @@
-#  Build automation system for .NET
+# CSharp Interactive
 
-[![NuGet csi](https://img.shields.io/nuget/v/dotnet-csi?includePreReleases=true)](https://www.nuget.org/packages/dotnet-csi)
-![GitHub](https://img.shields.io/github/license/devteam/csharp-interactive)
-[<img src="http://teamcity.jetbrains.com/app/rest/builds/buildType:(id:OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest)/statusIcon.svg"/>](http://teamcity.jetbrains.com/viewType.html?buildTypeId=OpenSourceProjects_DevTeam_CScriptInteractive_BuildAndTest&guest=1)
-![GitHub Build](https://github.com/DevTeam/csharp-interactive/actions/workflows/main.yml/badge.svg)
+[![NuGet dotnet-csi](https://img.shields.io/nuget/v/dotnet-csi)](https://www.nuget.org/packages/dotnet-csi)
+[![License MIT](https://img.shields.io/github/license/devteam/csharp-interactive)](LICENSE)
+[![GitHub build](https://github.com/DevTeam/csharp-interactive/actions/workflows/main.yml/badge.svg)](https://github.com/DevTeam/csharp-interactive/actions/workflows/main.yml)
 
-![](docs/CSharpInteractive.gif)
+CSharp Interactive automates .NET builds in C#. Write a console build project, run a `.csx` script, or try commands in an interactive REPL. The Host API covers tasks such as building and testing .NET projects, restoring NuGet packages, and running external commands or Docker containers.
 
-C# interactive build automation system makes it easy to build .NET projects. It can be part of your solution as a regular .NET console project or run C# scripts without compiling them, or even run in REPL mode - allowing you to run C# interactively.
+## Quick start
 
-![](docs/icon.png)
+Install the script runner with a supported [.NET SDK](#compatibility).
 
-## Key Features
+```sh
+dotnet tool install --global dotnet-csi
+```
 
-✔️ Three Integrated Execution Modes
-  - Flexible interoperability between modes (#operating-modes) to adapt to diverse workflow requirements.
+Save this as `hello.csx`.
 
-✔️ Native Cross-Platform Support
-  - Seamlessly operates on Windows, Linux, and macOS without compatibility compromises.
+```csharp
+System.Console.WriteLine($"Hello, {Args[0]}!");
+```
 
-✔️ Integrated Debugging Capabilities
-  - Debug ".NET build projects" directly to identify and resolve issues during compilation and builds.
+Run the script with an argument.
 
-✔️ Zero Abstraction Overhead
-  - Eliminates restrictive constructs (e.g., Tasks/Targets):
-  - Pure .NET codebase – no proprietary syntax or hidden layers
-  - Industry-standard practices ensure long-term maintainability
+```sh
+dotnet csi hello.csx World
+```
 
-✔️ Granular Build Control API
-  - Precise management of builds, tests, and deployments with streamlined project configuration.
+The script prints `Hello, World!`.
 
-✔️ Consolidated Build Analytics
-  - Actionable insights through summarized statistics.
+<details>
+<summary>Watch a demo</summary>
+
+![CSharp Interactive demo](docs/CSharpInteractive.gif)
+
+</details>
 
 ## Operating modes
 
-<details>
+### Build project
 
-<summary>.NET build project</summary>
+A build project is a console application you can add to your solution and debug in your IDE. The `build` template creates `Program.cs` with a Release build step and `Program.csx` that loads the same code.
 
-Seamless integration into existing solutions as a standard .NET console project.
+Run these commands from the directory that contains your solution.
 
-### Typical .NET console project
-
-1. Create the Project  
-  Initialize a new console application using .NET CLI:
-  ```bash
-  dotnet new console -n MyBuildApp
-  cd MyConsoleApp
-  ```  
-
-2. Add a reference to the _Build automation library for .NET_  
-  Add the [CSharpInteractive](https://www.nuget.org/packages/CSharpInteractive) NuGet package for scripting capabilities:
-  ```bash
-  dotnet add package CSharpInteractive
-  ```  
-
-### Creating a Build Automation Project from the _build_ template
-1. Install the Template  
-  First, install the `CSharpInteractive.Templates` NuGet package as a dotnet template:
-  ```bash
-  dotnet new install CSharpInteractive.Templates
-  ```  
-
-*[Detailed installation guide](https://github.com/DevTeam/csharp-interactive/wiki/Install-the-C%23-script-template)*
-
-2. Generate the Project  
-  Create a new project named **Build** using the template:
-  ```bash
-  dotnet new build -o ./Build
-  ```  
-
-### Dual Execution Modes
-
-The generated project supports two run methods:
-
-- **Compiled Application** (via `Program.cs`):
-  ```bash
-  dotnet run --project ./Build
-  ```  
-- **Script Execution** (via `Program.csx`):
-  ```bash
-  dotnet csi ./Build
-  ```
-
-</details>
-
-<details>
-
-<summary>Running C# script</summary>
-
-Direct execution of C# scripts without prior compilation:
-- Zero-Compilation Workflow - execute .csx files directly using Roslyn scripting engines, bypassing traditional dotnet build steps for rapid iteration.
-- Cross-Platform Scripting
-  - Windows - integrate with PowerShell/PowerShell Core automation pipelines
-  - Linux/macOS - combine with bash/zsh scripts via shebang directives (#!/usr/bin/env dotnet-script)
-  - Dependency Management - resolve NuGet packages in scripts via #r "nuget: PackageName/Version" syntax, with local cache optimization.
-
-Run a specified script with a given argument:
-
-```Shell
-dotnet csi ./MyDirectory/hello.csx World 
+```sh
+dotnet new install CSharpInteractive.Templates
+dotnet new build -o ./Build --version 1.2.3
+dotnet run --project ./Build
 ```
 
-Run a single script located in the _MyDirectory_ directory:
+The `--version` option sets the minimum version of the CSharpInteractive library in the generated project.
 
-```Shell
-dotnet csi ./MyDirectory World
+With `dotnet-csi` installed, run the same build as a script.
+
+```sh
+dotnet csi ./Build/Program.csx
 ```
 
-<details>
-<summary>Usage details</summary>
+To use the Host API in an existing console project, add the library from that project's directory.
 
-```Shell
+```sh
+dotnet add package CSharpInteractive
+```
+
+### C# script
+
+Pass a `.csx` file or a directory containing a single `.csx` file. Arguments following the script path are available through `Args`. Reference NuGet packages with `#r "nuget: PackageName, 1.2.3"` and load other scripts with `#load "other.csx"`.
+
+<details>
+<summary>Command-line options</summary>
+
+```text
 dotnet csi [options] [--] [script] [script arguments]
 ```
 
-Executes a script if specified, otherwise launches an interactive REPL (Read Eval Print Loop).
+`--` ends option parsing. `@file` reads options from a response file.
 
-`--` - Indicates that the remaining arguments should not be treated as options.
-
-`script` - The path to the script file to run. If no such file is found, the command will treat it as a directory and look for a single script file inside that directory.
-
-`script arguments` - Script arguments are accessible in a script via the global list `Args[index]` by an argument index.
-
-`@file` - Read the response file for more options.
-
-Supported options:
-
-| Option                  | Description                                                                                                                                                     | Alternative form                                                                              |
-|:------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| --help                  | Show how to use the command.                                                                                                                                    | `/?`, `-h`, `/h`, `/help`                                                                     |
-| --version               | Display the tool version.                                                                                                                                       | `/version`                                                                                    |
-| --source                | Specify the NuGet package source to use. Supported formats: URL, or a UNC directory path.                                                                       | `-s`, `/s`, `/source`                                                                         |
-| --property <key=value>  | Define a key-value pair(s) for the script properties called _Props_, which is accessible in scripts.                                                            | `-p`, `/property`, `/p`                                                                       |
-| --property:<key=value>  | Define a key-value pair(s) in MSBuild style for the script properties called _Props_, which is accessible in scripts.                                           | `-p:<key=value>`, `/property:<key=value>`, `/p:<key=value>`, `--property:key1=val1;key2=val2` |
+| Option | Description | Aliases |
+|---|---|---|
+| `--help` | Show command-line help. | `/?`, `-h`, `/h`, `/help` |
+| `--version` | Show the tool version. | `/version` |
+| `--source <source>` | Use a NuGet source URL or UNC path. | `-s`, `/s`, `/source` |
+| `--property <key=value>` | Set a property exposed through `Props`. | `-p`, `/p`, `/property` |
+| `--property:<key=value>` | Set properties in MSBuild style, for example `-p:key1=val1;key2=val2`. | `-p:`, `/p:`, `/property:` |
 
 </details>
 
-</details>
+### Interactive REPL
 
-<details>
-
-<summary>Interactive</summary>
-
-REPL (Read-Eval-Print-Loop) interface for interactive code evaluation. Please see [this page](https://www.nuget.org/packages/dotnet-csi) for installation details.
-
-Launch the tool in the interactive mode:
-
-```Shell
-dotnet csi
-```
-
-Simply enter C# commands sequentially one line after another and get the result in console output.
-
-</details>
+Run `dotnet csi` without a script path to evaluate C# statements interactively.
 
 ## NuGet packages
 
-| Package name                | Link                                                                                                                                 | Description                                         | Installation                                   |
-|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------|------------------------------------------------|
-| dotnet-csi                  | [![NuGet](https://img.shields.io/nuget/v/dotnet-csi)](https://www.nuget.org/packages/dotnet-csi)                                     | C# script runner and REPL tool for build automation | dotnet tool install --global dotnet-csi        |
-| CSharpInteractive           | [![NuGet](https://img.shields.io/nuget/v/CSharpInteractive)](https://www.nuget.org/packages/CSharpInteractive)                       | Build automation library for .NET                   | dotnet add package CSharpInteractive           |
-| CSharpInteractive.Templates | [![NuGet](https://img.shields.io/nuget/v/CSharpInteractive.Templates )](https://www.nuget.org/packages/CSharpInteractive.Templates ) | Build automation project templates for .NET         | dotnet new install CSharpInteractive.Templates |
+| Package | Use it to | Install |
+|---|---|---|
+| [dotnet-csi](https://www.nuget.org/packages/dotnet-csi) | Run scripts and open the REPL. | `dotnet tool install --global dotnet-csi` |
+| [CSharpInteractive](https://www.nuget.org/packages/CSharpInteractive) | Write a console build project with the Host API. | `dotnet add package CSharpInteractive` |
+| [CSharpInteractive.Templates](https://www.nuget.org/packages/CSharpInteractive.Templates) | Scaffold a build project with both a console and a script entry point. | `dotnet new install CSharpInteractive.Templates` |
+
+## Compatibility
+
+### Using the packages
+
+| Component | .NET requirements |
+|---|---|
+| `dotnet-csi` | The stable tool ships builds for .NET 8, 9, and 10. Use a .NET SDK to install it and the runtime matching the installed tool. Select a specific build during installation with `--framework`, for example `--framework net8.0`. |
+| `CSharpInteractive` | The stable library targets .NET 8, 9, and 10. The 1.2.4-beta02 package also targets .NET 11. |
+| `CSharpInteractive.Templates` | The stable template generates a .NET 10 project by default. The 1.2.4-beta02 template defaults to .NET 11. Use the SDK for the project's target framework. |
+
+### Building CSharp Interactive from source
+
+Use the .NET 11 SDK selected in [global.json](global.json). The repository builds the tool and library for .NET 8, 9, 10, and 11. The full build and compatibility checks use all four versions on Windows, Linux, and macOS. See the [GitHub Actions workflow](.github/workflows/main.yml).
 
 ## Usage examples
 
-- [Build project example](https://github.com/DevTeam/csharp-interactive/tree/master/Samples/MySampleLib)
-- [CSharp Interactive build project](https://github.com/DevTeam/csharp-interactive/tree/master/Build)
+- [Sample library build](Samples/MySampleLib)
+- [CSharp Interactive build project](Build)
 - [Pure.DI build project](https://github.com/DevTeam/Pure.DI/tree/master/build)
 - [Immutype build project](https://github.com/DevTeam/Immutype/tree/master/Build)
 - [Comparison with Cake and Nuke](https://github.com/DevTeam/ci-cd)
@@ -208,8 +156,8 @@ Simply enter C# commands sequentially one line after another and get the result 
   - [Adding a NuGet package](#adding-a-nuget-package)
   - [Adding a NuGet source](#adding-a-nuget-source)
   - [Adding a project reference](#adding-a-project-reference)
-  - [Adding projects to the solution file](#adding-projects-to-the-solution-file)
   - [Adding project-to-project (P2P) references](#adding-project-to-project-(p2p)-references)
+  - [Adding projects to the solution file](#adding-projects-to-the-solution-file)
   - [Building a project](#building-a-project)
   - [Building a project using MSBuild](#building-a-project-using-msbuild)
   - [Cleaning a project](#cleaning-a-project)
@@ -653,6 +601,18 @@ new DotNetListReference()
 lines.Any(i => i.Contains("MyLib.csproj")).ShouldBeFalse();
 ```
 
+### Adding project-to-project (P2P) references
+
+``` CSharp
+using HostApi;
+
+var result = new DotNetAddReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .WithReferences(Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();
+
+```
+
 ### Adding projects to the solution file
 
 ``` CSharp
@@ -671,18 +631,6 @@ new DotNetSlnAdd()
         Path.Combine("MyLib", "MyLib.csproj"),
         Path.Combine("MyTests", "MyTests.csproj"))
     .Run().EnsureSuccess();
-```
-
-### Adding project-to-project (P2P) references
-
-``` CSharp
-using HostApi;
-
-var result = new DotNetAddReference()
-    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
-    .WithReferences(Path.Combine("MyLib", "MyLib.csproj"))
-    .Run().EnsureSuccess();
-
 ```
 
 ### Building a project
@@ -1271,7 +1219,7 @@ var result = JsonSerializer.Deserialize<Result>(
     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
 result.ShouldNotBeNull();
-result.SearchResult.SelectMany(i => i.Packages).Count(i => i.Id == "Pure.DI").ShouldBe(1);
+result.SearchResult.SelectMany(i => i.Packages).Count(i => i.Id == "Pure.DI").ShouldBeGreaterThan(0);
 
 record Result(int Version, IReadOnlyCollection<Source> SearchResult);
 
@@ -1529,3 +1477,28 @@ using (var tests = writer.OpenBlock("My Tests"))
 }
 ```
 For more information on TeamCity Service Messages, see [this](https://www.jetbrains.com/help/teamcity/service-messages.html) page.
+
+## Built with
+
+<table>
+<tr>
+<td width="33%" valign="top" align="center">
+  <img src="https://api.nuget.org/v3-flatcontainer/pure.di/2.5.8/icon" width="72" height="72" alt="Pure.DI logo">
+  <h3><a href="https://github.com/DevTeam/Pure.DI">Pure.DI</a></h3>
+  <p align="left">Wires the tool and library services together at compile time.</p>
+  <p><a href="https://www.nuget.org/packages/Pure.DI">NuGet</a></p>
+</td>
+<td width="33%" valign="top" align="center">
+  <img src="https://raw.githubusercontent.com/DevTeam/Immutype/master/Docs/Images/icon.png" width="72" height="72" alt="Immutype logo">
+  <h3><a href="https://github.com/DevTeam/Immutype">Immutype</a></h3>
+  <p align="left">Generates methods for updating command options and build data as immutable objects.</p>
+  <p><a href="https://www.nuget.org/packages/Immutype">NuGet</a></p>
+</td>
+<td width="33%" valign="top" align="center">
+  <img src="https://raw.githubusercontent.com/DevTeam/dotnet-matrix/afa683e8565b16e24b26b6df277d3244c4d50672/readme/built-with/ai-client.svg" width="72" height="72" alt="AI Client logo">
+  <h3><a href="https://github.com/DevTeam/AI.Client">AI Client</a></h3>
+  <p align="left">Supports development with AI chat and MCP tools.</p>
+  <p><a href="https://ai.dev-team.org/">Website</a></p>
+</td>
+</tr>
+</table>

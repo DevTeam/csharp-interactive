@@ -35,8 +35,8 @@
   - [Adding a NuGet package](#adding-a-nuget-package)
   - [Adding a NuGet source](#adding-a-nuget-source)
   - [Adding a project reference](#adding-a-project-reference)
-  - [Adding projects to the solution file](#adding-projects-to-the-solution-file)
   - [Adding project-to-project (P2P) references](#adding-project-to-project-(p2p)-references)
+  - [Adding projects to the solution file](#adding-projects-to-the-solution-file)
   - [Building a project](#building-a-project)
   - [Building a project using MSBuild](#building-a-project-using-msbuild)
   - [Cleaning a project](#cleaning-a-project)
@@ -480,6 +480,18 @@ new DotNetListReference()
 lines.Any(i => i.Contains("MyLib.csproj")).ShouldBeFalse();
 ```
 
+### Adding project-to-project (P2P) references
+
+``` CSharp
+using HostApi;
+
+var result = new DotNetAddReference()
+    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
+    .WithReferences(Path.Combine("MyLib", "MyLib.csproj"))
+    .Run().EnsureSuccess();
+
+```
+
 ### Adding projects to the solution file
 
 ``` CSharp
@@ -498,18 +510,6 @@ new DotNetSlnAdd()
         Path.Combine("MyLib", "MyLib.csproj"),
         Path.Combine("MyTests", "MyTests.csproj"))
     .Run().EnsureSuccess();
-```
-
-### Adding project-to-project (P2P) references
-
-``` CSharp
-using HostApi;
-
-var result = new DotNetAddReference()
-    .WithProject(Path.Combine("MyTests", "MyTests.csproj"))
-    .WithReferences(Path.Combine("MyLib", "MyLib.csproj"))
-    .Run().EnsureSuccess();
-
 ```
 
 ### Building a project
@@ -1098,7 +1098,7 @@ var result = JsonSerializer.Deserialize<Result>(
     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
 result.ShouldNotBeNull();
-result.SearchResult.SelectMany(i => i.Packages).Count(i => i.Id == "Pure.DI").ShouldBe(1);
+result.SearchResult.SelectMany(i => i.Packages).Count(i => i.Id == "Pure.DI").ShouldBeGreaterThan(0);
 
 record Result(int Version, IReadOnlyCollection<Source> SearchResult);
 
